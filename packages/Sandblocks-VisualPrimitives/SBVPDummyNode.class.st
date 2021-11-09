@@ -61,7 +61,6 @@ SBVPDummyNode >> parent: aNode [
 
 { #category : #accessing }
 SBVPDummyNode >> right [
-
 	^ right
 ]
 
