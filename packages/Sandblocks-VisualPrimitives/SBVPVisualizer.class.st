@@ -115,6 +115,6 @@ SBVPVisualizer >> writeSourceOn: aStream [
 	self code submorphsDo: [:morph | morph writeSourceOn: aStream].
 	aStream nextPutAll: ' extent: '.
 	visual extent storeOn: aStream.
-	aStream nextPut: $).
+	aStream nextPut: $)
 	"reload."
 ]

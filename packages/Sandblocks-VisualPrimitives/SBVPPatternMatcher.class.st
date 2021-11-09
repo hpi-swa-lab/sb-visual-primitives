@@ -4,67 +4,11 @@ Class {
 	#instVars : [
 		'pattern',
 		'currentPrimitive',
-		'variableCount'
+		'variableCount',
+		'performedMatch'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
-
-{ #category : #'as yet unclassified' }
-SBVPPatternMatcher class >> example [
-
-	| matcher |
-	matcher := self new.
-	matcher startMatching: (SBVisualPrimitive new: 10) on: SBVPPattern example variableCount: 1.
-	^ matcher getMatch
-]
-
-{ #category : #'as yet unclassified' }
-SBVPPatternMatcher class >> example2 [
-
-	| matcher |
-	matcher := self new.
-	matcher
-		startMatching: ((SBVisualPrimitive new: 10) connections: {SBVisualPrimitive new: 0})
-		on: SBVPPattern example2
-		variableCount: 2.
-	^ matcher getMatch
-]
-
-{ #category : #'as yet unclassified' }
-SBVPPatternMatcher class >> example3 [
-
-	| matcher |
-	matcher := self new.
-	matcher
-		startMatching: ((SBVisualPrimitive new: 10) connections: {SBVisualPrimitive new: 0})
-		on: SBVPPattern example3
-		variableCount: 2.
-	^ matcher getMatch
-]
-
-{ #category : #'as yet unclassified' }
-SBVPPatternMatcher class >> example4 [
-
-	| matcher |
-	matcher := self new.
-	matcher
-		startMatching: ((SBVisualPrimitive new: 10) connections: {(SBVisualPrimitive new: 0) connections: {SBVisualPrimitive new: 0}})
-		on: SBVPPattern example3
-		variableCount: 2.
-	^ {matcher getMatch. matcher getNextMatch. matcher getNextMatch}
-]
-
-{ #category : #'as yet unclassified' }
-SBVPPatternMatcher class >> example5 [
-
-	| matcher |
-	matcher := self new.
-	matcher
-		startMatching: ((SBVisualPrimitive new: 10) connections: {(SBVisualPrimitive new: 0) connections: {SBVisualPrimitive new: 0}})
-		on: SBVPPattern example5
-		variableCount: 2.
-	^ {matcher getMatch. matcher getNextMatch. matcher getNextMatch}
-]
 
 { #category : #accessing }
 SBVPPatternMatcher >> currentPrimitive [
@@ -76,6 +20,15 @@ SBVPPatternMatcher >> currentPrimitive [
 SBVPPatternMatcher >> currentPrimitive: anObject [
 
 	currentPrimitive := anObject
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPatternMatcher >> getAllMatches [
+
+	| matches match |
+	matches := OrderedCollection new.
+	[match := self getNextMatch] whileNotNil: [matches add: match].
+	^ matches
 ]
 
 { #category : #accessing }
@@ -91,7 +44,9 @@ SBVPPatternMatcher >> getMatch [
 { #category : #accessing }
 SBVPPatternMatcher >> getNextMatch [
 
-	(self pattern getNext: self currentPrimitive) ifFalse: [^ nil].
+	self performedMatch
+		ifTrue: [(self pattern getNext: self currentPrimitive) ifFalse: [^ nil]]
+		ifFalse: [self performedMatch: true].
 	^ self getMatch
 ]
 
@@ -107,13 +62,26 @@ SBVPPatternMatcher >> pattern: anObject [
 	pattern := anObject
 ]
 
+{ #category : #accessing }
+SBVPPatternMatcher >> performedMatch [
+
+	^ performedMatch
+]
+
+{ #category : #accessing }
+SBVPPatternMatcher >> performedMatch: anObject [
+
+	performedMatch := anObject
+]
+
 { #category : #'as yet unclassified' }
 SBVPPatternMatcher >> startMatching: aVisualPrimitive on: aPattern variableCount: anInteger [
 
 	self
 		pattern: aPattern;
 		currentPrimitive: aVisualPrimitive;
-		variableCount: anInteger
+		variableCount: anInteger;
+		performedMatch: false
 ]
 
 { #category : #accessing }

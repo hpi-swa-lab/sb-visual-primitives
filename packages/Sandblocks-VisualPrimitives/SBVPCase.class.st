@@ -93,10 +93,11 @@ SBVPCase >> input: anObject [
 { #category : #'as yet unclassified' }
 SBVPCase >> input: anInputVisualizer output: anOutputVisualizer [
 
-	self addMorph: (SBRow new
-		addMorphBack: anInputVisualizer;
-		addMorphBack: SBIcon iconArrowRight;
-		addMorphBack: anOutputVisualizer);
+	self
+		addMorph: (SBRow new
+			addMorphBack: anInputVisualizer;
+			addMorphBack: SBIcon iconArrowRight;
+			addMorphBack: anOutputVisualizer);
 		input: anInputVisualizer;
 		output: anOutputVisualizer
 ]

@@ -27,12 +27,34 @@ SBVPPattern class >> example3 [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPPattern class >> example4 [
+
+	^ self example3
+]
+
+{ #category : #'as yet unclassified' }
 SBVPPattern class >> example5 [
 
 	^ SBVPGroupPattern new: {
 		SBVPWildcardPattern new connections: {
 			(SBVPBindingPattern new: 1) connections: {SBVPWildcardPattern new connections: {SBVPBindingPattern new: 2}}}.
 		SBVPConstraintPattern new: [:a :b | a label = (b label + 10)]}
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPattern class >> example6 [
+
+	^ SBVPGroupPattern new: {
+		(SBVPBindingPattern new: 1) connections: {SBVPBindingPattern new: 2. SBVPBindingPattern new: 3}.
+		SBVPConstraintPattern new: [:a :b :c | a label = (b label + c label)]}
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPattern class >> example7 [
+
+	^ SBVPGroupPattern new: {
+		SBVPWildcardPattern new connections: {(SBVPBindingPattern new: 1) connections: {SBVPBindingPattern new: 2. SBVPBindingPattern new: 3}}.
+		SBVPConstraintPattern new: [:a :b :c | a label = (b label + c label)]}
 ]
 
 { #category : #'as yet unclassified' }
