@@ -39,7 +39,7 @@ SBTreeDecorator >> addChild: aDecorator [
 
 	self children add: aDecorator.
 	aDecorator parent: self.
-	self morph containingFloat owner addMorphBack: (SBConnectorLine connect: self morph to: aDecorator morph)
+	self morph containingFloat owner addMorphBack: (SBNodeConnector connect: self morph to: aDecorator morph)
 ]
 
 { #category : #'as yet unclassified' }
@@ -265,6 +265,16 @@ SBTreeDecorator >> parent [
 SBTreeDecorator >> parent: anObject [
 
 	parent := anObject
+]
+
+{ #category : #accessing }
+SBTreeDecorator >> removeConnector: aConnector [
+	
+	aConnector to withDecorator: SBTreeDecorator do: [:childDecorator | 
+		self children remove: childDecorator.
+		childDecorator parent: nil
+		].
+	aConnector abandon
 ]
 
 { #category : #'as yet unclassified' }
