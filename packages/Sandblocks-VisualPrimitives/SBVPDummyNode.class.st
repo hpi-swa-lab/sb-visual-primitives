@@ -43,6 +43,7 @@ SBVPDummyNode >> asVisualPrimitiveIn: aWorld [
 		(right asVisualPrimitiveIn: aWorld)
 			withDecorator: SBTreeDecorator
 			do: [:childDecorator | decorator addChild: childDecorator]].
+	self parent ifNil: [decorator layout].
 	^ vs
 ]
 

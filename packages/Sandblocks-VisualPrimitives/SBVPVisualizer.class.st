@@ -2,7 +2,7 @@
 Visualizes the return value of the code block.
 "
 Class {
-	#name : #SBVisualizer,
+	#name : #SBVPVisualizer,
 	#superclass : #SBStSubstitution,
 	#instVars : [
 		'visual',
@@ -12,14 +12,14 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBVisualizer class >> code: aCode extent: aPoint [
+SBVPVisualizer class >> code: aCode extent: aPoint [
 	" marker "
 
 	
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualizer class >> matches: aBlock [
+SBVPVisualizer class >> matches: aBlock [
 
 	(super matches: aBlock) ifFalse: [^ false].
 	
@@ -29,39 +29,37 @@ SBVisualizer class >> matches: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualizer class >> newFor: aBlock [
+SBVPVisualizer class >> newFor: aBlock [
 
 	^ self new code: aBlock arguments first extent: aBlock arguments second contents
 ]
 
 { #category : #accessing }
-SBVisualizer >> code [
+SBVPVisualizer >> code [
 
 	^ code
 ]
 
 { #category : #accessing }
-SBVisualizer >> code: anObject [
+SBVPVisualizer >> code: anObject [
 
 	code := anObject
 ]
 
 { #category : #accessing }
-SBVisualizer >> code: aCodeBlock extent: aPoint [
+SBVPVisualizer >> code: aCodeBlock extent: aPoint [
 
 	| content |
 	self code addMorphBack: aCodeBlock.
 	content := aCodeBlock evaluate value asVisualPrimitiveIn: self visual.
-	content withDecorator: SBTreeDecorator do: [:dec|dec layout].
 	self visual extent: aPoint
 ]
 
 { #category : #accessing }
-SBVisualizer >> example [
+SBVPVisualizer >> example [
 
-	SBVisualizer
-		code: [
-			| root n1 n2 |
+	SBVPVisualizer
+		code: [ | root n1 n2 |
 			root := SBVPDummyNode new.
 			root key: 'Carl-Friedrich'.
 			n1 := SBVPDummyNode new.
@@ -72,11 +70,11 @@ SBVisualizer >> example [
 				left: n1;
 				right: n2.
 			root]
-		extent: 300@300
+		extent: 300 @ 300
 ]
 
 { #category : #accessing }
-SBVisualizer >> initialize [
+SBVPVisualizer >> initialize [
 
 	super initialize.
 	
@@ -99,13 +97,24 @@ SBVisualizer >> initialize [
 ]
 
 { #category : #accessing }
-SBVisualizer >> visual [
+SBVPVisualizer >> visual [
 
 	^ visual
 ]
 
 { #category : #accessing }
-SBVisualizer >> visual: anObject [
+SBVPVisualizer >> visual: anObject [
 
 	visual := anObject
+]
+
+{ #category : #accessing }
+SBVPVisualizer >> writeSourceOn: aStream [
+
+	aStream nextPutAll: '(SBVPVisualizer code: '.
+	self code submorphsDo: [:morph | morph writeSourceOn: aStream].
+	aStream nextPutAll: ' extent: '.
+	visual extent storeOn: aStream.
+	aStream nextPut: $).
+	"reload."
 ]
