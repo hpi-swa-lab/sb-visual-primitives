@@ -1,0 +1,62 @@
+Class {
+	#name : #SBVPPattern,
+	#superclass : #SBBlock,
+	#category : #'Sandblocks-VisualPrimitives'
+}
+
+{ #category : #'as yet unclassified' }
+SBVPPattern class >> example [
+
+	^ SBVPGroupPattern new: {SBVPBindingPattern new: 1. SBVPConstraintPattern new: [:a | a label = 10]}
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPattern class >> example2 [
+
+	^ SBVPGroupPattern new: {
+		(SBVPBindingPattern new: 1) connections: {SBVPBindingPattern new: 2}.
+		SBVPConstraintPattern new: [:a :b | a label = (b label + 10)]}
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPattern class >> example3 [
+
+	^ SBVPGroupPattern new: {
+		(SBVPBindingPattern new: 1) connections: {SBVPWildcardPattern new connections: {SBVPBindingPattern new: 2}}.
+		SBVPConstraintPattern new: [:a :b | a label = (b label + 10)]}
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPattern class >> example5 [
+
+	^ SBVPGroupPattern new: {
+		SBVPWildcardPattern new connections: {
+			(SBVPBindingPattern new: 1) connections: {SBVPWildcardPattern new connections: {SBVPBindingPattern new: 2}}}.
+		SBVPConstraintPattern new: [:a :b | a label = (b label + 10)]}
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPattern >> getNext: aVisualPrimitive [
+	"updates the visual primitive the pattern will bind to and returns whether a new binding was found. Whether the binding is correct needs to be checked with matches: withBinding:."
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPattern >> matches: aVisualPrimitive withBinding: aCollection [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPattern >> reset [
+	"do nothing"
+
+	
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPattern >> setBindingFor: aVisualPrimitive in: aCollection [
+
+	^ true
+]

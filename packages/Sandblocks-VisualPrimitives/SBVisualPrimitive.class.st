@@ -3,20 +3,40 @@ Class {
 	#superclass : #SBBlock,
 	#instVars : [
 		'label',
-		'labelBlock'
+		'labelBlock',
+		'connections'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
 
+{ #category : #'as yet unclassified' }
+SBVisualPrimitive class >> new: aLabel [
+
+	^ self new label: aLabel
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> connections [
+
+	^ connections
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> connections: anObject [
+
+	connections := anObject
+]
+
 { #category : #nil }
 SBVisualPrimitive >> initialize [
-	
+
 	super initialize.
 	labelBlock := SBTextBubble new.
 	self
 		addMorph: labelBlock;
 		vResizing: #shrinkWrap;
-		hResizing: #shrinkWrap
+		hResizing: #shrinkWrap;
+		connections: {}
 ]
 
 { #category : #accessing }
@@ -26,10 +46,10 @@ SBVisualPrimitive >> label [
 ]
 
 { #category : #nil }
-SBVisualPrimitive >> label: aString [
-	
-	label := aString.
-	self labelBlock contents: aString
+SBVisualPrimitive >> label: anObject [
+
+	label := anObject.
+	self labelBlock contents: anObject asString
 ]
 
 { #category : #accessing }
@@ -41,5 +61,14 @@ SBVisualPrimitive >> labelBlock [
 { #category : #accessing }
 SBVisualPrimitive >> labelBlock: anObject [
 
-	labelBlock := anObject.
+	labelBlock := anObject
+]
+
+{ #category : #'as yet unclassified' }
+SBVisualPrimitive >> printOn: aStream [
+
+	super printOn: aStream.
+	aStream
+		nextPutAll: ' label: ';
+		nextPutAll: self label asString
 ]
