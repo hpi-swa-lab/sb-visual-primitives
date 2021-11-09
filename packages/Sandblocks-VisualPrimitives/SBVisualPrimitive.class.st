@@ -10,7 +10,7 @@ Class {
 
 { #category : #nil }
 SBVisualPrimitive >> initialize [
-	
+
 	super initialize.
 	labelBlock := SBTextBubble new.
 	self
@@ -27,7 +27,7 @@ SBVisualPrimitive >> label [
 
 { #category : #nil }
 SBVisualPrimitive >> label: aString [
-	
+
 	label := aString.
 	self labelBlock contents: aString
 ]
@@ -41,5 +41,5 @@ SBVisualPrimitive >> labelBlock [
 { #category : #accessing }
 SBVisualPrimitive >> labelBlock: anObject [
 
-	labelBlock := anObject.
+	labelBlock := anObject
 ]

@@ -269,11 +269,10 @@ SBTreeDecorator >> parent: anObject [
 
 { #category : #accessing }
 SBTreeDecorator >> removeConnector: aConnector [
-	
-	aConnector to withDecorator: SBTreeDecorator do: [:childDecorator | 
+
+	aConnector to withDecorator: SBTreeDecorator do: [:childDecorator |
 		self children remove: childDecorator.
-		childDecorator parent: nil
-		].
+		childDecorator parent: nil].
 	aConnector abandon
 ]
 

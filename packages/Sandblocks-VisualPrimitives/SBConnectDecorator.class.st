@@ -29,22 +29,25 @@ SBConnectDecorator >> checkIsMouseNearby [
 { #category : #accessing }
 SBConnectDecorator >> connectionPoints [
 
-	connectionPoints ifNil: [self initializeConnectionPoints].	
+	connectionPoints ifNil: [self initializeConnectionPoints].
 	^ connectionPoints
 ]
 
 { #category : #accessing }
 SBConnectDecorator >> connectionPoints: anObject [
+
 	connectionPoints := anObject
 ]
 
 { #category : #accessing }
 SBConnectDecorator >> connectors [
+
 	^ connectors
 ]
 
 { #category : #accessing }
 SBConnectDecorator >> connectors: anObject [
+
 	connectors := anObject
 ]
 
@@ -57,7 +60,7 @@ SBConnectDecorator >> deleteConnectionPoints [
 { #category : #'initialize-release' }
 SBConnectDecorator >> deleteConnectors [
 
-	self connectors do: [:connector	| connector delete]
+	self connectors do: [:connector | connector delete]
 ]
 
 { #category : #connecting }
@@ -74,7 +77,10 @@ SBConnectDecorator >> example [
 
 	SBMorphExample
 		setUp: [SBStPlayground new attachDecorator: self class new]
-		cases: {SBMorphExampleCase name: 'example 1' caseBlock: [:m | m. m owner addMorph: m copy]}
+		cases: {
+			SBMorphExampleCase name: 'example 1' caseBlock: [:m |
+				m.
+				m owner addMorph: m copy]}
 		extent: 300 @ 300
 ]
 
@@ -82,7 +88,7 @@ SBConnectDecorator >> example [
 SBConnectDecorator >> initialize [
 
 	super initialize.
-	self 
+	self
 		isMouseClose: false;
 		connectors: Set new;
 		isConnecting: false
@@ -91,13 +97,13 @@ SBConnectDecorator >> initialize [
 { #category : #'initialize-release' }
 SBConnectDecorator >> initializeConnectionPoints [
 
-	self connectionPoints: (Array streamContents: 
-		[:stream | 4 timesRepeat: [stream nextPut:
-			(CircleMorph new 
-				extent: 8@8;
+	self connectionPoints: (Array streamContents: [:stream |
+		4 timesRepeat: [
+			stream nextPut: (CircleMorph new
+				extent: 8 @ 8;
 				yourself)]]).
-		
-	self connectionPoints do: [: connectionPoint | 
+	
+	self connectionPoints do: [:connectionPoint |
 		self initializeEventListenersOnConnectionPoint: connectionPoint.
 		self morph owner addMorph: connectionPoint].
 	
@@ -108,15 +114,14 @@ SBConnectDecorator >> initializeConnectionPoints [
 SBConnectDecorator >> initializeEventListenersOnConnectionPoint: connectionPoint [
 
 	(self installEventBroadcasterFor: connectionPoint)
-			when: #mouseDown send: #startConnecting to: self;
-			when: #mouseUp send: #endConnecting: to: self
-		
+		when: #mouseDown send: #startConnecting to: self;
+		when: #mouseUp send: #endConnecting: to: self
 ]
 
 { #category : #'initialize-release' }
 SBConnectDecorator >> initializeEventListenersOnMorph [
 
-	self morph 
+	self morph
 		when: #positionChanged send: #positionConnectionPoints to: self;
 		when: #delete send: #deleteConnectionPoints to: self;
 		when: #delete send: #deleteConnectors to: self
@@ -124,11 +129,13 @@ SBConnectDecorator >> initializeEventListenersOnMorph [
 
 { #category : #accessing }
 SBConnectDecorator >> isConnecting [
+
 	^ isConnecting
 ]
 
 { #category : #accessing }
 SBConnectDecorator >> isConnecting: anObject [
+
 	isConnecting := anObject
 ]
 
@@ -147,7 +154,7 @@ SBConnectDecorator >> isMouseClose: aBoolean [
 { #category : #connecting }
 SBConnectDecorator >> morphAtPoint: aPoint satisfying: aBlock [
 	"copied from SBForceMoveDecorator"
-	
+
 	| best bestArea |
 	best := nil.
 	bestArea := 0.
@@ -181,7 +188,7 @@ SBConnectDecorator >> postDrawOn: aCanvas [
 
 { #category : #connecting }
 SBConnectDecorator >> removeConnector: aConnector [
-	
+
 	self connectors remove: aConnector.
 	aConnector abandon
 ]
@@ -205,6 +212,6 @@ SBConnectDecorator >> step [
 
 { #category : #stepping }
 SBConnectDecorator >> stepTime [
-	
-	^200
+
+	^ 200
 ]

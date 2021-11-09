@@ -16,7 +16,7 @@ SBVPDummyNode >> asVisualPrimitive [
 
 	| decorator vs |
 	decorator := SBTreeDecorator new.
-	vs :=(SBVisualPrimitive new label: self key asString) attachDecorator: decorator.
+	vs := (SBVisualPrimitive new label: self key asString) attachDecorator: decorator.
 	self left ifNotNil: [:left |
 		left asVisualPrimitive
 			withDecorator: SBTreeDecorator
@@ -25,7 +25,7 @@ SBVPDummyNode >> asVisualPrimitive [
 		right asVisualPrimitive
 			withDecorator: SBTreeDecorator
 			do: [:childDecorator | decorator addChild: childDecorator]].
-	^  vs
+	^ vs
 ]
 
 { #category : #accessing }
@@ -33,7 +33,7 @@ SBVPDummyNode >> asVisualPrimitiveIn: aWorld [
 
 	| decorator vs |
 	decorator := SBTreeDecorator new.
-	vs :=(SBVisualPrimitive new label: self key asString) attachDecorator: decorator.
+	vs := (SBVisualPrimitive new label: self key asString) attachDecorator: decorator.
 	aWorld addMorphBack: vs.
 	self left ifNotNil: [:left |
 		(left asVisualPrimitiveIn: aWorld)
@@ -43,7 +43,7 @@ SBVPDummyNode >> asVisualPrimitiveIn: aWorld [
 		(right asVisualPrimitiveIn: aWorld)
 			withDecorator: SBTreeDecorator
 			do: [:childDecorator | decorator addChild: childDecorator]].
-	^  vs
+	^ vs
 ]
 
 { #category : #accessing }
@@ -96,6 +96,7 @@ SBVPDummyNode >> parent: aNode [
 
 { #category : #accessing }
 SBVPDummyNode >> right [
+
 	^ right
 ]
 
