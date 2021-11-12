@@ -77,8 +77,8 @@ SBVPPatternMatcherTest >> testMatchAllChildrenTree [
 		assert: {
 			{vp5. vp2. vp3}.
 			{vp2. vp2 connections first. vp2 connections second}.
-			{vp3. vp3 connections first. vp3 connections second}}
-		equals: matcher getAllMatches asArray
+			{vp3. vp3 connections first. vp3 connections second}} asSet
+		equals: matcher getAllMatches asSet
 ]
 
 { #category : #'as yet unclassified' }

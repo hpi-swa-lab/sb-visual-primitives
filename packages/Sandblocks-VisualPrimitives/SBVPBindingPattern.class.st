@@ -1,41 +1,29 @@
 Class {
 	#name : #SBVPBindingPattern,
 	#superclass : #SBVisualPrimitive,
-	#instVars : [
-		'firstChildOffset',
-		'canMatchAllChildren'
-	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
 
-{ #category : #accessing }
-SBVPBindingPattern >> canMatchAllChildren [
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern >> childrenInCurrentMatch [
 
-	^ canMatchAllChildren
-]
-
-{ #category : #accessing }
-SBVPBindingPattern >> canMatchAllChildren: anObject [
-
-	canMatchAllChildren := anObject
+	| offsetSum |
+	offsetSum := self connections
+		inject: 0
+		into: [:sum :connection | sum + connection indexOffset].
+	^ self connections size + offsetSum
 ]
 
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> couldMatch: aVisualPrimitive [
 
-	^ self connections size + self firstChildOffset <= aVisualPrimitive connections size
+	^ self childrenInCurrentMatch = aVisualPrimitive connections size
 ]
 
-{ #category : #accessing }
-SBVPBindingPattern >> firstChildOffset [
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern >> enoughChildren: aVisualPrimitive [
 
-	^ firstChildOffset
-]
-
-{ #category : #accessing }
-SBVPBindingPattern >> firstChildOffset: anObject [
-
-	firstChildOffset := anObject
+	^ self childrenInCurrentMatch <= aVisualPrimitive connections size
 ]
 
 { #category : #'as yet unclassified' }
@@ -49,47 +37,39 @@ SBVPBindingPattern >> getNext: aVisualPrimitive [
 
 	| currentPrimitive |
 	currentPrimitive := self getCurrentPrimitive: aVisualPrimitive.
-	(self couldMatch: currentPrimitive) ifTrue: [
+	(self enoughChildren: currentPrimitive) ifTrue: [ | offset |
+		offset := 0.
 		self connections withIndexDo: [:connection :index |
-			(connection getNext: (connection searchRootFor: currentPrimitive at: index + self firstChildOffset))
+			((connection getNext: (connection searchRootFor: currentPrimitive at: index + offset)) and: [self enoughChildren: currentPrimitive])
 				ifTrue: [^ true]
-				ifFalse: [connection reset]]].
-	(self canMatchAllChildren and: [self connections notEmpty]) ifTrue: [
-		self firstChildOffset: self firstChildOffset + 1.
-		(self couldMatch: currentPrimitive)
-			ifTrue: [
-				self resetChildren.
-				^ true]
-			ifFalse: [self reset]].
+				ifFalse: [connection reset].
+			offset := offset + connection indexOffset]].
 	^ false
 ]
 
 { #category : #'as yet unclassified' }
-SBVPBindingPattern >> initialize [
+SBVPBindingPattern >> indexOffset [
 
-	super initialize.
-	self
-		firstChildOffset: 0;
-		canMatchAllChildren: true
+	^ 0
 ]
 
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> matches: aVisualPrimitive withBinding: aCollection [
 
-	^ self connections withIndexAllSatisfy: [:connection :index |
-		connection
-			matches: (connection
-				searchRootFor: (self getCurrentPrimitive: aVisualPrimitive)
-				at: index + self firstChildOffset)
-			withBinding: aCollection]
+	| offset |
+	offset := 0.
+	^ self connections withIndexAllSatisfy: [:connection :index | | wasSuccessful |
+		wasSuccessful := connection
+			matches: (connection searchRootFor: (self getCurrentPrimitive: aVisualPrimitive) at: index + offset)
+			withBinding: aCollection.
+		offset := offset + connection indexOffset.
+		wasSuccessful]
 ]
 
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> reset [
 
-	self
-		firstChildOffset: 0;
-		resetChildren
+	self resetChildren
 ]
 
 { #category : #'as yet unclassified' }
@@ -101,7 +81,9 @@ SBVPBindingPattern >> resetChildren [
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> searchRootFor: aVisualPrimitive at: anIndex [
 
-	^ aVisualPrimitive connections at: anIndex
+	^ self indexOffset < 0
+		ifTrue: [aVisualPrimitive]
+		ifFalse: [aVisualPrimitive connections at: anIndex]
 ]
 
 { #category : #'as yet unclassified' }
@@ -120,10 +102,12 @@ SBVPBindingPattern >> setBindingFor: aVisualPrimitive in: aCollection [
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> setConnectionBindingFor: aVisualPrimitive in: aCollection [
 
-	^ self connections withIndexAllSatisfy: [:connection :index |
-		connection
-			setBindingFor: (connection
-				searchRootFor: (self getCurrentPrimitive: aVisualPrimitive)
-				at: index + self firstChildOffset)
-			in: aCollection]
+	| offset |
+	offset := 0.
+	^ self connections withIndexAllSatisfy: [:connection :index | | wasSuccessful |
+		wasSuccessful := connection
+			setBindingFor: (connection searchRootFor: (self getCurrentPrimitive: aVisualPrimitive) at: index + offset)
+			in: aCollection.
+		offset := offset + connection indexOffset.
+		wasSuccessful]
 ]

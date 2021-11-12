@@ -29,7 +29,7 @@ SBVPWildcardPattern >> dfsStack: anObject [
 { #category : #'as yet unclassified' }
 SBVPWildcardPattern >> getCurrentPrimitive: aVisualPrimitive [
 
-	^ self currentTop
+	^ self dfsStack ifEmpty: [aVisualPrimitive] ifNotEmpty: [self currentTop]
 ]
 
 { #category : #accessing }
@@ -49,6 +49,14 @@ SBVPWildcardPattern >> getNext: aVisualPrimitive [
 	^ false
 ]
 
+{ #category : #'as yet unclassified' }
+SBVPWildcardPattern >> indexOffset [
+
+	^ (self dfsStack isEmpty and: [self childrenInCurrentMatch <= 0])
+		ifTrue: [-1]
+		ifFalse: [0]
+]
+
 { #category : #accessing }
 SBVPWildcardPattern >> initialize [
 
@@ -63,6 +71,13 @@ SBVPWildcardPattern >> pushToStack: aVisualPrimitive [
 
 	self dfsStack addFirst: aVisualPrimitive.
 	self visitedPrimitives add: aVisualPrimitive
+]
+
+{ #category : #'as yet unclassified' }
+SBVPWildcardPattern >> reset [
+
+	super reset.
+	self dfsStack: LinkedList new
 ]
 
 { #category : #'as yet unclassified' }

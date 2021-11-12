@@ -22,7 +22,8 @@ SBVPPattern class >> example2 [
 SBVPPattern class >> example3 [
 
 	^ SBVPGroupPattern new: {
-		(SBVPBindingPattern new: 1) connections: {SBVPWildcardPattern new connections: {SBVPBindingPattern new: 2}}.
+		(SBVPBindingPattern new: 1) connections: {
+			SBVPWildcardPattern new connections: {(SBVPBindingPattern new: 2) connections: {SBVPWildcardPattern new}}}.
 		SBVPConstraintPattern new: [:a :b | a label = (b label + 10)]}
 ]
 
@@ -37,7 +38,8 @@ SBVPPattern class >> example5 [
 
 	^ SBVPGroupPattern new: {
 		SBVPWildcardPattern new connections: {
-			(SBVPBindingPattern new: 1) connections: {SBVPWildcardPattern new connections: {SBVPBindingPattern new: 2}}}.
+			(SBVPBindingPattern new: 1) connections: {
+				SBVPWildcardPattern new connections: {(SBVPBindingPattern new: 2) connections: {SBVPWildcardPattern new}}}}.
 		SBVPConstraintPattern new: [:a :b | a label = (b label + 10)]}
 ]
 
@@ -53,7 +55,12 @@ SBVPPattern class >> example6 [
 SBVPPattern class >> example7 [
 
 	^ SBVPGroupPattern new: {
-		SBVPWildcardPattern new connections: {(SBVPBindingPattern new: 1) connections: {SBVPBindingPattern new: 2. SBVPBindingPattern new: 3}}.
+		SBVPWildcardPattern new connections: {
+			SBVPEllipsisPattern new.
+			(SBVPBindingPattern new: 1) connections: {
+				(SBVPBindingPattern new: 2) connections: {SBVPEllipsisPattern new}.
+				(SBVPBindingPattern new: 3) connections: {SBVPEllipsisPattern new}}.
+			SBVPEllipsisPattern new}.
 		SBVPConstraintPattern new: [:a :b :c | a label = (b label + c label)]}
 ]
 

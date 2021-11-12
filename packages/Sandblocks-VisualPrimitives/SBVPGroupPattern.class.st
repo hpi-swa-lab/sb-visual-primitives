@@ -50,6 +50,5 @@ SBVPGroupPattern >> reset [
 { #category : #accessing }
 SBVPGroupPattern >> setBindingFor: aVisualPrimitive in: aCollection [
 
-	self patterns do: [:pattern | (pattern setBindingFor: aVisualPrimitive in: aCollection) ifFalse: [^ false]].
-	^ true
+	^ self patterns allSatisfy: [:pattern | pattern setBindingFor: aVisualPrimitive in: aCollection]
 ]
