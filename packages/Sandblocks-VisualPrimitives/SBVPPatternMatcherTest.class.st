@@ -163,7 +163,10 @@ SBVPPatternMatcherTest >> testThreeNodesWithWildcard [
 	| matcher primitives |
 	matcher := SBVPPatternMatcher new.
 	primitives := self buildList: {10. 0. 0}.
-	matcher startMatching: primitives first on: self examplePatternTwoNodesWithWildcard variableCount: 2.
+	matcher
+		startMatching: primitives first
+		on: self examplePatternTwoNodesWithWildcard
+		variableCount: 2.
 	self
 		assert: {{primitives first. primitives second}. {primitives first. primitives third}}
 		equals: matcher getAllMatches asArray
@@ -175,7 +178,10 @@ SBVPPatternMatcherTest >> testTwoNodesWithWildcard [
 	| matcher primitives |
 	matcher := SBVPPatternMatcher new.
 	primitives := self buildList: {10. 0}.
-	matcher startMatching: primitives first on: self examplePatternTwoNodesWithWildcard variableCount: 2.
+	matcher
+		startMatching: primitives first
+		on: self examplePatternTwoNodesWithWildcard
+		variableCount: 2.
 	self assert: {{primitives first. primitives second}} equals: matcher getAllMatches asArray
 ]
 
