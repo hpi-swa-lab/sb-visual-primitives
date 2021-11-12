@@ -40,6 +40,7 @@ SBVPGroupPattern >> getNext: aVisualPrimitive [
 SBVPGroupPattern >> initialize [
 
 	super initialize.
+	self removeAllMorphs.
 	
 	self
 		addKeyboardCaptureFilter: self;
@@ -51,7 +52,7 @@ SBVPGroupPattern >> initialize [
 		addMorphBack: (row := SBRow new
 			hResizing: #shrinkWrap;
 			vResizing: #shrinkWrap).
-	self label: 'AND'
+
 ]
 
 { #category : #'as yet unclassified' }
@@ -65,7 +66,7 @@ SBVPGroupPattern >> patternBlocks: aCollection [
 
 	patterns := aCollection.
 	self row removeAllMorphs.
-	self patterns do: [:aBlock | self row addMorphBack: aBlock]
+	self patterns do: [:aBlock | self row addMorphBack: aBlock] separatedBy: [self row addMorphBack: (SBTextBubble new contents: ' and '; yourself)]
 ]
 
 { #category : #accessing }

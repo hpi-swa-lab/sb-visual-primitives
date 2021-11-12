@@ -56,7 +56,9 @@ SBVPConstraintPattern >> constraintBlock: anObject [
 SBVPConstraintPattern >> initialize [
 
 	super initialize.
+	self removeAllMorphs.
 	self constraintBlock: (SBColumn new layoutInset: 0).
+	
 ]
 
 { #category : #'as yet unclassified' }
