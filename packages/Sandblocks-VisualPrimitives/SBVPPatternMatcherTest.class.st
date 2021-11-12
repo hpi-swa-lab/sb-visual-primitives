@@ -29,6 +29,60 @@ SBVPPatternMatcherTest >> buildTree: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPPatternMatcherTest >> examplePatternSimpleTree [
+
+	^ SBVPGroupPattern new: {
+		(SBVPBindingPattern new: 1) connections: {SBVPBindingPattern new: 2. SBVPBindingPattern new: 3}.
+		SBVPConstraintPattern new: [:a :b :c | a label = (b label + c label)]}
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPatternMatcherTest >> examplePatternSingleNode [
+
+	^ SBVPGroupPattern new: {SBVPBindingPattern new: 1. SBVPConstraintPattern new: [:a | a label = 10]}
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPatternMatcherTest >> examplePatternTreeWithEllipses [
+
+	^ SBVPGroupPattern new: {
+		SBVPWildcardPattern new connections: {
+			SBVPEllipsisPattern new.
+			(SBVPBindingPattern new: 1) connections: {
+				(SBVPBindingPattern new: 2) connections: {SBVPEllipsisPattern new}.
+				(SBVPBindingPattern new: 3) connections: {SBVPEllipsisPattern new}}.
+			SBVPEllipsisPattern new}.
+		SBVPConstraintPattern new: [:a :b :c | a label = (b label + c label)]}
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPatternMatcherTest >> examplePatternTwoNodes [
+
+	^ SBVPGroupPattern new: {
+		(SBVPBindingPattern new: 1) connections: {SBVPBindingPattern new: 2}.
+		SBVPConstraintPattern new: [:a :b | a label = (b label + 10)]}
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPatternMatcherTest >> examplePatternTwoNodesWithWildcard [
+
+	^ SBVPGroupPattern new: {
+		(SBVPBindingPattern new: 1) connections: {
+			SBVPWildcardPattern new connections: {(SBVPBindingPattern new: 2) connections: {SBVPWildcardPattern new}}}.
+		SBVPConstraintPattern new: [:a :b | a label = (b label + 10)]}
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPatternMatcherTest >> examplePatternTwoWildcardList [
+
+	^ SBVPGroupPattern new: {
+		SBVPWildcardPattern new connections: {
+			(SBVPBindingPattern new: 1) connections: {
+				SBVPWildcardPattern new connections: {(SBVPBindingPattern new: 2) connections: {SBVPWildcardPattern new}}}}.
+		SBVPConstraintPattern new: [:a :b | a label = (b label + 10)]}
+]
+
+{ #category : #'as yet unclassified' }
 SBVPPatternMatcherTest >> testComplexTree [
 
 	| matcher root vp10 vp3 vp7 vp1 |
@@ -38,7 +92,7 @@ SBVPPatternMatcherTest >> testComplexTree [
 	vp3 := vp10 connections first.
 	vp7 := vp10 connections second.
 	vp1 := vp3 connections first.
-	matcher startMatching: root on: SBVPPattern example7 variableCount: 3.
+	matcher startMatching: root on: self examplePatternTreeWithEllipses variableCount: 3.
 	self
 		assert: {
 			{vp10. vp3. vp7}.
@@ -54,7 +108,7 @@ SBVPPatternMatcherTest >> testFiveNodesWithWildcard [
 	| matcher primitives |
 	matcher := SBVPPatternMatcher new.
 	primitives := self buildList: {5. 10. 0. 10. 0}.
-	matcher startMatching: primitives first on: SBVPPattern example5 variableCount: 2.
+	matcher startMatching: primitives first on: self examplePatternTwoWildcardList variableCount: 2.
 	self
 		assert: {
 			{primitives second. primitives third}.
@@ -72,7 +126,7 @@ SBVPPatternMatcherTest >> testMatchAllChildrenTree [
 	vp5 := root connections first.
 	vp2 := vp5 connections first.
 	vp3 := vp5 connections second.
-	matcher startMatching: root on: SBVPPattern example7 variableCount: 3.
+	matcher startMatching: root on: self examplePatternTreeWithEllipses variableCount: 3.
 	self
 		assert: {
 			{vp5. vp2. vp3}.
@@ -87,7 +141,7 @@ SBVPPatternMatcherTest >> testSimpleTree [
 	| matcher root |
 	matcher := SBVPPatternMatcher new.
 	root := (self buildTree: {10 -> {7. 3}}) first.
-	matcher startMatching: root on: SBVPPattern example6 variableCount: 3.
+	matcher startMatching: root on: self examplePatternSimpleTree variableCount: 3.
 	self
 		assert: {{root. root connections first. root connections second}}
 		equals: matcher getAllMatches asArray
@@ -99,7 +153,7 @@ SBVPPatternMatcherTest >> testSingleNodeMatch [
 	| matcher primitives |
 	matcher := SBVPPatternMatcher new.
 	primitives := self buildList: {10}.
-	matcher startMatching: primitives first on: SBVPPattern example variableCount: 1.
+	matcher startMatching: primitives first on: self examplePatternSingleNode variableCount: 1.
 	self assert: {{primitives first}} equals: matcher getAllMatches asArray
 ]
 
@@ -109,7 +163,7 @@ SBVPPatternMatcherTest >> testThreeNodesWithWildcard [
 	| matcher primitives |
 	matcher := SBVPPatternMatcher new.
 	primitives := self buildList: {10. 0. 0}.
-	matcher startMatching: primitives first on: SBVPPattern example4 variableCount: 2.
+	matcher startMatching: primitives first on: self examplePatternTwoNodesWithWildcard variableCount: 2.
 	self
 		assert: {{primitives first. primitives second}. {primitives first. primitives third}}
 		equals: matcher getAllMatches asArray
@@ -121,7 +175,7 @@ SBVPPatternMatcherTest >> testTwoNodesWithWildcard [
 	| matcher primitives |
 	matcher := SBVPPatternMatcher new.
 	primitives := self buildList: {10. 0}.
-	matcher startMatching: primitives first on: SBVPPattern example3 variableCount: 2.
+	matcher startMatching: primitives first on: self examplePatternTwoNodesWithWildcard variableCount: 2.
 	self assert: {{primitives first. primitives second}} equals: matcher getAllMatches asArray
 ]
 
@@ -131,6 +185,6 @@ SBVPPatternMatcherTest >> testTwoNodesWithoutWildcard [
 	| matcher primitives |
 	matcher := SBVPPatternMatcher new.
 	primitives := self buildList: {10. 0}.
-	matcher startMatching: primitives first on: SBVPPattern example2 variableCount: 2.
+	matcher startMatching: primitives first on: self examplePatternTwoNodes variableCount: 2.
 	self assert: {{primitives first. primitives second}} equals: matcher getAllMatches asArray
 ]
