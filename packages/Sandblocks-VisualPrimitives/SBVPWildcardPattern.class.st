@@ -26,6 +26,12 @@ SBVPWildcardPattern >> dfsStack: anObject [
 	dfsStack := anObject
 ]
 
+{ #category : #'as yet unclassified' }
+SBVPWildcardPattern >> getCurrentPrimitive: aVisualPrimitive [
+
+	^ self currentTop
+]
+
 { #category : #accessing }
 SBVPWildcardPattern >> getNext: aVisualPrimitive [
 
@@ -57,12 +63,6 @@ SBVPWildcardPattern >> pushToStack: aVisualPrimitive [
 
 	self dfsStack addFirst: aVisualPrimitive.
 	self visitedPrimitives add: aVisualPrimitive
-]
-
-{ #category : #accessing }
-SBVPWildcardPattern >> resetChildren [
-
-	self connections do: [:connection | connection reset]
 ]
 
 { #category : #'as yet unclassified' }

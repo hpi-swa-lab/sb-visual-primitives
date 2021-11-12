@@ -44,8 +44,8 @@ SBVPPatternMatcherTest >> testComplexTree [
 			{vp10. vp3. vp7}.
 			{vp3. vp1. vp3 connections second}.
 			{vp1. vp1 connections first. vp1 connections second}.
-			{vp7. vp7 connections first. vp7 connections second}}
-		equals: matcher getAllMatches asArray
+			{vp7. vp7 connections first. vp7 connections second}} asSet
+		equals: matcher getAllMatches asSet
 ]
 
 { #category : #'as yet unclassified' }
@@ -60,6 +60,24 @@ SBVPPatternMatcherTest >> testFiveNodesWithWildcard [
 			{primitives second. primitives third}.
 			{primitives second. primitives fifth}.
 			{primitives fourth. primitives fifth}}
+		equals: matcher getAllMatches asArray
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPatternMatcherTest >> testMatchAllChildrenTree [
+
+	| matcher root vp3 vp2 vp5 |
+	matcher := SBVPPatternMatcher new.
+	root := (self buildTree: {10 -> {5 -> {2 -> {1. 1}. 3 -> {2. 1}}}}) first.
+	vp5 := root connections first.
+	vp2 := vp5 connections first.
+	vp3 := vp5 connections second.
+	matcher startMatching: root on: SBVPPattern example7 variableCount: 3.
+	self
+		assert: {
+			{vp5. vp2. vp3}.
+			{vp2. vp2 connections first. vp2 connections second}.
+			{vp3. vp3 connections first. vp3 connections second}}
 		equals: matcher getAllMatches asArray
 ]
 
