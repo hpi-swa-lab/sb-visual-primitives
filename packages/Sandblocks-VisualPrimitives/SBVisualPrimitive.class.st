@@ -1,6 +1,6 @@
 Class {
 	#name : #SBVisualPrimitive,
-	#superclass : #SBBlock,
+	#superclass : #SBStSubstitution,
 	#instVars : [
 		'label',
 		'labelBlock',
@@ -10,9 +10,30 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBVisualPrimitive class >> applySubstitution: aBlock [
+
+	self allSubclassesDo: [:substition | (substition matches: aBlock) ifTrue: [^ (substition newFor: aBlock) pc: aBlock pc]].
+	^ aBlock
+]
+
+{ #category : #'as yet unclassified' }
+SBVisualPrimitive class >> matches: aBlock [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBVisualPrimitive class >> new: aLabel [
 
 	^ self new label: aLabel
+]
+
+{ #category : #'as yet unclassified' }
+SBVisualPrimitive class >> selector: aString receiverMatches: aMessage [
+
+	(aMessage isSandblock and: [(aMessage isMessageSend and: [aMessage receiver notNil]) or: [self matchesCascades and: [aMessage isCascade]]]) ifFalse: [^ false].
+
+	^ (aMessage receiver satisfies: #(notNil isBinding)) and: [self name = aMessage receiver contents and: [aMessage selector = aString]]
 ]
 
 { #category : #accessing }
@@ -34,6 +55,7 @@ SBVisualPrimitive >> initialize [
 	labelBlock := SBTextBubble new.
 	self
 		addMorph: labelBlock;
+		changeTableLayout;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
 		connections: {}

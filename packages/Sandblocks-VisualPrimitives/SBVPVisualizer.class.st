@@ -49,9 +49,8 @@ SBVPVisualizer >> code: anObject [
 { #category : #accessing }
 SBVPVisualizer >> code: aCodeBlock extent: aPoint [
 
-	| content |
 	self code addMorphBack: aCodeBlock.
-	content := aCodeBlock evaluate value asVisualPrimitiveIn: self visual.
+	aCodeBlock evaluate value asVisualPrimitiveIn: self visual.
 	self visual extent: aPoint
 ]
 
@@ -63,7 +62,7 @@ SBVPVisualizer >> example [
 			root := SBVPDummyNode new.
 			root key: 'Carl-Friedrich'.
 			n1 := SBVPDummyNode new.
-			n1 key: 'n1'.
+			n1 key: 'peter'.
 			n2 := SBVPDummyNode new.
 			n2 key: 'n2'.
 			root

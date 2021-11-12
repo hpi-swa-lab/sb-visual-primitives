@@ -1,6 +1,6 @@
 Class {
 	#name : #SBVPPattern,
-	#superclass : #SBBlock,
+	#superclass : #SBVisualPrimitive,
 	#category : #'Sandblocks-VisualPrimitives'
 }
 

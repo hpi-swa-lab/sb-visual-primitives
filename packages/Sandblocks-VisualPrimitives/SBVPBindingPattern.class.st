@@ -1,6 +1,10 @@
 Class {
 	#name : #SBVPBindingPattern,
-	#superclass : #SBVisualPrimitive,
+	#superclass : #SBVPPattern,
+	#instVars : [
+		'firstChildOffset',
+		'canMatchAllChildren'
+	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
 
