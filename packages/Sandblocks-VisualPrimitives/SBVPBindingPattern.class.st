@@ -34,6 +34,27 @@ SBVPBindingPattern class >> newFor: aBlock [
 	^ bindingPattern
 ]
 
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern >> bindingFor: aVisualPrimitive [
+
+	^ self getCurrentPrimitive: aVisualPrimitive
+]
+
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern >> buildChildrenFromBinding: anArray [
+
+	^ self connections gather: [:pattern | pattern buildFromBinding: anArray]
+]
+
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern >> buildFromBinding: anArray [
+
+	| output |
+	output := (anArray at: self label asInteger) copy.
+	output connections: (self buildChildrenFromBinding: anArray).
+	^ {output}
+]
+
 { #category : #accessing }
 SBVPBindingPattern >> addToWorld: aWorld [
 
@@ -180,11 +201,12 @@ SBVPBindingPattern >> setBindingFor: aVisualPrimitive in: aCollection [
 
 	| currentPrimitive |
 	currentPrimitive := self getCurrentPrimitive: aVisualPrimitive.
-	self label ifNotNil: [ | variableIndex |
+	self label ifNotNil: [ | variableIndex binding |
 		variableIndex := self label asInteger.
+		binding := self bindingFor: aVisualPrimitive.
 		(aCollection at: variableIndex)
-			ifNotNil: [:previousValue | ^ previousValue = currentPrimitive]
-			ifNil: [aCollection at: variableIndex put: currentPrimitive]].
+			ifNotNil: [:previousValue | previousValue = binding ifFalse: [^ false]]
+			ifNil: [aCollection at: variableIndex put: binding]].
 	^ (self couldMatch: currentPrimitive) and: [self setConnectionBindingFor: currentPrimitive in: aCollection]
 ]
 

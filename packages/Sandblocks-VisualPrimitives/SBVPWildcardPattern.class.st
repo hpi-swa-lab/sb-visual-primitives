@@ -9,6 +9,36 @@ Class {
 }
 
 { #category : #accessing }
+SBVPWildcardPattern >> bindingFor: aVisualPrimitive [
+
+	^ {#root -> self dfsStack last. #leaf -> self currentTop} asDictionary
+	""""
+]
+
+{ #category : #'as yet unclassified' }
+SBVPWildcardPattern >> buildFromBinding: anArray [
+
+	| binding |
+	binding := anArray at: self label asInteger.
+	^ {self buildFromBinding: anArray currentPrimitive: (binding at: #root)}
+]
+
+{ #category : #'as yet unclassified' }
+SBVPWildcardPattern >> buildFromBinding: anArray currentPrimitive: aVisualPrimitive [
+
+	| output binding leaf |
+	binding := anArray at: self label asInteger.
+	leaf := binding at: #leaf.
+	""
+	""
+	output := aVisualPrimitive copy.
+	aVisualPrimitive = leaf
+		ifTrue: [output connections: (self buildChildrenFromBinding: anArray)]
+		ifFalse: [output connections: (aVisualPrimitive connections collect: [:primitive | self buildFromBinding: anArray currentPrimitive: primitive])].
+	^ output
+]
+
+{ #category : #accessing }
 SBVPWildcardPattern >> currentTop [
 
 	^ self dfsStack first
@@ -49,14 +79,6 @@ SBVPWildcardPattern >> getNext: aVisualPrimitive [
 	^ false
 ]
 
-{ #category : #'as yet unclassified' }
-SBVPWildcardPattern >> indexOffset [
-
-	^ (self dfsStack isEmpty and: [self childrenInCurrentMatch <= 0])
-		ifTrue: [-1]
-		ifFalse: [0]
-]
-
 { #category : #accessing }
 SBVPWildcardPattern >> initialize [
 
@@ -81,16 +103,11 @@ SBVPWildcardPattern >> reset [
 	self dfsStack: LinkedList new
 ]
 
-{ #category : #'as yet unclassified' }
-SBVPWildcardPattern >> searchRootFor: aVisualPrimitive at: anIndex [
-
-	^ aVisualPrimitive
-]
-
 { #category : #accessing }
 SBVPWildcardPattern >> setBindingFor: aVisualPrimitive in: aCollection [
 
 	self assert: (self dfsStack isEmpty or: [self dfsStack last = aVisualPrimitive]).
+	
 	self dfsStack isEmpty ifTrue: [self pushToStack: aVisualPrimitive].
 	^ super setBindingFor: self currentTop in: aCollection
 ]

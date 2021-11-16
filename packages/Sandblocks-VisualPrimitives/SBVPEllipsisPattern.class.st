@@ -8,6 +8,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBVPEllipsisPattern >> buildFromBinding: anArray [
+
+	^ (anArray at: self label asInteger) veryDeepCopy
+]
+
+{ #category : #'as yet unclassified' }
 SBVPEllipsisPattern >> connections: aCollection [
 
 	self assert: aCollection isEmpty description: 'Ellipses should not have children'.
@@ -35,7 +41,6 @@ SBVPEllipsisPattern >> currentSize: anObject [
 { #category : #'as yet unclassified' }
 SBVPEllipsisPattern >> getNext: aVisualPrimitive [
 
-	(super getNext: aVisualPrimitive) ifTrue: [^ true].
 	self currentSize: self currentSize + 1.
 	^ true
 ]
@@ -58,4 +63,12 @@ SBVPEllipsisPattern >> reset [
 
 	super reset.
 	self currentSize: 0
+]
+
+{ #category : #'as yet unclassified' }
+SBVPEllipsisPattern >> searchRootFor: aVisualPrimitive at: anIndex [
+
+	^ aVisualPrimitive connections
+		copyFrom: anIndex
+		to: anIndex + self indexOffset
 ]
