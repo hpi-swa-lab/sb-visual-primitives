@@ -64,7 +64,7 @@ SBVPWildcardPattern >> initialize [
 	self
 		dfsStack: LinkedList new;
 		visitedPrimitives: Set new;
-		addMorph: SBIcon iconStar.
+		addMorph: SBIcon iconStar
 ]
 
 { #category : #accessing }

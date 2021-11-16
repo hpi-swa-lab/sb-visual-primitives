@@ -17,7 +17,7 @@ SBVPGroupPattern class >> matches: aBlock [
 { #category : #'as yet unclassified' }
 SBVPGroupPattern class >> newFor: aBlock [
 
-	^ self new patternBlocks: (aBlock arguments first childSandblocks collect: [:arg | self applySubstitution: arg])
+	^ self new patternBlocks: aBlock arguments first childSandblocks
 ]
 
 { #category : #'as yet unclassified' }
@@ -51,8 +51,7 @@ SBVPGroupPattern >> initialize [
 		layoutInset: 6;
 		addMorphBack: (row := SBRow new
 			hResizing: #shrinkWrap;
-			vResizing: #shrinkWrap).
-
+			vResizing: #shrinkWrap)
 ]
 
 { #category : #'as yet unclassified' }
@@ -64,9 +63,33 @@ SBVPGroupPattern >> matches: aVisualPrimitive withBinding: aCollection [
 { #category : #accessing }
 SBVPGroupPattern >> patternBlocks: aCollection [
 
+	| isBindingPattern |
 	patterns := aCollection.
 	self row removeAllMorphs.
-	self patterns do: [:aBlock | self row addMorphBack: aBlock] separatedBy: [self row addMorphBack: (SBTextBubble new contents: ' and '; yourself)]
+	self patterns
+		do: [:aPattern |
+			isBindingPattern := SBVPBindingPattern withAllSubclasses anySatisfy: [:subclass | subclass = aPattern class].
+			isBindingPattern
+				ifTrue: [ | patternContainer |
+					patternContainer := SBSandboxPasteUpMorph new
+						when: #reportError
+						send: #reportError:
+						to: self.
+					patternContainer extent: 300 @ 300.
+					self row addMorphBack: (TransformMorph new
+						hResizing: #shrinkWrap;
+						vResizing: #shrinkWrap;
+						changeTableLayout;
+						addMorph: patternContainer).
+					aPattern
+						addToWorld: patternContainer;
+						attachTreeDecorator;
+						withDecorator: SBTreeDecorator do: [:treeDecorator | treeDecorator layout]]
+				ifFalse: [aPattern addToWorld: self row]]
+		separatedBy: [
+			self row addMorphBack: (SBTextBubble new
+				contents: ' and ';
+				yourself)]
 ]
 
 { #category : #accessing }
@@ -78,7 +101,7 @@ SBVPGroupPattern >> patterns [
 { #category : #accessing }
 SBVPGroupPattern >> patterns: aCollection [
 
-	patterns := aCollection.
+	patterns := aCollection
 ]
 
 { #category : #'as yet unclassified' }
@@ -96,7 +119,7 @@ SBVPGroupPattern >> row [
 { #category : #accessing }
 SBVPGroupPattern >> row: anObject [
 
-	row := anObject.
+	row := anObject
 ]
 
 { #category : #accessing }

@@ -39,7 +39,9 @@ SBTreeDecorator >> addChild: aDecorator [
 
 	self children add: aDecorator.
 	aDecorator parent: self.
-	self morph containingFloat owner addMorphBack: (SBNodeConnector connect: self morph to: aDecorator morph)
+	self morph containingFloat owner
+		ifNotNil: [:owner | owner addMorphBack: (SBNodeConnector connect: self morph to: aDecorator morph)]
+		ifNil: [self morph containingFloat addMorphBack: (SBNodeConnector connect: self morph to: aDecorator morph)]
 ]
 
 { #category : #'as yet unclassified' }

@@ -74,7 +74,31 @@ SBVPCase >> example [
 SBVPCase >> exampleWithBindingPattern [
 
 	SBVPCase
-		input: ( SBVPGroupPattern patterns: {SBVPBindingPattern label: 1 connections: {}. SBVPConstraintPattern constraint: [:b | b label = 20]})
+		input: (SBVPGroupPattern patterns: {SBVPBindingPattern label: 1 connections: {}. SBVPConstraintPattern constraint: [:b | b label = 20]})
+		output: (SBVPVisualizer
+			code: [ | root n1 n2 |
+				root := SBVPDummyNode new.
+				root key: 'Carl-Friedrich'.
+				n1 := SBVPDummyNode new.
+				n1 key: 'n1'.
+				n2 := SBVPDummyNode new.
+				n2 key: 'n2'.
+				root
+					left: n1;
+					right: n2.
+				root]
+			extent: 300 @ 300)
+]
+
+{ #category : #'as yet unclassified' }
+SBVPCase >> exampleWithBindingPatterns [
+
+	SBVPCase
+		input: (SBVPGroupPattern patterns: {
+			SBVPBindingPattern
+				label: 1
+				connections: {SBVPBindingPattern label: 2 connections: {}. SBVPBindingPattern label: 3 connections: {}}.
+			SBVPConstraintPattern constraint: [:b | b label = 20]})
 		output: (SBVPVisualizer
 			code: [ | root n1 n2 |
 				root := SBVPDummyNode new.
@@ -94,7 +118,9 @@ SBVPCase >> exampleWithBindingPattern [
 SBVPCase >> exampleWithPatterns [
 
 	SBVPCase
-		input: ( SBVPGroupPattern patterns: {SBVPConstraintPattern constraint: [:a | a label = 10]. SBVPConstraintPattern constraint: [:b | b label = 20]})
+		input: (SBVPGroupPattern patterns: {
+			SBVPConstraintPattern constraint: [:a | a label = 10].
+			SBVPConstraintPattern constraint: [:b | b label = 20]})
 		output: (SBVPVisualizer
 			code: [ | root n1 n2 |
 				root := SBVPDummyNode new.

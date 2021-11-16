@@ -10,13 +10,6 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive class >> applySubstitution: aBlock [
-
-	self allSubclassesDo: [:substition | (substition matches: aBlock) ifTrue: [^ (substition newFor: aBlock) pc: aBlock pc]].
-	^ aBlock
-]
-
-{ #category : #'as yet unclassified' }
 SBVisualPrimitive class >> matches: aBlock [
 
 	^ false
@@ -32,8 +25,14 @@ SBVisualPrimitive class >> new: aLabel [
 SBVisualPrimitive class >> selector: aString receiverMatches: aMessage [
 
 	(aMessage isSandblock and: [(aMessage isMessageSend and: [aMessage receiver notNil]) or: [self matchesCascades and: [aMessage isCascade]]]) ifFalse: [^ false].
+	
+	^ (aMessage receiver satisfies: #(#notNil #isBinding)) and: [self name = aMessage receiver contents and: [aMessage selector = aString]]
+]
 
-	^ (aMessage receiver satisfies: #(notNil isBinding)) and: [self name = aMessage receiver contents and: [aMessage selector = aString]]
+{ #category : #'as yet unclassified' }
+SBVisualPrimitive >> addToWorld: aWorld [
+
+	^ self subclassResponsibility
 ]
 
 { #category : #accessing }

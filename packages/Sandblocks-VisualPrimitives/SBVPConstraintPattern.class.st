@@ -11,7 +11,7 @@ Class {
 { #category : #'as yet unclassified' }
 SBVPConstraintPattern class >> constraint: aClosure [
 
-	^ self new constraint: aClosure.
+	^ self new constraint: aClosure
 ]
 
 { #category : #'as yet unclassified' }
@@ -27,6 +27,12 @@ SBVPConstraintPattern class >> newFor: aBlock [
 ]
 
 { #category : #accessing }
+SBVPConstraintPattern >> addToWorld: aWorld [
+
+	aWorld addMorphBack: self
+]
+
+{ #category : #accessing }
 SBVPConstraintPattern >> constraint [
 
 	^ constraint
@@ -35,8 +41,7 @@ SBVPConstraintPattern >> constraint [
 { #category : #accessing }
 SBVPConstraintPattern >> constraint: anObject [
 
-	constraint := anObject.
-
+	constraint := anObject
 ]
 
 { #category : #accessing }
@@ -46,10 +51,10 @@ SBVPConstraintPattern >> constraintBlock [
 ]
 
 { #category : #accessing }
-SBVPConstraintPattern >> constraintBlock: anObject [
+SBVPConstraintPattern >> constraintBlock: aBlock [
 
-	constraintBlock := anObject.
-	self addMorphBack: anObject
+	constraintBlock := aBlock.
+	self addMorphBack: aBlock
 ]
 
 { #category : #'as yet unclassified' }
@@ -57,8 +62,7 @@ SBVPConstraintPattern >> initialize [
 
 	super initialize.
 	self removeAllMorphs.
-	self constraintBlock: (SBColumn new layoutInset: 0).
-	
+	self constraintBlock: (SBColumn new layoutInset: 0)
 ]
 
 { #category : #'as yet unclassified' }
