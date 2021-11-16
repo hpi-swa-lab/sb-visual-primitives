@@ -31,6 +31,7 @@ SBVPWildcardPattern >> buildFromBinding: anArray currentPrimitive: aVisualPrimit
 	leaf := binding at: #leaf.
 	""
 	""
+	
 	output := aVisualPrimitive copy.
 	aVisualPrimitive = leaf
 		ifTrue: [output connections: (self buildChildrenFromBinding: anArray)]

@@ -34,6 +34,23 @@ SBVPBindingPattern class >> newFor: aBlock [
 	^ bindingPattern
 ]
 
+{ #category : #accessing }
+SBVPBindingPattern >> addToWorld: aWorld [
+
+	self connections do: [:child | child addToWorld: aWorld].
+	aWorld addMorphBack: self
+]
+
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern >> attachTreeDecorator [
+
+	| decorator |
+	decorator := SBTreeDecorator new.
+	self connections do: [:child | child attachTreeDecorator].
+	self attachDecorator: decorator.
+	self connections do: [:child | child withDecorator: SBTreeDecorator do: [:childDecorator | decorator addChild: childDecorator]]
+]
+
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> bindingFor: aVisualPrimitive [
 
@@ -53,23 +70,6 @@ SBVPBindingPattern >> buildFromBinding: anArray [
 	output := (anArray at: self label asInteger) copy.
 	output connections: (self buildChildrenFromBinding: anArray).
 	^ {output}
-]
-
-{ #category : #accessing }
-SBVPBindingPattern >> addToWorld: aWorld [
-
-	self connections do: [:child | child addToWorld: aWorld].
-	aWorld addMorphBack: self
-]
-
-{ #category : #'as yet unclassified' }
-SBVPBindingPattern >> attachTreeDecorator [
-
-	| decorator |
-	decorator := SBTreeDecorator new.
-	self connections do: [:child | child attachTreeDecorator].
-	self attachDecorator: decorator.
-	self connections do: [:child | child withDecorator: SBTreeDecorator do: [:childDecorator | decorator addChild: childDecorator]]
 ]
 
 { #category : #accessing }

@@ -12,7 +12,7 @@ Class {
 SBVPCase class >> input: anInputVisualizer output: anOutputVisualizer [
 	" marker "
 
-	
+	^ self new input: anInputVisualizer output: anOutputVisualizer
 ]
 
 { #category : #'as yet unclassified' }
@@ -143,6 +143,16 @@ SBVPCase >> exampleWithPatterns [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPCase >> exampleWithPatterns: aDummyNode [
+
+	^ (SBVPCase
+		input: (SBVPGroupPattern patterns: {
+			(SBVPBindingPattern new: 1) connections: {SBVPBindingPattern new: 2. SBVPBindingPattern new: 3}.
+			SBVPConstraintPattern constraint: [:a :b :c | true]})
+		output: ((SBVPBindingPattern new: 1) connections: {SBVPBindingPattern new: 3. SBVPBindingPattern new: 2})) value: aDummyNode
+]
+
+{ #category : #'as yet unclassified' }
 SBVPCase >> initialize [
 
 	super initialize.
@@ -192,6 +202,15 @@ SBVPCase >> output [
 SBVPCase >> output: anObject [
 
 	output := anObject
+]
+
+{ #category : #'as yet unclassified' }
+SBVPCase >> value: aDummyNode [
+
+	| matcher |
+	matcher := SBVPPatternMatcher new.
+	matcher startMatching: aDummyNode asVisualPrimitive on: self input variableCount: 3.
+	^ aDummyNode class fromVisualPrimitive: (self output buildFromBinding: matcher getNextMatch) first
 ]
 
 { #category : #'as yet unclassified' }

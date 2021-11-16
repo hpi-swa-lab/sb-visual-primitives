@@ -52,6 +52,6 @@ SBPropertyInspector >> initializeFor: anSBBlock [
 				color: Color white;
 				contents: aProperty asString);
 			addMorphBack: (anSBBlock perform: aProperty) asSandblock)].
-		
+	
 	self addMorphBack: codeWindow
 ]

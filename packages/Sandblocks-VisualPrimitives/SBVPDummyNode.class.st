@@ -11,20 +11,50 @@ Class {
 	#category : #'Sandblocks-VisualPrimitives'
 }
 
+{ #category : #'as yet unclassified' }
+SBVPDummyNode class >> exampleRootWithTwoChildren [
+
+	| n1 n2 root |
+	root := SBVPDummyNode new.
+	root key: 'Carl-Friedrich'.
+	n1 := SBVPDummyNode new.
+	n1 key: 'peter'.
+	n2 := SBVPDummyNode new.
+	n2 key: 'n2'.
+	root
+		left: n1;
+		right: n2.
+	^ root
+]
+
+{ #category : #'as yet unclassified' }
+SBVPDummyNode class >> fromVisualPrimitive: aVisualPrimitive [
+
+	^ self fromVisualPrimitive: aVisualPrimitive withParent: nil
+]
+
+{ #category : #'as yet unclassified' }
+SBVPDummyNode class >> fromVisualPrimitive: aVisualPrimitive withParent: aDummyNode [
+
+	| node |
+	aVisualPrimitive ifNil: [^ nil].
+	
+	node := self new.
+	node
+		left: (self fromVisualPrimitive: (aVisualPrimitive connections at: 1 ifAbsent: [nil]) withParent: node);
+		right: (self fromVisualPrimitive: (aVisualPrimitive connections at: 2 ifAbsent: [nil]) withParent: node);
+		parent: aDummyNode;
+		key: aVisualPrimitive label.
+	^ node
+]
+
 { #category : #accessing }
 SBVPDummyNode >> asVisualPrimitive [
 
-	| decorator vs |
-	decorator := SBTreeDecorator new.
-	vs := (SBVisualPrimitive new label: self key asString) attachDecorator: decorator.
-	self left ifNotNil: [:left |
-		left asVisualPrimitive
-			withDecorator: SBTreeDecorator
-			do: [:childDecorator | decorator addChild: childDecorator]].
-	self right ifNotNil: [:right |
-		right asVisualPrimitive
-			withDecorator: SBTreeDecorator
-			do: [:childDecorator | decorator addChild: childDecorator]].
+	| vs |
+	vs := SBVisualPrimitive new label: self key asString.
+	self left ifNotNil: [:left | vs connections add: left asVisualPrimitive].
+	self right ifNotNil: [:right | vs connections add: right asVisualPrimitive].
 	^ vs
 ]
 

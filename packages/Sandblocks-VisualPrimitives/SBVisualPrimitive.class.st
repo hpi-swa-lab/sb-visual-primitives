@@ -57,7 +57,7 @@ SBVisualPrimitive >> initialize [
 		changeTableLayout;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
-		connections: {}
+		connections: OrderedCollection new
 ]
 
 { #category : #accessing }
