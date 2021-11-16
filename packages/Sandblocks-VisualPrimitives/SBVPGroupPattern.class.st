@@ -51,8 +51,7 @@ SBVPGroupPattern >> initialize [
 		layoutInset: 6;
 		addMorphBack: (row := SBRow new
 			hResizing: #shrinkWrap;
-			vResizing: #shrinkWrap).
-
+			vResizing: #shrinkWrap)
 ]
 
 { #category : #'as yet unclassified' }
@@ -66,7 +65,10 @@ SBVPGroupPattern >> patternBlocks: aCollection [
 
 	patterns := aCollection.
 	self row removeAllMorphs.
-	self patterns do: [:aBlock | self row addMorphBack: aBlock] separatedBy: [self row addMorphBack: (SBTextBubble new contents: ' and '; yourself)]
+	self patterns do: [:aBlock | self row addMorphBack: aBlock] separatedBy: [
+		self row addMorphBack: (SBTextBubble new
+			contents: ' and ';
+			yourself)]
 ]
 
 { #category : #accessing }
@@ -78,7 +80,7 @@ SBVPGroupPattern >> patterns [
 { #category : #accessing }
 SBVPGroupPattern >> patterns: aCollection [
 
-	patterns := aCollection.
+	patterns := aCollection
 ]
 
 { #category : #'as yet unclassified' }
@@ -96,7 +98,7 @@ SBVPGroupPattern >> row [
 { #category : #accessing }
 SBVPGroupPattern >> row: anObject [
 
-	row := anObject.
+	row := anObject
 ]
 
 { #category : #accessing }

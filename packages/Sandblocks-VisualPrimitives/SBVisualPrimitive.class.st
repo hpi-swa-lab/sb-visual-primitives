@@ -32,8 +32,8 @@ SBVisualPrimitive class >> new: aLabel [
 SBVisualPrimitive class >> selector: aString receiverMatches: aMessage [
 
 	(aMessage isSandblock and: [(aMessage isMessageSend and: [aMessage receiver notNil]) or: [self matchesCascades and: [aMessage isCascade]]]) ifFalse: [^ false].
-
-	^ (aMessage receiver satisfies: #(notNil isBinding)) and: [self name = aMessage receiver contents and: [aMessage selector = aString]]
+	
+	^ (aMessage receiver satisfies: #(#notNil #isBinding)) and: [self name = aMessage receiver contents and: [aMessage selector = aString]]
 ]
 
 { #category : #accessing }

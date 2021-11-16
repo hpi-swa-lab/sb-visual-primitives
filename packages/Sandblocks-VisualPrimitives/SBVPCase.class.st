@@ -38,6 +38,12 @@ SBVPCase >> addSubPattern: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPCase >> buildOutput: aPattern fromBinding: anArray [
+
+	^ aPattern buildFromBinding: anArray
+]
+
+{ #category : #'as yet unclassified' }
 SBVPCase >> example [
 
 	SBVPCase
@@ -74,7 +80,7 @@ SBVPCase >> example [
 SBVPCase >> exampleWithBindingPattern [
 
 	SBVPCase
-		input: ( SBVPGroupPattern patterns: {SBVPBindingPattern label: 1 connections: {}. SBVPConstraintPattern constraint: [:b | b label = 20]})
+		input: (SBVPGroupPattern patterns: {SBVPBindingPattern label: 1 connections: {}. SBVPConstraintPattern constraint: [:b | b label = 20]})
 		output: (SBVPVisualizer
 			code: [ | root n1 n2 |
 				root := SBVPDummyNode new.
@@ -94,7 +100,9 @@ SBVPCase >> exampleWithBindingPattern [
 SBVPCase >> exampleWithPatterns [
 
 	SBVPCase
-		input: ( SBVPGroupPattern patterns: {SBVPConstraintPattern constraint: [:a | a label = 10]. SBVPConstraintPattern constraint: [:b | b label = 20]})
+		input: (SBVPGroupPattern patterns: {
+			SBVPConstraintPattern constraint: [:a | a label = 10].
+			SBVPConstraintPattern constraint: [:b | b label = 20]})
 		output: (SBVPVisualizer
 			code: [ | root n1 n2 |
 				root := SBVPDummyNode new.

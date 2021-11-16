@@ -11,7 +11,7 @@ Class {
 { #category : #'as yet unclassified' }
 SBVPConstraintPattern class >> constraint: aClosure [
 
-	^ self new constraint: aClosure.
+	^ self new constraint: aClosure
 ]
 
 { #category : #'as yet unclassified' }
@@ -35,8 +35,7 @@ SBVPConstraintPattern >> constraint [
 { #category : #accessing }
 SBVPConstraintPattern >> constraint: anObject [
 
-	constraint := anObject.
-
+	constraint := anObject
 ]
 
 { #category : #accessing }
@@ -57,8 +56,7 @@ SBVPConstraintPattern >> initialize [
 
 	super initialize.
 	self removeAllMorphs.
-	self constraintBlock: (SBColumn new layoutInset: 0).
-	
+	self constraintBlock: (SBColumn new layoutInset: 0)
 ]
 
 { #category : #'as yet unclassified' }
