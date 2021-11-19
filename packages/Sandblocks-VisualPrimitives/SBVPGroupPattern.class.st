@@ -23,7 +23,7 @@ SBVPGroupPattern class >> newFor: aBlock [
 { #category : #'as yet unclassified' }
 SBVPGroupPattern class >> patterns: aCollection [
 
-	^ self new patterns: aCollection
+	^ self new patternBlocks: aCollection
 ]
 
 { #category : #'as yet unclassified' }

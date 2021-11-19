@@ -137,23 +137,16 @@ SBVPCase >> exampleWithEllipsisAndWildcardPattern [
 { #category : #'as yet unclassified' }
 SBVPCase >> exampleWithPatterns [
 
-	SBVPCase
+	^ SBVPCase
 		input: (SBVPGroupPattern patterns: {
-			SBVPConstraintPattern constraint: [:a | a label = 10].
-			SBVPConstraintPattern constraint: [:b | b label = 20]})
-		output: (SBVPVisualizer
-			code: [ | root n1 n2 |
-				root := SBVPDummyNode new.
-				root key: 'Carl-Friedrich'.
-				n1 := SBVPDummyNode new.
-				n1 key: 'n1'.
-				n2 := SBVPDummyNode new.
-				n2 key: 'n2'.
-				root
-					left: n1;
-					right: n2.
-				root]
-			extent: 300 @ 300)
+			SBVPBindingPattern
+				label: 1
+				connections: {SBVPBindingPattern label: 2 connections: {}. SBVPBindingPattern label: 3 connections: {}}.
+			SBVPConstraintPattern constraint: [:a :b :c | true]})
+		output: (SBVPGroupPattern patterns: {
+			SBVPBindingPattern
+				label: 1
+				connections: {SBVPBindingPattern label: 3 connections: {}. SBVPBindingPattern label: 2 connections: {}}})
 ]
 
 { #category : #'as yet unclassified' }

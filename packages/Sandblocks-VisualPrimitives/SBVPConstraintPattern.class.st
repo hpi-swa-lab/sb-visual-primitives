@@ -10,6 +10,7 @@ Class {
 
 { #category : #'as yet unclassified' }
 SBVPConstraintPattern class >> constraint: aClosure [
+	"marker"
 
 	^ self new constraint: aClosure
 ]
@@ -39,9 +40,14 @@ SBVPConstraintPattern >> constraint [
 ]
 
 { #category : #accessing }
-SBVPConstraintPattern >> constraint: anObject [
+SBVPConstraintPattern >> constraint: aBlockClosure [
 
-	constraint := anObject
+	constraint := aBlockClosure.
+	self constraintBlock: ((SBStPlayground
+		newFromSource: aBlockClosure decompile decompileString
+		named: 'constrainty')
+		hResizing: #shrinkWrap;
+		vResizing: #shrinkWrap)
 ]
 
 { #category : #accessing }

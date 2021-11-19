@@ -22,7 +22,7 @@ SBVPVisualizer class >> code: aCode extent: aPoint [
 SBVPVisualizer class >> matches: aBlock [
 
 	(super matches: aBlock) ifFalse: [^ false].
-	
+	Transcript showln: 'Matches called'.
 	^ (aBlock receiver satisfies: #(#notNil #isBinding))
 		and: [aBlock receiver contents = self name]
 		and: [aBlock selector = 'code:extent:']
@@ -49,8 +49,10 @@ SBVPVisualizer >> code: anObject [
 { #category : #accessing }
 SBVPVisualizer >> code: aCodeBlock extent: aPoint [
 
-	self code addMorphBack: aCodeBlock.
-	aCodeBlock evaluate value asVisualPrimitiveIn: self visual.
+	| aSandblock |
+	aSandblock := aCodeBlock asSandblock.
+	self code addMorphBack: aSandblock.
+	aSandblock evaluate value asVisualPrimitiveIn: self visual.
 	self visual extent: aPoint
 ]
 
