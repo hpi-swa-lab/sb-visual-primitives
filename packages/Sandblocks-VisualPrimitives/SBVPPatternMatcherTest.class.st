@@ -49,6 +49,38 @@ SBVPPatternMatcherTest >> examplePatternSingleNode [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPPatternMatcherTest >> examplePatternSortTree [
+
+	^ SBVPGroupPattern patterns: {
+		SBVPWildcardPattern label: 6 connections: {
+			SBVPEllipsisPattern label: 7 connections: {}.
+			SBVPBindingPattern label: 1 connections: {
+				SBVPBindingPattern
+					label: 2
+					connections: {SBVPEllipsisPattern label: 4 connections: {}}.
+				SBVPBindingPattern
+					label: 3
+					connections: {SBVPEllipsisPattern label: 5 connections: {}}}.
+			SBVPEllipsisPattern label: 8 connections: {}}.
+		SBVPConstraintPattern constraint: [:a :b :c :d :e :f :g :h | b label > c label]}
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPatternMatcherTest >> examplePatternSortTreeOutput [
+
+	^ SBVPWildcardPattern label: 6 connections: {
+		SBVPEllipsisPattern label: 7 connections: {}.
+		SBVPBindingPattern label: 1 connections: {
+			SBVPBindingPattern
+				label: 3
+				connections: {SBVPEllipsisPattern label: 5 connections: {}}.
+			SBVPBindingPattern
+				label: 2
+				connections: {SBVPEllipsisPattern label: 4 connections: {}}}.
+		SBVPEllipsisPattern label: 8 connections: {}}
+]
+
+{ #category : #'as yet unclassified' }
 SBVPPatternMatcherTest >> examplePatternTreeWithEllipses [
 
 	^ SBVPGroupPattern patterns: {
@@ -250,6 +282,17 @@ SBVPPatternMatcherTest >> testSingleNodeMatch [
 		pattern: self examplePatternSingleNode
 		variableCount: 1.
 	self assert: {{primitives first}} equals: matcher getAllMatches asArray
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPatternMatcherTest >> testSortTreeOutput [
+
+	| root output |
+	root := (self buildTree: {0 -> {1 -> {3 -> {5. 4}. 2 -> {6. 7}}}}) first.
+	output := (SBVPCase
+		input: self examplePatternSortTree
+		output: self examplePatternSortTreeOutput) replaceAllMatches: root.
+	self assert: {0 -> {1 -> {2 -> {6. 7}. 3 -> {4. 5}}}} equals: {self getLabelTree: output}
 ]
 
 { #category : #'as yet unclassified' }

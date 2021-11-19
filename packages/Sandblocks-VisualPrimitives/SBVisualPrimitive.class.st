@@ -10,6 +10,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBVisualPrimitive class >> fromVisualPrimitive: aVisualPrimitive [
+
+	^ aVisualPrimitive
+]
+
+{ #category : #'as yet unclassified' }
 SBVisualPrimitive class >> matches: aBlock [
 
 	^ false
@@ -33,6 +39,12 @@ SBVisualPrimitive class >> selector: aString receiverMatches: aMessage [
 SBVisualPrimitive >> addToWorld: aWorld [
 
 	^ self subclassResponsibility
+]
+
+{ #category : #nil }
+SBVisualPrimitive >> asVisualPrimitive [
+
+	^ self
 ]
 
 { #category : #accessing }

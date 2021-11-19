@@ -56,6 +56,14 @@ SBVPPatternMatcher >> getNextMatch [
 	^ self getMatch
 ]
 
+{ #category : #accessing }
+SBVPPatternMatcher >> input: anObject [
+
+	self currentPrimitive: anObject.
+	self pattern reset.
+	self performedMatch: false
+]
+
 { #category : #'as yet unclassified' }
 SBVPPatternMatcher >> input: aVisualPrimitive pattern: aPattern variableCount: anInteger [
 

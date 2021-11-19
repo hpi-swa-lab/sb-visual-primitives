@@ -165,9 +165,10 @@ SBVPCase >> exampleWithPatterns: aDummyNode [
 				label: 1
 				connections: {SBVPBindingPattern label: 2 connections: {}. SBVPBindingPattern label: 3 connections: {}}.
 			SBVPConstraintPattern constraint: [:a :b :c | true]})
-		output: (SBVPGroupPattern patterns: {SBVPBindingPattern
-			label: 1
-			connections: {SBVPBindingPattern label: 3 connections: {}. SBVPBindingPattern label: 2 connections: {}}})) value: aDummyNode
+		output: (SBVPGroupPattern patterns: {
+			SBVPBindingPattern
+				label: 1
+				connections: {SBVPBindingPattern label: 3 connections: {}. SBVPBindingPattern label: 2 connections: {}}})) value: aDummyNode
 ]
 
 { #category : #'as yet unclassified' }
@@ -223,14 +224,32 @@ SBVPCase >> output: anObject [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPCase >> replaceAllMatches: aDummyNode [
+
+	| matcher currentPrimitive match |
+	currentPrimitive := aDummyNode asVisualPrimitive.
+	matcher := SBVPPatternMatcher
+		input: currentPrimitive
+		pattern: self input
+		variableCount: 8.
+	[match := matcher getNextMatch] whileNotNil: [
+		currentPrimitive := (self output buildFromBinding: match) first.
+		matcher input: currentPrimitive].
+	^ aDummyNode class fromVisualPrimitive: currentPrimitive
+]
+
+{ #category : #'as yet unclassified' }
 SBVPCase >> value: aDummyNode [
 
-	| matcher |
+	| matcher match |
 	matcher := SBVPPatternMatcher
 		input: aDummyNode asVisualPrimitive
 		pattern: self input
 		variableCount: 3.
-	^ aDummyNode class fromVisualPrimitive: (self output buildFromBinding: matcher getNextMatch) first
+	match := matcher getNextMatch.
+	^ match
+		ifNil: [aDummyNode]
+		ifNotNil: [aDummyNode class fromVisualPrimitive: (self output buildFromBinding: match) first]
 ]
 
 { #category : #'as yet unclassified' }
