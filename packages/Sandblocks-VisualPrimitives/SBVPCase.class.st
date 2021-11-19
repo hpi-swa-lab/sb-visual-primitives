@@ -228,10 +228,7 @@ SBVPCase >> replaceAllMatches: aDummyNode [
 
 	| matcher currentPrimitive match |
 	currentPrimitive := aDummyNode asVisualPrimitive.
-	matcher := SBVPPatternMatcher
-		input: currentPrimitive
-		pattern: self input
-		variableCount: 8.
+	matcher := SBVPPatternMatcher input: currentPrimitive pattern: self input.
 	[match := matcher getNextMatch] whileNotNil: [
 		currentPrimitive := (self output buildFromBinding: match) first.
 		matcher input: currentPrimitive].
@@ -242,10 +239,7 @@ SBVPCase >> replaceAllMatches: aDummyNode [
 SBVPCase >> value: aDummyNode [
 
 	| matcher match |
-	matcher := SBVPPatternMatcher
-		input: aDummyNode asVisualPrimitive
-		pattern: self input
-		variableCount: 3.
+	matcher := SBVPPatternMatcher input: aDummyNode asVisualPrimitive pattern: self input.
 	match := matcher getNextMatch.
 	^ match
 		ifNil: [aDummyNode]

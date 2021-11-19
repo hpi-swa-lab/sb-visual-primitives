@@ -11,9 +11,9 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBVPPatternMatcher class >> input: aVisualPrimitive pattern: aPattern variableCount: anInteger [
+SBVPPatternMatcher class >> input: aVisualPrimitive pattern: aPattern [
 
-	^ self new input: aVisualPrimitive pattern: aPattern variableCount: anInteger
+	^ self new input: aVisualPrimitive pattern: aPattern
 ]
 
 { #category : #accessing }
@@ -41,7 +41,7 @@ SBVPPatternMatcher >> getAllMatches [
 SBVPPatternMatcher >> getMatch [
 
 	| bindings |
-	bindings := Array new: self variableCount.
+	bindings := Array new: self pattern highestBindingVariable.
 	(self pattern setBindingFor: self currentPrimitive in: bindings) ifFalse: [^ self getNextMatch].
 	(self pattern matches: self currentPrimitive withBinding: bindings) ifFalse: [^ self getNextMatch].
 	^ bindings
@@ -65,12 +65,11 @@ SBVPPatternMatcher >> input: anObject [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPatternMatcher >> input: aVisualPrimitive pattern: aPattern variableCount: anInteger [
+SBVPPatternMatcher >> input: aVisualPrimitive pattern: aPattern [
 
 	self
 		pattern: aPattern;
 		currentPrimitive: aVisualPrimitive;
-		variableCount: anInteger;
 		performedMatch: false
 ]
 
@@ -96,16 +95,4 @@ SBVPPatternMatcher >> performedMatch [
 SBVPPatternMatcher >> performedMatch: anObject [
 
 	performedMatch := anObject
-]
-
-{ #category : #accessing }
-SBVPPatternMatcher >> variableCount [
-
-	^ variableCount
-]
-
-{ #category : #accessing }
-SBVPPatternMatcher >> variableCount: anObject [
-
-	variableCount := anObject
 ]

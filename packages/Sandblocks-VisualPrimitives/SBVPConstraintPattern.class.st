@@ -58,6 +58,12 @@ SBVPConstraintPattern >> constraintBlock: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPConstraintPattern >> highestBindingVariable [
+
+	^ self constraint numArgs
+]
+
+{ #category : #'as yet unclassified' }
 SBVPConstraintPattern >> initialize [
 
 	super initialize.

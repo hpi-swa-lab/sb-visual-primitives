@@ -37,6 +37,14 @@ SBVPGroupPattern >> getNext: aVisualPrimitive [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPGroupPattern >> highestBindingVariable [
+
+	^ self patterns
+		ifEmpty: [0]
+		ifNotEmpty: [(self patterns collect: [:pattern | pattern highestBindingVariable]) max]
+]
+
+{ #category : #'as yet unclassified' }
 SBVPGroupPattern >> initialize [
 
 	super initialize.
