@@ -226,8 +226,10 @@ SBVPCase >> output: anObject [
 SBVPCase >> value: aDummyNode [
 
 	| matcher |
-	matcher := SBVPPatternMatcher new.
-	matcher startMatching: aDummyNode asVisualPrimitive on: self input variableCount: 3.
+	matcher := SBVPPatternMatcher
+		input: aDummyNode asVisualPrimitive
+		pattern: self input
+		variableCount: 3.
 	^ aDummyNode class fromVisualPrimitive: (self output buildFromBinding: matcher getNextMatch) first
 ]
 

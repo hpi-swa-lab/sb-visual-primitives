@@ -10,6 +10,12 @@ Class {
 	#category : #'Sandblocks-VisualPrimitives'
 }
 
+{ #category : #'as yet unclassified' }
+SBVPPatternMatcher class >> input: aVisualPrimitive pattern: aPattern variableCount: anInteger [
+
+	^ self new input: aVisualPrimitive pattern: aPattern variableCount: anInteger
+]
+
 { #category : #accessing }
 SBVPPatternMatcher >> currentPrimitive [
 
@@ -50,6 +56,16 @@ SBVPPatternMatcher >> getNextMatch [
 	^ self getMatch
 ]
 
+{ #category : #'as yet unclassified' }
+SBVPPatternMatcher >> input: aVisualPrimitive pattern: aPattern variableCount: anInteger [
+
+	self
+		pattern: aPattern;
+		currentPrimitive: aVisualPrimitive;
+		variableCount: anInteger;
+		performedMatch: false
+]
+
 { #category : #accessing }
 SBVPPatternMatcher >> pattern [
 
@@ -72,16 +88,6 @@ SBVPPatternMatcher >> performedMatch [
 SBVPPatternMatcher >> performedMatch: anObject [
 
 	performedMatch := anObject
-]
-
-{ #category : #'as yet unclassified' }
-SBVPPatternMatcher >> startMatching: aVisualPrimitive on: aPattern variableCount: anInteger [
-
-	self
-		pattern: aPattern;
-		currentPrimitive: aVisualPrimitive;
-		variableCount: anInteger;
-		performedMatch: false
 ]
 
 { #category : #accessing }

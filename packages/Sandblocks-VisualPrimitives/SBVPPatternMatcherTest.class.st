@@ -141,13 +141,15 @@ SBVPPatternMatcherTest >> getLabelTree: aPrimitive [
 SBVPPatternMatcherTest >> testComplexTree [
 
 	| matcher root vp10 vp3 vp7 vp1 |
-	matcher := SBVPPatternMatcher new.
 	root := (self buildTree: {42 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}) first.
 	vp10 := root connections first.
 	vp3 := vp10 connections first.
 	vp7 := vp10 connections second.
 	vp1 := vp3 connections first.
-	matcher startMatching: root on: self examplePatternTreeWithEllipses variableCount: 3.
+	matcher := SBVPPatternMatcher
+		input: root
+		pattern: self examplePatternTreeWithEllipses
+		variableCount: 3.
 	self
 		assert: {
 			{vp10. vp3. vp7}.
@@ -161,9 +163,11 @@ SBVPPatternMatcherTest >> testComplexTree [
 SBVPPatternMatcherTest >> testFiveNodesWithWildcard [
 
 	| matcher primitives |
-	matcher := SBVPPatternMatcher new.
 	primitives := self buildList: {5. 10. 5. 0. 5. 10. 5. 0. 5}.
-	matcher startMatching: primitives first on: self examplePatternTwoWildcardList variableCount: 2.
+	matcher := SBVPPatternMatcher
+		input: primitives first
+		pattern: self examplePatternTwoWildcardList
+		variableCount: 2.
 	self
 		assert: {
 			{primitives second. primitives fourth}.
@@ -176,12 +180,14 @@ SBVPPatternMatcherTest >> testFiveNodesWithWildcard [
 SBVPPatternMatcherTest >> testMatchAllChildrenTree [
 
 	| matcher root vp3 vp2 vp5 |
-	matcher := SBVPPatternMatcher new.
 	root := (self buildTree: {10 -> {5 -> {2 -> {1. 1}. 3 -> {2. 1}}}}) first.
 	vp5 := root connections first.
 	vp2 := vp5 connections first.
 	vp3 := vp5 connections second.
-	matcher startMatching: root on: self examplePatternTreeWithEllipses variableCount: 3.
+	matcher := SBVPPatternMatcher
+		input: root
+		pattern: self examplePatternTreeWithEllipses
+		variableCount: 3.
 	self
 		assert: {
 			{vp5. vp2. vp3}.
@@ -194,9 +200,11 @@ SBVPPatternMatcherTest >> testMatchAllChildrenTree [
 SBVPPatternMatcherTest >> testSimpleTree [
 
 	| matcher root |
-	matcher := SBVPPatternMatcher new.
 	root := (self buildTree: {10 -> {7. 3}}) first.
-	matcher startMatching: root on: self examplePatternSimpleTree variableCount: 3.
+	matcher := SBVPPatternMatcher
+		input: root
+		pattern: self examplePatternSimpleTree
+		variableCount: 3.
 	self
 		assert: {{root. root connections first. root connections second}}
 		equals: matcher getAllMatches asArray
@@ -206,9 +214,11 @@ SBVPPatternMatcherTest >> testSimpleTree [
 SBVPPatternMatcherTest >> testSimpleTreeEllipsisOutput [
 
 	| matcher root output |
-	matcher := SBVPPatternMatcher new.
 	root := (self buildTree: {10 -> {1. 2 -> {-1}. 3. 4}}) first.
-	matcher startMatching: root on: self examplePatternTreeWithLabeledEllipses variableCount: 3.
+	matcher := SBVPPatternMatcher
+		input: root
+		pattern: self examplePatternTreeWithLabeledEllipses
+		variableCount: 3.
 	
 	output := self examplePatternTreeWithLabeledEllipsesOutput buildFromBinding: matcher getNextMatch.
 	
@@ -219,9 +229,11 @@ SBVPPatternMatcherTest >> testSimpleTreeEllipsisOutput [
 SBVPPatternMatcherTest >> testSimpleTreeOutput [
 
 	| matcher root output |
-	matcher := SBVPPatternMatcher new.
 	root := (self buildTree: {10 -> {7. 3}}) first.
-	matcher startMatching: root on: self examplePatternSimpleTree variableCount: 3.
+	matcher := SBVPPatternMatcher
+		input: root
+		pattern: self examplePatternSimpleTree
+		variableCount: 3.
 	output := (self examplePatternSimpleTreeOutput buildFromBinding: matcher getNextMatch) first.
 	self
 		assert: {10. 3. 7}
@@ -232,9 +244,11 @@ SBVPPatternMatcherTest >> testSimpleTreeOutput [
 SBVPPatternMatcherTest >> testSingleNodeMatch [
 
 	| matcher primitives |
-	matcher := SBVPPatternMatcher new.
 	primitives := self buildList: {10}.
-	matcher startMatching: primitives first on: self examplePatternSingleNode variableCount: 1.
+	matcher := SBVPPatternMatcher
+		input: primitives first
+		pattern: self examplePatternSingleNode
+		variableCount: 1.
 	self assert: {{primitives first}} equals: matcher getAllMatches asArray
 ]
 
@@ -242,11 +256,10 @@ SBVPPatternMatcherTest >> testSingleNodeMatch [
 SBVPPatternMatcherTest >> testThreeNodesWithWildcard [
 
 	| matcher primitives |
-	matcher := SBVPPatternMatcher new.
 	primitives := self buildList: {10. 42. 0. 0. 42}.
-	matcher
-		startMatching: primitives first
-		on: self examplePatternTwoNodesWithWildcard
+	matcher := SBVPPatternMatcher
+		input: primitives first
+		pattern: self examplePatternTwoNodesWithWildcard
 		variableCount: 2.
 	self
 		assert: {{primitives first. primitives third}. {primitives first. primitives fourth}}
@@ -257,11 +270,10 @@ SBVPPatternMatcherTest >> testThreeNodesWithWildcard [
 SBVPPatternMatcherTest >> testThreeNodesWithWildcardOutput [
 
 	| matcher primitives output |
-	matcher := SBVPPatternMatcher new.
 	primitives := self buildList: {10. 101. 102. 0. 103}.
-	matcher
-		startMatching: primitives first
-		on: self examplePatternTwoNodesWithLabeledWildcard
+	matcher := SBVPPatternMatcher
+		input: primitives first
+		pattern: self examplePatternTwoNodesWithLabeledWildcard
 		variableCount: 4.
 	
 	output := (self examplePatternTwoNodesWithLabeledWildcardOutput buildFromBinding: matcher getNextMatch) first.
@@ -273,8 +285,10 @@ SBVPPatternMatcherTest >> testThreeNodesWithWildcardOutput [
 SBVPPatternMatcherTest >> testTwoNodesWithoutWildcard [
 
 	| matcher primitives |
-	matcher := SBVPPatternMatcher new.
 	primitives := self buildList: {10. 0}.
-	matcher startMatching: primitives first on: self examplePatternTwoNodes variableCount: 2.
+	matcher := SBVPPatternMatcher
+		input: primitives first
+		pattern: self examplePatternTwoNodes
+		variableCount: 2.
 	self assert: {{primitives first. primitives second}} equals: matcher getAllMatches asArray
 ]
