@@ -43,9 +43,7 @@ SBVPConstraintPattern >> constraint [
 SBVPConstraintPattern >> constraint: aBlockClosure [
 
 	constraint := aBlockClosure.
-	self constraintBlock: ((SBStPlayground
-		newFromSource: aBlockClosure decompile decompileString
-		named: 'constrainty')
+	self constraintBlock: (aBlockClosure decompile asSandblock
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap)
 ]

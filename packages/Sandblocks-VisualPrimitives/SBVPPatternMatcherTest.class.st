@@ -68,12 +68,12 @@ SBVPPatternMatcherTest >> examplePatternSortTree [
 { #category : #'as yet unclassified' }
 SBVPPatternMatcherTest >> examplePatternSortTreeOutput [
 
-	^ SBVPWildcardPattern label: 6 connections: {
+	^ SBVPGroupPattern patterns: {SBVPWildcardPattern label: 6 connections: {
 		SBVPEllipsisPattern label: 7.
 		SBVPBindingPattern label: 1 connections: {
 			SBVPBindingPattern label: 3 connections: {SBVPEllipsisPattern label: 5}.
 			SBVPBindingPattern label: 2 connections: {SBVPEllipsisPattern label: 4}}.
-		SBVPEllipsisPattern label: 8}
+		SBVPEllipsisPattern label: 8}}
 ]
 
 { #category : #'as yet unclassified' }

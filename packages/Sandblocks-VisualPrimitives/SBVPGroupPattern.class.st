@@ -27,6 +27,12 @@ SBVPGroupPattern class >> patterns: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPGroupPattern >> buildFromBinding: anArray [
+	
+	 ^ self patterns first buildFromBinding: anArray
+]
+
+{ #category : #'as yet unclassified' }
 SBVPGroupPattern >> getNext: aVisualPrimitive [
 
 	self patterns do: [:pattern |

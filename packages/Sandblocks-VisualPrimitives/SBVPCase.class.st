@@ -142,7 +142,7 @@ SBVPCase >> exampleWithPatterns [
 			SBVPBindingPattern
 				label: 1
 				connections: {SBVPBindingPattern label: 2 connections: {}. SBVPBindingPattern label: 3 connections: {}}.
-			SBVPConstraintPattern constraint: [:a :b :c | true]})
+			SBVPConstraintPattern constraint: [:c :b :a | true]})
 		output: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern
 				label: 1

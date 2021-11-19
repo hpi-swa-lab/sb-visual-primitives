@@ -1,14 +1,15 @@
 Extension { #name : #SBBlock }
 
 { #category : #'*Sandblocks-VisualPrimitives' }
-SBBlock >> inspect [
-	
+SBBlock >> inspectProperties [
 	<action>
+
 	| inspector |
 	inspector := SBPropertyInspector newFor: self.
 	
-	self sandblockEditor openMorphInView: inspector; 
-		openMorphInView: (SBForceConnector connect: self to: inspector)	
+	self sandblockEditor
+		openMorphInView: inspector;
+		openMorphInView: (SBForceConnector connect: self to: inspector)
 ]
 
 { #category : #'*Sandblocks-VisualPrimitives' }
