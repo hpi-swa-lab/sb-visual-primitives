@@ -55,3 +55,9 @@ SBPropertyInspector >> initializeFor: anSBBlock [
 	
 	self addMorphBack: codeWindow
 ]
+
+{ #category : #'as yet unclassified' }
+SBPropertyInspector >> isAttractedTo: aMorph [
+
+	^ false
+]
