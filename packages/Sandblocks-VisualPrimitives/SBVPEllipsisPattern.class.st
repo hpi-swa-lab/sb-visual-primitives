@@ -55,7 +55,8 @@ SBVPEllipsisPattern >> indexOffset [
 SBVPEllipsisPattern >> initialize [
 
 	super initialize.
-	self currentSize: 0
+	self currentSize: 0.
+	self firstSubmorph addMorph: (SBIcon iconEllipsisH scale: 1.5)
 ]
 
 { #category : #'as yet unclassified' }

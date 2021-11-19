@@ -121,6 +121,20 @@ SBVPCase >> exampleWithBindingPatterns [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPCase >> exampleWithEllipsisAndWildcardPattern [
+
+	SBVPCase
+		input: (SBVPGroupPattern patterns: {
+			SBVPBindingPattern
+				label: 1
+				connections: {SBVPEllipsisPattern label: 2 connections: {}. SBVPWildcardPattern label: 3 connections: {}}.
+			SBVPConstraintPattern constraint: [:b | b label = 20]})
+		output: (SBVPBindingPattern
+			label: 1
+			connections: {SBVPEllipsisPattern label: 2 connections: {}. SBVPWildcardPattern label: 3 connections: {}})
+]
+
+{ #category : #'as yet unclassified' }
 SBVPCase >> exampleWithPatterns [
 
 	SBVPCase

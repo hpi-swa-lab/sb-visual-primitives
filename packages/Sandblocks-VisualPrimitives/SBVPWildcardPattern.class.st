@@ -83,8 +83,8 @@ SBVPWildcardPattern >> initialize [
 	super initialize.
 	self
 		dfsStack: LinkedList new;
-		visitedPrimitives: Set new;
-		addMorph: SBIcon iconStar
+		visitedPrimitives: Set new.
+	self firstSubmorph addMorph: (SBIcon iconAsterisk scale: 1.5)
 ]
 
 { #category : #accessing }

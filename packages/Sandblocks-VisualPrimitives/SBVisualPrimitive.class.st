@@ -53,7 +53,7 @@ SBVisualPrimitive >> initialize [
 	super initialize.
 	labelBlock := SBTextBubble new.
 	self
-		addMorph: labelBlock;
+		addMorphBack: (SBRow new addMorph: labelBlock);
 		changeTableLayout;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
