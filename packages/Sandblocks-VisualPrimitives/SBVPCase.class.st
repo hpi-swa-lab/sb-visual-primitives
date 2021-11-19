@@ -165,9 +165,9 @@ SBVPCase >> exampleWithPatterns: aDummyNode [
 				label: 1
 				connections: {SBVPBindingPattern label: 2 connections: {}. SBVPBindingPattern label: 3 connections: {}}.
 			SBVPConstraintPattern constraint: [:a :b :c | true]})
-		output: (SBVPBindingPattern
+		output: (SBVPGroupPattern patterns: {SBVPBindingPattern
 			label: 1
-			connections: {SBVPBindingPattern label: 3 connections: {}. SBVPBindingPattern label: 2 connections: {}})) value: aDummyNode
+			connections: {SBVPBindingPattern label: 3 connections: {}. SBVPBindingPattern label: 2 connections: {}}})) value: aDummyNode
 ]
 
 { #category : #'as yet unclassified' }
@@ -197,15 +197,15 @@ SBVPCase >> input: anObject [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPCase >> input: aSBStMessageSend output: anOutputVisualizer [
+SBVPCase >> input: aSBStMessageSend output: anotherSBStMessageSend [
 
 	self
 		addMorph: (SBRow new
 			addMorphBack: aSBStMessageSend;
 			addMorphBack: SBIcon iconArrowRight;
-			addMorphBack: anOutputVisualizer);
+			addMorphBack: anotherSBStMessageSend);
 		input: aSBStMessageSend;
-		output: anOutputVisualizer
+		output: anotherSBStMessageSend
 	"
 	aSBStMessageSend do: [:m | self addSubPattern: m arg]"
 ]

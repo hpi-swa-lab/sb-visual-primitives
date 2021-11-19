@@ -14,7 +14,7 @@ SBVPBindingPattern class >> label: anObject connections: aCollection [
 
 	^ self new
 		label: anObject;
-		connectors: aCollection
+		connections: aCollection
 ]
 
 { #category : #'as yet unclassified' }
