@@ -12,7 +12,6 @@ Class {
 SBVPWildcardPattern >> bindingFor: aVisualPrimitive [
 
 	^ {#root -> self dfsStack last. #leaf -> self currentTop} asDictionary
-	""""
 ]
 
 { #category : #'as yet unclassified' }
@@ -29,8 +28,6 @@ SBVPWildcardPattern >> buildFromBinding: anArray currentPrimitive: aVisualPrimit
 	| output binding leaf |
 	binding := anArray at: self label asInteger.
 	leaf := binding at: #leaf.
-	""
-	""
 	
 	output := aVisualPrimitive copy.
 	aVisualPrimitive = leaf

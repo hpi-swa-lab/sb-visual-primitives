@@ -72,9 +72,9 @@ SBVPGroupPattern >> patternBlocks: aCollection [
 			isBindingPattern
 				ifTrue: [ | patternContainer |
 					patternContainer := SBSandboxPasteUpMorph new
-						when: #reportError
-						send: #reportError:
-						to: self.
+						hResizing: #shrinkWrap;
+						vResizing: #shrinkWrap;
+						when: #reportError send: #reportError: to: self.
 					patternContainer extent: 300 @ 300.
 					self row addMorphBack: (TransformMorph new
 						hResizing: #shrinkWrap;

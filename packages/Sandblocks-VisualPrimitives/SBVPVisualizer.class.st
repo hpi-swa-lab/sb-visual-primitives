@@ -89,9 +89,9 @@ SBVPVisualizer >> initialize [
 			vResizing: #shrinkWrap;
 			changeTableLayout;
 			addMorph: (visual := SBSandboxPasteUpMorph new
-				when: #reportError
-				send: #reportError:
-				to: self));
+				hResizing: #shrinkWrap;
+				vResizing: #shrinkWrap;
+				when: #reportError send: #reportError: to: self));
 		addMorphBack: (code := SBColumn new layoutInset: 0)
 ]
 
