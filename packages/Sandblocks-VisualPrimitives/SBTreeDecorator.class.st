@@ -282,7 +282,9 @@ SBTreeDecorator >> removeConnector: aConnector [
 SBTreeDecorator >> secondWalk: modSum [
 
 	self x: self x + modSum.
-	self morph position: self x @ self depth * 150.
+	self morph
+		fullBounds;
+		center: self x @ self depth * 150.
 	self children do: [:child | child secondWalk: modSum + self mod]
 ]
 
