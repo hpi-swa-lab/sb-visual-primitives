@@ -147,9 +147,13 @@ SBVPCase >> exampleWithPatterns: aDummyNode [
 
 	^ (SBVPCase
 		input: (SBVPGroupPattern patterns: {
-			(SBVPBindingPattern new: 1) connections: {SBVPBindingPattern new: 2. SBVPBindingPattern new: 3}.
+			SBVPBindingPattern
+				label: 1
+				connections: {SBVPBindingPattern label: 2 connections: {}. SBVPBindingPattern label: 3 connections: {}}.
 			SBVPConstraintPattern constraint: [:a :b :c | true]})
-		output: ((SBVPBindingPattern new: 1) connections: {SBVPBindingPattern new: 3. SBVPBindingPattern new: 2})) value: aDummyNode
+		output: (SBVPBindingPattern
+			label: 1
+			connections: {SBVPBindingPattern label: 3 connections: {}. SBVPBindingPattern label: 2 connections: {}})) value: aDummyNode
 ]
 
 { #category : #'as yet unclassified' }
