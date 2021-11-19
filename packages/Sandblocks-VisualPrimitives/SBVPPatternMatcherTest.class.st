@@ -32,14 +32,18 @@ SBVPPatternMatcherTest >> buildTree: aCollection [
 SBVPPatternMatcherTest >> examplePatternSimpleTree [
 
 	^ SBVPGroupPattern patterns: {
-		SBVPBindingPattern label: 1 connections: {SBVPBindingPattern new: 2. SBVPBindingPattern new: 3}.
+		SBVPBindingPattern
+			label: 1
+			connections: {SBVPBindingPattern new: 2. SBVPBindingPattern new: 3}.
 		SBVPConstraintPattern constraint: [:a :b :c | a label = (b label + c label)]}
 ]
 
 { #category : #'as yet unclassified' }
 SBVPPatternMatcherTest >> examplePatternSimpleTreeOutput [
 
-	^ SBVPBindingPattern label: 1 connections: {SBVPBindingPattern new: 3. SBVPBindingPattern new: 2}
+	^ SBVPBindingPattern
+		label: 1
+		connections: {SBVPBindingPattern new: 3. SBVPBindingPattern new: 2}
 ]
 
 { #category : #'as yet unclassified' }
@@ -96,13 +100,17 @@ SBVPPatternMatcherTest >> examplePatternTreeWithEllipses [
 { #category : #'as yet unclassified' }
 SBVPPatternMatcherTest >> examplePatternTreeWithLabeledEllipses [
 
-	^ SBVPBindingPattern label: 1 connections: {SBVPEllipsisPattern new: 2. SBVPBindingPattern new: 3}
+	^ SBVPBindingPattern
+		label: 1
+		connections: {SBVPEllipsisPattern new: 2. SBVPBindingPattern new: 3}
 ]
 
 { #category : #'as yet unclassified' }
 SBVPPatternMatcherTest >> examplePatternTreeWithLabeledEllipsesOutput [
 
-	^ SBVPBindingPattern label: 1 connections: {SBVPBindingPattern new: 3. SBVPEllipsisPattern new: 2}
+	^ SBVPBindingPattern
+		label: 1
+		connections: {SBVPBindingPattern new: 3. SBVPEllipsisPattern new: 2}
 ]
 
 { #category : #'as yet unclassified' }
@@ -118,7 +126,9 @@ SBVPPatternMatcherTest >> examplePatternTwoNodesWithLabeledWildcard [
 
 	^ SBVPGroupPattern patterns: {
 		SBVPBindingPattern label: 1 connections: {
-			SBVPWildcardPattern label: 3 connections: {SBVPBindingPattern label: 2 connections: {SBVPWildcardPattern new: 4}}}.
+			SBVPWildcardPattern
+				label: 3
+				connections: {SBVPBindingPattern label: 2 connections: {SBVPWildcardPattern new: 4}}}.
 		SBVPConstraintPattern constraint: [:a :b :c :d | a label = (b label + 10)]}
 ]
 
@@ -126,7 +136,9 @@ SBVPPatternMatcherTest >> examplePatternTwoNodesWithLabeledWildcard [
 SBVPPatternMatcherTest >> examplePatternTwoNodesWithLabeledWildcardOutput [
 
 	^ SBVPBindingPattern label: 1 connections: {
-		SBVPWildcardPattern label: 4 connections: {SBVPWildcardPattern label: 3 connections: {SBVPBindingPattern new: 2}}}
+		SBVPWildcardPattern
+			label: 4
+			connections: {SBVPWildcardPattern label: 3 connections: {SBVPBindingPattern new: 2}}}
 ]
 
 { #category : #'as yet unclassified' }
