@@ -10,6 +10,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBVPBindingPattern class >> label: anObject [
+
+	^ self label: anObject connections: {}
+]
+
+{ #category : #'as yet unclassified' }
 SBVPBindingPattern class >> label: anObject connections: aCollection [
 
 	^ self new
