@@ -3,9 +3,11 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'pattern',
-		'currentPrimitive',
+		'searchStack',
 		'variableCount',
-		'performedMatch'
+		'performedMatch',
+		'strategy',
+		'visitedPrimitives'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
@@ -19,13 +21,33 @@ SBVPPatternMatcher class >> input: aVisualPrimitive pattern: aPattern [
 { #category : #accessing }
 SBVPPatternMatcher >> currentPrimitive [
 
-	^ currentPrimitive
+	^ self dfsStack last
 ]
 
 { #category : #accessing }
-SBVPPatternMatcher >> currentPrimitive: anObject [
+SBVPPatternMatcher >> currentPrimitive: aPrimitive [
 
-	currentPrimitive := anObject
+	self dfsStack: LinkedList new.
+	self dfsStack addLast: aPrimitive.
+	self visitedPrimitives: Set new.
+	self visitedPrimitives add: aPrimitive
+]
+
+{ #category : #accessing }
+SBVPPatternMatcher >> dealWithUndefinedResult [
+
+	(self strategy = #exact) ifTrue: [^ nil].
+	
+	(self searchStack notEmpty) whileTrue:
+		[self currentPrimitive connections do: [:aConnection |
+			(self visitedPrimitives includes: aConnection) ifFalse: [
+				self pattern reset.
+				self performedMatch: false.
+				self searchStack addLast: aConnection.
+				self visitedPrimitives add: aConnection.
+				^ self getNextMatch]]
+		self searchStack removeLast].
+	^ nil
 ]
 
 { #category : #'as yet unclassified' }
@@ -51,9 +73,12 @@ SBVPPatternMatcher >> getMatch [
 SBVPPatternMatcher >> getNextMatch [
 
 	self performedMatch
-		ifTrue: [(self pattern getNext: self currentPrimitive) ifFalse: [^ nil]]
+		ifTrue: [(self pattern getNext: self currentPrimitive) ifFalse: [^ self dealWithUndefinedResult]]
 		ifFalse: [self performedMatch: true].
-	^ self getMatch
+		
+	^  (self getMatch: self currentPrimitive) ifNil: [self dealWithUndefinedResult]
+	
+	
 ]
 
 { #category : #accessing }
@@ -95,4 +120,52 @@ SBVPPatternMatcher >> performedMatch [
 SBVPPatternMatcher >> performedMatch: anObject [
 
 	performedMatch := anObject
+]
+
+{ #category : #accessing }
+SBVPPatternMatcher >> searchStack [
+
+	^ searchStack
+]
+
+{ #category : #accessing }
+SBVPPatternMatcher >> searchStack: anObject [
+
+	searchStack := anObject.
+]
+
+{ #category : #accessing }
+SBVPPatternMatcher >> strategy [
+
+	^ strategy
+]
+
+{ #category : #accessing }
+SBVPPatternMatcher >> strategy: aSymbol [
+
+	strategy := aSymbol.
+]
+
+{ #category : #accessing }
+SBVPPatternMatcher >> variableCount [
+
+	^ variableCount
+]
+
+{ #category : #accessing }
+SBVPPatternMatcher >> variableCount: anObject [
+
+	variableCount := anObject.
+]
+
+{ #category : #accessing }
+SBVPPatternMatcher >> visitedPrimitives [
+
+	^ visitedPrimitives
+]
+
+{ #category : #accessing }
+SBVPPatternMatcher >> visitedPrimitives: anObject [
+
+	visitedPrimitives := anObject.
 ]
