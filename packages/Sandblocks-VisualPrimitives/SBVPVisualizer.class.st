@@ -24,7 +24,6 @@ SBVPVisualizer class >> code: aCode extent: aPoint [
 SBVPVisualizer class >> matches: aBlock [
 
 	(super matches: aBlock) ifFalse: [^ false].
-	Transcript showln: 'Matches called'.
 	^ (aBlock receiver satisfies: #(#notNil #isBinding))
 		and: [aBlock receiver contents = self name]
 		and: [aBlock selector = 'code:extent:']
@@ -33,7 +32,6 @@ SBVPVisualizer class >> matches: aBlock [
 { #category : #'as yet unclassified' }
 SBVPVisualizer class >> newFor: aBlock [
 
-	self halt.
 	^ self new code: aBlock arguments first extent: aBlock arguments second contents
 ]
 

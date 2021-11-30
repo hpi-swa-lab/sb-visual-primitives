@@ -21,14 +21,14 @@ SBVPPatternMatcher class >> input: aVisualPrimitive pattern: aPattern [
 { #category : #accessing }
 SBVPPatternMatcher >> currentPrimitive [
 
-	^ self dfsStack last
+	^ self searchStack last
 ]
 
 { #category : #accessing }
 SBVPPatternMatcher >> currentPrimitive: aPrimitive [
 
-	self dfsStack: LinkedList new.
-	self dfsStack addLast: aPrimitive.
+	self searchStack: LinkedList new.
+	self searchStack addLast: aPrimitive.
 	self visitedPrimitives: Set new.
 	self visitedPrimitives add: aPrimitive
 ]
@@ -76,7 +76,7 @@ SBVPPatternMatcher >> getNextMatch [
 		ifTrue: [(self pattern getNext: self currentPrimitive) ifFalse: [^ self dealWithUndefinedResult]]
 		ifFalse: [self performedMatch: true].
 		
-	^  (self getMatch: self currentPrimitive) ifNil: [self dealWithUndefinedResult]
+	^  (self getMatch) ifNil: [self dealWithUndefinedResult]
 	
 	
 ]

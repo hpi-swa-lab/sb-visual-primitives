@@ -51,6 +51,18 @@ SBVPExecuter >> evaluationReceiver [
 ]
 
 { #category : #accessing }
+SBVPExecuter >> exampleNumberOne [
+
+^ SBVPExecuter new
+		case: (SBVPCase
+			input: SBVPPatternMatcherTest new examplePatternSortTree
+			output: SBVPPatternMatcherTest new examplePatternSortTreeOutput);
+		input: (SBVPVisualizer
+			code: [SBVPDummyNode fromVisualPrimitive: (SBVPPatternMatcherTest new buildTree: {42 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}) first]
+			extent: 300 @ 300)
+]
+
+{ #category : #accessing }
 SBVPExecuter >> execute [
 	<action>
 
