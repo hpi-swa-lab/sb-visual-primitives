@@ -148,40 +148,33 @@ SBVPExecuter >> initialize [
 			addMorphBack: (SBColumn new
 				hResizing: #shrinkWrap;
 				vResizing: #shrinkWrap;
+				layoutInset: 6;
 				addMorphBack: (SBTextBubble new contents: 'Input');
-				addMorphBack: (TransformMorph new
+				addMorphBack: (inputBlock := SBSandboxPasteUpMorph new
 					hResizing: #shrinkWrap;
 					vResizing: #shrinkWrap;
-					changeTableLayout;
-					addMorph: (inputBlock := SBSandboxPasteUpMorph new
-						hResizing: #shrinkWrap;
-						vResizing: #shrinkWrap;
-						when: #reportError send: #reportError: to: self)));
+					borderColor: Color black;
+					when: #reportError send: #reportError: to: self));
 			addMorphBack: (SBColumn new
 				hResizing: #shrinkWrap;
 				vResizing: #shrinkWrap;
 				addMorphBack: (SBTextBubble new contents: 'Transformation');
-				addMorphBack: (TransformMorph new
+				addMorphBack: (caseBlock := SBSandboxPasteUpMorph new
 					hResizing: #shrinkWrap;
 					vResizing: #shrinkWrap;
-					changeTableLayout;
-					addMorph: (caseBlock := SBSandboxPasteUpMorph new
-						hResizing: #shrinkWrap;
-						vResizing: #shrinkWrap;
-						when: #reportError send: #reportError: to: self)));
+					borderColor: Color black;
+					when: #reportError send: #reportError: to: self));
 			addMorphBack: (SBColumn new
 				hResizing: #shrinkWrap;
 				vResizing: #shrinkWrap;
+				layoutInset: 6;
 				addMorphBack: (SBTextBubble new contents: 'Output');
-				addMorphBack: (TransformMorph new
+				addMorphBack: (outputBlock := SBSandboxPasteUpMorph new
 					hResizing: #shrinkWrap;
 					vResizing: #shrinkWrap;
-					changeTableLayout;
-					addMorph: (outputBlock := SBSandboxPasteUpMorph new
-						hResizing: #shrinkWrap;
-						vResizing: #shrinkWrap;
-						layoutInset: 6;
-						when: #reportError send: #reportError: to: self))))
+					borderColor: Color black;
+					layoutInset: 6;
+					when: #reportError send: #reportError: to: self)))
 ]
 
 { #category : #accessing }
@@ -240,6 +233,12 @@ SBVPExecuter >> outputBlock [
 SBVPExecuter >> outputBlock: anObject [
 
 	^ outputBlock := anObject
+]
+
+{ #category : #accessing }
+SBVPExecuter >> saveTryFixing: aFixBoolean quick: aQuickBoolean [
+
+	
 ]
 
 { #category : #accessing }

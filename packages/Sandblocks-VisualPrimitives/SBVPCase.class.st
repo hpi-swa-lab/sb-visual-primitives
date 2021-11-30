@@ -59,7 +59,8 @@ SBVPCase >> colorDifferences [
 		inputNode := inputBindingDict at: bindingKey.
 		outputNode := outputBindingDict at: bindingKey ifAbsent: [nil].
 		outputNode isNil
-			ifTrue: ["do something here"]
+			ifTrue: ["do something here"
+			]
 			ifFalse: [
 				inputNode connections withIndexDo: [:connection :index | | outputConnection c |
 					outputConnection := outputNode connections at: index ifAbsent: [nil].

@@ -49,6 +49,8 @@ SBVPVisualizer >> code: anObject [
 SBVPVisualizer >> code: aCodeBlock extent: aPoint [
 
 	| aSandblock |
+	self code removeAllMorphs.
+	self visual removeAllMorphs.
 	aSandblock := aCodeBlock asSandblock.
 	self code addMorphBack: aSandblock.
 	aSandblock evaluate value asVisualPrimitiveIn: self visual.
@@ -85,16 +87,26 @@ SBVPVisualizer >> initialize [
 		vResizing: #shrinkWrap;
 		changeTableLayout;
 		layoutInset: 6;
-		addMorphBack: (TransformMorph new
+		addMorphBack: (visual := SBSandboxPasteUpMorph new
 			hResizing: #shrinkWrap;
 			vResizing: #shrinkWrap;
-			changeTableLayout;
-			addMorph: (visual := SBSandboxPasteUpMorph new
-				hResizing: #shrinkWrap;
-				vResizing: #shrinkWrap;
-				layoutInset: 6;
-				when: #reportError send: #reportError: to: self));
+			borderColor: Color black;
+			layoutInset: 6;
+			when: #reportError send: #reportError: to: self);
 		addMorphBack: (code := SBColumn new layoutInset: 0)
+]
+
+{ #category : #accessing }
+SBVPVisualizer >> isArtefact [
+
+	^ true
+]
+
+{ #category : #accessing }
+SBVPVisualizer >> saveTryFixing: aFixBoolean quick: aQuickBoolean [
+
+	self code: self code firstSubmorph extent: self extent.
+	^ true
 ]
 
 { #category : #accessing }

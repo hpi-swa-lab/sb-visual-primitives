@@ -88,6 +88,7 @@ SBVPGroupPattern >> patternBlocks: aCollection [
 					patternContainer := SBSandboxPasteUpMorph new
 						hResizing: #shrinkWrap;
 						vResizing: #shrinkWrap;
+						borderColor: Color black;
 						layoutInset: 6;
 						when: #reportError send: #reportError: to: self.
 					patternContainer extent: 300 @ 300.
