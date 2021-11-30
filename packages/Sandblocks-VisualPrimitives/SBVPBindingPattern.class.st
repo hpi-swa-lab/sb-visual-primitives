@@ -119,6 +119,13 @@ SBVPBindingPattern >> couldMatch: aVisualPrimitive [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPBindingPattern >> drawOn: aCanvas [
+
+	super drawOn: aCanvas.
+	aCanvas frameRectangle: (self bounds outsetBy: 1) width: 2 color: color
+]
+
+{ #category : #'as yet unclassified' }
 SBVPBindingPattern >> enoughChildren: aVisualPrimitive [
 
 	^ self childrenInCurrentMatch <= aVisualPrimitive connections size
@@ -163,12 +170,6 @@ SBVPBindingPattern >> indexOffset [
 	^ 0
 ]
 
-{ #category : #accessing }
-SBVPBindingPattern >> initialize [
-
-	super initialize
-]
-
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> matches: aVisualPrimitive withBinding: aCollection [
 
@@ -180,6 +181,12 @@ SBVPBindingPattern >> matches: aVisualPrimitive withBinding: aCollection [
 			withBinding: aCollection.
 		offset := offset + connection indexOffset.
 		wasSuccessful]
+]
+
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern >> preferredColor [
+
+	^ self color
 ]
 
 { #category : #'as yet unclassified' }

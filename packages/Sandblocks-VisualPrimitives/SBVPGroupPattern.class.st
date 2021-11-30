@@ -28,8 +28,8 @@ SBVPGroupPattern class >> patterns: aCollection [
 
 { #category : #'as yet unclassified' }
 SBVPGroupPattern >> buildFromBinding: anArray [
-	
-	 ^ self patterns first buildFromBinding: anArray
+
+	^ self patterns first buildFromBinding: anArray
 ]
 
 { #category : #'as yet unclassified' }
@@ -88,6 +88,7 @@ SBVPGroupPattern >> patternBlocks: aCollection [
 					patternContainer := SBSandboxPasteUpMorph new
 						hResizing: #shrinkWrap;
 						vResizing: #shrinkWrap;
+						layoutInset: 6;
 						when: #reportError send: #reportError: to: self.
 					patternContainer extent: 300 @ 300.
 					self row addMorphBack: (TransformMorph new

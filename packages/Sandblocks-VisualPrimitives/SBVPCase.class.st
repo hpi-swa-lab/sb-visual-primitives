@@ -44,6 +44,32 @@ SBVPCase >> buildOutput: aPattern fromBinding: anArray [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPCase >> colorDifferences [
+
+	| inputRoot outputRoot inputBindingDict outputBindingDict colors |
+	inputRoot := self input patterns first.
+	outputRoot := self output patterns first.
+	
+	inputBindingDict := self findAllBindings: inputRoot.
+	outputBindingDict := self findAllBindings: outputRoot.
+	
+	colors := Color wheel: inputBindingDict size saturation: 1.0 brightness: 1.0.
+	
+	inputBindingDict keysDo: [:bindingKey | | inputNode outputNode |
+		inputNode := inputBindingDict at: bindingKey.
+		outputNode := outputBindingDict at: bindingKey ifAbsent: [nil].
+		outputNode isNil
+			ifTrue: ["do something here"]
+			ifFalse: [
+				inputNode connections withIndexDo: [:connection :index | | outputConnection c |
+					outputConnection := outputNode connections at: index ifAbsent: [nil].
+					c := colors at: connection label.
+					connection label = (outputConnection ifNotNil: #label) ifFalse: [
+						connection color: c.
+						(outputBindingDict at: connection label ifAbsent: [nil]) ifNotNil: [:o | o color: c]]]]]
+]
+
+{ #category : #'as yet unclassified' }
 SBVPCase >> example [
 
 	SBVPCase
@@ -165,6 +191,23 @@ SBVPCase >> exampleWithPatterns: aDummyNode [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPCase >> findAllBindings: aRootPattern [
+
+	| bindingDict dfs |
+	dfs := LinkedList new.
+	bindingDict := Dictionary new.
+	
+	dfs add: aRootPattern.
+	[dfs notEmpty] whileTrue: [ | currentTop |
+		currentTop := dfs first.
+		dfs removeFirst.
+		bindingDict add: currentTop label -> currentTop.
+		dfs addAll: currentTop connections].
+	
+	^ bindingDict
+]
+
+{ #category : #'as yet unclassified' }
 SBVPCase >> initialize [
 
 	super initialize.
@@ -191,17 +234,16 @@ SBVPCase >> input: anObject [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPCase >> input: aSBStMessageSend output: anotherSBStMessageSend [
+SBVPCase >> input: aSBBlock output: anotherSBBlock [
 
 	self
 		addMorph: (SBRow new
-			addMorphBack: aSBStMessageSend;
+			addMorphBack: aSBBlock;
 			addMorphBack: SBIcon iconArrowRight;
-			addMorphBack: anotherSBStMessageSend);
-		input: aSBStMessageSend;
-		output: anotherSBStMessageSend
-	"
-	aSBStMessageSend do: [:m | self addSubPattern: m arg]"
+			addMorphBack: anotherSBBlock);
+		input: aSBBlock;
+		output: anotherSBBlock;
+		colorDifferences
 ]
 
 { #category : #accessing }

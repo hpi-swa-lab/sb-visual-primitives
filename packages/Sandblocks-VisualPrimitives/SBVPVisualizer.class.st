@@ -14,10 +14,8 @@ Class {
 { #category : #'as yet unclassified' }
 SBVPVisualizer class >> code: aCode extent: aPoint [
 	" marker "
-	
-	  ^ self new code: aCode asSandblock extent: aPoint
 
-	
+	^ self new code: aCode asSandblock extent: aPoint
 ]
 
 { #category : #'as yet unclassified' }
@@ -94,6 +92,7 @@ SBVPVisualizer >> initialize [
 			addMorph: (visual := SBSandboxPasteUpMorph new
 				hResizing: #shrinkWrap;
 				vResizing: #shrinkWrap;
+				layoutInset: 6;
 				when: #reportError send: #reportError: to: self));
 		addMorphBack: (code := SBColumn new layoutInset: 0)
 ]

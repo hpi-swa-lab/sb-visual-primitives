@@ -36,17 +36,16 @@ SBVPPatternMatcher >> currentPrimitive: aPrimitive [
 { #category : #accessing }
 SBVPPatternMatcher >> dealWithUndefinedResult [
 
-	(self strategy = #exact) ifTrue: [^ nil].
+	self strategy = #exact ifTrue: [^ nil].
 	
-	(self searchStack notEmpty) whileTrue:
-		[self currentPrimitive connections do: [:aConnection |
+	[self searchStack notEmpty] whileTrue: [
+		self currentPrimitive connections do: [:aConnection |
 			(self visitedPrimitives includes: aConnection) ifFalse: [
 				self pattern reset.
 				self performedMatch: false.
 				self searchStack addLast: aConnection.
 				self visitedPrimitives add: aConnection.
-				^ self getNextMatch]]
-		self searchStack removeLast].
+				^ self getNextMatch]]. self searchStack removeLast].
 	^ nil
 ]
 
@@ -75,10 +74,15 @@ SBVPPatternMatcher >> getNextMatch [
 	self performedMatch
 		ifTrue: [(self pattern getNext: self currentPrimitive) ifFalse: [^ self dealWithUndefinedResult]]
 		ifFalse: [self performedMatch: true].
-		
-	^  (self getMatch) ifNil: [self dealWithUndefinedResult]
 	
-	
+	^ self getMatch ifNil: [self dealWithUndefinedResult]
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPatternMatcher >> initialize [
+
+	super initialize.
+	self strategy: #exact
 ]
 
 { #category : #accessing }
@@ -131,7 +135,7 @@ SBVPPatternMatcher >> searchStack [
 { #category : #accessing }
 SBVPPatternMatcher >> searchStack: anObject [
 
-	searchStack := anObject.
+	searchStack := anObject
 ]
 
 { #category : #accessing }
@@ -143,7 +147,7 @@ SBVPPatternMatcher >> strategy [
 { #category : #accessing }
 SBVPPatternMatcher >> strategy: aSymbol [
 
-	strategy := aSymbol.
+	strategy := aSymbol
 ]
 
 { #category : #accessing }
@@ -155,7 +159,7 @@ SBVPPatternMatcher >> variableCount [
 { #category : #accessing }
 SBVPPatternMatcher >> variableCount: anObject [
 
-	variableCount := anObject.
+	variableCount := anObject
 ]
 
 { #category : #accessing }
@@ -167,5 +171,5 @@ SBVPPatternMatcher >> visitedPrimitives [
 { #category : #accessing }
 SBVPPatternMatcher >> visitedPrimitives: anObject [
 
-	visitedPrimitives := anObject.
+	visitedPrimitives := anObject
 ]

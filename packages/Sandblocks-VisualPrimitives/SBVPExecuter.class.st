@@ -53,7 +53,7 @@ SBVPExecuter >> evaluationReceiver [
 { #category : #accessing }
 SBVPExecuter >> exampleNumberOne [
 
-^ SBVPExecuter new
+	^ SBVPExecuter new
 		case: (SBVPCase
 			input: SBVPPatternMatcherTest new examplePatternSortTree
 			output: SBVPPatternMatcherTest new examplePatternSortTreeOutput);
@@ -86,8 +86,7 @@ SBVPExecuter >> initialize [
 		addMorphBack: (SBRow new
 			hResizing: #shrinkWrap;
 			vResizing: #shrinkWrap;
-			addMorphBack: (
-			SBColumn new 
+			addMorphBack: (SBColumn new
 				hResizing: #shrinkWrap;
 				vResizing: #shrinkWrap;
 				addMorphBack: (SBTextBubble new contents: 'Input');
@@ -99,32 +98,31 @@ SBVPExecuter >> initialize [
 						hResizing: #shrinkWrap;
 						vResizing: #shrinkWrap;
 						when: #reportError send: #reportError: to: self)));
-			addMorphBack: (
-			SBColumn new 
+			addMorphBack: (SBColumn new
 				hResizing: #shrinkWrap;
 				vResizing: #shrinkWrap;
 				addMorphBack: (SBTextBubble new contents: 'Transformation');
 				addMorphBack: (TransformMorph new
-				hResizing: #shrinkWrap;
-				vResizing: #shrinkWrap;
-				changeTableLayout;
-				addMorph: (caseBlock := SBSandboxPasteUpMorph new
 					hResizing: #shrinkWrap;
 					vResizing: #shrinkWrap;
-					when: #reportError send: #reportError: to: self)));
-			addMorphBack: (
-			SBColumn new 
+					changeTableLayout;
+					addMorph: (caseBlock := SBSandboxPasteUpMorph new
+						hResizing: #shrinkWrap;
+						vResizing: #shrinkWrap;
+						when: #reportError send: #reportError: to: self)));
+			addMorphBack: (SBColumn new
 				hResizing: #shrinkWrap;
 				vResizing: #shrinkWrap;
 				addMorphBack: (SBTextBubble new contents: 'Output');
 				addMorphBack: (TransformMorph new
-				hResizing: #shrinkWrap;
-				vResizing: #shrinkWrap;
-				changeTableLayout;
-				addMorph: (outputBlock := SBSandboxPasteUpMorph new
 					hResizing: #shrinkWrap;
 					vResizing: #shrinkWrap;
-					when: #reportError send: #reportError: to: self)))) 
+					changeTableLayout;
+					addMorph: (outputBlock := SBSandboxPasteUpMorph new
+						hResizing: #shrinkWrap;
+						vResizing: #shrinkWrap;
+						layoutInset: 6;
+						when: #reportError send: #reportError: to: self))))
 ]
 
 { #category : #accessing }
@@ -183,10 +181,4 @@ SBVPExecuter >> outputBlock [
 SBVPExecuter >> outputBlock: anObject [
 
 	^ outputBlock := anObject
-]
-
-{ #category : #accessing }
-SBVPExecuter >> reportError: anError [
-
-	Transcript showln: anError. self halt
 ]
