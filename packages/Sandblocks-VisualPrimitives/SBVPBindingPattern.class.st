@@ -32,12 +32,15 @@ SBVPBindingPattern class >> matches: aBlock [
 { #category : #'as yet unclassified' }
 SBVPBindingPattern class >> newFor: aBlock [
 
-	^ aBlock arguments size > 1 ifTrue: [
-	self new
-		label: aBlock arguments first evaluate;
-		connectionBlocks: aBlock arguments second childSandblocks] ifFalse: [self new
-		label: aBlock arguments first evaluate;
-		connectionBlocks: {}]
+	^ aBlock arguments size > 1
+		ifTrue: [
+			self new
+				label: aBlock arguments first evaluate;
+				connectionBlocks: aBlock arguments second childSandblocks]
+		ifFalse: [
+			self new
+				label: aBlock arguments first evaluate;
+				connectionBlocks: {}]
 ]
 
 { #category : #accessing }

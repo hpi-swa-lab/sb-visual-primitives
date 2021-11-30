@@ -23,7 +23,7 @@ SBVPExecuter class >> exampleHeapItThenKeepIt [
 		input: (SBVPVisualizer
 			code: [SBVPDummyNode fromVisualPrimitive: (SBVPPatternMatcherTest new buildTree: {42 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}) first]
 			extent: 300 @ 300);
-		strategy: #subTree.
+		strategy: #subTree
 ]
 
 { #category : #'as yet unclassified' }
@@ -77,25 +77,25 @@ SBVPExecuter >> evaluationReceiver [
 ]
 
 { #category : #accessing }
-SBVPExecuter >> exampleHeapItThenKeepIt [
+SBVPExecuter >> exampleBuildHeap [
 
 	^ SBVPExecuter new
 		case: (SBVPCase
 			input: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern label: 1 connections: {
-				SBVPEllipsisPattern label: 2.
-				SBVPBindingPattern label: 3 connections: {SBVPEllipsisPattern label: 5}. 
-				SBVPEllipsisPattern label: 4  }.
-		SBVPConstraintPattern constraint: [:a :b :c :d :e | c label < a label]})
+				SBVPBindingPattern label: 1 connections: {
+					SBVPEllipsisPattern label: 2.
+					SBVPBindingPattern label: 3 connections: {SBVPEllipsisPattern label: 5}.
+					SBVPEllipsisPattern label: 4}.
+				SBVPConstraintPattern constraint: [:a :b :c :d :e | c label asInteger < a label asInteger]})
 			output: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern label: 3 connections: {
-				SBVPEllipsisPattern label: 2.
-				SBVPBindingPattern label: 1 connections: {SBVPEllipsisPattern label: 5}. 
-				SBVPEllipsisPattern label: 4  }}));
+				SBVPBindingPattern label: 3 connections: {
+					SBVPEllipsisPattern label: 2.
+					SBVPBindingPattern label: 1 connections: {SBVPEllipsisPattern label: 5}.
+					SBVPEllipsisPattern label: 4}}));
 		input: (SBVPVisualizer
-			code: [SBVPDummyNode fromVisualPrimitive: (SBVPPatternMatcherTest new buildTree: {42 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}) first]
+			code: [SBVPDummyNode fromVisualPrimitive: (SBVPPatternMatcherTest new buildTree: {9 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}) first]
 			extent: 300 @ 300);
-		strategy: #exact.
+		strategy: #subTree
 ]
 
 { #category : #accessing }
@@ -123,7 +123,9 @@ SBVPExecuter >> executeAll [
 	<action>
 
 	self outputBlock removeAllMorphs.
-	(self case replaceAllMatches: self input code firstSubmorph evaluate value strategy: self strategy) asVisualPrimitiveIn: self outputBlock
+	(self case
+		replaceAllMatches: self input code firstSubmorph evaluate value
+		strategy: self strategy) asVisualPrimitiveIn: self outputBlock
 ]
 
 { #category : #accessing }
@@ -249,5 +251,5 @@ SBVPExecuter >> strategy [
 { #category : #accessing }
 SBVPExecuter >> strategy: anObject [
 
-	strategy := anObject.
+	strategy := anObject
 ]

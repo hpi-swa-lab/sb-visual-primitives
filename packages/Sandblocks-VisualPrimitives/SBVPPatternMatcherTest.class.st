@@ -32,10 +32,10 @@ SBVPPatternMatcherTest >> buildTree: aCollection [
 SBVPPatternMatcherTest >> examplePatternChildSmallerThanParent [
 
 	^ SBVPGroupPattern patterns: {
-			SBVPBindingPattern label: 1 connections: {
-				SBVPEllipsisPattern label: 2.
-				SBVPBindingPattern label: 3 connections: {SBVPEllipsisPattern label: 5}. 
-				SBVPEllipsisPattern label: 4  }.
+		SBVPBindingPattern label: 1 connections: {
+			SBVPEllipsisPattern label: 2.
+			SBVPBindingPattern label: 3 connections: {SBVPEllipsisPattern label: 5}.
+			SBVPEllipsisPattern label: 4}.
 		SBVPConstraintPattern constraint: [:a :b :c :d :e | c label < a label]}
 ]
 
@@ -43,10 +43,10 @@ SBVPPatternMatcherTest >> examplePatternChildSmallerThanParent [
 SBVPPatternMatcherTest >> examplePatternChildSmallerThanParentOutput [
 
 	^ SBVPGroupPattern patterns: {
-			SBVPBindingPattern label: 3 connections: {
-				SBVPEllipsisPattern label: 2.
-				SBVPBindingPattern label: 1 connections: {SBVPEllipsisPattern label: 5}. 
-				SBVPEllipsisPattern label: 4  }}
+		SBVPBindingPattern label: 3 connections: {
+			SBVPEllipsisPattern label: 2.
+			SBVPBindingPattern label: 1 connections: {SBVPEllipsisPattern label: 5}.
+			SBVPEllipsisPattern label: 4}}
 ]
 
 { #category : #'as yet unclassified' }
@@ -89,12 +89,13 @@ SBVPPatternMatcherTest >> examplePatternSortTree [
 { #category : #'as yet unclassified' }
 SBVPPatternMatcherTest >> examplePatternSortTreeOutput [
 
-	^ SBVPGroupPattern patterns: {SBVPWildcardPattern label: 6 connections: {
-		SBVPEllipsisPattern label: 7.
-		SBVPBindingPattern label: 1 connections: {
-			SBVPBindingPattern label: 3 connections: {SBVPEllipsisPattern label: 5}.
-			SBVPBindingPattern label: 2 connections: {SBVPEllipsisPattern label: 4}}.
-		SBVPEllipsisPattern label: 8}}
+	^ SBVPGroupPattern patterns: {
+		SBVPWildcardPattern label: 6 connections: {
+			SBVPEllipsisPattern label: 7.
+			SBVPBindingPattern label: 1 connections: {
+				SBVPBindingPattern label: 3 connections: {SBVPEllipsisPattern label: 5}.
+				SBVPBindingPattern label: 2 connections: {SBVPEllipsisPattern label: 4}}.
+			SBVPEllipsisPattern label: 8}}
 ]
 
 { #category : #'as yet unclassified' }

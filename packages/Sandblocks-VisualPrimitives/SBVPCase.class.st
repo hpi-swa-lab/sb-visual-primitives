@@ -261,13 +261,7 @@ SBVPCase >> output: anObject [
 { #category : #'as yet unclassified' }
 SBVPCase >> replaceAllMatches: aDummyNode [
 
-	| matcher currentPrimitive match |
-	currentPrimitive := aDummyNode asVisualPrimitive.
-	matcher := SBVPPatternMatcher input: currentPrimitive pattern: self input.
-	[match := matcher getNextMatch] whileNotNil: [
-		currentPrimitive := (self output buildFromBinding: match) first.
-		matcher input: currentPrimitive].
-	^ aDummyNode class fromVisualPrimitive: currentPrimitive
+	^ self replaceAllMatches: aDummyNode strategy: #exact
 ]
 
 { #category : #'as yet unclassified' }
@@ -277,7 +271,7 @@ SBVPCase >> replaceAllMatches: aDummyNode strategy: aSymbol [
 	currentPrimitive := aDummyNode asVisualPrimitive.
 	matcher := (SBVPPatternMatcher input: currentPrimitive pattern: self input) strategy: aSymbol.
 	[match := matcher getNextMatch] whileNotNil: [
-		currentPrimitive := (self output buildFromBinding: match) first.
+		currentPrimitive := matcher build: self output fromBinding: match.
 		matcher input: currentPrimitive].
 	^ aDummyNode class fromVisualPrimitive: currentPrimitive
 ]
@@ -292,11 +286,13 @@ SBVPCase >> value: aDummyNode [
 SBVPCase >> value: aDummyNode strategy: aSymbol [
 
 	| matcher match |
-	matcher := (SBVPPatternMatcher input: aDummyNode asVisualPrimitive pattern: self input) strategy: aSymbol.
+	matcher := (SBVPPatternMatcher
+		input: aDummyNode asVisualPrimitive
+		pattern: self input) strategy: aSymbol.
 	match := matcher getNextMatch.
 	^ match
 		ifNil: [aDummyNode]
-		ifNotNil: [aDummyNode class fromVisualPrimitive: (self output buildFromBinding: match) first]
+		ifNotNil: [aDummyNode class fromVisualPrimitive: (matcher build: self output fromBinding: match)]
 ]
 
 { #category : #'as yet unclassified' }

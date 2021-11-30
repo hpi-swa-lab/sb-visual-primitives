@@ -19,25 +19,20 @@ SBVPPatternMatcher class >> input: aVisualPrimitive pattern: aPattern [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPatternMatcher >> buildFromBinding: anArray [
+SBVPPatternMatcher >> build: aPattern fromBinding: anArray [
 
-	| binding |
-	binding := anArray at: self label asInteger.
-	^ {self buildFromBinding: anArray currentPrimitive: (binding at: #root)}
+	^ self build: aPattern fromBinding: anArray currentPrimitive: self searchStack first
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPatternMatcher >> buildFromBinding: anArray currentPrimitive: aVisualPrimitive [
+SBVPPatternMatcher >> build: aPattern fromBinding: anArray currentPrimitive: aVisualPrimitive [
 
-	| output binding leaf |
-	binding := anArray at: self label asInteger.
-	leaf := binding at: #leaf.
+	| subtreeRoot |
+	subtreeRoot := self searchStack last.
 	
-	output := aVisualPrimitive copy.
-	aVisualPrimitive = leaf
-		ifTrue: [output connections: (self buildChildrenFromBinding: anArray)]
-		ifFalse: [output connections: (aVisualPrimitive connections collect: [:primitive | self buildFromBinding: anArray currentPrimitive: primitive])].
-	^ output
+	^ aVisualPrimitive = subtreeRoot
+		ifTrue: [(aPattern buildFromBinding: anArray) first]
+		ifFalse: [aVisualPrimitive copy connections: (aVisualPrimitive connections collect: [:primitive | self build: aPattern fromBinding: anArray currentPrimitive: primitive])]
 ]
 
 { #category : #accessing }
@@ -67,7 +62,8 @@ SBVPPatternMatcher >> dealWithUndefinedResult [
 				self performedMatch: false.
 				self searchStack addLast: aConnection.
 				self visitedPrimitives add: aConnection.
-				^ self getNextMatch]]. self searchStack removeLast].
+				^ self getNextMatch]].
+		self searchStack removeLast].
 	^ nil
 ]
 
