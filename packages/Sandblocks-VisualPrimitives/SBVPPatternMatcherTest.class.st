@@ -29,6 +29,27 @@ SBVPPatternMatcherTest >> buildTree: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPPatternMatcherTest >> examplePatternChildSmallerThanParent [
+
+	^ SBVPGroupPattern patterns: {
+			SBVPBindingPattern label: 1 connections: {
+				SBVPEllipsisPattern label: 2.
+				SBVPBindingPattern label: 3 connections: {SBVPEllipsisPattern label: 5}. 
+				SBVPEllipsisPattern label: 4  }.
+		SBVPConstraintPattern constraint: [:a :b :c :d :e | c label < a label]}
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPatternMatcherTest >> examplePatternChildSmallerThanParentOutput [
+
+	^ SBVPGroupPattern patterns: {
+			SBVPBindingPattern label: 3 connections: {
+				SBVPEllipsisPattern label: 2.
+				SBVPBindingPattern label: 1 connections: {SBVPEllipsisPattern label: 5}. 
+				SBVPEllipsisPattern label: 4  }}
+]
+
+{ #category : #'as yet unclassified' }
 SBVPPatternMatcherTest >> examplePatternSimpleTree [
 
 	^ SBVPGroupPattern patterns: {

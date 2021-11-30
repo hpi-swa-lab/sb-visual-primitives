@@ -18,6 +18,28 @@ SBVPPatternMatcher class >> input: aVisualPrimitive pattern: aPattern [
 	^ self new input: aVisualPrimitive pattern: aPattern
 ]
 
+{ #category : #'as yet unclassified' }
+SBVPPatternMatcher >> buildFromBinding: anArray [
+
+	| binding |
+	binding := anArray at: self label asInteger.
+	^ {self buildFromBinding: anArray currentPrimitive: (binding at: #root)}
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPatternMatcher >> buildFromBinding: anArray currentPrimitive: aVisualPrimitive [
+
+	| output binding leaf |
+	binding := anArray at: self label asInteger.
+	leaf := binding at: #leaf.
+	
+	output := aVisualPrimitive copy.
+	aVisualPrimitive = leaf
+		ifTrue: [output connections: (self buildChildrenFromBinding: anArray)]
+		ifFalse: [output connections: (aVisualPrimitive connections collect: [:primitive | self buildFromBinding: anArray currentPrimitive: primitive])].
+	^ output
+]
+
 { #category : #accessing }
 SBVPPatternMatcher >> currentPrimitive [
 

@@ -271,10 +271,28 @@ SBVPCase >> replaceAllMatches: aDummyNode [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPCase >> replaceAllMatches: aDummyNode strategy: aSymbol [
+
+	| matcher currentPrimitive match |
+	currentPrimitive := aDummyNode asVisualPrimitive.
+	matcher := (SBVPPatternMatcher input: currentPrimitive pattern: self input) strategy: aSymbol.
+	[match := matcher getNextMatch] whileNotNil: [
+		currentPrimitive := (self output buildFromBinding: match) first.
+		matcher input: currentPrimitive].
+	^ aDummyNode class fromVisualPrimitive: currentPrimitive
+]
+
+{ #category : #'as yet unclassified' }
 SBVPCase >> value: aDummyNode [
 
+	^ self value: aDummyNode strategy: #exact
+]
+
+{ #category : #'as yet unclassified' }
+SBVPCase >> value: aDummyNode strategy: aSymbol [
+
 	| matcher match |
-	matcher := SBVPPatternMatcher input: aDummyNode asVisualPrimitive pattern: self input.
+	matcher := (SBVPPatternMatcher input: aDummyNode asVisualPrimitive pattern: self input) strategy: aSymbol.
 	match := matcher getNextMatch.
 	^ match
 		ifNil: [aDummyNode]

@@ -26,18 +26,18 @@ SBVPBindingPattern class >> label: anObject connections: aCollection [
 { #category : #'as yet unclassified' }
 SBVPBindingPattern class >> matches: aBlock [
 
-	^ self selector: #label:connections: receiverMatches: aBlock
+	^ (self selector: #label:connections: receiverMatches: aBlock) or: [self selector: #label: receiverMatches: aBlock]
 ]
 
 { #category : #'as yet unclassified' }
 SBVPBindingPattern class >> newFor: aBlock [
 
-	| bindingPattern |
-	bindingPattern := self new
+	^ aBlock arguments size > 1 ifTrue: [
+	self new
 		label: aBlock arguments first evaluate;
-		connectionBlocks: aBlock arguments second childSandblocks.
-	"bindingPattern canvas addMorphBack: bindingPattern labelBlock."
-	^ bindingPattern
+		connectionBlocks: aBlock arguments second childSandblocks] ifFalse: [self new
+		label: aBlock arguments first evaluate;
+		connectionBlocks: {}]
 ]
 
 { #category : #accessing }

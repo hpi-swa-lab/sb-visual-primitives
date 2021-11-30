@@ -7,10 +7,36 @@ Class {
 		'output',
 		'inputBlock',
 		'caseBlock',
-		'outputBlock'
+		'outputBlock',
+		'strategy'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
+
+{ #category : #'as yet unclassified' }
+SBVPExecuter class >> exampleHeapItThenKeepIt [
+
+	^ SBVPExecuter new
+		case: (SBVPCase
+			input: SBVPPatternMatcherTest new examplePatternChildSmallerThanParent
+			output: SBVPPatternMatcherTest new examplePatternChildSmallerThanParentOutput);
+		input: (SBVPVisualizer
+			code: [SBVPDummyNode fromVisualPrimitive: (SBVPPatternMatcherTest new buildTree: {42 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}) first]
+			extent: 300 @ 300);
+		strategy: #subTree.
+]
+
+{ #category : #'as yet unclassified' }
+SBVPExecuter class >> exampleSort [
+
+	^ SBVPExecuter new
+		case: (SBVPCase
+			input: SBVPPatternMatcherTest new examplePatternSortTree
+			output: SBVPPatternMatcherTest new examplePatternSortTreeOutput);
+		input: (SBVPVisualizer
+			code: [SBVPDummyNode fromVisualPrimitive: (SBVPPatternMatcherTest new buildTree: {42 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}) first]
+			extent: 300 @ 300)
+]
 
 { #category : #accessing }
 SBVPExecuter >> case [
@@ -51,6 +77,28 @@ SBVPExecuter >> evaluationReceiver [
 ]
 
 { #category : #accessing }
+SBVPExecuter >> exampleHeapItThenKeepIt [
+
+	^ SBVPExecuter new
+		case: (SBVPCase
+			input: (SBVPGroupPattern patterns: {
+			SBVPBindingPattern label: 1 connections: {
+				SBVPEllipsisPattern label: 2.
+				SBVPBindingPattern label: 3 connections: {SBVPEllipsisPattern label: 5}. 
+				SBVPEllipsisPattern label: 4  }.
+		SBVPConstraintPattern constraint: [:a :b :c :d :e | c label < a label]})
+			output: (SBVPGroupPattern patterns: {
+			SBVPBindingPattern label: 3 connections: {
+				SBVPEllipsisPattern label: 2.
+				SBVPBindingPattern label: 1 connections: {SBVPEllipsisPattern label: 5}. 
+				SBVPEllipsisPattern label: 4  }}));
+		input: (SBVPVisualizer
+			code: [SBVPDummyNode fromVisualPrimitive: (SBVPPatternMatcherTest new buildTree: {42 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}) first]
+			extent: 300 @ 300);
+		strategy: #exact.
+]
+
+{ #category : #accessing }
 SBVPExecuter >> exampleNumberOne [
 
 	^ SBVPExecuter new
@@ -67,7 +115,15 @@ SBVPExecuter >> execute [
 	<action>
 
 	self outputBlock removeAllMorphs.
-	(self case value: self input code firstSubmorph evaluate value) asVisualPrimitiveIn: self outputBlock
+	(self case value: self input code firstSubmorph evaluate value strategy: self strategy) asVisualPrimitiveIn: self outputBlock
+]
+
+{ #category : #accessing }
+SBVPExecuter >> executeAll [
+	<action>
+
+	self outputBlock removeAllMorphs.
+	(self case replaceAllMatches: self input code firstSubmorph evaluate value strategy: self strategy) asVisualPrimitiveIn: self outputBlock
 ]
 
 { #category : #accessing }
@@ -76,13 +132,14 @@ SBVPExecuter >> initialize [
 	super initialize.
 	
 	self
+		strategy: #exact;
 		addKeyboardCaptureFilter: self;
 		addMouseCaptureFilter: self;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
 		changeTableLayout;
 		layoutInset: 6;
-		addMorphBack: (SBTextBubble new contents: 'Executioner');
+		addMorphBack: (SBTextBubble new contents: 'Executer');
 		addMorphBack: (SBRow new
 			hResizing: #shrinkWrap;
 			vResizing: #shrinkWrap;
@@ -181,4 +238,16 @@ SBVPExecuter >> outputBlock [
 SBVPExecuter >> outputBlock: anObject [
 
 	^ outputBlock := anObject
+]
+
+{ #category : #accessing }
+SBVPExecuter >> strategy [
+
+	^ strategy
+]
+
+{ #category : #accessing }
+SBVPExecuter >> strategy: anObject [
+
+	strategy := anObject.
 ]
