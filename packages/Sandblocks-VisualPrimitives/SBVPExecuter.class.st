@@ -1,6 +1,6 @@
 Class {
 	#name : #SBVPExecuter,
-	#superclass : #SBBlock,
+	#superclass : #SBStSubstitution,
 	#instVars : [
 		'input',
 		'case',
@@ -14,15 +14,34 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBVPExecuter class >> exampleHeapItThenKeepIt [
+SBVPExecuter class >> case: aVPCase input: aVisualizer strategy: aSymbol [
+	"marker"
 
-	^ SBVPExecuter new
+	^ self new
+		case: aVPCase;
+		input: aVisualizer;
+		strategy: aSymbol
+]
+
+{ #category : #'as yet unclassified' }
+SBVPExecuter class >> exampleBuildHeap [
+
+		^ SBVPExecuter
 		case: (SBVPCase
-			input: SBVPPatternMatcherTest new examplePatternChildSmallerThanParent
-			output: SBVPPatternMatcherTest new examplePatternChildSmallerThanParentOutput);
+			input: (SBVPGroupPattern patterns: {
+				SBVPBindingPattern label: 1 connections: {
+					SBVPEllipsisPattern label: 2.
+					SBVPBindingPattern label: 3 connections: {SBVPEllipsisPattern label: 5}.
+					SBVPEllipsisPattern label: 4}.
+				SBVPConstraintPattern constraint: [:a :b :c :d :e | c label asInteger < a label asInteger]})
+			output: (SBVPGroupPattern patterns: {
+				SBVPBindingPattern label: 3 connections: {
+					SBVPEllipsisPattern label: 2.
+					SBVPBindingPattern label: 1 connections: {SBVPEllipsisPattern label: 5}.
+					SBVPEllipsisPattern label: 4}}))
 		input: (SBVPVisualizer
-			code: [SBVPDummyNode fromVisualPrimitive: (SBVPPatternMatcherTest new buildTree: {42 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}) first]
-			extent: 300 @ 300);
+			code: [SBVPDummyNode fromVisualPrimitive: (SBVPPatternMatcherTest new buildTree: {9 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}) first]
+			extent: 300 @ 300)
 		strategy: #subTree
 ]
 
@@ -36,6 +55,22 @@ SBVPExecuter class >> exampleSort [
 		input: (SBVPVisualizer
 			code: [SBVPDummyNode fromVisualPrimitive: (SBVPPatternMatcherTest new buildTree: {42 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}) first]
 			extent: 300 @ 300)
+]
+
+{ #category : #'as yet unclassified' }
+SBVPExecuter class >> matches: aBlock [
+
+	(super matches: aBlock) ifFalse: [^ false].
+	
+	^ (aBlock receiver satisfies: #(#notNil #isBinding))
+		and: [aBlock receiver contents = self name]
+		and: [aBlock selector = 'case:input:strategy:']
+]
+
+{ #category : #'as yet unclassified' }
+SBVPExecuter class >> newFor: aBlock [
+
+	^ self case: aBlock arguments first input: aBlock arguments second strategy: aBlock arguments third
 ]
 
 { #category : #accessing }
@@ -74,28 +109,6 @@ SBVPExecuter >> evaluationContext [
 SBVPExecuter >> evaluationReceiver [
 
 	^ self
-]
-
-{ #category : #accessing }
-SBVPExecuter >> exampleBuildHeap [
-
-	^ SBVPExecuter new
-		case: (SBVPCase
-			input: (SBVPGroupPattern patterns: {
-				SBVPBindingPattern label: 1 connections: {
-					SBVPEllipsisPattern label: 2.
-					SBVPBindingPattern label: 3 connections: {SBVPEllipsisPattern label: 5}.
-					SBVPEllipsisPattern label: 4}.
-				SBVPConstraintPattern constraint: [:a :b :c :d :e | c label asInteger < a label asInteger]})
-			output: (SBVPGroupPattern patterns: {
-				SBVPBindingPattern label: 3 connections: {
-					SBVPEllipsisPattern label: 2.
-					SBVPBindingPattern label: 1 connections: {SBVPEllipsisPattern label: 5}.
-					SBVPEllipsisPattern label: 4}}));
-		input: (SBVPVisualizer
-			code: [SBVPDummyNode fromVisualPrimitive: (SBVPPatternMatcherTest new buildTree: {9 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}) first]
-			extent: 300 @ 300);
-		strategy: #subTree
 ]
 
 { #category : #accessing }

@@ -43,7 +43,7 @@ SBVPConstraintPattern >> constraint [
 SBVPConstraintPattern >> constraint: aBlockClosure [
 
 	constraint := aBlockClosure.
-	self constraintBlock: (aBlockClosure decompile asSandblock
+	self constraintBlockBasic: (aBlockClosure decompile asSandblock
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap)
 ]
@@ -56,6 +56,14 @@ SBVPConstraintPattern >> constraintBlock [
 
 { #category : #accessing }
 SBVPConstraintPattern >> constraintBlock: aBlock [
+
+	constraintBlock := aBlock.
+	constraint := aBlock evaluate.
+	self addMorphBack: aBlock.
+]
+
+{ #category : #accessing }
+SBVPConstraintPattern >> constraintBlockBasic: aBlock [
 
 	constraintBlock := aBlock.
 	self addMorphBack: aBlock
@@ -72,7 +80,7 @@ SBVPConstraintPattern >> initialize [
 
 	super initialize.
 	self removeAllMorphs.
-	self constraintBlock: (SBColumn new layoutInset: 0)
+	self constraintBlockBasic: (SBColumn new layoutInset: 0)
 ]
 
 { #category : #'as yet unclassified' }
