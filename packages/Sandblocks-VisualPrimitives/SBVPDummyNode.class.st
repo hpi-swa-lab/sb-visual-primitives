@@ -12,6 +12,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBVPDummyNode class >> buildTree: aCollection [
+
+	^ self fromVisualPrimitive: (SBVisualPrimitive buildTree: aCollection) first
+]
+
+{ #category : #'as yet unclassified' }
 SBVPDummyNode class >> exampleRootWithTwoChildren [
 
 	| n1 n2 root |

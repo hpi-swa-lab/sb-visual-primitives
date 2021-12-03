@@ -40,21 +40,9 @@ SBVPExecuter class >> exampleBuildHeap [
 					SBVPBindingPattern label: 1 connections: {SBVPEllipsisPattern label: 5}.
 					SBVPEllipsisPattern label: 4}}))
 		input: (SBVPVisualizer
-			code: [SBVPDummyNode fromVisualPrimitive: (SBVPPatternMatcherTest new buildTree: {9 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}) first]
+			code: [SBVPDummyNode buildTree: {9 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}]
 			extent: 300 @ 300)
 		strategy: #subTree
-]
-
-{ #category : #'as yet unclassified' }
-SBVPExecuter class >> exampleSort [
-
-	^ SBVPExecuter new
-		case: (SBVPCase
-			input: SBVPPatternMatcherTest new examplePatternSortTree
-			output: SBVPPatternMatcherTest new examplePatternSortTreeOutput);
-		input: (SBVPVisualizer
-			code: [SBVPDummyNode fromVisualPrimitive: (SBVPPatternMatcherTest new buildTree: {42 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}) first]
-			extent: 300 @ 300)
 ]
 
 { #category : #'as yet unclassified' }
@@ -109,18 +97,6 @@ SBVPExecuter >> evaluationContext [
 SBVPExecuter >> evaluationReceiver [
 
 	^ self
-]
-
-{ #category : #accessing }
-SBVPExecuter >> exampleNumberOne [
-
-	^ SBVPExecuter new
-		case: (SBVPCase
-			input: SBVPPatternMatcherTest new examplePatternSortTree
-			output: SBVPPatternMatcherTest new examplePatternSortTreeOutput);
-		input: (SBVPVisualizer
-			code: [SBVPDummyNode fromVisualPrimitive: (SBVPPatternMatcherTest new buildTree: {42 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}) first]
-			extent: 300 @ 300)
 ]
 
 { #category : #accessing }

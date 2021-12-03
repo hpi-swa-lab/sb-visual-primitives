@@ -10,6 +10,15 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBVisualPrimitive class >> buildTree: aCollection [
+
+	^ aCollection collect: [:element |
+		element isVariableBinding
+			ifTrue: [(self new: element key) connections: (self buildTree: element value)]
+			ifFalse: [self new: element]]
+]
+
+{ #category : #'as yet unclassified' }
 SBVisualPrimitive class >> fromVisualPrimitive: aVisualPrimitive [
 
 	^ aVisualPrimitive

@@ -84,7 +84,26 @@ SBVPConstraintPattern >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPConstraintPattern >> isArtefact [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBVPConstraintPattern >> matches: aVisualPrimitive withBinding: aCollection [
 
 	^ self constraint valueWithArguments: aCollection
+]
+
+{ #category : #'as yet unclassified' }
+SBVPConstraintPattern >> saveTryFixing: aBoolean quick: anotherBoolean [
+
+	constraint := self constraintBlock evaluate.
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBVPConstraintPattern >> wantsMethodBody [
+
+	^ false
 ]
