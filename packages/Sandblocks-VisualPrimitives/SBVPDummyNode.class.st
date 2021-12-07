@@ -142,3 +142,12 @@ SBVPDummyNode >> right: aNode [
 
 	right := aNode
 ]
+
+{ #category : #accessing }
+SBVPDummyNode >> visualPrimitiveMapping [
+
+	^ {
+		#form -> Rectangle.
+		#innerLabel -> self key.
+		#connections -> ({self left. self right} reject: [:connection | connection isNil])}
+]

@@ -6,16 +6,17 @@ Class {
 	#superclass : #SBStSubstitution,
 	#instVars : [
 		'visual',
-		'code'
+		'code',
+		'showCode'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
 
 { #category : #'as yet unclassified' }
-SBVPVisualizer class >> code: aCode extent: aPoint [
+SBVPVisualizer class >> code: aCode showCode: aBoolean [
 	" marker "
 
-	^ self new code: aCode asSandblock extent: aPoint
+	^ self new code: aCode asSandblock showCode: aBoolean
 ]
 
 { #category : #'as yet unclassified' }
@@ -24,13 +25,13 @@ SBVPVisualizer class >> matches: aBlock [
 	(super matches: aBlock) ifFalse: [^ false].
 	^ (aBlock receiver satisfies: #(#notNil #isBinding))
 		and: [aBlock receiver contents = self name]
-		and: [aBlock selector = 'code:extent:']
+		and: [aBlock selector = 'code:showCode:']
 ]
 
 { #category : #'as yet unclassified' }
 SBVPVisualizer class >> newFor: aBlock [
 
-	^ self new code: aBlock arguments first extent: aBlock arguments second contents
+	^ self new code: aBlock arguments first showCode: aBlock arguments second evaluate
 ]
 
 { #category : #accessing }
@@ -46,15 +47,15 @@ SBVPVisualizer >> code: anObject [
 ]
 
 { #category : #accessing }
-SBVPVisualizer >> code: aCodeBlock extent: aPoint [
+SBVPVisualizer >> code: aCodeBlock showCode: aBoolean [
 
 	| aSandblock |
 	self code removeAllMorphs.
 	self visual removeAllMorphs.
 	aSandblock := aCodeBlock asSandblock.
-	self code addMorphBack: aSandblock.
-	aSandblock evaluate value asVisualPrimitiveIn: self visual.
-	self visual extent: aPoint
+	aBoolean ifTrue: [self code addMorphBack: aSandblock].
+	self visualPrimitiveFrom: aSandblock evaluate value
+	"aSandblock evaluate value asVisualPrimitiveIn: self visual"
 ]
 
 { #category : #accessing }
@@ -72,13 +73,15 @@ SBVPVisualizer >> example [
 				left: n1;
 				right: n2.
 			root]
-		extent: 300 @ 300
+		showCode: true
 ]
 
 { #category : #accessing }
 SBVPVisualizer >> initialize [
 
 	super initialize.
+	
+	self showCode: true.
 	
 	self
 		addKeyboardCaptureFilter: self;
@@ -105,8 +108,20 @@ SBVPVisualizer >> isArtefact [
 { #category : #accessing }
 SBVPVisualizer >> saveTryFixing: aFixBoolean quick: aQuickBoolean [
 
-	self code: self code firstSubmorph extent: self extent.
+	self code: self code firstSubmorph showCode: true.
 	^ true
+]
+
+{ #category : #accessing }
+SBVPVisualizer >> showCode [
+
+	^ showCode
+]
+
+{ #category : #accessing }
+SBVPVisualizer >> showCode: anObject [
+
+	showCode := anObject.
 ]
 
 { #category : #accessing }
@@ -122,12 +137,33 @@ SBVPVisualizer >> visual: anObject [
 ]
 
 { #category : #accessing }
+SBVPVisualizer >> visualPrimitiveFrom: anObject [
+
+	| mapping vp |
+	mapping := anObject visualPrimitiveMapping asDictionary.
+	vp := SBVisualPrimitive new.
+	self visual addMorphBack: vp.
+	mapping ifNotNil: [ | treeDecorator |
+		"add Tree Layout"
+		treeDecorator := SBTreeDecorator new.
+		vp attachDecorator: treeDecorator.
+		mapping at: #innerLabel ifPresent: [:innerLabel | vp label: innerLabel] ifAbsent: [vp label: ''].
+		mapping at: #connections ifPresent: [:connections |
+			connections do: [:connection |
+				(self visualPrimitiveFrom: connection)
+					withDecorator: SBTreeDecorator
+					do: [:childDecorator | treeDecorator addChild: childDecorator]]].
+		treeDecorator layout].
+	^ vp
+]
+
+{ #category : #accessing }
 SBVPVisualizer >> writeSourceOn: aStream [
 
 	aStream nextPutAll: '(SBVPVisualizer code: ['.
 	self code submorphsDo: [:morph | morph writeSourceOn: aStream].
-	aStream nextPutAll: '] extent: '.
-	visual extent storeOn: aStream.
+	aStream nextPutAll: '] showCode: '.
+	self showCode storeOn: aStream.
 	aStream nextPut: $).
 	self reloadArtefact
 ]

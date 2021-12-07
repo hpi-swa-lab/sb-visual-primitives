@@ -59,7 +59,7 @@ SBVPConstraintPattern >> constraintBlock: aBlock [
 
 	constraintBlock := aBlock.
 	constraint := aBlock evaluate.
-	self addMorphBack: aBlock.
+	self addMorphBack: aBlock
 ]
 
 { #category : #accessing }

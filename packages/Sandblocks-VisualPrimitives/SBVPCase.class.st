@@ -97,7 +97,7 @@ SBVPCase >> example [
 					left: n1;
 					right: n2.
 				root]
-			extent: 300 @ 300)
+			showCode: true)
 		output: (SBVPVisualizer
 			code: [ | root n1 n2 |
 				root := SBVPDummyNode new.
@@ -110,7 +110,7 @@ SBVPCase >> example [
 					left: n1;
 					right: n2.
 				root]
-			extent: 300 @ 300)
+			showCode: true)
 ]
 
 { #category : #'as yet unclassified' }
@@ -130,7 +130,7 @@ SBVPCase >> exampleWithBindingPattern [
 					left: n1;
 					right: n2.
 				root]
-			extent: 300 @ 300)
+			showCode: true)
 ]
 
 { #category : #'as yet unclassified' }
@@ -154,7 +154,7 @@ SBVPCase >> exampleWithBindingPatterns [
 					left: n1;
 					right: n2.
 				root]
-			extent: 300 @ 300)
+			showCode: true)
 ]
 
 { #category : #'as yet unclassified' }

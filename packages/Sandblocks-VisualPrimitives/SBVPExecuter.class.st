@@ -26,7 +26,7 @@ SBVPExecuter class >> case: aVPCase input: aVisualizer strategy: aSymbol [
 { #category : #'as yet unclassified' }
 SBVPExecuter class >> exampleBuildHeap [
 
-		^ SBVPExecuter
+	^ SBVPExecuter
 		case: (SBVPCase
 			input: (SBVPGroupPattern patterns: {
 				SBVPBindingPattern label: 1 connections: {
@@ -41,7 +41,7 @@ SBVPExecuter class >> exampleBuildHeap [
 					SBVPEllipsisPattern label: 4}}))
 		input: (SBVPVisualizer
 			code: [SBVPDummyNode buildTree: {9 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}]
-			extent: 300 @ 300)
+			showCode: true)
 		strategy: #subTree
 ]
 
