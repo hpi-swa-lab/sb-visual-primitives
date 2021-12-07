@@ -124,10 +124,10 @@ SBVPVisualizer >> visual: anObject [
 { #category : #accessing }
 SBVPVisualizer >> writeSourceOn: aStream [
 
-	aStream nextPutAll: '(SBVPVisualizer code: '.
+	aStream nextPutAll: '(SBVPVisualizer code: ['.
 	self code submorphsDo: [:morph | morph writeSourceOn: aStream].
-	aStream nextPutAll: ' extent: '.
+	aStream nextPutAll: '] extent: '.
 	visual extent storeOn: aStream.
-	aStream nextPut: $)
-	"reload."
+	aStream nextPut: $).
+	self reloadArtefact
 ]

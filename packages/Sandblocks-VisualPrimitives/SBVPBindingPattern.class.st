@@ -238,3 +238,22 @@ SBVPBindingPattern >> setConnectionBindingFor: aVisualPrimitive in: aCollection 
 		offset := offset + connection indexOffset.
 		wasSuccessful]
 ]
+
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern >> writeSourceOn: aStream [
+
+	aStream
+		nextPut:  $(;
+		nextPutAll: self class name;
+		nextPutAll: ' label: ';
+		nextPutAll: self label asString.
+	
+	self connections ifNotEmpty: [
+		aStream nextPutAll: ' connections: {'.
+		self connections do: [:connection |
+			connection writeSourceOn: aStream.
+			aStream nextPut: $.].
+		aStream nextPut: $}].
+	aStream nextPut: $).
+	self reloadArtefact
+]

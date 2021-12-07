@@ -107,3 +107,12 @@ SBVPConstraintPattern >> wantsMethodBody [
 
 	^ false
 ]
+
+{ #category : #'as yet unclassified' }
+SBVPConstraintPattern >> writeSourceOn: aStream [
+
+	aStream nextPutAll: '(SBVPConstraintPattern constraint: '.
+	self constraintBlock writeSourceOn: aStream.
+	aStream nextPut: $).
+	self reloadArtefact
+]

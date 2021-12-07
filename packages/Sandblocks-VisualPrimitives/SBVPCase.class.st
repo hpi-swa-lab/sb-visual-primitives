@@ -32,6 +32,16 @@ SBVPCase class >> newFor: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPCase class >> suggestion [
+
+	^ [:block |
+		block sandblockEditor do: (SBReplaceCommand new
+			target: block;
+			replacer: (self input: SBVPGroupPattern new output: SBVPGroupPattern new);
+			yourself)]
+]
+
+{ #category : #'as yet unclassified' }
 SBVPCase >> addSubPattern: aBlock [
 
 	
@@ -243,8 +253,8 @@ SBVPCase >> input: aSBBlock output: anotherSBBlock [
 			addMorphBack: SBIcon iconArrowRight;
 			addMorphBack: anotherSBBlock);
 		input: aSBBlock;
-		output: anotherSBBlock;
-		colorDifferences
+		output: anotherSBBlock";
+		colorDifferences"
 ]
 
 { #category : #accessing }

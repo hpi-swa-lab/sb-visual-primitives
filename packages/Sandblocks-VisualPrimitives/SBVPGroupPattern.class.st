@@ -55,6 +55,7 @@ SBVPGroupPattern >> initialize [
 
 	super initialize.
 	self removeAllMorphs.
+	self patterns: {}.
 	
 	self
 		addKeyboardCaptureFilter: self;
@@ -142,4 +143,15 @@ SBVPGroupPattern >> row: anObject [
 SBVPGroupPattern >> setBindingFor: aVisualPrimitive in: aCollection [
 
 	^ self patterns allSatisfy: [:pattern | pattern setBindingFor: aVisualPrimitive in: aCollection]
+]
+
+{ #category : #'as yet unclassified' }
+SBVPGroupPattern >> writeSourceOn: aStream [
+
+	aStream nextPutAll: '(SBVPGroupPattern patterns: {'.
+	self patterns do: [:pattern |
+		pattern writeSourceOn: aStream.
+		aStream nextPut: $.].
+	aStream nextPutAll: '})'.
+	self reloadArtefact
 ]

@@ -57,8 +57,8 @@ SBVPExecuter class >> matches: aBlock [
 
 { #category : #'as yet unclassified' }
 SBVPExecuter class >> newFor: aBlock [
-
-	^ self case: aBlock arguments first input: aBlock arguments second strategy: aBlock arguments third
+	
+	^ self case: aBlock arguments first input: aBlock arguments second strategy: aBlock arguments third evaluate
 ]
 
 { #category : #accessing }
@@ -240,4 +240,17 @@ SBVPExecuter >> strategy [
 SBVPExecuter >> strategy: anObject [
 
 	strategy := anObject
+]
+
+{ #category : #'as yet unclassified' }
+SBVPExecuter >> writeSourceOn: aStream [
+
+	aStream nextPutAll: '(SBVPExecuter case: '.
+	self case writeSourceOn: aStream.
+	aStream nextPutAll: ' input: '.
+	self input writeSourceOn: aStream.
+	aStream nextPutAll: ' strategy: '.
+	self strategy storeOn: aStream.
+	aStream nextPut: $).
+	self reloadArtefact
 ]
