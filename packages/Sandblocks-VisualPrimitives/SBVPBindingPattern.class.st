@@ -255,5 +255,4 @@ SBVPBindingPattern >> writeSourceOn: aStream [
 			aStream nextPut: $.].
 		aStream nextPut: $}].
 	aStream nextPut: $).
-	self reloadArtefact
 ]

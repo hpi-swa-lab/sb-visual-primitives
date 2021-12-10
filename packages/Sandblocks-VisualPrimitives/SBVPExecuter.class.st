@@ -193,12 +193,6 @@ SBVPExecuter >> inputBlock: anObject [
 ]
 
 { #category : #accessing }
-SBVPExecuter >> isArtefact [
-
-	^ true
-]
-
-{ #category : #accessing }
 SBVPExecuter >> output [
 
 	^ output
@@ -251,6 +245,5 @@ SBVPExecuter >> writeSourceOn: aStream [
 	self input writeSourceOn: aStream.
 	aStream nextPutAll: ' strategy: '.
 	self strategy storeOn: aStream.
-	aStream nextPut: $).
-	self reloadArtefact
+	aStream nextPut: $)
 ]

@@ -153,5 +153,4 @@ SBVPGroupPattern >> writeSourceOn: aStream [
 		pattern writeSourceOn: aStream.
 		aStream nextPut: $.].
 	aStream nextPutAll: '})'.
-	self reloadArtefact
 ]

@@ -34,6 +34,12 @@ SBVPVisualizer class >> newFor: aBlock [
 	^ self new code: aBlock arguments first showCode: aBlock arguments second evaluate
 ]
 
+{ #category : #'as yet unclassified' }
+SBVPVisualizer >> artefactSaved: aMethodBlock [
+
+	self code: self code firstSubmorph showCode: true
+]
+
 { #category : #accessing }
 SBVPVisualizer >> code [
 
@@ -100,19 +106,6 @@ SBVPVisualizer >> initialize [
 ]
 
 { #category : #accessing }
-SBVPVisualizer >> isArtefact [
-
-	^ true
-]
-
-{ #category : #accessing }
-SBVPVisualizer >> saveTryFixing: aFixBoolean quick: aQuickBoolean [
-
-	self code: self code firstSubmorph showCode: true.
-	^ true
-]
-
-{ #category : #accessing }
 SBVPVisualizer >> showCode [
 
 	^ showCode
@@ -164,6 +157,5 @@ SBVPVisualizer >> writeSourceOn: aStream [
 	self code submorphsDo: [:morph | morph writeSourceOn: aStream].
 	aStream nextPutAll: '] showCode: '.
 	self showCode storeOn: aStream.
-	aStream nextPut: $).
-	self reloadArtefact
+	aStream nextPut: $)
 ]

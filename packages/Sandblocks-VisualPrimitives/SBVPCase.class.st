@@ -313,6 +313,5 @@ SBVPCase >> writeSourceOn: aStream [
 	self input writeSourceOn: aStream.
 	aStream nextPutAll: ' output: '.
 	self output writeSourceOn: aStream.
-	aStream nextPut: $).
-	self reloadArtefact
+	aStream nextPut: $)
 ]

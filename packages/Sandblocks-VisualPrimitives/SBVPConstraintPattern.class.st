@@ -33,6 +33,12 @@ SBVPConstraintPattern >> addToWorld: aWorld [
 	aWorld addMorphBack: self
 ]
 
+{ #category : #'as yet unclassified' }
+SBVPConstraintPattern >> artefactSaved: aMethodBlock [
+
+	constraint := self constraintBlock evaluate
+]
+
 { #category : #accessing }
 SBVPConstraintPattern >> constraint [
 
@@ -84,22 +90,9 @@ SBVPConstraintPattern >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPConstraintPattern >> isArtefact [
-
-	^ true
-]
-
-{ #category : #'as yet unclassified' }
 SBVPConstraintPattern >> matches: aVisualPrimitive withBinding: aCollection [
 
 	^ self constraint valueWithArguments: aCollection
-]
-
-{ #category : #'as yet unclassified' }
-SBVPConstraintPattern >> saveTryFixing: aBoolean quick: anotherBoolean [
-
-	constraint := self constraintBlock evaluate.
-	^ true
 ]
 
 { #category : #'as yet unclassified' }
@@ -114,5 +107,4 @@ SBVPConstraintPattern >> writeSourceOn: aStream [
 	aStream nextPutAll: '(SBVPConstraintPattern constraint: '.
 	self constraintBlock writeSourceOn: aStream.
 	aStream nextPut: $).
-	self reloadArtefact
 ]
