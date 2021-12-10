@@ -65,7 +65,43 @@ SBVPVisualizer >> code: aCodeBlock showCode: aBoolean [
 ]
 
 { #category : #accessing }
-SBVPVisualizer >> example [
+SBVPVisualizer >> exampleCircleAllLabels [
+
+	SBVPVisualizer
+		code: [ | root n1 n2 |
+			root := SBVPCircleAllLabelFixture new.
+			root key: 'Root Rundi'.
+			n1 := SBVPCircleAllLabelFixture new.
+			n1 key: 'Rundi jr'.
+			n2 := SBVPCircleAllLabelFixture new.
+			n2 key: 'Kindkreis'.
+			root
+				left: n1;
+				right: n2.
+			root]
+		showCode: true
+]
+
+{ #category : #accessing }
+SBVPVisualizer >> exampleSimpleCircle [
+
+	SBVPVisualizer
+		code: [ | root n1 n2 |
+			root := SBVPCircleFixture new.
+			root key: 'Root Rundi'.
+			n1 := SBVPCircleFixture new.
+			n1 key: 'Rundi jr'.
+			n2 := SBVPCircleFixture new.
+			n2 key: 'Kindkreis'.
+			root
+				left: n1;
+				right: n2.
+			root]
+		showCode: true
+]
+
+{ #category : #accessing }
+SBVPVisualizer >> exampleSimpleRectangle [
 
 	SBVPVisualizer
 		code: [ | root n1 n2 |
@@ -132,15 +168,28 @@ SBVPVisualizer >> visual: anObject [
 { #category : #accessing }
 SBVPVisualizer >> visualPrimitiveFrom: anObject [
 
-	| mapping vp |
+	| mapping vp labels |
 	mapping := anObject visualPrimitiveMapping asDictionary.
 	vp := SBVisualPrimitive new.
 	self visual addMorphBack: vp.
+	labels := {
+		#innerLabel.
+		#topLeftLabel.
+		#topCenterLabel.
+		#topRightLabel.
+		#rightLabel.
+		#bottomRightLabel.
+		#bottomCenterLabel.
+		#bottomLeftLabel.
+		#leftLabel}.
 	mapping ifNotNil: [ | treeDecorator |
 		"add Tree Layout"
 		treeDecorator := SBTreeDecorator new.
 		vp attachDecorator: treeDecorator.
-		mapping at: #innerLabel ifPresent: [:innerLabel | vp label: innerLabel] ifAbsent: [vp label: ''].
+		labels do: [:positionLabel |
+			mapping
+				at: positionLabel
+				ifPresent: [:label | vp perform: positionLabel asSimpleSetter with: label]].
 		mapping at: #connections ifPresent: [:connections |
 			connections do: [:connection |
 				(self visualPrimitiveFrom: connection)

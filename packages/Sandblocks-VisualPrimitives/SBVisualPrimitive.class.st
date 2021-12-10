@@ -2,10 +2,26 @@ Class {
 	#name : #SBVisualPrimitive,
 	#superclass : #SBStSubstitution,
 	#instVars : [
-		'label',
-		'labelBlock',
+		'innerLabel',
+		'shape',
+		'shapeBlock',
+		'innerLabelColor',
+		'topRightLabel',
+		'topRightLabelBlock',
 		'connections',
-		'origin'
+		'bottomCenterLabel',
+		'bottomCenterLabelBlock',
+		'bottomLeftLabel',
+		'bottomLeftLabelBlock',
+		'bottomRightLabel',
+		'bottomRightLabelBlock',
+		'rightLabel',
+		'rightLabelBlock',
+		'topCenterLabel',
+		'topCenterLabelBlock',
+		'topLeftLabel',
+		'topLeftLabelBlock',
+		'leftLabelBlock'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
@@ -51,10 +67,70 @@ SBVisualPrimitive >> addToWorld: aWorld [
 	^ self subclassResponsibility
 ]
 
-{ #category : #nil }
+{ #category : #'as yet unclassified' }
 SBVisualPrimitive >> asVisualPrimitive [
 
 	^ self
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> bottomCenterLabel [
+
+	^ bottomCenterLabel
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> bottomCenterLabel: aMorph [
+
+	bottomCenterLabel := aMorph.
+	self bottomCenterLabelBlock removeAllMorphs.
+	self bottomCenterLabelBlock addMorphBack: aMorph
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> bottomCenterLabelBlock [
+
+	^ bottomCenterLabelBlock 
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> bottomLeftLabel [
+
+	^ bottomLeftLabel 
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> bottomLeftLabel: aMorph [
+
+	bottomLeftLabel := aMorph.
+	self bottomLeftLabelBlock removeAllMorphs.
+	self bottomLeftLabelBlock addMorphBack: aMorph
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> bottomLeftLabelBlock [
+
+	^ bottomLeftLabelBlock 
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> bottomRightLabel [
+
+	^ bottomRightLabel 
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> bottomRightLabel: aMorph [
+
+	bottomRightLabel := aMorph.
+	self bottomRightLabelBlock removeAllMorphs.
+	self bottomRightLabelBlock addMorphBack: aMorph
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> bottomRightLabelBlock [
+
+	^ bottomRightLabelBlock 
 ]
 
 { #category : #accessing }
@@ -69,54 +145,79 @@ SBVisualPrimitive >> connections: anObject [
 	connections := anObject
 ]
 
-{ #category : #nil }
+{ #category : #'as yet unclassified' }
 SBVisualPrimitive >> initialize [
 
 	super initialize.
-	labelBlock := SBTextBubble new.
+	topLeftLabelBlock := SBColumn new.
+	topCenterLabelBlock := SBColumn new.
+	topRightLabelBlock := SBColumn new.
+	leftLabelBlock := SBColumn new.
+	shapeBlock := SBColumn new.
+	rightLabelBlock := SBColumn new. 
+	bottomLeftLabelBlock := SBColumn new.
+	bottomCenterLabelBlock := SBColumn new.
+	bottomRightLabelBlock := SBColumn new.
+	innerLabel := SBTextBubble new contents: ''.
+	self shape: CircleMorph.
 	self
-		addMorphBack: (SBRow new addMorph: labelBlock);
+		addAllMorphs: {
+			SBRow new addAllMorphs: {topLeftLabelBlock. topCenterLabelBlock. topRightLabelBlock}.
+			SBRow new addAllMorphs: {leftLabelBlock. shapeBlock. rightLabelBlock}.
+			SBRow new addAllMorphs: {bottomLeftLabelBlock. bottomCenterLabelBlock. bottomRightLabelBlock}};
 		changeTableLayout;
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap;
-		connections: OrderedCollection new
+		connections: OrderedCollection new;
+		color: Color transparent
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> label [
+SBVisualPrimitive >> innerLabel [
 
-	^ label
-]
-
-{ #category : #nil }
-SBVisualPrimitive >> label: anObject [
-
-	label := anObject.
-	self labelBlock contents: anObject asString
+	^ innerLabel
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> labelBlock [
+SBVisualPrimitive >> innerLabel: aMorph [
 
-	^ labelBlock
+	innerLabel := aMorph.
+	shapeBlock removeAllMorphs.
+	shapeBlock addMorphBack: (shape new
+		addMorphBack: aMorph;
+		hResizing: #shrinkWrap)
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> labelBlock: anObject [
+SBVisualPrimitive >> innerLabelColor [
 
-	labelBlock := anObject
+	^ innerLabelColor
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> origin [
+SBVisualPrimitive >> innerLabelColor: aColor [
 
-	^ origin
+	innerLabelColor := aColor
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> origin: anObject [
+SBVisualPrimitive >> leftLabel [
 
-	origin := anObject
+	^ leftLabel
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> leftLabel: aMorph [
+
+	leftLabel := aMorph.
+	self leftLabelBlock removeAllMorphs.
+	self leftLabelBlock addMorphBack: aMorph
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> leftLabelBlock [
+
+	^ leftLabelBlock
 ]
 
 { #category : #'as yet unclassified' }
@@ -124,6 +225,116 @@ SBVisualPrimitive >> printOn: aStream [
 
 	super printOn: aStream.
 	aStream
-		nextPutAll: ' label: ';
-		nextPutAll: self label asString
+		nextPutAll: ' innerLabel ';
+		nextPutAll: self innerLabel asString
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> rightLabel [
+
+	^ rightLabel
+]
+
+{ #category : #'as yet unclassified' }
+SBVisualPrimitive >> rightLabel: aMorph [
+
+	rightLabel := aMorph.
+	self rightLabelBlock removeAllMorphs.
+	self rightLabelBlock addMorphBack: aMorph 
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> rightLabelBlock [
+
+	^ rightLabelBlock 
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> shape [
+
+	^ shape
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> shape: aClass [
+
+	shape := aClass.
+	
+	shapeBlock removeAllMorphs.
+	shapeBlock addMorphBack: (aClass new
+		addMorphBack: self innerLabel;
+		vResizing: #shrinkWrap;
+		hResizing: #shrinkWrap)
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> shapeBlock [
+
+	^ shapeBlock
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> shapeBlock: anObject [
+
+	shapeBlock := anObject
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> topCenterLabel [
+
+	^ topCenterLabel 
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> topCenterLabel: aMorph [
+
+	topCenterLabel := aMorph.
+	self topCenterLabelBlock removeAllMorphs.
+	self topCenterLabelBlock addMorphBack: aMorph
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> topCenterLabelBlock [
+
+	^ topCenterLabelBlock 
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> topLeftLabel [
+
+	^ topLeftLabel 
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> topLeftLabel: aMorph [
+
+	topLeftLabel := aMorph.
+	self topLeftLabelBlock removeAllMorphs.
+	self topLeftLabelBlock addMorphBack: aMorph
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> topLeftLabelBlock [
+
+	^ topLeftLabelBlock 
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> topRightLabel [
+
+	^ topRightLabel
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> topRightLabel: aMorph [
+
+	topRightLabel := aMorph.
+	self topRightLabelBlock removeAllMorphs.
+	self topRightLabelBlock addMorphBack: aMorph
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> topRightLabelBlock [
+
+	^ topRightLabelBlock
 ]

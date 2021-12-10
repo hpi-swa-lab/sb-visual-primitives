@@ -286,7 +286,7 @@ SBTreeDecorator >> secondWalk: modSum [
 	self x: self x + modSum.
 	self morph
 		fullBounds;
-		center: self x @ self depth * 50.
+		center: self x @ self depth * 100.
 	self children do: [:child | child secondWalk: modSum + self mod]
 ]
 
