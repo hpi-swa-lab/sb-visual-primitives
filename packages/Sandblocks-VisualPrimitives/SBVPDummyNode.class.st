@@ -149,9 +149,9 @@ SBVPDummyNode >> right: aNode [
 SBVPDummyNode >> visualPrimitiveMapping [
 
 	^ {
-		#form -> Rectangle.
-		(#innerLabel -> SBTextBubble new)
+		#shape -> RectangleMorph.
+		#innerLabel -> (SBTextBubble new
 			contents: self key;
-			yourself.
+			yourself).
 		#connections -> ({self left. self right} reject: [:connection | connection isNil])}
 ]

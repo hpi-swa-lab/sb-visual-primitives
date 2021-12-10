@@ -61,7 +61,6 @@ SBVPVisualizer >> code: aCodeBlock showCode: aBoolean [
 	aSandblock := aCodeBlock asSandblock.
 	aBoolean ifTrue: [self code addMorphBack: aSandblock].
 	self visualPrimitiveFrom: aSandblock evaluate value
-	"aSandblock evaluate value asVisualPrimitiveIn: self visual"
 ]
 
 { #category : #accessing }
@@ -75,6 +74,24 @@ SBVPVisualizer >> exampleCircleAllLabels [
 			n1 key: 'Rundi jr'.
 			n2 := SBVPCircleAllLabelFixture new.
 			n2 key: 'Kindkreis'.
+			root
+				left: n1;
+				right: n2.
+			root]
+		showCode: true
+]
+
+{ #category : #accessing }
+SBVPVisualizer >> exampleRectangleTopLabel [
+
+	SBVPVisualizer
+		code: [ | root n1 n2 |
+			root := SBVPRectangleTopLabelFixture new.
+			root key: 'Carl-Friedrich'.
+			n1 := SBVPRectangleTopLabelFixture new.
+			n1 key: 'peter'.
+			n2 := SBVPRectangleTopLabelFixture new.
+			n2 key: 'n2'.
 			root
 				left: n1;
 				right: n2.
@@ -142,6 +159,21 @@ SBVPVisualizer >> initialize [
 ]
 
 { #category : #accessing }
+SBVPVisualizer >> labelPositions [
+
+	^ {
+		#innerLabel.
+		#topLeftLabel.
+		#topCenterLabel.
+		#topRightLabel.
+		#rightLabel.
+		#bottomRightLabel.
+		#bottomCenterLabel.
+		#bottomLeftLabel.
+		#leftLabel}
+]
+
+{ #category : #accessing }
 SBVPVisualizer >> showCode [
 
 	^ showCode
@@ -168,33 +200,24 @@ SBVPVisualizer >> visual: anObject [
 { #category : #accessing }
 SBVPVisualizer >> visualPrimitiveFrom: anObject [
 
-	| mapping vp labels |
+	| mapping vp |
 	mapping := anObject visualPrimitiveMapping asDictionary.
 	vp := SBVisualPrimitive new.
 	self visual addMorphBack: vp.
-	labels := {
-		#innerLabel.
-		#topLeftLabel.
-		#topCenterLabel.
-		#topRightLabel.
-		#rightLabel.
-		#bottomRightLabel.
-		#bottomCenterLabel.
-		#bottomLeftLabel.
-		#leftLabel}.
 	mapping ifNotNil: [ | treeDecorator |
 		"add Tree Layout"
 		treeDecorator := SBTreeDecorator new.
 		vp attachDecorator: treeDecorator.
-		labels do: [:positionLabel |
+		self labelPositions do: [:labelPosition |
 			mapping
-				at: positionLabel
-				ifPresent: [:label | vp perform: positionLabel asSimpleSetter with: label]].
+				at: labelPosition
+				ifPresent: [:label | vp perform: labelPosition asSimpleSetter with: label]].
 		mapping at: #connections ifPresent: [:connections |
 			connections do: [:connection |
 				(self visualPrimitiveFrom: connection)
 					withDecorator: SBTreeDecorator
 					do: [:childDecorator | treeDecorator addChild: childDecorator]]].
+		mapping at: #shape ifPresent: [:shape | vp shape: shape].
 		treeDecorator layout].
 	^ vp
 ]

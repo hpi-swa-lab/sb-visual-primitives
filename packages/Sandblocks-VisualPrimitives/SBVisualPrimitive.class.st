@@ -90,13 +90,13 @@ SBVisualPrimitive >> bottomCenterLabel: aMorph [
 { #category : #accessing }
 SBVisualPrimitive >> bottomCenterLabelBlock [
 
-	^ bottomCenterLabelBlock 
+	^ bottomCenterLabelBlock
 ]
 
 { #category : #accessing }
 SBVisualPrimitive >> bottomLeftLabel [
 
-	^ bottomLeftLabel 
+	^ bottomLeftLabel
 ]
 
 { #category : #accessing }
@@ -110,13 +110,13 @@ SBVisualPrimitive >> bottomLeftLabel: aMorph [
 { #category : #accessing }
 SBVisualPrimitive >> bottomLeftLabelBlock [
 
-	^ bottomLeftLabelBlock 
+	^ bottomLeftLabelBlock
 ]
 
 { #category : #accessing }
 SBVisualPrimitive >> bottomRightLabel [
 
-	^ bottomRightLabel 
+	^ bottomRightLabel
 ]
 
 { #category : #accessing }
@@ -130,7 +130,7 @@ SBVisualPrimitive >> bottomRightLabel: aMorph [
 { #category : #accessing }
 SBVisualPrimitive >> bottomRightLabelBlock [
 
-	^ bottomRightLabelBlock 
+	^ bottomRightLabelBlock
 ]
 
 { #category : #accessing }
@@ -149,16 +149,7 @@ SBVisualPrimitive >> connections: anObject [
 SBVisualPrimitive >> initialize [
 
 	super initialize.
-	topLeftLabelBlock := SBColumn new.
-	topCenterLabelBlock := SBColumn new.
-	topRightLabelBlock := SBColumn new.
-	leftLabelBlock := SBColumn new.
-	shapeBlock := SBColumn new.
-	rightLabelBlock := SBColumn new. 
-	bottomLeftLabelBlock := SBColumn new.
-	bottomCenterLabelBlock := SBColumn new.
-	bottomRightLabelBlock := SBColumn new.
-	innerLabel := SBTextBubble new contents: ''.
+	self initializeLabelBlocks.
 	self shape: CircleMorph.
 	self
 		addAllMorphs: {
@@ -170,6 +161,21 @@ SBVisualPrimitive >> initialize [
 		hResizing: #shrinkWrap;
 		connections: OrderedCollection new;
 		color: Color transparent
+]
+
+{ #category : #'as yet unclassified' }
+SBVisualPrimitive >> initializeLabelBlocks [
+
+	topLeftLabelBlock := SBColumn new.
+	topCenterLabelBlock := SBColumn new.
+	topRightLabelBlock := SBColumn new.
+	leftLabelBlock := SBColumn new.
+	shapeBlock := SBColumn new.
+	rightLabelBlock := SBColumn new.
+	bottomLeftLabelBlock := SBColumn new.
+	bottomCenterLabelBlock := SBColumn new.
+	bottomRightLabelBlock := SBColumn new.
+	innerLabel := SBTextBubble new contents: ''
 ]
 
 { #category : #accessing }
@@ -240,13 +246,13 @@ SBVisualPrimitive >> rightLabel: aMorph [
 
 	rightLabel := aMorph.
 	self rightLabelBlock removeAllMorphs.
-	self rightLabelBlock addMorphBack: aMorph 
+	self rightLabelBlock addMorphBack: aMorph
 ]
 
 { #category : #accessing }
 SBVisualPrimitive >> rightLabelBlock [
 
-	^ rightLabelBlock 
+	^ rightLabelBlock
 ]
 
 { #category : #accessing }
@@ -282,7 +288,7 @@ SBVisualPrimitive >> shapeBlock: anObject [
 { #category : #accessing }
 SBVisualPrimitive >> topCenterLabel [
 
-	^ topCenterLabel 
+	^ topCenterLabel
 ]
 
 { #category : #accessing }
@@ -296,13 +302,13 @@ SBVisualPrimitive >> topCenterLabel: aMorph [
 { #category : #accessing }
 SBVisualPrimitive >> topCenterLabelBlock [
 
-	^ topCenterLabelBlock 
+	^ topCenterLabelBlock
 ]
 
 { #category : #accessing }
 SBVisualPrimitive >> topLeftLabel [
 
-	^ topLeftLabel 
+	^ topLeftLabel
 ]
 
 { #category : #accessing }
@@ -316,7 +322,7 @@ SBVisualPrimitive >> topLeftLabel: aMorph [
 { #category : #accessing }
 SBVisualPrimitive >> topLeftLabelBlock [
 
-	^ topLeftLabelBlock 
+	^ topLeftLabelBlock
 ]
 
 { #category : #accessing }
