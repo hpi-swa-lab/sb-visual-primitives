@@ -181,9 +181,9 @@ SBVPPatternMatcherTest >> getLabelList: aPrimitive [
 	list := OrderedCollection new.
 	currentPrimitive := aPrimitive.
 	[currentPrimitive connections notEmpty] whileTrue: [
-		list add: currentPrimitive label.
+		list add: currentPrimitive label asInteger.
 		currentPrimitive := currentPrimitive connections first].
-	list add: currentPrimitive label.
+	list add: currentPrimitive label asInteger.
 	^ list
 ]
 
@@ -214,6 +214,15 @@ SBVPPatternMatcherTest >> testComplexTree [
 			{vp1. vp1 connections first. vp1 connections second}.
 			{vp7. vp7 connections first. vp7 connections second}} asSet
 		equals: matcher getAllMatches asSet
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPatternMatcherTest >> testConstantsWork [
+
+	| tree resultingTree |
+	tree := SBVPDummyNode buildTree: {9 -> {10 -> {8}}}.
+	resultingTree := SBVPExecuter exampleWithConstants: tree.
+	self assert: {10. 8. 9} equals: (self getLabelList: resultingTree asVisualPrimitive) asArray
 ]
 
 { #category : #'as yet unclassified' }

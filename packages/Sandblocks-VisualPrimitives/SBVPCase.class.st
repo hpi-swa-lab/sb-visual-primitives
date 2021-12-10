@@ -3,7 +3,8 @@ Class {
 	#superclass : #SBStSubstitution,
 	#instVars : [
 		'input',
-		'output'
+		'output',
+		'strategy'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
@@ -16,19 +17,34 @@ SBVPCase class >> input: anInputVisualizer output: anOutputVisualizer [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPCase class >> input: anInputVisualizer output: anOutputVisualizer strategy: aSymbol [
+	" marker "
+
+	^ self new
+		input: anInputVisualizer output: anOutputVisualizer;
+		strategy: aSymbol
+]
+
+{ #category : #'as yet unclassified' }
 SBVPCase class >> matches: aBlock [
 
 	(super matches: aBlock) ifFalse: [^ false].
 	
 	^ (aBlock receiver satisfies: #(#notNil #isBinding))
 		and: [aBlock receiver contents = self name]
-		and: [aBlock selector = 'input:output:']
+		and: [(self selector: #input:output: receiverMatches: aBlock) or: [self selector: #input:output:strategy: receiverMatches: aBlock]]
 ]
 
 { #category : #'as yet unclassified' }
 SBVPCase class >> newFor: aBlock [
 
-	^ self new input: aBlock arguments first output: aBlock arguments second
+	^ aBlock arguments size > 2
+		ifTrue: [
+			self
+				input: aBlock arguments first
+				output: aBlock arguments second
+				strategy: aBlock arguments third evaluate]
+		ifFalse: [self input: aBlock arguments first output: aBlock arguments second]
 ]
 
 { #category : #'as yet unclassified' }
@@ -221,11 +237,18 @@ SBVPCase >> findAllBindings: aRootPattern [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPCase >> findRoot [
+
+	self input findConstant root
+]
+
+{ #category : #'as yet unclassified' }
 SBVPCase >> initialize [
 
 	super initialize.
 	
 	self
+		strategy: #exact;
 		addKeyboardCaptureFilter: self;
 		addMouseCaptureFilter: self;
 		hResizing: #shrinkWrap;
@@ -273,36 +296,48 @@ SBVPCase >> output: anObject [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPCase >> replaceAllMatches: aDummyNode [
+SBVPCase >> replaceAllMatches [
 
-	^ self replaceAllMatches: aDummyNode strategy: #exact
+	^ self replaceAllMatches: self findRoot
 ]
 
 { #category : #'as yet unclassified' }
-SBVPCase >> replaceAllMatches: aDummyNode strategy: aSymbol [
+SBVPCase >> replaceAllMatches: aDummyNode [
 
 	| matcher currentPrimitive match |
 	currentPrimitive := aDummyNode asVisualPrimitive.
-	matcher := (SBVPPatternMatcher input: currentPrimitive pattern: self input) strategy: aSymbol.
+	matcher := (SBVPPatternMatcher input: currentPrimitive pattern: self input) strategy: self strategy.
 	[match := matcher getNextMatch] whileNotNil: [
 		currentPrimitive := matcher build: self output fromBinding: match.
 		matcher input: currentPrimitive].
 	^ aDummyNode class fromVisualPrimitive: currentPrimitive
 ]
 
-{ #category : #'as yet unclassified' }
-SBVPCase >> value: aDummyNode [
+{ #category : #accessing }
+SBVPCase >> strategy [
 
-	^ self value: aDummyNode strategy: #exact
+	^ strategy
+]
+
+{ #category : #accessing }
+SBVPCase >> strategy: anObject [
+
+	strategy := anObject
 ]
 
 { #category : #'as yet unclassified' }
-SBVPCase >> value: aDummyNode strategy: aSymbol [
+SBVPCase >> value [
+
+	^ self value: self findRoot
+]
+
+{ #category : #'as yet unclassified' }
+SBVPCase >> value: aDummyNode [
 
 	| matcher match |
 	matcher := (SBVPPatternMatcher
 		input: aDummyNode asVisualPrimitive
-		pattern: self input) strategy: aSymbol.
+		pattern: self input) strategy: self strategy.
 	match := matcher getNextMatch.
 	^ match
 		ifNil: [aDummyNode]

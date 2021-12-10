@@ -33,6 +33,12 @@ SBVPGroupPattern >> buildFromBinding: anArray [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPGroupPattern >> findConstant [
+
+	^ self patterns do: [:pattern | pattern findConstant]
+]
+
+{ #category : #'as yet unclassified' }
 SBVPGroupPattern >> getNext: aVisualPrimitive [
 
 	self patterns do: [:pattern |

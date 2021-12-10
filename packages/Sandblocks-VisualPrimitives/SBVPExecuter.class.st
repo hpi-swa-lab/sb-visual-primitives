@@ -7,8 +7,7 @@ Class {
 		'output',
 		'inputBlock',
 		'caseBlock',
-		'outputBlock',
-		'strategy'
+		'outputBlock'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
@@ -49,7 +48,29 @@ SBVPExecuter class >> exampleBuildHeap [
 SBVPExecuter class >> exampleWithConstants [
 
 	| salzstangen case |
-	salzstangen := SBVPDummyNode buildTree: {9 -> {10 -> {8}}}.
+	SBVPVisualizer code: [SBVPDummyNode buildTree: {9 -> {10 -> {8}}}] showCode: false.
+	SBVPVisualizer
+		code: [
+			salzstangen := SBVPDummyNode buildTree: {9 -> {10 -> {8}}}.
+			case := SBVPCase
+				input: (SBVPGroupPattern patterns: {
+					SBVPBindingPattern
+						constant: salzstangen
+						connections: {SBVPBindingPattern bindingIndex: 1 connections: {SBVPEllipsisPattern bindingIndex: 2}}})
+				output: (SBVPGroupPattern patterns: {
+					SBVPBindingPattern bindingIndex: 1 connections: {
+						SBVPBindingPattern
+							constant: salzstangen
+							connections: {SBVPEllipsisPattern bindingIndex: 2}}})
+				strategy: #subTree.
+			case replaceAllMatches: salzstangen]
+		showCode: true
+]
+
+{ #category : #'as yet unclassified' }
+SBVPExecuter class >> exampleWithConstants: salzstangen [
+
+	| case |
 	case := SBVPCase
 		input: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern
@@ -59,9 +80,29 @@ SBVPExecuter class >> exampleWithConstants [
 			SBVPBindingPattern bindingIndex: 1 connections: {
 				SBVPBindingPattern
 					constant: salzstangen
-					connections: {SBVPEllipsisPattern bindingIndex: 2}}}).
-	"hallo!"
-	^ case replaceAllMatches: salzstangen strategy: #subTree
+					connections: {SBVPEllipsisPattern bindingIndex: 2}}})
+		strategy: #subTree.
+	^ case replaceAllMatches: salzstangen
+]
+
+{ #category : #'as yet unclassified' }
+SBVPExecuter class >> exampleWithWriteBack: salzstangen [
+
+	| case gerhard |
+	case := SBVPCase
+		input: (SBVPGroupPattern patterns: {
+			SBVPBindingPattern constant: salzstangen connections: {
+				SBVPBindingPattern
+					writeBackClosure: [:var | gerhard := var]
+					connections: {SBVPEllipsisPattern bindingIndex: 1}}})
+		output: (SBVPGroupPattern patterns: {
+			SBVPBindingPattern constant: gerhard connections: {
+				SBVPBindingPattern
+					constant: salzstangen
+					connections: {SBVPEllipsisPattern bindingIndex: 1}}}).
+	
+	case replaceAllMatches: salzstangen.
+	^ gerhard
 ]
 
 { #category : #'as yet unclassified' }
@@ -126,7 +167,7 @@ SBVPExecuter >> execute [
 	<action>
 
 	self outputBlock removeAllMorphs.
-	(self case value: self input code firstSubmorph evaluate value strategy: self strategy) asVisualPrimitiveIn: self outputBlock
+	(self case value: self input code firstSubmorph evaluate value) asVisualPrimitiveIn: self outputBlock
 ]
 
 { #category : #accessing }
@@ -134,9 +175,7 @@ SBVPExecuter >> executeAll [
 	<action>
 
 	self outputBlock removeAllMorphs.
-	(self case
-		replaceAllMatches: self input code firstSubmorph evaluate value
-		strategy: self strategy) asVisualPrimitiveIn: self outputBlock
+	(self case replaceAllMatches: self input code firstSubmorph evaluate value) asVisualPrimitiveIn: self outputBlock
 ]
 
 { #category : #accessing }
@@ -145,7 +184,6 @@ SBVPExecuter >> initialize [
 	super initialize.
 	
 	self
-		strategy: #exact;
 		addKeyboardCaptureFilter: self;
 		addMouseCaptureFilter: self;
 		hResizing: #shrinkWrap;
@@ -249,13 +287,13 @@ SBVPExecuter >> saveTryFixing: aFixBoolean quick: aQuickBoolean [
 { #category : #accessing }
 SBVPExecuter >> strategy [
 
-	^ strategy
+	^ self case strategy
 ]
 
 { #category : #accessing }
 SBVPExecuter >> strategy: anObject [
 
-	strategy := anObject
+	self case strategy: anObject
 ]
 
 { #category : #'as yet unclassified' }

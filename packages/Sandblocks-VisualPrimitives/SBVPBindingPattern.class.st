@@ -6,7 +6,9 @@ Class {
 		'canMatchAllChildren',
 		'connectionBlocks',
 		'constant',
-		'bindingIndex'
+		'bindingIndex',
+		'writeBackClosure',
+		'writeBackClosureString'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
@@ -42,7 +44,7 @@ SBVPBindingPattern class >> constant: anObject connections: aCollection [
 { #category : #'as yet unclassified' }
 SBVPBindingPattern class >> matches: aBlock [
 
-	^ {#bindingIndex:. #constant:} anySatisfy: [:methodName | (self selector: methodName receiverMatches: aBlock) or: [self selector: methodName, #connections: receiverMatches: aBlock]]
+	^ {#bindingIndex:. #constant:. #writeBackClosure:} anySatisfy: [:methodName | (self selector: methodName receiverMatches: aBlock) or: [self selector: methodName, #connections: receiverMatches: aBlock]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -55,6 +57,22 @@ SBVPBindingPattern class >> newFor: aBlock [
 				with: aBlock arguments first
 				with: aBlock arguments second childSandblocks]
 		ifFalse: [self perform: aBlock selector asSymbol with: aBlock arguments first]
+]
+
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern class >> writeBackClosure: aClosure [
+	"should look like [:var | yourVariable := var]"
+
+	^ self writeBackClosure: aClosure connections: {}
+]
+
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern class >> writeBackClosure: aClosure connections: aCollection [
+	"should look like [:var | yourVariable := var]"
+
+	^ self new
+		writeBackClosure: aClosure;
+		connections: aCollection
 ]
 
 { #category : #accessing }
@@ -173,6 +191,7 @@ SBVPBindingPattern >> couldMatch: aVisualPrimitive [
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> drawOn: aCanvas [
 
+	self writeBackClosure ifNotNil: [aCanvas frameOval: (self bounds outsetBy: 5) width: 2 color: Color black].
 	super drawOn: aCanvas.
 	aCanvas frameRectangle: (self bounds outsetBy: 1) width: 2 color: color
 ]
@@ -181,6 +200,13 @@ SBVPBindingPattern >> drawOn: aCanvas [
 SBVPBindingPattern >> enoughChildren: aVisualPrimitive [
 
 	^ self childrenInCurrentMatch <= aVisualPrimitive connections size
+]
+
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern >> findConstant [
+
+	self constant ifNotNil: [^ self].
+	^ super findConstant
 ]
 
 { #category : #accessing }
@@ -271,6 +297,7 @@ SBVPBindingPattern >> setBindingFor: aVisualPrimitive in: aCollection [
 		(aCollection at: self bindingIndex)
 			ifNotNil: [:previousValue | previousValue = binding ifFalse: [^ false]]
 			ifNil: [aCollection at: self bindingIndex put: binding]].
+	self writeBackClosure ifNotNil: [self writeBackClosure value: currentPrimitive].
 	^ (self couldMatch: currentPrimitive) and: [self setConnectionBindingFor: currentPrimitive in: aCollection]
 ]
 
@@ -285,6 +312,38 @@ SBVPBindingPattern >> setConnectionBindingFor: aVisualPrimitive in: aCollection 
 			in: aCollection.
 		offset := offset + connection indexOffset.
 		wasSuccessful]
+]
+
+{ #category : #accessing }
+SBVPBindingPattern >> writeBackClosure [
+
+	^ writeBackClosure
+]
+
+{ #category : #accessing }
+SBVPBindingPattern >> writeBackClosure: anObject [
+
+	writeBackClosure := anObject isSandblock
+		ifTrue: [ | variableBlock |
+			self label: anObject contents.
+			variableBlock := anObject statements first receiver copy.
+			self labelBlock replaceBy: variableBlock.
+			self labelBlock: variableBlock.
+			self writeBackClosureString: anObject sourceString.
+			anObject evaluate]
+		ifFalse: [anObject]
+]
+
+{ #category : #accessing }
+SBVPBindingPattern >> writeBackClosureString [
+
+	^ writeBackClosureString
+]
+
+{ #category : #accessing }
+SBVPBindingPattern >> writeBackClosureString: aString [
+
+	writeBackClosureString := aString
 ]
 
 { #category : #'as yet unclassified' }
@@ -303,6 +362,11 @@ SBVPBindingPattern >> writeSourceOn: aStream [
 		aStream
 			nextPutAll: ' constant: ';
 			nextPutAll: self label asString].
+	
+	self writeBackClosure ifNotNil: [
+		aStream
+			nextPutAll: ' writeBackClosure: ';
+			nextPutAll: self writeBackClosureString].
 	
 	self connections ifNotEmpty: [
 		aStream nextPutAll: ' connections: {'.

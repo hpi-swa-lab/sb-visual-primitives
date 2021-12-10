@@ -21,7 +21,9 @@ Class {
 		'topCenterLabelBlock',
 		'topLeftLabel',
 		'topLeftLabelBlock',
-		'leftLabelBlock'
+		'leftLabelBlock',
+		'parent',
+		'origin'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
@@ -94,6 +96,12 @@ SBVisualPrimitive >> bottomCenterLabelBlock [
 ]
 
 { #category : #accessing }
+SBVisualPrimitive >> bottomCenterLabelBlock: anObject [
+
+	bottomCenterLabelBlock := anObject
+]
+
+{ #category : #accessing }
 SBVisualPrimitive >> bottomLeftLabel [
 
 	^ bottomLeftLabel
@@ -111,6 +119,12 @@ SBVisualPrimitive >> bottomLeftLabel: aMorph [
 SBVisualPrimitive >> bottomLeftLabelBlock [
 
 	^ bottomLeftLabelBlock
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> bottomLeftLabelBlock: anObject [
+
+	bottomLeftLabelBlock := anObject
 ]
 
 { #category : #accessing }
@@ -134,6 +148,12 @@ SBVisualPrimitive >> bottomRightLabelBlock [
 ]
 
 { #category : #accessing }
+SBVisualPrimitive >> bottomRightLabelBlock: anObject [
+
+	bottomRightLabelBlock := anObject
+]
+
+{ #category : #accessing }
 SBVisualPrimitive >> connections [
 
 	^ connections
@@ -142,7 +162,8 @@ SBVisualPrimitive >> connections [
 { #category : #accessing }
 SBVisualPrimitive >> connections: anObject [
 
-	connections := anObject
+	connections := anObject.
+	connections do: [:child | child parent: self]
 ]
 
 { #category : #'as yet unclassified' }
@@ -207,6 +228,18 @@ SBVisualPrimitive >> innerLabelColor: aColor [
 ]
 
 { #category : #accessing }
+SBVisualPrimitive >> label [
+
+	^ self innerLabel contents asInteger
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> label: anObject [
+
+	^ self innerLabel: (SBTextBubble new contents: anObject asString)
+]
+
+{ #category : #accessing }
 SBVisualPrimitive >> leftLabel [
 
 	^ leftLabel
@@ -224,6 +257,36 @@ SBVisualPrimitive >> leftLabel: aMorph [
 SBVisualPrimitive >> leftLabelBlock [
 
 	^ leftLabelBlock
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> leftLabelBlock: anObject [
+
+	leftLabelBlock := anObject
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> origin [
+
+	^ origin
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> origin: anObject [
+
+	origin := anObject
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> parent [
+
+	^ parent
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> parent: anObject [
+
+	parent := anObject
 ]
 
 { #category : #'as yet unclassified' }
@@ -253,6 +316,18 @@ SBVisualPrimitive >> rightLabel: aMorph [
 SBVisualPrimitive >> rightLabelBlock [
 
 	^ rightLabelBlock
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> rightLabelBlock: anObject [
+
+	rightLabelBlock := anObject
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> root [
+
+	^ self parent ifNil: [self] ifNotNil: [self parent root]
 ]
 
 { #category : #accessing }
@@ -306,6 +381,12 @@ SBVisualPrimitive >> topCenterLabelBlock [
 ]
 
 { #category : #accessing }
+SBVisualPrimitive >> topCenterLabelBlock: anObject [
+
+	topCenterLabelBlock := anObject
+]
+
+{ #category : #accessing }
 SBVisualPrimitive >> topLeftLabel [
 
 	^ topLeftLabel
@@ -326,6 +407,12 @@ SBVisualPrimitive >> topLeftLabelBlock [
 ]
 
 { #category : #accessing }
+SBVisualPrimitive >> topLeftLabelBlock: anObject [
+
+	topLeftLabelBlock := anObject
+]
+
+{ #category : #accessing }
 SBVisualPrimitive >> topRightLabel [
 
 	^ topRightLabel
@@ -343,4 +430,10 @@ SBVisualPrimitive >> topRightLabel: aMorph [
 SBVisualPrimitive >> topRightLabelBlock [
 
 	^ topRightLabelBlock
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> topRightLabelBlock: anObject [
+
+	topRightLabelBlock := anObject
 ]
