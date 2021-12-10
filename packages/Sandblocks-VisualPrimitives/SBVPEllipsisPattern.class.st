@@ -10,7 +10,7 @@ Class {
 { #category : #'as yet unclassified' }
 SBVPEllipsisPattern >> buildFromBinding: anArray [
 
-	^ (anArray at: self label asInteger) veryDeepCopy
+	^ (anArray at: self bindingIndex) veryDeepCopy
 ]
 
 { #category : #'as yet unclassified' }

@@ -18,7 +18,7 @@ SBVPWildcardPattern >> bindingFor: aVisualPrimitive [
 SBVPWildcardPattern >> buildFromBinding: anArray [
 
 	| binding |
-	binding := anArray at: self label asInteger.
+	binding := anArray at: self bindingIndex.
 	^ {self buildFromBinding: anArray currentPrimitive: (binding at: #root)}
 ]
 
@@ -26,7 +26,7 @@ SBVPWildcardPattern >> buildFromBinding: anArray [
 SBVPWildcardPattern >> buildFromBinding: anArray currentPrimitive: aVisualPrimitive [
 
 	| output binding leaf |
-	binding := anArray at: self label asInteger.
+	binding := anArray at: self bindingIndex.
 	leaf := binding at: #leaf.
 	
 	output := aVisualPrimitive copy.

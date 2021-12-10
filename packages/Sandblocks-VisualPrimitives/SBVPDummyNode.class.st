@@ -61,6 +61,7 @@ SBVPDummyNode >> asVisualPrimitive [
 	vs := SBVisualPrimitive new label: self key asString.
 	self left ifNotNil: [:left | vs connections add: left asVisualPrimitive].
 	self right ifNotNil: [:right | vs connections add: right asVisualPrimitive].
+	vs origin: self.
 	^ vs
 ]
 
@@ -80,6 +81,7 @@ SBVPDummyNode >> asVisualPrimitiveIn: aWorld [
 			withDecorator: SBTreeDecorator
 			do: [:childDecorator | decorator addChild: childDecorator]].
 	self parent ifNil: [decorator layout].
+	vs origin: self.
 	^ vs
 ]
 

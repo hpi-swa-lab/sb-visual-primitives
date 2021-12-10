@@ -152,5 +152,5 @@ SBVPGroupPattern >> writeSourceOn: aStream [
 	self patterns do: [:pattern |
 		pattern writeSourceOn: aStream.
 		aStream nextPut: $.].
-	aStream nextPutAll: '})'.
+	aStream nextPutAll: '})'
 ]

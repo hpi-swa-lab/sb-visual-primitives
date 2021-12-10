@@ -106,5 +106,5 @@ SBVPConstraintPattern >> writeSourceOn: aStream [
 
 	aStream nextPutAll: '(SBVPConstraintPattern constraint: '.
 	self constraintBlock writeSourceOn: aStream.
-	aStream nextPut: $).
+	aStream nextPut: $)
 ]

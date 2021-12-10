@@ -114,7 +114,7 @@ SBVPVisualizer >> showCode [
 { #category : #accessing }
 SBVPVisualizer >> showCode: anObject [
 
-	showCode := anObject.
+	showCode := anObject
 ]
 
 { #category : #accessing }

@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'label',
 		'labelBlock',
-		'connections'
+		'connections',
+		'origin'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
@@ -104,6 +105,18 @@ SBVisualPrimitive >> labelBlock [
 SBVisualPrimitive >> labelBlock: anObject [
 
 	labelBlock := anObject
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> origin [
+
+	^ origin
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> origin: anObject [
+
+	origin := anObject
 ]
 
 { #category : #'as yet unclassified' }

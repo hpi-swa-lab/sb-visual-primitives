@@ -4,29 +4,45 @@ Class {
 	#instVars : [
 		'firstChildOffset',
 		'canMatchAllChildren',
-		'connectionBlocks'
+		'connectionBlocks',
+		'constant',
+		'bindingIndex'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
 
 { #category : #'as yet unclassified' }
-SBVPBindingPattern class >> label: anObject [
+SBVPBindingPattern class >> bindingIndex: anObject [
 
-	^ self label: anObject connections: {}
+	^ self bindingIndex: anObject connections: {}
 ]
 
 { #category : #'as yet unclassified' }
-SBVPBindingPattern class >> label: anObject connections: aCollection [
+SBVPBindingPattern class >> bindingIndex: anObject connections: aCollection [
 
 	^ self new
-		label: anObject;
+		bindingIndex: anObject;
+		connections: aCollection
+]
+
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern class >> constant: anObject [
+
+	^ self constant: anObject connections: {}
+]
+
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern class >> constant: anObject connections: aCollection [
+
+	^ self new
+		constant: anObject;
 		connections: aCollection
 ]
 
 { #category : #'as yet unclassified' }
 SBVPBindingPattern class >> matches: aBlock [
 
-	^ (self selector: #label:connections: receiverMatches: aBlock) or: [self selector: #label: receiverMatches: aBlock]
+	^ {#bindingIndex:. #constant:} anySatisfy: [:methodName | (self selector: methodName receiverMatches: aBlock) or: [self selector: methodName, #connections: receiverMatches: aBlock]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -34,13 +50,11 @@ SBVPBindingPattern class >> newFor: aBlock [
 
 	^ aBlock arguments size > 1
 		ifTrue: [
-			self new
-				label: aBlock arguments first evaluate;
-				connectionBlocks: aBlock arguments second childSandblocks]
-		ifFalse: [
-			self new
-				label: aBlock arguments first evaluate;
-				connectionBlocks: {}]
+			self
+				perform: aBlock selector asSymbol
+				with: aBlock arguments first
+				with: aBlock arguments second childSandblocks]
+		ifFalse: [self perform: aBlock selector asSymbol with: aBlock arguments first]
 ]
 
 { #category : #accessing }
@@ -66,6 +80,21 @@ SBVPBindingPattern >> bindingFor: aVisualPrimitive [
 	^ self getCurrentPrimitive: aVisualPrimitive
 ]
 
+{ #category : #accessing }
+SBVPBindingPattern >> bindingIndex [
+
+	^ bindingIndex
+]
+
+{ #category : #accessing }
+SBVPBindingPattern >> bindingIndex: anObject [
+
+	bindingIndex := anObject isSandblock
+		ifTrue: [anObject evaluate]
+		ifFalse: [anObject].
+	self label: bindingIndex asString
+]
+
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> buildChildrenFromBinding: anArray [
 
@@ -76,7 +105,9 @@ SBVPBindingPattern >> buildChildrenFromBinding: anArray [
 SBVPBindingPattern >> buildFromBinding: anArray [
 
 	| output |
-	output := (anArray at: self label asInteger) copy.
+	output := self constant
+		ifNotNil: [self constant asVisualPrimitive]
+		ifNil: [(anArray at: self bindingIndex) copy].
 	output connections: (self buildChildrenFromBinding: anArray).
 	^ {output}
 ]
@@ -115,10 +146,28 @@ SBVPBindingPattern >> connectionBlocks: aCollection [
 	connections := aCollection
 ]
 
+{ #category : #accessing }
+SBVPBindingPattern >> constant [
+
+	^ constant
+]
+
+{ #category : #accessing }
+SBVPBindingPattern >> constant: anObject [
+
+	constant := anObject isSandblock
+		ifTrue: [
+			self label: anObject contents.
+			self labelBlock replaceBy: anObject.
+			self labelBlock: anObject.
+			anObject evaluate ifNil: [#placeholder]]
+		ifFalse: [anObject]
+]
+
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> couldMatch: aVisualPrimitive [
 
-	^ self childrenInCurrentMatch = aVisualPrimitive connections size
+	^ self childrenInCurrentMatch = aVisualPrimitive connections size and: [self constant isNil or: [self constant = aVisualPrimitive origin]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -217,12 +266,11 @@ SBVPBindingPattern >> setBindingFor: aVisualPrimitive in: aCollection [
 
 	| currentPrimitive |
 	currentPrimitive := self getCurrentPrimitive: aVisualPrimitive.
-	self label ifNotNil: [ | variableIndex binding |
-		variableIndex := self label asInteger.
+	self bindingIndex ifNotNil: [ | binding |
 		binding := self bindingFor: aVisualPrimitive.
-		(aCollection at: variableIndex)
+		(aCollection at: self bindingIndex)
 			ifNotNil: [:previousValue | previousValue = binding ifFalse: [^ false]]
-			ifNil: [aCollection at: variableIndex put: binding]].
+			ifNil: [aCollection at: self bindingIndex put: binding]].
 	^ (self couldMatch: currentPrimitive) and: [self setConnectionBindingFor: currentPrimitive in: aCollection]
 ]
 
@@ -243,10 +291,18 @@ SBVPBindingPattern >> setConnectionBindingFor: aVisualPrimitive in: aCollection 
 SBVPBindingPattern >> writeSourceOn: aStream [
 
 	aStream
-		nextPut:  $(;
-		nextPutAll: self class name;
-		nextPutAll: ' label: ';
-		nextPutAll: self label asString.
+		nextPut: $(;
+		nextPutAll: self class name.
+	
+	self bindingIndex ifNotNil: [
+		aStream
+			nextPutAll: ' bindingIndex: ';
+			nextPutAll: self bindingIndex asString].
+	
+	self constant ifNotNil: [
+		aStream
+			nextPutAll: ' constant: ';
+			nextPutAll: self label asString].
 	
 	self connections ifNotEmpty: [
 		aStream nextPutAll: ' connections: {'.
@@ -254,5 +310,5 @@ SBVPBindingPattern >> writeSourceOn: aStream [
 			connection writeSourceOn: aStream.
 			aStream nextPut: $.].
 		aStream nextPut: $}].
-	aStream nextPut: $).
+	aStream nextPut: $)
 ]

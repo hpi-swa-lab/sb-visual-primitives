@@ -117,7 +117,9 @@ SBVPCase >> example [
 SBVPCase >> exampleWithBindingPattern [
 
 	SBVPCase
-		input: (SBVPGroupPattern patterns: {SBVPBindingPattern label: 1 connections: {}. SBVPConstraintPattern constraint: [:b | b label = 20]})
+		input: (SBVPGroupPattern patterns: {
+			SBVPBindingPattern bindingIndex: 1 connections: {}.
+			SBVPConstraintPattern constraint: [:b | b label = 20]})
 		output: (SBVPVisualizer
 			code: [ | root n1 n2 |
 				root := SBVPDummyNode new.
@@ -139,8 +141,8 @@ SBVPCase >> exampleWithBindingPatterns [
 	SBVPCase
 		input: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern
-				label: 1
-				connections: {SBVPBindingPattern label: 2 connections: {}. SBVPBindingPattern label: 3 connections: {}}.
+				bindingIndex: 1
+				connections: {SBVPBindingPattern bindingIndex: 2 connections: {}. SBVPBindingPattern bindingIndex: 3 connections: {}}.
 			SBVPConstraintPattern constraint: [:b | b label = 20]})
 		output: (SBVPVisualizer
 			code: [ | root n1 n2 |
@@ -162,13 +164,13 @@ SBVPCase >> exampleWithEllipsisAndWildcardPattern [
 
 	SBVPCase
 		input: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern
-				label: 1
-				connections: {SBVPEllipsisPattern label: 2 connections: {}. SBVPWildcardPattern label: 3 connections: {}}.
+			SBVPBindingPattern bindingIndex: 1 connections: {
+				SBVPEllipsisPattern bindingIndex: 2 connections: {}.
+				SBVPWildcardPattern bindingIndex: 3 connections: {}}.
 			SBVPConstraintPattern constraint: [:b | b label = 20]})
-		output: (SBVPBindingPattern
-			label: 1
-			connections: {SBVPEllipsisPattern label: 2 connections: {}. SBVPWildcardPattern label: 3 connections: {}})
+		output: (SBVPBindingPattern bindingIndex: 1 connections: {
+			SBVPEllipsisPattern bindingIndex: 2 connections: {}.
+			SBVPWildcardPattern bindingIndex: 3 connections: {}})
 ]
 
 { #category : #'as yet unclassified' }
@@ -177,13 +179,13 @@ SBVPCase >> exampleWithPatterns [
 	^ SBVPCase
 		input: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern
-				label: 1
-				connections: {SBVPBindingPattern label: 2 connections: {}. SBVPBindingPattern label: 3 connections: {}}.
+				bindingIndex: 1
+				connections: {SBVPBindingPattern bindingIndex: 2 connections: {}. SBVPBindingPattern bindingIndex: 3 connections: {}}.
 			SBVPConstraintPattern constraint: [:c :b :a | true]})
 		output: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern
-				label: 1
-				connections: {SBVPBindingPattern label: 3 connections: {}. SBVPBindingPattern label: 2 connections: {}}})
+				bindingIndex: 1
+				connections: {SBVPBindingPattern bindingIndex: 3 connections: {}. SBVPBindingPattern bindingIndex: 2 connections: {}}})
 ]
 
 { #category : #'as yet unclassified' }
@@ -192,13 +194,13 @@ SBVPCase >> exampleWithPatterns: aDummyNode [
 	^ (SBVPCase
 		input: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern
-				label: 1
-				connections: {SBVPBindingPattern label: 2 connections: {}. SBVPBindingPattern label: 3 connections: {}}.
+				bindingIndex: 1
+				connections: {SBVPBindingPattern bindingIndex: 2 connections: {}. SBVPBindingPattern bindingIndex: 3 connections: {}}.
 			SBVPConstraintPattern constraint: [:a :b :c | true]})
 		output: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern
-				label: 1
-				connections: {SBVPBindingPattern label: 3 connections: {}. SBVPBindingPattern label: 2 connections: {}}})) value: aDummyNode
+				bindingIndex: 1
+				connections: {SBVPBindingPattern bindingIndex: 3 connections: {}. SBVPBindingPattern bindingIndex: 2 connections: {}}})) value: aDummyNode
 ]
 
 { #category : #'as yet unclassified' }
@@ -253,7 +255,8 @@ SBVPCase >> input: aSBBlock output: anotherSBBlock [
 			addMorphBack: SBIcon iconArrowRight;
 			addMorphBack: anotherSBBlock);
 		input: aSBBlock;
-		output: anotherSBBlock";
+		output: anotherSBBlock
+	";
 		colorDifferences"
 ]
 

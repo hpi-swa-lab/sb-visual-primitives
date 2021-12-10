@@ -46,6 +46,25 @@ SBVPExecuter class >> exampleBuildHeap [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPExecuter class >> exampleWithConstants [
+
+	| salzstangen case |
+	salzstangen := SBVPDummyNode buildTree: {9 -> {10 -> {8}}}.
+	case := SBVPCase
+		input: (SBVPGroupPattern patterns: {
+			SBVPBindingPattern
+				constant: salzstangen
+				connections: {SBVPBindingPattern bindingIndex: 1 connections: {SBVPEllipsisPattern bindingIndex: 2}}})
+		output: (SBVPGroupPattern patterns: {
+			SBVPBindingPattern bindingIndex: 1 connections: {
+				SBVPBindingPattern
+					constant: salzstangen
+					connections: {SBVPEllipsisPattern bindingIndex: 2}}}).
+	"hallo!"
+	^ case replaceAllMatches: salzstangen strategy: #subTree
+]
+
+{ #category : #'as yet unclassified' }
 SBVPExecuter class >> matches: aBlock [
 
 	(super matches: aBlock) ifFalse: [^ false].
@@ -57,8 +76,11 @@ SBVPExecuter class >> matches: aBlock [
 
 { #category : #'as yet unclassified' }
 SBVPExecuter class >> newFor: aBlock [
-	
-	^ self case: aBlock arguments first input: aBlock arguments second strategy: aBlock arguments third evaluate
+
+	^ self
+		case: aBlock arguments first
+		input: aBlock arguments second
+		strategy: aBlock arguments third evaluate
 ]
 
 { #category : #accessing }
