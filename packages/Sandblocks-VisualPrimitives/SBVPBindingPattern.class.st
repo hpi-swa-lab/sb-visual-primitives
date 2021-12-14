@@ -172,7 +172,7 @@ SBVPBindingPattern >> constant [
 
 { #category : #accessing }
 SBVPBindingPattern >> constant: anObject [
-	
+
 	constant := anObject isSandblock
 		ifTrue: [
 			self innerLabel: anObject.

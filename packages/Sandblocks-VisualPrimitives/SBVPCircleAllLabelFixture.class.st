@@ -9,14 +9,14 @@ SBVPCircleAllLabelFixture >> visualPrimitiveMapping [
 
 	^ {
 		#shape -> CircleMorph.
-		#innerLabel -> (SBTextBubble new contents: self key).
+		#innerLabel -> #key.
 		#topLeftLabel -> SBIcon iconUsb.
-		#topCenterLabel -> (SBTextBubble new contents: 'tc').
-		#topRightLabel -> (SBTextBubble new contents: 'tr').
-		#rightLabel -> (SBTextBubble new contents: 'r').
-		#bottomRightLabel -> (SBTextBubble new contents: 'H').
-		#bottomCenterLabel -> (SBTextBubble new contents: 'H').
-		#bottomLeftLabel -> (SBTextBubble new contents: 'H').
-		#leftLabel -> (SBTextBubble new contents: 'H').
+		#topCenterLabel -> 'tc'.
+		#topRightLabel -> 'tr'.
+		#rightLabel -> 'r'.
+		#bottomRightLabel -> 'br'.
+		#bottomCenterLabel -> 'bc'.
+		#bottomLeftLabel -> 'bl'.
+		#leftLabel -> 'l'.
 		#connections -> ({self left. self right} reject: [:connection | connection isNil])}
 ]

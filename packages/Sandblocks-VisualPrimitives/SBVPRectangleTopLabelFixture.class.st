@@ -9,7 +9,12 @@ SBVPRectangleTopLabelFixture >> visualPrimitiveMapping [
 
 	^ {
 		#shape -> RectangleMorph.
-		#topCenterLabel -> (SBTextBubble new contents: 'top').
-		#innerLabel -> (SBTextBubble new contents: self key).
+		#topCenterLabel -> 'top'.
+		SBVPPropertyMapping
+			getter: [SBTextBubble new contents: 'Test']
+			setter: [:aString | Transcript showln: aString]
+			position: #bottomCenterLabel
+			optionalArgs: {} asDictionary.
+		#innerLabel -> #key.
 		#connections -> ({self left. self right} reject: [:connection | connection isNil])}
 ]

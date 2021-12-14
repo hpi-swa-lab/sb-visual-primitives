@@ -200,25 +200,32 @@ SBVPVisualizer >> visual: anObject [
 { #category : #accessing }
 SBVPVisualizer >> visualPrimitiveFrom: anObject [
 
-	| mapping vp |
-	mapping := anObject visualPrimitiveMapping asDictionary.
+	| mapping vp treeDecorator |
+	mapping := anObject visualPrimitiveMapping.
 	vp := SBVisualPrimitive new.
 	self visual addMorphBack: vp.
-	mapping ifNotNil: [ | treeDecorator |
-		"add Tree Layout"
-		treeDecorator := SBTreeDecorator new.
-		vp attachDecorator: treeDecorator.
-		self labelPositions do: [:labelPosition |
-			mapping
-				at: labelPosition
-				ifPresent: [:label | vp perform: labelPosition asSimpleSetter with: label]].
-		mapping at: #connections ifPresent: [:connections |
-			connections do: [:connection |
-				(self visualPrimitiveFrom: connection)
-					withDecorator: SBTreeDecorator
-					do: [:childDecorator | treeDecorator addChild: childDecorator]]].
-		mapping at: #shape ifPresent: [:shape | vp shape: shape].
-		treeDecorator layout].
+	
+	"add Tree Layout"
+	treeDecorator := SBTreeDecorator new.
+	vp attachDecorator: treeDecorator.
+	mapping do: [:mappingEntry |
+		mappingEntry isPropertyMapping
+			ifTrue: [vp addPropertyMapping: mappingEntry]
+			ifFalse: [
+				"we have an association here"
+				mappingEntry key = #shape ifTrue: [vp shape: mappingEntry value].
+				mappingEntry key = #connections ifTrue: [
+					mappingEntry value do: [:connection |
+						(self visualPrimitiveFrom: connection)
+							withDecorator: SBTreeDecorator
+							do: [:childDecorator | treeDecorator addChild: childDecorator]]].
+				mappingEntry key = #innerLabel
+					ifTrue: [vp innerLabel: (SBVPPropertyMapping fromAssociation: mappingEntry for: anObject)]
+					ifFalse: [
+						(self labelPositions includes: mappingEntry key) ifTrue: [ | propertyMapping |
+							propertyMapping := SBVPPropertyMapping fromAssociation: mappingEntry for: anObject.
+							vp addPropertyMapping: propertyMapping]]]].
+	treeDecorator layout.
 	^ vp
 ]
 

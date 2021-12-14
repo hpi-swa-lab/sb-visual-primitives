@@ -9,6 +9,6 @@ SBVPCircleFixture >> visualPrimitiveMapping [
 
 	^ {
 		#shape -> CircleMorph.
-		#innerLabel -> (SBTextBubble new contents: self key).
+		#innerLabel -> #key.
 		#connections -> ({self left. self right} reject: [:connection | connection isNil])}
 ]
