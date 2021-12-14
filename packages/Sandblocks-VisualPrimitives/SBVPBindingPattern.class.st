@@ -172,12 +172,10 @@ SBVPBindingPattern >> constant [
 
 { #category : #accessing }
 SBVPBindingPattern >> constant: anObject [
-
+	
 	constant := anObject isSandblock
 		ifTrue: [
-			self label: anObject contents.
-			self labelBlock replaceBy: anObject.
-			self labelBlock: anObject.
+			self innerLabel: anObject.
 			anObject evaluate ifNil: [#placeholder]]
 		ifFalse: [anObject]
 ]
@@ -325,10 +323,8 @@ SBVPBindingPattern >> writeBackClosure: anObject [
 
 	writeBackClosure := anObject isSandblock
 		ifTrue: [ | variableBlock |
-			self label: anObject contents.
 			variableBlock := anObject statements first receiver copy.
-			self labelBlock replaceBy: variableBlock.
-			self labelBlock: variableBlock.
+			self innerLabel: variableBlock.
 			self writeBackClosureString: anObject sourceString.
 			anObject evaluate]
 		ifFalse: [anObject]
@@ -361,7 +357,7 @@ SBVPBindingPattern >> writeSourceOn: aStream [
 	self constant ifNotNil: [
 		aStream
 			nextPutAll: ' constant: ';
-			nextPutAll: self label asString].
+			nextPutAll: self innerLabel contents].
 	
 	self writeBackClosure ifNotNil: [
 		aStream

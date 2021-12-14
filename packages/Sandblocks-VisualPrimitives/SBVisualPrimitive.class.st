@@ -208,11 +208,12 @@ SBVisualPrimitive >> innerLabel [
 { #category : #accessing }
 SBVisualPrimitive >> innerLabel: aMorph [
 
+	| shapeMorph |
 	innerLabel := aMorph.
 	shapeBlock removeAllMorphs.
-	shapeBlock addMorphBack: (shape new
-		addMorphBack: aMorph;
-		hResizing: #shrinkWrap)
+	shapeBlock addMorphBack: (shapeMorph := shape new
+		hResizing: #shrinkWrap).
+	shapeMorph addMorphBack: aMorph
 ]
 
 { #category : #accessing }

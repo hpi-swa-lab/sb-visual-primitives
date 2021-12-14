@@ -28,16 +28,16 @@ SBVPExecuter class >> exampleBuildHeap [
 	^ SBVPExecuter
 		case: (SBVPCase
 			input: (SBVPGroupPattern patterns: {
-				SBVPBindingPattern label: 1 connections: {
-					SBVPEllipsisPattern label: 2.
-					SBVPBindingPattern label: 3 connections: {SBVPEllipsisPattern label: 5}.
-					SBVPEllipsisPattern label: 4}.
+				SBVPBindingPattern bindingIndex: 1 connections: {
+					SBVPEllipsisPattern bindingIndex: 2.
+					SBVPBindingPattern bindingIndex: 3 connections: {SBVPEllipsisPattern bindingIndex: 5}.
+					SBVPEllipsisPattern bindingIndex: 4}.
 				SBVPConstraintPattern constraint: [:a :b :c :d :e | c label asInteger < a label asInteger]})
 			output: (SBVPGroupPattern patterns: {
-				SBVPBindingPattern label: 3 connections: {
-					SBVPEllipsisPattern label: 2.
-					SBVPBindingPattern label: 1 connections: {SBVPEllipsisPattern label: 5}.
-					SBVPEllipsisPattern label: 4}}))
+				SBVPBindingPattern bindingIndex: 3 connections: {
+					SBVPEllipsisPattern bindingIndex: 2.
+					SBVPBindingPattern bindingIndex: 1 connections: {SBVPEllipsisPattern bindingIndex: 5}.
+					SBVPEllipsisPattern bindingIndex: 4}}))
 		input: (SBVPVisualizer
 			code: [SBVPDummyNode buildTree: {9 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}]
 			showCode: true)

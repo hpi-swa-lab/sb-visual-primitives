@@ -151,7 +151,7 @@ SBVPDummyNode >> visualPrimitiveMapping [
 	^ {
 		#shape -> RectangleMorph.
 		#innerLabel -> (SBTextBubble new
-			contents: self key;
+			contents: self key asString;
 			yourself).
 		#connections -> ({self left. self right} reject: [:connection | connection isNil])}
 ]
