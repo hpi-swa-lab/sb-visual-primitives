@@ -60,7 +60,7 @@ SBVPVisualizer >> code: aCodeBlock showCode: aBoolean [
 	self visual removeAllMorphs.
 	aSandblock := aCodeBlock asSandblock.
 	self code addMorphBack: aSandblock.
-	aSandblock hide.
+	aBoolean ifFalse: [aSandblock hide].
 	self visualPrimitiveFrom: aSandblock evaluate value
 ]
 

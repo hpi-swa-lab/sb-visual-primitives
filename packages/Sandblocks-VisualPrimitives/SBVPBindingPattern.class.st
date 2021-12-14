@@ -356,7 +356,7 @@ SBVPBindingPattern >> writeSourceOn: aStream [
 	self constant ifNotNil: [
 		aStream
 			nextPutAll: ' constant: ';
-			nextPutAll: self innerLabel contents].
+			nextPutAll: self label].
 	
 	self writeBackClosure ifNotNil: [
 		aStream

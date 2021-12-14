@@ -190,12 +190,13 @@ SBVisualPrimitive >> initializeLabelBlocks [
 { #category : #accessing }
 SBVisualPrimitive >> innerLabel: anObject [
 
+	| morph |
 	(self blockDict at: #innerLabel)
 		removeAllMorphs;
-		addMorphBack: (shape new
+		addMorphBack: (morph := shape new
 			hResizing: #shrinkWrap;
-			vResizing: #shrinkWrap;
-			addMorphBack: (self getLabelMorph: anObject))
+			vResizing: #shrinkWrap).
+	morph addMorphBack: (self getLabelMorph: anObject)
 ]
 
 { #category : #accessing }
@@ -203,7 +204,7 @@ SBVisualPrimitive >> label [
 
 	| boi |
 	boi := self blockDict at: #innerLabel.
-	boi hasSubmorphs ifTrue: [boi firstSubmorph hasSubmorphs ifTrue: [^ boi firstSubmorph firstSubmorph contents asInteger]].
+	boi hasSubmorphs ifTrue: [boi firstSubmorph hasSubmorphs ifTrue: [^ boi firstSubmorph firstSubmorph contents]].
 	^ nil
 ]
 
