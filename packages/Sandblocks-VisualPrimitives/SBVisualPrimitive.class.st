@@ -113,6 +113,22 @@ SBVisualPrimitive >> addToWorld: aWorld [
 	^ self subclassResponsibility
 ]
 
+{ #category : #accessing }
+SBVisualPrimitive >> artefactChanged: aMethod [
+	"schreibe meine aktuellen Werte in meine origin zurück"
+	"geh meine attribute durch, für jedes attr:
+			setter mit Ziel origin aufrufen (MutateCommand)
+			"
+	"erstmal nur inner label ^.^"
+
+	| currentSetter |
+	currentSetter := (self labelDict at: #innerLabel) setter.
+	self sandblockEditor do: (SBMutatePropertyCommand new
+		target: self origin;
+		selector: #key;
+		value: (self blockDict at: #innerLabel) firstSubmorph firstSubmorph contents)
+]
+
 { #category : #'as yet unclassified' }
 SBVisualPrimitive >> asVisualPrimitive [
 
@@ -268,7 +284,7 @@ SBVisualPrimitive >> printOn: aStream [
 	super printOn: aStream.
 	aStream
 		nextPutAll: ' innerLabel: ';
-		nextPutAll: self label
+		nextPutAll: self labelDict asString
 ]
 
 { #category : #accessing }
@@ -301,6 +317,23 @@ SBVisualPrimitive >> shape: aClass [
 SBVisualPrimitive >> topLabelPositions [
 
 	^ {#topLeftLabel. #topCenterLabel. #topRightLabel}
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> writeBack [
+	"schreibe meine aktuellen Werte in meine origin zurück"
+	"geh meine attribute durch, für jedes attr:
+			setter mit Ziel origin aufrufen (MutateCommand)
+			"
+	"erstmal nur inner label ^.^"
+
+	| currentSetter |
+	self halt.
+	currentSetter := self labelDict at: #innerLabel setter.
+	^ SBMutatePropertyCommand new
+		target: self origin;
+		selector: currentSetter;
+		value: (self blockDict at: #innerLabel text)
 ]
 
 { #category : #'as yet unclassified' }

@@ -122,17 +122,18 @@ SBVPVisualizer >> exampleSimpleCircle [
 SBVPVisualizer >> exampleSimpleRectangle [
 
 	SBVPVisualizer
-		code: [ | root n1 n2 |
-			root := SBVPDummyNode new.
-			root key: 'Carl-Friedrich'.
-			n1 := SBVPDummyNode new.
-			n1 key: 'peter'.
-			n2 := SBVPDummyNode new.
-			n2 key: 'n2'.
-			root
-				left: n1;
-				right: n2.
-			root]
+		code: [
+			[ | root n1 n2 |
+				root := SBVPDummyNode new.
+				root key: 'Carl-Friedrich'.
+				n1 := SBVPDummyNode new.
+				n1 key: 'peter'.
+				n2 := SBVPDummyNode new.
+				n2 key: 'n2'.
+				root
+					left: n1;
+					right: n2.
+				root]]
 		showCode: true
 ]
 
