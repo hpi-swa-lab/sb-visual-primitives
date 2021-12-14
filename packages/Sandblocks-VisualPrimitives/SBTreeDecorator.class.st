@@ -205,17 +205,15 @@ SBTreeDecorator >> initialize [
 
 	super initialize.
 	children := OrderedCollection new.
-	depth := 0.
 	parent := nil.
-	mod := 0.
-	shift := 0.
-	change := 0
+	self reset
 ]
 
 { #category : #'as yet unclassified' }
 SBTreeDecorator >> layout [
 
 	self
+		resetAll;
 		firstWalk;
 		secondWalk: 0
 ]
@@ -278,6 +276,22 @@ SBTreeDecorator >> removeConnector: aConnector [
 		self children remove: childDecorator.
 		childDecorator parent: nil].
 	aConnector abandon
+]
+
+{ #category : #'as yet unclassified' }
+SBTreeDecorator >> reset [
+
+	depth := 0.
+	mod := 0.
+	shift := 0.
+	change := 0
+]
+
+{ #category : #'as yet unclassified' }
+SBTreeDecorator >> resetAll [
+
+	self reset.
+	self children do: [:child | child reset]
 ]
 
 { #category : #'as yet unclassified' }

@@ -203,8 +203,7 @@ SBVPBindingPattern >> enoughChildren: aVisualPrimitive [
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> findConstant [
 
-	self constant ifNotNil: [^ self].
-	^ super findConstant
+	^ self constant ifNil: [super findConstant]
 ]
 
 { #category : #accessing }
@@ -295,7 +294,7 @@ SBVPBindingPattern >> setBindingFor: aVisualPrimitive in: aCollection [
 		(aCollection at: self bindingIndex)
 			ifNotNil: [:previousValue | previousValue = binding ifFalse: [^ false]]
 			ifNil: [aCollection at: self bindingIndex put: binding]].
-	self writeBackClosure ifNotNil: [self writeBackClosure value: currentPrimitive].
+	self writeBackClosure ifNotNil: [self writeBackClosure value: currentPrimitive origin].
 	^ (self couldMatch: currentPrimitive) and: [self setConnectionBindingFor: currentPrimitive in: aCollection]
 ]
 

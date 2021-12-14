@@ -47,12 +47,12 @@ SBVPExecuter class >> exampleBuildHeap [
 { #category : #'as yet unclassified' }
 SBVPExecuter class >> exampleWithConstants [
 
-	| salzstangen case |
+	| salzstangen |
 	SBVPVisualizer code: [SBVPDummyNode buildTree: {9 -> {10 -> {8}}}] showCode: false.
 	SBVPVisualizer
 		code: [
 			salzstangen := SBVPDummyNode buildTree: {9 -> {10 -> {8}}}.
-			case := SBVPCase
+			SBVPCase
 				input: (SBVPGroupPattern patterns: {
 					SBVPBindingPattern
 						constant: salzstangen
@@ -62,8 +62,8 @@ SBVPExecuter class >> exampleWithConstants [
 						SBVPBindingPattern
 							constant: salzstangen
 							connections: {SBVPEllipsisPattern bindingIndex: 2}}})
-				strategy: #subTree.
-			case replaceAllMatches: salzstangen]
+				strategy: #subTree
+				replaceAll: true]
 		showCode: true
 ]
 
@@ -83,26 +83,6 @@ SBVPExecuter class >> exampleWithConstants: salzstangen [
 					connections: {SBVPEllipsisPattern bindingIndex: 2}}})
 		strategy: #subTree.
 	^ case replaceAllMatches: salzstangen
-]
-
-{ #category : #'as yet unclassified' }
-SBVPExecuter class >> exampleWithWriteBack: salzstangen [
-
-	| case gerhard |
-	case := SBVPCase
-		input: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern constant: salzstangen connections: {
-				SBVPBindingPattern
-					writeBackClosure: [:var | gerhard := var]
-					connections: {SBVPEllipsisPattern bindingIndex: 1}}})
-		output: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern constant: gerhard connections: {
-				SBVPBindingPattern
-					constant: salzstangen
-					connections: {SBVPEllipsisPattern bindingIndex: 1}}}).
-	
-	case replaceAllMatches: salzstangen.
-	^ gerhard
 ]
 
 { #category : #'as yet unclassified' }

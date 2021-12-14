@@ -40,6 +40,35 @@ SBVisualPrimitive class >> new: aLabel [
 ]
 
 { #category : #'as yet unclassified' }
+SBVisualPrimitive class >> newFromObject: anObject [
+
+	| vp treeDecorator |
+	vp := self new.
+	vp origin: anObject.
+	
+	treeDecorator := SBTreeDecorator new.
+	vp attachDecorator: treeDecorator.
+	anObject visualPrimitiveMapping do: [:mappingEntry | vp addPropertyMapping: mappingEntry].
+	treeDecorator layout.
+	^ vp
+]
+
+{ #category : #'as yet unclassified' }
+SBVisualPrimitive class >> newFromObject: anObject in: aMorph [
+
+	| vp treeDecorator |
+	vp := self new.
+	aMorph addMorphBack: vp.
+	vp origin: anObject.
+	
+	treeDecorator := SBTreeDecorator new.
+	vp attachDecorator: treeDecorator.
+	anObject visualPrimitiveMapping do: [:mappingEntry | vp addPropertyMapping: mappingEntry].
+	treeDecorator layout.
+	^ vp
+]
+
+{ #category : #'as yet unclassified' }
 SBVisualPrimitive class >> selector: aString receiverMatches: aMessage [
 
 	(aMessage isSandblock and: [(aMessage isMessageSend and: [aMessage receiver notNil]) or: [self matchesCascades and: [aMessage isCascade]]]) ifFalse: [^ false].
@@ -50,14 +79,32 @@ SBVisualPrimitive class >> selector: aString receiverMatches: aMessage [
 { #category : #accessing }
 SBVisualPrimitive >> addPropertyMapping: anSBVPPropertyMapping [
 
-	| morphy value positionBlock |
-	value := anSBVPPropertyMapping getter value.
-	self labelDict at: anSBVPPropertyMapping position put: anSBVPPropertyMapping.
-	morphy := self getLabelMorph: value.
-	positionBlock := self blockDict at: anSBVPPropertyMapping position.
-	positionBlock
-		removeAllMorphs;
-		addMorphBack: morphy
+	| morphy value positionBlock propertyMapping |
+	propertyMapping := anSBVPPropertyMapping.
+	anSBVPPropertyMapping isPropertyMapping ifFalse: [
+		propertyMapping := SBVPPropertyMapping
+			fromAssociation: anSBVPPropertyMapping
+			for: self origin].
+	
+	self labelDict at: propertyMapping position put: propertyMapping.
+	value := propertyMapping getter value.
+	
+	propertyMapping position
+		caseOf: {
+			[#shape] -> [self shape: value].
+			[#innerLabel] -> [self innerLabel: value].
+			[#connections] -> [
+				value do: [:connection |
+					(self class newFromObject: connection in: self owner)
+						withDecorator: SBTreeDecorator
+						do: [:childDecorator | self withDecorator: SBTreeDecorator do: [:treeDecorator | treeDecorator addChild: childDecorator]]]]}
+		otherwise: [
+			(self labelPositions includes: propertyMapping position) ifTrue: [
+				morphy := self getLabelMorph: value.
+				positionBlock := self blockDict at: propertyMapping position.
+				positionBlock
+					removeAllMorphs;
+					addMorphBack: morphy]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -141,22 +188,23 @@ SBVisualPrimitive >> initializeLabelBlocks [
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> innerLabel: anSBVPPropertyMapping [
+SBVisualPrimitive >> innerLabel: anObject [
 
-	| shapeMorph |
-	self labelDict at: #innerLabel put: anSBVPPropertyMapping.
-	shapeMorph := self blockDict at: #innerLabel.
-	shapeMorph removeAllMorphs.
-	shapeMorph addMorphBack: (shape new
-		hResizing: #shrinkWrap;
-		vResizing: #shrinkWrap;
-		addMorphBack: (self getLabelMorph: (self getLabelMorph: anSBVPPropertyMapping getter value)))
+	(self blockDict at: #innerLabel)
+		removeAllMorphs;
+		addMorphBack: (shape new
+			hResizing: #shrinkWrap;
+			vResizing: #shrinkWrap;
+			addMorphBack: (self getLabelMorph: anObject))
 ]
 
 { #category : #accessing }
 SBVisualPrimitive >> label [
 
-	^ self innerLabel contents asInteger
+	| boi |
+	boi := self blockDict at: #innerLabel.
+	boi hasSubmorphs ifTrue: [boi firstSubmorph hasSubmorphs ifTrue: [^ boi firstSubmorph firstSubmorph contents asInteger]].
+	^ nil
 ]
 
 { #category : #accessing }
@@ -218,8 +266,8 @@ SBVisualPrimitive >> printOn: aStream [
 
 	super printOn: aStream.
 	aStream
-		nextPutAll: ' innerLabel ';
-		nextPutAll: self innerLabel asString
+		nextPutAll: ' innerLabel: ';
+		nextPutAll: self label
 ]
 
 { #category : #accessing }
@@ -252,4 +300,10 @@ SBVisualPrimitive >> shape: aClass [
 SBVisualPrimitive >> topLabelPositions [
 
 	^ {#topLeftLabel. #topCenterLabel. #topRightLabel}
+]
+
+{ #category : #'as yet unclassified' }
+SBVisualPrimitive >> writeSourceOn: aStream [
+
+	
 ]

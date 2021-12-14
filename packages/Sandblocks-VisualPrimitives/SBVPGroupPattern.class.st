@@ -35,7 +35,8 @@ SBVPGroupPattern >> buildFromBinding: anArray [
 { #category : #'as yet unclassified' }
 SBVPGroupPattern >> findConstant [
 
-	^ self patterns do: [:pattern | pattern findConstant]
+	self patterns do: [:child | child findConstant ifNotNil: [:constant | ^ constant]].
+	^ nil
 ]
 
 { #category : #'as yet unclassified' }

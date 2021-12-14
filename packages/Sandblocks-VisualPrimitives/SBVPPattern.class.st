@@ -7,7 +7,14 @@ Class {
 { #category : #'as yet unclassified' }
 SBVPPattern >> findConstant [
 
-	^ self connections do: [:child | child findConstant]
+	self connections do: [:child | child findConstant ifNotNil: [:constant | ^ constant]].
+	^ nil
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPattern >> findOriginRoot [
+
+	^ self findConstant asVisualPrimitive root origin
 ]
 
 { #category : #'as yet unclassified' }

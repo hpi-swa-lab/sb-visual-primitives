@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'input',
 		'output',
-		'strategy'
+		'strategy',
+		'replaceAll'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
@@ -26,24 +27,39 @@ SBVPCase class >> input: anInputVisualizer output: anOutputVisualizer strategy: 
 ]
 
 { #category : #'as yet unclassified' }
+SBVPCase class >> input: anInputVisualizer output: anOutputVisualizer strategy: aSymbol replaceAll: aBoolean [
+	" marker "
+
+	| case |
+	case := self new
+		input: anInputVisualizer output: anOutputVisualizer;
+		strategy: aSymbol.
+	
+	^ aBoolean
+		ifNotNil: [aBoolean ifTrue: [case replaceAllMatches] ifFalse: [case value]]
+		ifNil: [case]
+]
+
+{ #category : #'as yet unclassified' }
 SBVPCase class >> matches: aBlock [
 
 	(super matches: aBlock) ifFalse: [^ false].
 	
 	^ (aBlock receiver satisfies: #(#notNil #isBinding))
 		and: [aBlock receiver contents = self name]
-		and: [(self selector: #input:output: receiverMatches: aBlock) or: [self selector: #input:output:strategy: receiverMatches: aBlock]]
+		and: [{#input:output:. #input:output:strategy:. #input:output:strategy:replaceAll:} anySatisfy: [:selector | self selector: selector receiverMatches: aBlock]]
 ]
 
 { #category : #'as yet unclassified' }
 SBVPCase class >> newFor: aBlock [
 
 	^ aBlock arguments size > 2
-		ifTrue: [
-			self
+		ifTrue: [ | replaceAll |
+			replaceAll := aBlock arguments size > 3 ifTrue: [aBlock arguments fourth evaluate].
+			(self
 				input: aBlock arguments first
 				output: aBlock arguments second
-				strategy: aBlock arguments third evaluate]
+				strategy: aBlock arguments third evaluate) replaceAll: replaceAll]
 		ifFalse: [self input: aBlock arguments first output: aBlock arguments second]
 ]
 
@@ -67,6 +83,12 @@ SBVPCase >> addSubPattern: aBlock [
 SBVPCase >> buildOutput: aPattern fromBinding: anArray [
 
 	^ aPattern buildFromBinding: anArray
+]
+
+{ #category : #'as yet unclassified' }
+SBVPCase >> color [
+
+	^ color
 ]
 
 { #category : #'as yet unclassified' }
@@ -237,20 +259,12 @@ SBVPCase >> findAllBindings: aRootPattern [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPCase >> findRoot [
-
-	self input findConstant root
-]
-
-{ #category : #'as yet unclassified' }
 SBVPCase >> initialize [
 
 	super initialize.
 	
 	self
 		strategy: #exact;
-		addKeyboardCaptureFilter: self;
-		addMouseCaptureFilter: self;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
 		changeTableLayout;
@@ -295,10 +309,23 @@ SBVPCase >> output: anObject [
 	output := anObject
 ]
 
+{ #category : #accessing }
+SBVPCase >> replaceAll [
+
+	^ replaceAll
+]
+
+{ #category : #accessing }
+SBVPCase >> replaceAll: anObject [
+
+	replaceAll := anObject.
+	anObject ifNotNil: [self color: (anObject ifTrue: [Color seaFoam] ifFalse: [Color spindrift])]
+]
+
 { #category : #'as yet unclassified' }
 SBVPCase >> replaceAllMatches [
 
-	^ self replaceAllMatches: self findRoot
+	^ self replaceAllMatches: self input findOriginRoot
 ]
 
 { #category : #'as yet unclassified' }
@@ -328,7 +355,7 @@ SBVPCase >> strategy: anObject [
 { #category : #'as yet unclassified' }
 SBVPCase >> value [
 
-	^ self value: self findRoot
+	^ self value: self input findOriginRoot
 ]
 
 { #category : #'as yet unclassified' }
@@ -351,5 +378,14 @@ SBVPCase >> writeSourceOn: aStream [
 	self input writeSourceOn: aStream.
 	aStream nextPutAll: ' output: '.
 	self output writeSourceOn: aStream.
+	
+	self strategy ifNotNil: [
+		aStream nextPutAll: ' strategy: '.
+		self strategy storeOn: aStream].
+	
+	self replaceAll ifNotNil: [
+		aStream nextPutAll: ' replaceAll: '.
+		self replaceAll storeOn: aStream].
+	
 	aStream nextPut: $)
 ]
