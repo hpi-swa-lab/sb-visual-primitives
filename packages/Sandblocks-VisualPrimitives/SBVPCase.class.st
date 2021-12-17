@@ -18,22 +18,22 @@ SBVPCase class >> input: anInputVisualizer output: anOutputVisualizer [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPCase class >> input: anInputVisualizer output: anOutputVisualizer strategy: aSymbol [
+SBVPCase class >> input: anInputVisualizer output: anOutputVisualizer strategy: aDict [
 	" marker "
 
 	^ self new
 		input: anInputVisualizer output: anOutputVisualizer;
-		strategy: aSymbol
+		strategy: aDict
 ]
 
 { #category : #'as yet unclassified' }
-SBVPCase class >> input: anInputVisualizer output: anOutputVisualizer strategy: aSymbol replaceAll: aBoolean [
+SBVPCase class >> input: anInputVisualizer output: anOutputVisualizer strategy: aDict replaceAll: aBoolean [
 	" marker "
 
 	| case |
 	case := self new
 		input: anInputVisualizer output: anOutputVisualizer;
-		strategy: aSymbol.
+		strategy: aDict.
 	
 	^ aBoolean
 		ifNotNil: [aBoolean ifTrue: [case replaceAllMatches] ifFalse: [case value]]
@@ -264,7 +264,7 @@ SBVPCase >> initialize [
 	super initialize.
 	
 	self
-		strategy: #exact;
+		strategy: Dictionary new;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
 		changeTableLayout;

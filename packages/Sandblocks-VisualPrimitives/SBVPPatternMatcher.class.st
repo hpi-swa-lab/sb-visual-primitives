@@ -53,7 +53,7 @@ SBVPPatternMatcher >> currentPrimitive: aPrimitive [
 { #category : #accessing }
 SBVPPatternMatcher >> dealWithUndefinedResult [
 
-	self strategy = #exact ifTrue: [^ nil].
+	(self strategy at: #explicitRootMatching ifAbsent: [true]) ifTrue: [^ nil].
 	
 	[self searchStack notEmpty] whileTrue: [
 		self currentPrimitive connections do: [:aConnection |
@@ -100,7 +100,7 @@ SBVPPatternMatcher >> getNextMatch [
 SBVPPatternMatcher >> initialize [
 
 	super initialize.
-	self strategy: #exact
+	self strategy: Dictionary new
 ]
 
 { #category : #accessing }
@@ -163,9 +163,9 @@ SBVPPatternMatcher >> strategy [
 ]
 
 { #category : #accessing }
-SBVPPatternMatcher >> strategy: aSymbol [
+SBVPPatternMatcher >> strategy: aDict [
 
-	strategy := aSymbol
+	strategy := aDict
 ]
 
 { #category : #accessing }

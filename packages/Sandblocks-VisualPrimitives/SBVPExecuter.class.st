@@ -13,13 +13,13 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBVPExecuter class >> case: aVPCase input: aVisualizer strategy: aSymbol [
+SBVPExecuter class >> case: aVPCase input: aVisualizer strategy: aDict [
 	"marker"
 
 	^ self new
 		case: aVPCase;
 		input: aVisualizer;
-		strategy: aSymbol
+		strategy: aDict
 ]
 
 { #category : #'as yet unclassified' }
@@ -41,7 +41,7 @@ SBVPExecuter class >> exampleBuildHeap [
 		input: (SBVPVisualizer
 			code: [SBVPDummyNode buildTree: {9 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}]
 			showCode: true)
-		strategy: #subTree
+		strategy: {#explicitRootMatching -> false} asDictionary
 ]
 
 { #category : #'as yet unclassified' }
@@ -62,7 +62,7 @@ SBVPExecuter class >> exampleWithConstants [
 						SBVPBindingPattern
 							constant: salzstangen
 							connections: {SBVPEllipsisPattern bindingIndex: 2}}})
-				strategy: #subTree
+				strategy: {#explicitRootMatching -> false} asDictionary
 				replaceAll: true]
 		showCode: true
 ]
@@ -81,7 +81,7 @@ SBVPExecuter class >> exampleWithConstants: salzstangen [
 				SBVPBindingPattern
 					constant: salzstangen
 					connections: {SBVPEllipsisPattern bindingIndex: 2}}})
-		strategy: #subTree.
+		strategy: {#explicitRootMatching -> false} asDictionary.
 	^ case replaceAllMatches: salzstangen
 ]
 
@@ -271,9 +271,9 @@ SBVPExecuter >> strategy [
 ]
 
 { #category : #accessing }
-SBVPExecuter >> strategy: anObject [
+SBVPExecuter >> strategy: aDict [
 
-	self case strategy: anObject
+	self case strategy: aDict
 ]
 
 { #category : #'as yet unclassified' }

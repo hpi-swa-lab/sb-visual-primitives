@@ -24,7 +24,7 @@ SBVPQuery class >> exampleExtractLeafOf: salzstangen [
 					SBVPBindingPattern
 						writeBackClosure: [:var | gerhard := var]
 						connections: {SBVPEllipsisPattern bindingIndex: 1}}})
-			strategy: #exact] whileNotNil: [
+			strategy: {#explicitRootMatching -> true} asDictionary] whileNotNil: [
 		Transcript showln: gerhard key.
 		currentSnack := gerhard].
 	^ gerhard
@@ -38,12 +38,12 @@ SBVPQuery class >> input: anInputVisualizer [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPQuery class >> input: anInputVisualizer strategy: aSymbol [
+SBVPQuery class >> input: anInputVisualizer strategy: aDict [
 	" marker "
 
 	^ (self new
 		input: anInputVisualizer;
-		strategy: aSymbol) query
+		strategy: aDict) query
 ]
 
 { #category : #'as yet unclassified' }
@@ -73,7 +73,7 @@ SBVPQuery >> initialize [
 	super initialize.
 	
 	self
-		strategy: #exact;
+		strategy: Dictionary new;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
 		changeTableLayout;
