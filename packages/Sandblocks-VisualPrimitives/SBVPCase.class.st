@@ -5,7 +5,8 @@ Class {
 		'input',
 		'output',
 		'strategy',
-		'replaceAll'
+		'replaceAll',
+		'informationRow'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
@@ -74,9 +75,24 @@ SBVPCase class >> suggestion [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPCase >> addStrategyToggleButton [
+
+	| correctIcon |
+	
+	correctIcon := (self strategy at: #explicitRootMatching) ifTrue: [SBIcon iconAnchor] ifFalse: [SBIcon iconTree].
+	self informationRow addMorphBack: (SBButton new icon: correctIcon label: 'toggle strategy' do: [self toggleStrategy])
+]
+
+{ #category : #'as yet unclassified' }
 SBVPCase >> addSubPattern: aBlock [
 
 	
+]
+
+{ #category : #'as yet unclassified' }
+SBVPCase >> artefactChanged: aMethodBlock [
+
+	self halt.
 ]
 
 { #category : #'as yet unclassified' }
@@ -259,12 +275,29 @@ SBVPCase >> findAllBindings: aRootPattern [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPCase >> hasUnsavedChanges [
+
+	^ super hasUnsavedChanges or: [(self valueOfProperty: #strategyChanged) ifNil: [false]]
+]
+
+{ #category : #accessing }
+SBVPCase >> informationRow [
+
+	^ informationRow
+]
+
+{ #category : #accessing }
+SBVPCase >> informationRow: aBlock [
+
+	informationRow := aBlock.
+]
+
+{ #category : #'as yet unclassified' }
 SBVPCase >> initialize [
 
 	super initialize.
 	
 	self
-		strategy: Dictionary new;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
 		changeTableLayout;
@@ -287,12 +320,16 @@ SBVPCase >> input: anObject [
 SBVPCase >> input: aSBBlock output: anotherSBBlock [
 
 	self
-		addMorph: (SBRow new
-			addMorphBack: aSBBlock;
-			addMorphBack: SBIcon iconArrowRight;
-			addMorphBack: anotherSBBlock);
+		addMorph: (SBColumn new
+			addMorphBack: (informationRow := SBRow new);
+			addMorphBack: (SBRow new
+				addMorphBack: aSBBlock;
+				addMorphBack: SBIcon iconArrowRight;
+				addMorphBack: anotherSBBlock));
 		input: aSBBlock;
-		output: anotherSBBlock
+		output: anotherSBBlock.
+		
+	self addStrategyToggleButton.
 	";
 		colorDifferences"
 ]
@@ -343,13 +380,32 @@ SBVPCase >> replaceAllMatches: aDummyNode [
 { #category : #accessing }
 SBVPCase >> strategy [
 
-	^ strategy
+	^ strategy ifNil: [self strategy: {#explicitRootMatching -> true} asDictionary. self strategy]
 ]
 
 { #category : #accessing }
-SBVPCase >> strategy: anObject [
+SBVPCase >> strategy: aDict [
 
-	strategy := anObject
+	strategy := aDict.
+	self informationRow removeAllMorphs.
+	self addStrategyToggleButton.
+]
+
+{ #category : #accessing }
+SBVPCase >> strategyToggleButton [
+	
+	^ self informationRow firstSubmorph
+]
+
+{ #category : #'as yet unclassified' }
+SBVPCase >> toggleStrategy [
+
+	
+	self strategy at: #explicitRootMatching put: ((self strategy at: #explicitRootMatching) not).
+	self informationRow removeAllMorphs.
+	self addStrategyToggleButton.
+	self setProperty: #strategyChanged toValue: true.
+	self triggerEvent: #changed.
 ]
 
 { #category : #'as yet unclassified' }
