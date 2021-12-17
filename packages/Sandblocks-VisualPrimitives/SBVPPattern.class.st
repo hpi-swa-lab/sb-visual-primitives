@@ -5,6 +5,18 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBVPPattern >> addImplicitChildren: anArray [
+
+	
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPattern >> buildImplicitChildren: anArray [
+
+	
+]
+
+{ #category : #'as yet unclassified' }
 SBVPPattern >> findConstant [
 
 	self connections do: [:child | child findConstant ifNotNil: [:constant | ^ constant]].
@@ -48,5 +60,11 @@ SBVPPattern >> reset [
 { #category : #'as yet unclassified' }
 SBVPPattern >> setBindingFor: aVisualPrimitive in: aCollection [
 
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPattern >> wantsImplicitNeighbors [
+	
 	^ true
 ]

@@ -75,6 +75,12 @@ SBVPBindingPattern class >> writeBackClosure: aClosure connections: aCollection 
 		connections: aCollection
 ]
 
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern >> addImplicitChildren: anArray [
+
+	self flag: #TODO
+]
+
 { #category : #accessing }
 SBVPBindingPattern >> addToWorld: aWorld [
 
@@ -128,6 +134,36 @@ SBVPBindingPattern >> buildFromBinding: anArray [
 		ifNil: [(anArray at: self bindingIndex) copy].
 	output connections: (self buildChildrenFromBinding: anArray).
 	^ {output}
+]
+
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern >> buildImplicitChildren: anArray [
+
+	| implicitChildren nextIndex oldConnections addImplicitChild |
+	implicitChildren := OrderedCollection new.
+	nextIndex := anArray size + 1.
+	anArray do: [:subArray | nextIndex := nextIndex max: subArray max].
+	
+	oldConnections := self connections copy.
+	
+	addImplicitChild := [:index | | implicitChild |
+		implicitChild := SBVPEllipsisPattern bindingIndex: nextIndex.
+		self connections add: implicitChild at: index + implicitChildren size + 1.
+		implicitChildren add: nextIndex.
+		nextIndex := nextIndex + 1].
+	
+	(self connections isEmpty or: [self connections first wantsImplicitNeighbors]) ifTrue: [addImplicitChild value: 0].
+	
+	oldConnections withIndexDo: [:connection :index |
+		(connection wantsImplicitNeighbors and: [
+			self connections
+				at: index + 1
+				ifPresent: [:nextChild | nextChild wantsImplicitNeighbors]
+				ifAbsent: [true]]) ifTrue: [addImplicitChild value: index]].
+	
+	anArray at: self bindingIndex put: implicitChildren asArray.
+	
+	oldConnections do: [:connections | connections buildImplicitChildren: anArray]
 ]
 
 { #category : #accessing }
@@ -198,6 +234,12 @@ SBVPBindingPattern >> drawOn: aCanvas [
 SBVPBindingPattern >> enoughChildren: aVisualPrimitive [
 
 	^ self childrenInCurrentMatch <= aVisualPrimitive connections size
+]
+
+{ #category : #accessing }
+SBVPBindingPattern >> explicitChildrenMatching: anObject [
+
+	explicitChildrenMatching := anObject
 ]
 
 { #category : #'as yet unclassified' }

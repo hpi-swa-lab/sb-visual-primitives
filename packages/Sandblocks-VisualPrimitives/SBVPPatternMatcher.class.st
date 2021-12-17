@@ -36,6 +36,19 @@ SBVPPatternMatcher >> build: aPattern fromBinding: anArray currentPrimitive: aVi
 ]
 
 { #category : #accessing }
+SBVPPatternMatcher >> buildImplicitChildrenMatchingPattern [
+	
+	self flag: #TODO. "Move everything to SBVPCase"
+	self input removeImplicitChildren.
+	self output removeImplicitChildren.
+	
+	self explicitChildrenMatching ifFalse: [ | additionalNodes |
+		additionalNodes := self emptyBindingArray.
+		self input buildImplicitChildren: additionalNodes.
+		self output addImplicitChildren: additionalNodes]
+]
+
+{ #category : #accessing }
 SBVPPatternMatcher >> currentPrimitive [
 
 	^ self searchStack last
@@ -47,7 +60,8 @@ SBVPPatternMatcher >> currentPrimitive: aPrimitive [
 	self searchStack: LinkedList new.
 	self searchStack addLast: aPrimitive.
 	self visitedPrimitives: Set new.
-	self visitedPrimitives add: aPrimitive
+	self visitedPrimitives add: aPrimitive.
+	self buildImplicitChildrenMatchingPattern
 ]
 
 { #category : #accessing }
@@ -67,6 +81,18 @@ SBVPPatternMatcher >> dealWithUndefinedResult [
 	^ nil
 ]
 
+{ #category : #accessing }
+SBVPPatternMatcher >> emptyBindingArray [
+
+	^ Array new: self pattern highestBindingVariable
+]
+
+{ #category : #accessing }
+SBVPPatternMatcher >> explicitChildrenMatching [
+
+	^ self strategy at: #explicitChildrenMatching ifAbsent: [true]
+]
+
 { #category : #'as yet unclassified' }
 SBVPPatternMatcher >> getAllMatches [
 
@@ -80,7 +106,7 @@ SBVPPatternMatcher >> getAllMatches [
 SBVPPatternMatcher >> getMatch [
 
 	| bindings |
-	bindings := Array new: self pattern highestBindingVariable.
+	bindings := self emptyBindingArray.
 	(self pattern setBindingFor: self currentPrimitive in: bindings) ifFalse: [^ self getNextMatch].
 	(self pattern matches: self currentPrimitive withBinding: bindings) ifFalse: [^ self getNextMatch].
 	^ bindings
@@ -165,7 +191,8 @@ SBVPPatternMatcher >> strategy [
 { #category : #accessing }
 SBVPPatternMatcher >> strategy: aDict [
 
-	strategy := aDict
+	strategy := aDict.
+	self buildImplicitChildrenMatchingPattern
 ]
 
 { #category : #accessing }

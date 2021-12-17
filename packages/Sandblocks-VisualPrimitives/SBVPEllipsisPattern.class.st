@@ -14,6 +14,10 @@ SBVPEllipsisPattern >> buildFromBinding: anArray [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPEllipsisPattern >> buildImplicitChildren: anArray [
+]
+
+{ #category : #'as yet unclassified' }
 SBVPEllipsisPattern >> connections: aCollection [
 
 	self assert: aCollection isEmpty description: 'Ellipses should not have children'.
@@ -72,4 +76,10 @@ SBVPEllipsisPattern >> searchRootFor: aVisualPrimitive at: anIndex [
 	^ aVisualPrimitive connections
 		copyFrom: anIndex
 		to: anIndex + self indexOffset
+]
+
+{ #category : #'as yet unclassified' }
+SBVPEllipsisPattern >> wantsImplicitNeighbors [
+	
+	^ false
 ]
