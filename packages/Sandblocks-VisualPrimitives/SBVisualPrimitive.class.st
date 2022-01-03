@@ -115,11 +115,6 @@ SBVisualPrimitive >> addToWorld: aWorld [
 
 { #category : #accessing }
 SBVisualPrimitive >> artefactChanged: aMethod [
-	"schreibe meine aktuellen Werte in meine origin zurück"
-	"geh meine attribute durch, für jedes attr:
-			setter mit Ziel origin aufrufen (MutateCommand)
-			"
-	"erstmal nur inner label ^.^"
 
 	| currentSetter |
 	currentSetter := (self labelDict at: #innerLabel) setter.

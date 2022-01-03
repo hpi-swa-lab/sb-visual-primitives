@@ -100,9 +100,7 @@ SBVPExecuter class >> matches: aBlock [
 { #category : #'as yet unclassified' }
 SBVPExecuter class >> newFor: aBlock [
 
-	^ self
-		case: aBlock arguments first
-		input: aBlock arguments second
+	^ self case: aBlock arguments first input: aBlock arguments second
 ]
 
 { #category : #accessing }

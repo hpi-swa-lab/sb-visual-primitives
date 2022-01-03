@@ -87,10 +87,10 @@ SBVPQuery >> input [
 ]
 
 { #category : #accessing }
-SBVPQuery >> input: aSBBlock [
+SBVPQuery >> input: anSBBlock [
 
-	self addMorph: aSBBlock.
-	input := aSBBlock
+	self addMorph: anSBBlock.
+	input := anSBBlock
 ]
 
 { #category : #'as yet unclassified' }

@@ -78,8 +78,9 @@ SBVPCase class >> suggestion [
 SBVPCase >> addStrategyToggleButton [
 
 	| correctIcon |
-	
-	correctIcon := (self strategy at: #explicitRootMatching) ifTrue: [SBIcon iconAnchor] ifFalse: [SBIcon iconTree].
+	correctIcon := (self strategy at: #explicitRootMatching)
+		ifTrue: [SBIcon iconAnchor]
+		ifFalse: [SBIcon iconTree].
 	self informationRow addMorphBack: (SBButton new icon: correctIcon label: 'toggle strategy' do: [self toggleStrategy])
 ]
 
@@ -87,12 +88,6 @@ SBVPCase >> addStrategyToggleButton [
 SBVPCase >> addSubPattern: aBlock [
 
 	
-]
-
-{ #category : #'as yet unclassified' }
-SBVPCase >> artefactChanged: aMethodBlock [
-
-	self halt.
 ]
 
 { #category : #'as yet unclassified' }
@@ -289,7 +284,7 @@ SBVPCase >> informationRow [
 { #category : #accessing }
 SBVPCase >> informationRow: aBlock [
 
-	informationRow := aBlock.
+	informationRow := aBlock
 ]
 
 { #category : #'as yet unclassified' }
@@ -317,19 +312,19 @@ SBVPCase >> input: anObject [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPCase >> input: aSBBlock output: anotherSBBlock [
+SBVPCase >> input: anSBBlock output: anotherSBBlock [
 
 	self
 		addMorph: (SBColumn new
 			addMorphBack: (informationRow := SBRow new);
 			addMorphBack: (SBRow new
-				addMorphBack: aSBBlock;
+				addMorphBack: anSBBlock;
 				addMorphBack: SBIcon iconArrowRight;
 				addMorphBack: anotherSBBlock));
-		input: aSBBlock;
+		input: anSBBlock;
 		output: anotherSBBlock.
-		
-	self addStrategyToggleButton.
+	
+	self addStrategyToggleButton
 	";
 		colorDifferences"
 ]
@@ -380,32 +375,31 @@ SBVPCase >> replaceAllMatches: aDummyNode [
 { #category : #accessing }
 SBVPCase >> strategy [
 
-	^ strategy ifNil: [self strategy: {#explicitRootMatching -> true} asDictionary. self strategy]
+	^ strategy ifNil: [
+		self strategy: {#explicitRootMatching -> true} asDictionary.
+		self strategy]
 ]
 
 { #category : #accessing }
 SBVPCase >> strategy: aDict [
 
-	strategy := aDict.
-	self informationRow removeAllMorphs.
-	self addStrategyToggleButton.
+	strategy := aDict
 ]
 
 { #category : #accessing }
 SBVPCase >> strategyToggleButton [
-	
+
 	^ self informationRow firstSubmorph
 ]
 
 { #category : #'as yet unclassified' }
 SBVPCase >> toggleStrategy [
 
-	
-	self strategy at: #explicitRootMatching put: ((self strategy at: #explicitRootMatching) not).
+	self strategy at: #explicitRootMatching put: (self strategy at: #explicitRootMatching) not.
 	self informationRow removeAllMorphs.
 	self addStrategyToggleButton.
 	self setProperty: #strategyChanged toValue: true.
-	self triggerEvent: #changed.
+	self triggerEvent: #changed
 ]
 
 { #category : #'as yet unclassified' }
