@@ -28,6 +28,15 @@ SBVPBindingPattern class >> bindingIndex: anObject connections: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPBindingPattern class >> bindingIndex: anObject labelDict: aDict connections: aCollection [
+
+	^ self new
+		bindingIndex: anObject;
+		connections: aCollection;
+		addPropertyMappings: aDict
+]
+
+{ #category : #'as yet unclassified' }
 SBVPBindingPattern class >> constant: anObject [
 
 	^ self constant: anObject connections: {}
@@ -44,19 +53,27 @@ SBVPBindingPattern class >> constant: anObject connections: aCollection [
 { #category : #'as yet unclassified' }
 SBVPBindingPattern class >> matches: aBlock [
 
-	^ {#bindingIndex:. #constant:. #writeBackClosure:} anySatisfy: [:methodName | (self selector: methodName receiverMatches: aBlock) or: [self selector: methodName, #connections: receiverMatches: aBlock]]
+	^ {#bindingIndex:. #constant:. #writeBackClosure:. #bindingIndex:labelDict:} anySatisfy: [:methodName | (self selector: methodName receiverMatches: aBlock) or: [self selector: methodName, #connections: receiverMatches: aBlock]]
 ]
 
 { #category : #'as yet unclassified' }
 SBVPBindingPattern class >> newFor: aBlock [
 
-	^ aBlock arguments size > 1
+	^ aBlock arguments size > 2
 		ifTrue: [
 			self
 				perform: aBlock selector asSymbol
 				with: aBlock arguments first
-				with: aBlock arguments second childSandblocks]
-		ifFalse: [self perform: aBlock selector asSymbol with: aBlock arguments first]
+				with: aBlock arguments second evaluate
+				with: aBlock arguments third childSandblocks]
+		ifFalse: [
+			aBlock arguments size > 1
+				ifTrue: [
+					self
+						perform: aBlock selector asSymbol
+						with: aBlock arguments first
+						with: aBlock arguments second childSandblocks]
+				ifFalse: [self perform: aBlock selector asSymbol with: aBlock arguments first]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -139,6 +156,7 @@ SBVPBindingPattern >> buildFromBinding: anArray [
 		ifNotNil: [self constant asVisualPrimitive]
 		ifNil: [(anArray at: self bindingIndex) copy].
 	output connections: (self buildChildrenFromBinding: anArray).
+	output labelDict addAll: self labelDict.
 	^ {output}
 ]
 

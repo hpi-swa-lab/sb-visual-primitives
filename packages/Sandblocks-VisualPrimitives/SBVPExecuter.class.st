@@ -58,11 +58,37 @@ SBVPExecuter class >> exampleBuildHeapWithImplicitChildren [
 			output: (SBVPGroupPattern patterns: {
 				SBVPBindingPattern
 					bindingIndex: 2
-					connections: {SBVPBindingPattern bindingIndex: 1 connections: {}}}))
+					connections: {SBVPBindingPattern bindingIndex: 1 connections: {}}})
+			strategy: {#explicitRootMatching -> false. #explicitChildrenMatching -> false} asDictionary)
 		input: (SBVPVisualizer
 			code: [SBVPDummyNode buildTree: {9 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}]
 			showCode: true)
-		strategy: {#explicitRootMatching -> false. #explicitChildrenMatching -> false} asDictionary
+]
+
+{ #category : #'as yet unclassified' }
+SBVPExecuter class >> exampleOrPattern [
+
+	^ SBVPExecuter
+		case: (SBVPCase
+			input: (SBVPOrGroupPattern patterns: {
+				SBVPBindingPattern
+					bindingIndex: 1
+					connections: {SBVPBindingPattern bindingIndex: 2 connections: {SBVPEllipsisPattern bindingIndex: 3}}.
+				SBVPGroupPattern patterns: {
+					SBVPBindingPattern bindingIndex: 1 connections: {SBVPEllipsisPattern bindingIndex: 3}.
+					SBVPConstraintPattern constraint: [:a :b :c | a label asInteger = 3]}})
+			output: (SBVPGroupPattern patterns: {
+				SBVPBindingPattern
+					bindingIndex: 1
+					labelDict: {#innerLabel -> 42}
+					connections: {SBVPEllipsisPattern bindingIndex: 3}})
+			strategy: (Dictionary new
+				add: #explicitRootMatching -> false;
+				add: #explicitChildrenMatching -> true;
+				yourself))
+		input: (SBVPVisualizer
+			code: [SBVPDummyNode buildTree: {9 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}]
+			showCode: true)
 ]
 
 { #category : #'as yet unclassified' }
@@ -166,6 +192,14 @@ SBVPExecuter >> execute [
 
 	self outputBlock removeAllMorphs.
 	(self case value: self input code firstSubmorph evaluate value) asVisualPrimitiveIn: self outputBlock
+]
+
+{ #category : #accessing }
+SBVPExecuter >> execute100Times [
+	<action>
+
+	self outputBlock removeAllMorphs.
+	(self case replace: 100 matches: self input code firstSubmorph evaluate value) asVisualPrimitiveIn: self outputBlock
 ]
 
 { #category : #accessing }

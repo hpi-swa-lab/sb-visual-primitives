@@ -48,7 +48,7 @@ SBVisualPrimitive class >> newFromObject: anObject [
 	
 	treeDecorator := SBTreeDecorator new.
 	vp attachDecorator: treeDecorator.
-	anObject visualPrimitiveMapping do: [:mappingEntry | vp addPropertyMapping: mappingEntry].
+	vp addPropertyMappings: anObject visualPrimitiveMapping.
 	treeDecorator layout.
 	^ vp
 ]
@@ -63,7 +63,7 @@ SBVisualPrimitive class >> newFromObject: anObject in: aMorph [
 	
 	treeDecorator := SBTreeDecorator new.
 	vp attachDecorator: treeDecorator.
-	anObject visualPrimitiveMapping do: [:mappingEntry | vp addPropertyMapping: mappingEntry].
+	vp addPropertyMappings: anObject visualPrimitiveMapping.
 	treeDecorator layout.
 	^ vp
 ]
@@ -107,6 +107,12 @@ SBVisualPrimitive >> addPropertyMapping: anSBVPPropertyMapping [
 					addMorphBack: morphy]]
 ]
 
+{ #category : #accessing }
+SBVisualPrimitive >> addPropertyMappings: aCollection [
+
+	aCollection do: [:mappingEntry | self addPropertyMapping: mappingEntry]
+]
+
 { #category : #'as yet unclassified' }
 SBVisualPrimitive >> addToWorld: aWorld [
 
@@ -148,6 +154,14 @@ SBVisualPrimitive >> connections: anObject [
 
 	connections := anObject asOrderedCollection.
 	connections do: [:child | child parent: self]
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> getLabelContents: anObject [
+
+	^ (anObject isString or: [anObject isNumber])
+		ifTrue: [anObject]
+		ifFalse: [anObject contents]
 ]
 
 { #category : #accessing }
@@ -196,16 +210,14 @@ SBVisualPrimitive >> innerLabel: anObject [
 		addMorphBack: (morph := shape new
 			hResizing: #shrinkWrap;
 			vResizing: #shrinkWrap).
+	self labelDict at: #innerLabel put: (self getLabelContents: anObject).
 	morph addMorphBack: (self getLabelMorph: anObject)
 ]
 
 { #category : #accessing }
 SBVisualPrimitive >> label [
 
-	| boi |
-	boi := self blockDict at: #innerLabel.
-	boi hasSubmorphs ifTrue: [boi firstSubmorph hasSubmorphs ifTrue: [^ boi firstSubmorph firstSubmorph contents]].
-	^ nil
+	^ self labelDict at: #innerLabel
 ]
 
 { #category : #accessing }

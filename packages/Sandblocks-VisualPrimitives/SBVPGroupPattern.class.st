@@ -33,6 +33,12 @@ SBVPGroupPattern >> addImplicitChildren: anArray [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPGroupPattern >> addToWorld: aWorld [
+
+	aWorld addMorphBack: self
+]
+
+{ #category : #'as yet unclassified' }
 SBVPGroupPattern >> buildFromBinding: anArray [
 
 	^ self patterns first buildFromBinding: anArray
@@ -124,7 +130,7 @@ SBVPGroupPattern >> patternBlocks: aCollection [
 				ifFalse: [aPattern addToWorld: self row]]
 		separatedBy: [
 			self row addMorphBack: (SBTextBubble new
-				contents: ' and ';
+				contents: self seperatorString;
 				yourself)]
 ]
 
@@ -165,6 +171,12 @@ SBVPGroupPattern >> row: anObject [
 ]
 
 { #category : #accessing }
+SBVPGroupPattern >> seperatorString [
+
+	^ ' and '
+]
+
+{ #category : #accessing }
 SBVPGroupPattern >> setBindingFor: aVisualPrimitive in: aCollection [
 
 	^ self patterns allSatisfy: [:pattern | pattern setBindingFor: aVisualPrimitive in: aCollection]
@@ -173,7 +185,7 @@ SBVPGroupPattern >> setBindingFor: aVisualPrimitive in: aCollection [
 { #category : #'as yet unclassified' }
 SBVPGroupPattern >> writeSourceOn: aStream [
 
-	aStream nextPutAll: '(SBVPGroupPattern patterns: {'.
+	aStream nextPutAll: '(', self class name, ' patterns: {'.
 	self patterns do: [:pattern |
 		pattern writeSourceOn: aStream.
 		aStream nextPut: $.].

@@ -384,6 +384,19 @@ SBVPCase >> output: anObject [
 	self flag: #TODO
 ]
 
+{ #category : #'as yet unclassified' }
+SBVPCase >> replace: aNumber matches: aDummyNode [
+
+	| matcher currentPrimitive match iteration |
+	currentPrimitive := aDummyNode asVisualPrimitive.
+	matcher := (SBVPPatternMatcher input: currentPrimitive pattern: self input) strategy: self strategy.
+	iteration := 0.
+	[(match := matcher getNextMatch) notNil and: [(iteration := iteration + 1) < aNumber]] whileTrue: [
+		currentPrimitive := matcher build: self output fromBinding: match.
+		matcher input: currentPrimitive].
+	^ aDummyNode class fromVisualPrimitive: currentPrimitive
+]
+
 { #category : #accessing }
 SBVPCase >> replaceAll [
 
