@@ -13,12 +13,13 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBVPExecuter class >> case: aVPCase input: aVisualizer [
+SBVPExecuter class >> case: aVPCase input: aVisualizer strategy: aDict [
 	"marker"
 
 	^ self new
 		case: aVPCase;
-		input: aVisualizer
+		input: aVisualizer;
+		strategy: aDict
 ]
 
 { #category : #'as yet unclassified' }
@@ -41,6 +42,24 @@ SBVPExecuter class >> exampleBuildHeap [
 			code: [SBVPDummyNode buildTree: {9 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}]
 			showCode: true)
 		strategy: {#explicitRootMatching -> false} asDictionary
+]
+
+{ #category : #'as yet unclassified' }
+SBVPExecuter class >> exampleBuildHeapWithImplicitChildren [
+
+	^ SBVPExecuter
+		case: (SBVPCase
+			input: (SBVPGroupPattern patterns: {
+				SBVPBindingPattern bindingIndex: 1 connections: {
+					SBVPBindingPattern bindingIndex: 2 connections: {}.}.
+				SBVPConstraintPattern constraint: [:a :b | b label asInteger < a label asInteger]})
+			output: (SBVPGroupPattern patterns: {
+				SBVPBindingPattern bindingIndex: 2 connections: {
+					SBVPBindingPattern bindingIndex: 1 connections: {}.}}))
+		input: (SBVPVisualizer
+			code: [SBVPDummyNode buildTree: {9 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}]
+			showCode: true)
+		strategy: {#explicitRootMatching -> false. #explicitChildrenMatching -> false} asDictionary
 ]
 
 { #category : #'as yet unclassified' }
@@ -80,10 +99,7 @@ SBVPExecuter class >> exampleWithConstants: salzstangen [
 				SBVPBindingPattern
 					constant: salzstangen
 					connections: {SBVPEllipsisPattern bindingIndex: 2}}})
-		strategy: (Dictionary new
-			add: #explicitRootMatching -> false;
-			yourself).
-	
+		strategy: {#explicitRootMatching -> false} asDictionary.
 	^ case replaceAllMatches: salzstangen
 ]
 
@@ -94,13 +110,16 @@ SBVPExecuter class >> matches: aBlock [
 	
 	^ (aBlock receiver satisfies: #(#notNil #isBinding))
 		and: [aBlock receiver contents = self name]
-		and: [aBlock selector = 'case:input:']
+		and: [aBlock selector = 'case:input:strategy:']
 ]
 
 { #category : #'as yet unclassified' }
 SBVPExecuter class >> newFor: aBlock [
 
-	^ self case: aBlock arguments first input: aBlock arguments second
+	^ self
+		case: aBlock arguments first
+		input: aBlock arguments second
+		strategy: aBlock arguments third evaluate
 ]
 
 { #category : #accessing }
@@ -263,6 +282,18 @@ SBVPExecuter >> saveTryFixing: aFixBoolean quick: aQuickBoolean [
 	
 ]
 
+{ #category : #accessing }
+SBVPExecuter >> strategy [
+
+	^ self case strategy
+]
+
+{ #category : #accessing }
+SBVPExecuter >> strategy: aDict [
+
+	self case strategy: aDict
+]
+
 { #category : #'as yet unclassified' }
 SBVPExecuter >> writeSourceOn: aStream [
 
@@ -270,5 +301,7 @@ SBVPExecuter >> writeSourceOn: aStream [
 	self case writeSourceOn: aStream.
 	aStream nextPutAll: ' input: '.
 	self input writeSourceOn: aStream.
+	aStream nextPutAll: ' strategy: '.
+	self strategy storeOn: aStream.
 	aStream nextPut: $)
 ]

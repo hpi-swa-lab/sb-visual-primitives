@@ -72,10 +72,10 @@ SBTreeDecorator >> ancestor: anObject [
 ]
 
 { #category : #'as yet unclassified' }
-SBTreeDecorator >> apportion: aDefaultAncestor [
+SBTreeDecorator >> apportion: defaultAncestor [
 
 	| left shift sil sir sol sor vil vir vol vor newDefaultAncestor |
-	newDefaultAncestor := aDefaultAncestor.
+	newDefaultAncestor := defaultAncestor.
 	left := self leftSibling.
 	left ifNotNil: [
 		vir := self.
@@ -96,7 +96,7 @@ SBTreeDecorator >> apportion: aDefaultAncestor [
 			shift > 0 ifTrue: [ | a |
 				a := (self parent children includes: vil ancestor)
 					ifTrue: [vil ancestor]
-					ifFalse: [aDefaultAncestor].
+					ifFalse: [defaultAncestor].
 				a moveSubtree: self by: shift.
 				sir := sir + shift.
 				sor := sor + shift].
@@ -246,15 +246,15 @@ SBTreeDecorator >> mod: anObject [
 ]
 
 { #category : #'as yet unclassified' }
-SBTreeDecorator >> moveSubtree: aNode by: aShiftValue [
+SBTreeDecorator >> moveSubtree: node by: shift [
 
 	| numberOfSubtrees |
-	numberOfSubtrees := aNode siblingIndex - self siblingIndex.
-	aNode change: aNode change - aShiftValue / numberOfSubtrees.
-	aNode shift: aNode shift + aShiftValue.
-	aNode x: aNode x + aShiftValue.
-	aNode mod: aNode mod + aShiftValue.
-	self change: self change + aShiftValue / numberOfSubtrees
+	numberOfSubtrees := node siblingIndex - self siblingIndex.
+	node change: node change - shift / numberOfSubtrees.
+	node shift: node shift + shift.
+	node x: node x + shift.
+	node mod: node mod + shift.
+	self change: self change + shift / numberOfSubtrees
 ]
 
 { #category : #accessing }
@@ -295,13 +295,13 @@ SBTreeDecorator >> resetAll [
 ]
 
 { #category : #'as yet unclassified' }
-SBTreeDecorator >> secondWalk: aValue [
+SBTreeDecorator >> secondWalk: modSum [
 
-	self x: self x + aValue.
+	self x: self x + modSum.
 	self morph
 		fullBounds;
 		center: self x @ self depth * 100.
-	self children do: [:child | child secondWalk: aValue + self mod]
+	self children do: [:child | child secondWalk: modSum + self mod]
 ]
 
 { #category : #accessing }

@@ -115,6 +115,11 @@ SBVisualPrimitive >> addToWorld: aWorld [
 
 { #category : #accessing }
 SBVisualPrimitive >> artefactChanged: aMethod [
+	"schreibe meine aktuellen Werte in meine origin zurück"
+	"geh meine attribute durch, für jedes attr:
+			setter mit Ziel origin aufrufen (MutateCommand)
+			"
+	"erstmal nur inner label ^.^"
 
 	| currentSetter |
 	currentSetter := (self labelDict at: #innerLabel) setter.
@@ -157,7 +162,7 @@ SBVisualPrimitive >> connections [
 { #category : #accessing }
 SBVisualPrimitive >> connections: anObject [
 
-	connections := anObject.
+	connections := anObject asOrderedCollection.
 	connections do: [:child | child parent: self]
 ]
 
@@ -279,7 +284,7 @@ SBVisualPrimitive >> printOn: aStream [
 	super printOn: aStream.
 	aStream
 		nextPutAll: ' innerLabel: ';
-		nextPutAll: self labelDict asString
+		nextPutAll: self label asString
 ]
 
 { #category : #accessing }

@@ -104,9 +104,9 @@ SBVPDummyNode >> key [
 ]
 
 { #category : #accessing }
-SBVPDummyNode >> key: aValue [
+SBVPDummyNode >> key: aNumber [
 
-	key := aValue
+	key := aNumber
 ]
 
 { #category : #accessing }

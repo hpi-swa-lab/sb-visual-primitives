@@ -5,8 +5,7 @@ Class {
 		'input',
 		'output',
 		'strategy',
-		'replaceAll',
-		'informationRow'
+		'replaceAll'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
@@ -75,19 +74,24 @@ SBVPCase class >> suggestion [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPCase >> addStrategyToggleButton [
-
-	| correctIcon |
-	correctIcon := (self strategy at: #explicitRootMatching)
-		ifTrue: [SBIcon iconAnchor]
-		ifFalse: [SBIcon iconTree].
-	self informationRow addMorphBack: (SBButton new icon: correctIcon label: 'toggle strategy' do: [self toggleStrategy])
-]
-
-{ #category : #'as yet unclassified' }
 SBVPCase >> addSubPattern: aBlock [
 
 	
+]
+
+{ #category : #'as yet unclassified' }
+SBVPCase >> buildImplicitChildrenMatchingPattern [
+	
+	self input ifNotNil: #removeImplicitChildren.
+	self output ifNotNil: #removeImplicitChildren.
+	
+	self explicitChildrenMatching ifFalse: [ | additionalNodes additionalNodes2 |
+		additionalNodes := self emptyBindingArray.
+		additionalNodes2 := self emptyBindingArray.
+		self input buildImplicitChildren: additionalNodes.
+		self flag: #TODO. "FIgure this out"
+		self output buildImplicitChildren: additionalNodes2.
+		"self output addImplicitChildren: additionalNodes"]
 ]
 
 { #category : #'as yet unclassified' }
@@ -127,6 +131,12 @@ SBVPCase >> colorDifferences [
 					connection label = (outputConnection ifNotNil: #label) ifFalse: [
 						connection color: c.
 						(outputBindingDict at: connection label ifAbsent: [nil]) ifNotNil: [:o | o color: c]]]]]
+]
+
+{ #category : #'as yet unclassified' }
+SBVPCase >> emptyBindingArray [
+
+	^ Array new: self input highestBindingVariable withAll: Array new
 ]
 
 { #category : #'as yet unclassified' }
@@ -253,6 +263,12 @@ SBVPCase >> exampleWithPatterns: aDummyNode [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPCase >> explicitChildrenMatching [
+
+	^ self strategy at: #explicitChildrenMatching ifAbsent: [true]
+]
+
+{ #category : #'as yet unclassified' }
 SBVPCase >> findAllBindings: aRootPattern [
 
 	| bindingDict dfs |
@@ -270,29 +286,12 @@ SBVPCase >> findAllBindings: aRootPattern [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPCase >> hasUnsavedChanges [
-
-	^ super hasUnsavedChanges or: [(self valueOfProperty: #strategyChanged) ifNil: [false]]
-]
-
-{ #category : #accessing }
-SBVPCase >> informationRow [
-
-	^ informationRow
-]
-
-{ #category : #accessing }
-SBVPCase >> informationRow: aBlock [
-
-	informationRow := aBlock
-]
-
-{ #category : #'as yet unclassified' }
 SBVPCase >> initialize [
 
 	super initialize.
 	
 	self
+		strategy: Dictionary new;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
 		changeTableLayout;
@@ -308,23 +307,21 @@ SBVPCase >> input [
 { #category : #accessing }
 SBVPCase >> input: anObject [
 
-	input := anObject
+	input := anObject.
+	"maybe buildImplicitChildren here" self flag: #TODO
 ]
 
 { #category : #'as yet unclassified' }
-SBVPCase >> input: anSBBlock output: anotherSBBlock [
+SBVPCase >> input: aSBBlock output: anotherSBBlock [
 
 	self
-		addMorph: (SBColumn new
-			addMorphBack: (informationRow := SBRow new);
-			addMorphBack: (SBRow new
-				addMorphBack: anSBBlock;
-				addMorphBack: SBIcon iconArrowRight;
-				addMorphBack: anotherSBBlock));
-		input: anSBBlock;
+		addMorph: (SBRow new
+			addMorphBack: aSBBlock;
+			addMorphBack: SBIcon iconArrowRight;
+			addMorphBack: anotherSBBlock);
+		input: aSBBlock;
 		output: anotherSBBlock.
-	
-	self addStrategyToggleButton
+	self buildImplicitChildrenMatchingPattern
 	";
 		colorDifferences"
 ]
@@ -338,7 +335,8 @@ SBVPCase >> output [
 { #category : #accessing }
 SBVPCase >> output: anObject [
 
-	output := anObject
+	output := anObject.
+	"maybe buildImplicitChildren here" self flag: #TODO
 ]
 
 { #category : #accessing }
@@ -375,31 +373,14 @@ SBVPCase >> replaceAllMatches: aDummyNode [
 { #category : #accessing }
 SBVPCase >> strategy [
 
-	^ strategy ifNil: [
-		self strategy: {#explicitRootMatching -> true} asDictionary.
-		self strategy]
+	^ strategy
 ]
 
 { #category : #accessing }
-SBVPCase >> strategy: aDict [
+SBVPCase >> strategy: anObject [
 
-	strategy := aDict
-]
-
-{ #category : #accessing }
-SBVPCase >> strategyToggleButton [
-
-	^ self informationRow firstSubmorph
-]
-
-{ #category : #'as yet unclassified' }
-SBVPCase >> toggleStrategy [
-
-	self strategy at: #explicitRootMatching put: (self strategy at: #explicitRootMatching) not.
-	self informationRow removeAllMorphs.
-	self addStrategyToggleButton.
-	self setProperty: #strategyChanged toValue: true.
-	self triggerEvent: #changed
+	strategy := anObject.
+	self buildImplicitChildrenMatchingPattern
 ]
 
 { #category : #'as yet unclassified' }

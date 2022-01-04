@@ -92,7 +92,7 @@ SBVPConstraintPattern >> initialize [
 { #category : #'as yet unclassified' }
 SBVPConstraintPattern >> matches: aVisualPrimitive withBinding: aCollection [
 
-	^ self constraint valueWithArguments: aCollection
+	^ self constraint valueWithEnoughArguments: aCollection
 ]
 
 { #category : #'as yet unclassified' }

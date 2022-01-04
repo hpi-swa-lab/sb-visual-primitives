@@ -27,9 +27,21 @@ SBVPGroupPattern class >> patterns: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPGroupPattern >> addImplicitChildren: anArray [
+
+	self patterns do: [:pattern | pattern addImplicitChildren: anArray]
+]
+
+{ #category : #'as yet unclassified' }
 SBVPGroupPattern >> buildFromBinding: anArray [
 
 	^ self patterns first buildFromBinding: anArray
+]
+
+{ #category : #'as yet unclassified' }
+SBVPGroupPattern >> buildImplicitChildren: anArray [
+
+	self patterns do: [:pattern | pattern buildImplicitChildren: anArray]
 ]
 
 { #category : #'as yet unclassified' }
@@ -126,6 +138,12 @@ SBVPGroupPattern >> patterns [
 SBVPGroupPattern >> patterns: aCollection [
 
 	patterns := aCollection
+]
+
+{ #category : #accessing }
+SBVPGroupPattern >> removeImplicitChildren [
+
+	self patterns do: [:child | child removeImplicitChildren]
 ]
 
 { #category : #'as yet unclassified' }
