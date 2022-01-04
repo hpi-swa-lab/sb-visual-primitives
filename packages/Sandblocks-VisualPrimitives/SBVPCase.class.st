@@ -78,7 +78,7 @@ SBVPCase class >> newFor: aBlock [
 	| input output |
 	input := aBlock arguments first.
 	input isVisualPrimitive ifFalse: [input := input evaluate].
-	output := aBlock arguments first.
+	output := aBlock arguments second.
 	output isVisualPrimitive ifFalse: [output := output evaluate].
 	
 	^ aBlock arguments size > 2

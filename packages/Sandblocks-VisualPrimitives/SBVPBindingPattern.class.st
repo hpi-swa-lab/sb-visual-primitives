@@ -426,7 +426,7 @@ SBVPBindingPattern >> writeSourceOn: aStream [
 	self constant ifNotNil: [
 		aStream
 			nextPutAll: ' constant: ';
-			nextPutAll: self label].
+			nextPutAll: (self blockDict at: #innerLabel) firstSubmorph firstSubmorph contents].
 	
 	self writeBackClosure ifNotNil: [
 		aStream
