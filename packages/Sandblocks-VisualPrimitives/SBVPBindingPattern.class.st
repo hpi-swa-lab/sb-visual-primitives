@@ -139,7 +139,8 @@ SBVPBindingPattern >> bindingIndex: anObject [
 	bindingIndex := anObject isSandblock
 		ifTrue: [anObject evaluate]
 		ifFalse: [anObject].
-	self label: bindingIndex asString
+	self label: bindingIndex asString.
+	self labelDict removeKey: #innerLabel
 ]
 
 { #category : #'as yet unclassified' }
@@ -237,6 +238,7 @@ SBVPBindingPattern >> constant: anObject [
 	constant := anObject isSandblock
 		ifTrue: [
 			self innerLabel: anObject.
+			self labelDict removeKey: #innerLabel.
 			anObject evaluate ifNil: [#placeholder]]
 		ifFalse: [anObject]
 ]
@@ -391,6 +393,7 @@ SBVPBindingPattern >> writeBackClosure: anObject [
 		ifTrue: [ | variableBlock |
 			variableBlock := anObject statements first receiver copy.
 			self innerLabel: variableBlock.
+			self labelDict removeKey: #innerLabel.
 			self writeBackClosureString: anObject sourceString.
 			anObject evaluate]
 		ifFalse: [anObject]

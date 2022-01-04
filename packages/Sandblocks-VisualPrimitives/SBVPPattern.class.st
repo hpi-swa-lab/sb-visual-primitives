@@ -42,7 +42,7 @@ SBVPPattern >> getNext: aVisualPrimitive [
 { #category : #'as yet unclassified' }
 SBVPPattern >> highestBindingVariable [
 
-	^ (self label ifNil: [0] ifNotNil: [:l | l asInteger ifNil: [0]]) max: (self connections
+	^ (self bindingIndex ifNil: [0]) max: (self connections
 		ifEmpty: [0]
 		ifNotEmpty: [(self connections collect: [:connection | connection highestBindingVariable]) max])
 ]

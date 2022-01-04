@@ -13,6 +13,12 @@ Object >> isPropertyMapping [
 ]
 
 { #category : #'*Sandblocks-VisualPrimitives' }
+Object >> isVisualPrimitive [
+
+	^ false
+]
+
+{ #category : #'*Sandblocks-VisualPrimitives' }
 Object >> visualPrimitiveMapping [
 
 	^ {}

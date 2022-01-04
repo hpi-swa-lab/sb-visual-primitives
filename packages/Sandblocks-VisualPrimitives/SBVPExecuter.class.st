@@ -129,7 +129,7 @@ SBVPExecuter class >> exampleWithConstants: salzstangen [
 				SBVPBindingPattern
 					constant: salzstangen
 					connections: {SBVPEllipsisPattern bindingIndex: 2}}})
-		strategy: {#explicitRootMatching -> false} asDictionary.
+		strategy: {#explicitRootMatching -> false. #explicitChildrenMatching -> true} asDictionary.
 	^ case replaceAllMatches: salzstangen
 ]
 

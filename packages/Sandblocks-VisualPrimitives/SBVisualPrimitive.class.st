@@ -214,10 +214,16 @@ SBVisualPrimitive >> innerLabel: anObject [
 	morph addMorphBack: (self getLabelMorph: anObject)
 ]
 
+{ #category : #'as yet unclassified' }
+SBVisualPrimitive >> isVisualPrimitive [
+
+	^ true
+]
+
 { #category : #accessing }
 SBVisualPrimitive >> label [
 
-	^ self labelDict at: #innerLabel
+	^ self labelDict at: #innerLabel ifAbsent: nil
 ]
 
 { #category : #accessing }

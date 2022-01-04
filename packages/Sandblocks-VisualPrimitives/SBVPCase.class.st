@@ -75,14 +75,17 @@ SBVPCase class >> matches: aBlock [
 { #category : #'as yet unclassified' }
 SBVPCase class >> newFor: aBlock [
 
+	| input output |
+	input := aBlock arguments first.
+	input isVisualPrimitive ifFalse: [input := input evaluate].
+	output := aBlock arguments first.
+	output isVisualPrimitive ifFalse: [output := output evaluate].
+	
 	^ aBlock arguments size > 2
 		ifTrue: [ | replaceAll |
 			replaceAll := aBlock arguments size > 3 ifTrue: [aBlock arguments fourth evaluate].
-			(self
-				input: aBlock arguments first
-				output: aBlock arguments second
-				strategy: aBlock arguments third evaluate) replaceAll: replaceAll]
-		ifFalse: [self input: aBlock arguments first output: aBlock arguments second]
+			(self input: input output: output strategy: aBlock arguments third evaluate) replaceAll: replaceAll]
+		ifFalse: [self input: input output: output]
 ]
 
 { #category : #'as yet unclassified' }
@@ -469,7 +472,7 @@ SBVPCase >> strategy [
 { #category : #accessing }
 SBVPCase >> strategy: aDict [
 
-	strategy := aDict.
+	strategy ifNotNil: [strategy addAll: aDict] ifNil: [strategy := aDict].
 	self class buttonSpecifications keysDo: [:strategySymbol | self addToggleButtonFor: strategySymbol].
 	self buildImplicitChildrenMatchingPattern
 ]
