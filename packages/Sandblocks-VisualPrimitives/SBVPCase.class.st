@@ -12,6 +12,27 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBVPCase class >> buttonSpecifications [
+
+	^ {
+		self rootStrategy -> {
+			#index -> 1.
+			#icons -> {true -> SBIcon iconAnchor. false -> SBIcon iconTree} asDictionary.
+			#text -> {true -> 'root matching'. false -> 'subtree matching'} asDictionary} asDictionary.
+		
+		self childrenStrategy -> {
+			#index -> 2.
+			#icons -> {true -> SBIcon iconChild. false -> SBIcon iconEyeSlash} asDictionary.
+			#text -> {true -> 'explicit children'. false -> 'implicit children'} asDictionary} asDictionary} asDictionary
+]
+
+{ #category : #'as yet unclassified' }
+SBVPCase class >> childrenStrategy [
+
+	^ #explicitChildrenMatching
+]
+
+{ #category : #'as yet unclassified' }
 SBVPCase class >> input: anInputVisualizer output: anOutputVisualizer [
 	" marker "
 
@@ -65,6 +86,12 @@ SBVPCase class >> newFor: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPCase class >> rootStrategy [
+
+	^ #explicitRootMatching
+]
+
+{ #category : #'as yet unclassified' }
 SBVPCase class >> suggestion [
 
 	^ [:block |
@@ -75,23 +102,26 @@ SBVPCase class >> suggestion [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPCase >> addStrategyToggleButton [
-
-	| correctIcon |
-	correctIcon := self explicitRootMatching
-		ifTrue: [SBIcon iconAnchor]
-		ifFalse: [SBIcon iconTree].
-	self informationRow removeAllMorphs.
-	self informationRow addMorphBack: (SBButton new icon: correctIcon label: 'toggle strategy' do: [
-		self sandblockEditor do: (SBDoItCommand new
-			artefactFrom: self containingArtefact;
-			do: [self toggleStrategy])])
-]
-
-{ #category : #'as yet unclassified' }
 SBVPCase >> addSubPattern: aBlock [
 
 	
+]
+
+{ #category : #'as yet unclassified' }
+SBVPCase >> addToggleButtonFor: aSymbol [
+
+	| correctIcon correctText button isExplicit |
+	isExplicit := self strategy at: aSymbol.
+	correctIcon := ((self class buttonSpecifications at: aSymbol) at: #icons) at: isExplicit.
+	correctText := ((self class buttonSpecifications at: aSymbol) at: #text) at: isExplicit.
+	button := SBButton new icon: correctIcon label: correctText do: [
+		self sandblockEditor do: (SBDoItCommand new
+			artefactFrom: self containingArtefact;
+			do: [self toggleStrategy: aSymbol])].
+	
+	(self strategyButtonFor: aSymbol)
+		ifNil: [self informationRow addMorphBack: button]
+		ifNotNil: [:existingButton | existingButton replaceBy: button]
 ]
 
 { #category : #'as yet unclassified' }
@@ -328,13 +358,16 @@ SBVPCase >> informationRow: aBlock [
 SBVPCase >> initialize [
 
 	super initialize.
-	informationRow := SBColumn new.
+	informationRow := SBRow new.
 	self
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
 		changeTableLayout;
 		layoutInset: 6;
-		strategy: Dictionary new
+		strategy: (Dictionary new
+			add: #explicitRootMatching -> true;
+			add: #explicitChildrenMatching -> true;
+			yourself)
 ]
 
 { #category : #accessing }
@@ -356,7 +389,7 @@ SBVPCase >> input: anSBBlock output: anotherSBBlock [
 
 	self
 		addMorph: (SBColumn new
-			addMorphBack: (informationRow := SBRow new);
+			addMorphBack: self informationRow;
 			addMorphBack: (SBRow new
 				addMorphBack: anSBBlock;
 				addMorphBack: SBIcon iconArrowRight;
@@ -364,7 +397,6 @@ SBVPCase >> input: anSBBlock output: anotherSBBlock [
 		input: anSBBlock;
 		output: anotherSBBlock.
 	
-	self addStrategyToggleButton.
 	self buildImplicitChildrenMatchingPattern
 	";
 		colorDifferences"
@@ -438,21 +470,23 @@ SBVPCase >> strategy [
 SBVPCase >> strategy: aDict [
 
 	strategy := aDict.
-	self addStrategyToggleButton.
+	self class buttonSpecifications keysDo: [:strategySymbol | self addToggleButtonFor: strategySymbol].
 	self buildImplicitChildrenMatchingPattern
 ]
 
 { #category : #accessing }
-SBVPCase >> strategyToggleButton [
+SBVPCase >> strategyButtonFor: aSymbol [
 
-	^ self informationRow firstSubmorph
+	| index |
+	index := (self class buttonSpecifications at: aSymbol) at: #index.
+	^ self informationRow submorphs at: index ifAbsent: [nil]
 ]
 
 { #category : #'as yet unclassified' }
-SBVPCase >> toggleStrategy [
+SBVPCase >> toggleStrategy: aSymbol [
 
-	self strategy at: #explicitRootMatching put: (self strategy at: #explicitRootMatching) not.
-	self addStrategyToggleButton
+	self strategy at: aSymbol put: (self strategy at: aSymbol) not.
+	self addToggleButtonFor: aSymbol
 ]
 
 { #category : #'as yet unclassified' }
