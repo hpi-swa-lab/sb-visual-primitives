@@ -5,7 +5,8 @@ Class {
 		'input',
 		'output',
 		'strategy',
-		'replaceAll'
+		'replaceAll',
+		'informationRow'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
@@ -74,6 +75,20 @@ SBVPCase class >> suggestion [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPCase >> addStrategyToggleButton [
+
+	| correctIcon |
+	correctIcon := self explicitRootMatching
+		ifTrue: [SBIcon iconAnchor]
+		ifFalse: [SBIcon iconTree].
+	self informationRow removeAllMorphs.
+	self informationRow addMorphBack: (SBButton new icon: correctIcon label: 'toggle strategy' do: [
+		self sandblockEditor do: (SBDoItCommand new
+			artefactFrom: self containingArtefact;
+			do: [self toggleStrategy])])
+]
+
+{ #category : #'as yet unclassified' }
 SBVPCase >> addSubPattern: aBlock [
 
 	
@@ -81,7 +96,7 @@ SBVPCase >> addSubPattern: aBlock [
 
 { #category : #'as yet unclassified' }
 SBVPCase >> buildImplicitChildrenMatchingPattern [
-	
+
 	self input ifNotNil: #removeImplicitChildren.
 	self output ifNotNil: #removeImplicitChildren.
 	
@@ -89,8 +104,9 @@ SBVPCase >> buildImplicitChildrenMatchingPattern [
 		additionalNodes := self emptyBindingArray.
 		additionalNodes2 := self emptyBindingArray.
 		self input buildImplicitChildren: additionalNodes.
-		self flag: #TODO. "FIgure this out"
-		self output buildImplicitChildren: additionalNodes2.
+		self flag: #TODO.
+		"FIgure this out"
+		self output buildImplicitChildren: additionalNodes2
 		"self output addImplicitChildren: additionalNodes"]
 ]
 
@@ -144,32 +160,37 @@ SBVPCase >> example [
 
 	SBVPCase
 		input: (SBVPVisualizer
-			code: [ | root n1 n2 |
-				root := SBVPDummyNode new.
-				root key: 'Carl-Friedrich'.
-				n1 := SBVPDummyNode new.
-				n1 key: 'gadaitdd'.
-				
-				n2 := SBVPDummyNode new.
-				n2 key: 'ghlplplph'.
-				root
-					left: n1;
-					right: n2.
-				root]
+			code: [
+				[ | root n1 n2 |
+					root := SBVPDummyNode new.
+					root key: 'Carl-Friedrich'.
+					n1 := SBVPDummyNode new.
+					n1 key: 'gadaitdd'.
+					
+					n2 := SBVPDummyNode new.
+					n2 key: 'ghlplplph'.
+					root
+						left: n1;
+						right: n2.
+					root]]
 			showCode: true)
 		output: (SBVPVisualizer
-			code: [ | root n1 n2 |
-				root := SBVPDummyNode new.
-				root key: 'Carl-Friedrich'.
-				n1 := SBVPDummyNode new.
-				n1 key: 'n1'.
-				n2 := SBVPDummyNode new.
-				n2 key: 'n2'.
-				root
-					left: n1;
-					right: n2.
-				root]
+			code: [
+				[ | root n1 n2 |
+					root := SBVPDummyNode new.
+					root key: 'Carl-Friedrich'.
+					n1 := SBVPDummyNode new.
+					n1 key: 'n1'.
+					n2 := SBVPDummyNode new.
+					n2 key: 'n2'.
+					root
+						left: n1;
+						right: n2.
+					root]]
 			showCode: true)
+		strategy: (Dictionary new
+			add: #explicitRootMatching -> true;
+			yourself)
 ]
 
 { #category : #'as yet unclassified' }
@@ -269,6 +290,12 @@ SBVPCase >> explicitChildrenMatching [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPCase >> explicitRootMatching [
+
+	^ self strategy at: #explicitRootMatching ifAbsent: [true]
+]
+
+{ #category : #'as yet unclassified' }
 SBVPCase >> findAllBindings: aRootPattern [
 
 	| bindingDict dfs |
@@ -285,17 +312,29 @@ SBVPCase >> findAllBindings: aRootPattern [
 	^ bindingDict
 ]
 
+{ #category : #accessing }
+SBVPCase >> informationRow [
+
+	^ informationRow
+]
+
+{ #category : #accessing }
+SBVPCase >> informationRow: aBlock [
+
+	informationRow := aBlock
+]
+
 { #category : #'as yet unclassified' }
 SBVPCase >> initialize [
 
 	super initialize.
-	
+	informationRow := SBColumn new.
 	self
-		strategy: Dictionary new;
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
 		changeTableLayout;
-		layoutInset: 6
+		layoutInset: 6;
+		strategy: Dictionary new
 ]
 
 { #category : #accessing }
@@ -308,19 +347,24 @@ SBVPCase >> input [
 SBVPCase >> input: anObject [
 
 	input := anObject.
-	"maybe buildImplicitChildren here" self flag: #TODO
+	"maybe buildImplicitChildren here"
+	self flag: #TODO
 ]
 
 { #category : #'as yet unclassified' }
-SBVPCase >> input: aSBBlock output: anotherSBBlock [
+SBVPCase >> input: anSBBlock output: anotherSBBlock [
 
 	self
-		addMorph: (SBRow new
-			addMorphBack: aSBBlock;
-			addMorphBack: SBIcon iconArrowRight;
-			addMorphBack: anotherSBBlock);
-		input: aSBBlock;
+		addMorph: (SBColumn new
+			addMorphBack: (informationRow := SBRow new);
+			addMorphBack: (SBRow new
+				addMorphBack: anSBBlock;
+				addMorphBack: SBIcon iconArrowRight;
+				addMorphBack: anotherSBBlock));
+		input: anSBBlock;
 		output: anotherSBBlock.
+	
+	self addStrategyToggleButton.
 	self buildImplicitChildrenMatchingPattern
 	";
 		colorDifferences"
@@ -336,7 +380,8 @@ SBVPCase >> output [
 SBVPCase >> output: anObject [
 
 	output := anObject.
-	"maybe buildImplicitChildren here" self flag: #TODO
+	"maybe buildImplicitChildren here"
+	self flag: #TODO
 ]
 
 { #category : #accessing }
@@ -377,10 +422,24 @@ SBVPCase >> strategy [
 ]
 
 { #category : #accessing }
-SBVPCase >> strategy: anObject [
+SBVPCase >> strategy: aDict [
 
-	strategy := anObject.
+	strategy := aDict.
+	self addStrategyToggleButton.
 	self buildImplicitChildrenMatchingPattern
+]
+
+{ #category : #accessing }
+SBVPCase >> strategyToggleButton [
+
+	^ self informationRow firstSubmorph
+]
+
+{ #category : #'as yet unclassified' }
+SBVPCase >> toggleStrategy [
+
+	self strategy at: #explicitRootMatching put: (self strategy at: #explicitRootMatching) not.
+	self addStrategyToggleButton
 ]
 
 { #category : #'as yet unclassified' }

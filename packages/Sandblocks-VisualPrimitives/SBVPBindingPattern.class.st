@@ -84,8 +84,7 @@ SBVPBindingPattern >> addImplicitChildren: anArray [
 	implicitChildrenIndices withIndexDo: [:bindingIndex :index | | implicitChild |
 		implicitChild := SBVPEllipsisPattern bindingIndex: bindingIndex.
 		implicitChild isImplicitChild: true.
-		self connections add: implicitChild beforeIndex: 2*index].
-	
+		self connections add: implicitChild beforeIndex: 2 * index]
 ]
 
 { #category : #accessing }

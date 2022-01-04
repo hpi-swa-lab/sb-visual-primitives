@@ -15,6 +15,8 @@ SBVPEllipsisPattern >> buildFromBinding: anArray [
 
 { #category : #'as yet unclassified' }
 SBVPEllipsisPattern >> buildImplicitChildren: anArray [
+
+	
 ]
 
 { #category : #'as yet unclassified' }
@@ -80,6 +82,6 @@ SBVPEllipsisPattern >> searchRootFor: aVisualPrimitive at: anIndex [
 
 { #category : #'as yet unclassified' }
 SBVPEllipsisPattern >> wantsImplicitNeighbors [
-	
+
 	^ false
 ]

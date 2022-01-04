@@ -210,9 +210,9 @@ SBVPVisualizer >> visualPrimitiveFrom: anObject [
 { #category : #accessing }
 SBVPVisualizer >> writeSourceOn: aStream [
 
-	aStream nextPutAll: '(SBVPVisualizer code: ['.
+	aStream nextPutAll: '(SBVPVisualizer code: '.
 	self code submorphsDo: [:morph | morph writeSourceOn: aStream].
-	aStream nextPutAll: '] showCode: '.
+	aStream nextPutAll: ' showCode: '.
 	self showCode storeOn: aStream.
 	aStream nextPut: $)
 ]

@@ -37,8 +37,9 @@ SBVPPatternMatcher >> build: aPattern fromBinding: anArray currentPrimitive: aVi
 
 { #category : #accessing }
 SBVPPatternMatcher >> buildImplicitChildrenMatchingPattern [
-	
-	self flag: #TODO. "Move everything to SBVPCase"
+
+	self flag: #TODO.
+	"Move everything to SBVPCase"
 	self input removeImplicitChildren.
 	self output removeImplicitChildren.
 	
@@ -60,7 +61,7 @@ SBVPPatternMatcher >> currentPrimitive: aPrimitive [
 	self searchStack: LinkedList new.
 	self searchStack addLast: aPrimitive.
 	self visitedPrimitives: Set new.
-	self visitedPrimitives add: aPrimitive.
+	self visitedPrimitives add: aPrimitive
 ]
 
 { #category : #accessing }
@@ -190,7 +191,7 @@ SBVPPatternMatcher >> strategy [
 { #category : #accessing }
 SBVPPatternMatcher >> strategy: aDict [
 
-	strategy := aDict.
+	strategy := aDict
 ]
 
 { #category : #accessing }

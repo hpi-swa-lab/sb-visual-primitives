@@ -56,11 +56,13 @@ SBVPPattern >> initialize [
 
 { #category : #accessing }
 SBVPPattern >> isImplicitChild [
+
 	^ isImplicitChild
 ]
 
 { #category : #accessing }
 SBVPPattern >> isImplicitChild: aBoolean [
+
 	isImplicitChild := aBoolean
 ]
 
@@ -92,6 +94,6 @@ SBVPPattern >> setBindingFor: aVisualPrimitive in: aCollection [
 
 { #category : #'as yet unclassified' }
 SBVPPattern >> wantsImplicitNeighbors [
-	
+
 	^ true
 ]

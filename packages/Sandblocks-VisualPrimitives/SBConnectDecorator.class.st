@@ -11,11 +11,11 @@ Class {
 }
 
 { #category : #connecting }
-SBConnectDecorator >> addConnectorFrom: sourceMorph to: destinationMorph [
+SBConnectDecorator >> addConnectorFrom: aSourceMorph to: aDestinationMorph [
 
 	| connector |
-	(self connectors noneSatisfy: [:con | con to = destinationMorph]) ifTrue: [
-		connector := SBNodeConnector connect: sourceMorph to: destinationMorph.
+	(self connectors noneSatisfy: [:con | con to = aDestinationMorph]) ifTrue: [
+		connector := SBNodeConnector connect: aSourceMorph to: aDestinationMorph.
 		self connectors add: connector.
 		self morph containingFloat owner addMorphBack: connector]
 ]
@@ -111,9 +111,9 @@ SBConnectDecorator >> initializeConnectionPoints [
 ]
 
 { #category : #'initialize-release' }
-SBConnectDecorator >> initializeEventListenersOnConnectionPoint: connectionPoint [
+SBConnectDecorator >> initializeEventListenersOnConnectionPoint: aConnectionPoint [
 
-	(self installEventBroadcasterFor: connectionPoint)
+	(self installEventBroadcasterFor: aConnectionPoint)
 		when: #mouseDown send: #startConnecting to: self;
 		when: #mouseUp send: #endConnecting: to: self
 ]
