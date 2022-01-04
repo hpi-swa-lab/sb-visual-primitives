@@ -162,7 +162,7 @@ SBVisualPrimitive >> connections [
 { #category : #accessing }
 SBVisualPrimitive >> connections: anObject [
 
-	connections := anObject.
+	connections := anObject asOrderedCollection.
 	connections do: [:child | child parent: self]
 ]
 
@@ -284,7 +284,7 @@ SBVisualPrimitive >> printOn: aStream [
 	super printOn: aStream.
 	aStream
 		nextPutAll: ' innerLabel: ';
-		nextPutAll: self labelDict asString
+		nextPutAll: self label asString
 ]
 
 { #category : #accessing }

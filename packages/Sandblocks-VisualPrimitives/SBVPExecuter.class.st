@@ -45,6 +45,24 @@ SBVPExecuter class >> exampleBuildHeap [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPExecuter class >> exampleBuildHeapWithImplicitChildren [
+
+	^ SBVPExecuter
+		case: (SBVPCase
+			input: (SBVPGroupPattern patterns: {
+				SBVPBindingPattern bindingIndex: 1 connections: {
+					SBVPBindingPattern bindingIndex: 2 connections: {}.}.
+				SBVPConstraintPattern constraint: [:a :b | b label asInteger < a label asInteger]})
+			output: (SBVPGroupPattern patterns: {
+				SBVPBindingPattern bindingIndex: 2 connections: {
+					SBVPBindingPattern bindingIndex: 1 connections: {}.}}))
+		input: (SBVPVisualizer
+			code: [SBVPDummyNode buildTree: {9 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}]
+			showCode: true)
+		strategy: {#explicitRootMatching -> false. #explicitChildrenMatching -> false} asDictionary
+]
+
+{ #category : #'as yet unclassified' }
 SBVPExecuter class >> exampleWithConstants [
 
 	| salzstangen |

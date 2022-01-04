@@ -140,6 +140,12 @@ SBVPGroupPattern >> patterns: aCollection [
 	patterns := aCollection
 ]
 
+{ #category : #accessing }
+SBVPGroupPattern >> removeImplicitChildren [
+
+	self patterns do: [:child | child removeImplicitChildren]
+]
+
 { #category : #'as yet unclassified' }
 SBVPGroupPattern >> reset [
 

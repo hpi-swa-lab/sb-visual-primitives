@@ -80,6 +80,21 @@ SBVPCase >> addSubPattern: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPCase >> buildImplicitChildrenMatchingPattern [
+	
+	self input ifNotNil: #removeImplicitChildren.
+	self output ifNotNil: #removeImplicitChildren.
+	
+	self explicitChildrenMatching ifFalse: [ | additionalNodes additionalNodes2 |
+		additionalNodes := self emptyBindingArray.
+		additionalNodes2 := self emptyBindingArray.
+		self input buildImplicitChildren: additionalNodes.
+		self flag: #TODO. "FIgure this out"
+		self output buildImplicitChildren: additionalNodes2.
+		"self output addImplicitChildren: additionalNodes"]
+]
+
+{ #category : #'as yet unclassified' }
 SBVPCase >> buildOutput: aPattern fromBinding: anArray [
 
 	^ aPattern buildFromBinding: anArray
@@ -116,6 +131,12 @@ SBVPCase >> colorDifferences [
 					connection label = (outputConnection ifNotNil: #label) ifFalse: [
 						connection color: c.
 						(outputBindingDict at: connection label ifAbsent: [nil]) ifNotNil: [:o | o color: c]]]]]
+]
+
+{ #category : #'as yet unclassified' }
+SBVPCase >> emptyBindingArray [
+
+	^ Array new: self input highestBindingVariable withAll: Array new
 ]
 
 { #category : #'as yet unclassified' }
@@ -242,6 +263,12 @@ SBVPCase >> exampleWithPatterns: aDummyNode [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPCase >> explicitChildrenMatching [
+
+	^ self strategy at: #explicitChildrenMatching ifAbsent: [true]
+]
+
+{ #category : #'as yet unclassified' }
 SBVPCase >> findAllBindings: aRootPattern [
 
 	| bindingDict dfs |
@@ -280,7 +307,8 @@ SBVPCase >> input [
 { #category : #accessing }
 SBVPCase >> input: anObject [
 
-	input := anObject
+	input := anObject.
+	"maybe buildImplicitChildren here" self flag: #TODO
 ]
 
 { #category : #'as yet unclassified' }
@@ -292,7 +320,8 @@ SBVPCase >> input: aSBBlock output: anotherSBBlock [
 			addMorphBack: SBIcon iconArrowRight;
 			addMorphBack: anotherSBBlock);
 		input: aSBBlock;
-		output: anotherSBBlock
+		output: anotherSBBlock.
+	self buildImplicitChildrenMatchingPattern
 	";
 		colorDifferences"
 ]
@@ -306,7 +335,8 @@ SBVPCase >> output [
 { #category : #accessing }
 SBVPCase >> output: anObject [
 
-	output := anObject
+	output := anObject.
+	"maybe buildImplicitChildren here" self flag: #TODO
 ]
 
 { #category : #accessing }
@@ -349,7 +379,8 @@ SBVPCase >> strategy [
 { #category : #accessing }
 SBVPCase >> strategy: anObject [
 
-	strategy := anObject
+	strategy := anObject.
+	self buildImplicitChildrenMatchingPattern
 ]
 
 { #category : #'as yet unclassified' }

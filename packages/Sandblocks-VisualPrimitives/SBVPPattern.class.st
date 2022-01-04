@@ -1,6 +1,9 @@
 Class {
 	#name : #SBVPPattern,
 	#superclass : #SBVisualPrimitive,
+	#instVars : [
+		'isImplicitChild'
+	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
 
@@ -44,10 +47,34 @@ SBVPPattern >> highestBindingVariable [
 		ifNotEmpty: [(self connections collect: [:connection | connection highestBindingVariable]) max])
 ]
 
+{ #category : #accessing }
+SBVPPattern >> initialize [
+
+	super initialize.
+	self isImplicitChild: false
+]
+
+{ #category : #accessing }
+SBVPPattern >> isImplicitChild [
+	^ isImplicitChild
+]
+
+{ #category : #accessing }
+SBVPPattern >> isImplicitChild: aBoolean [
+	isImplicitChild := aBoolean
+]
+
 { #category : #'as yet unclassified' }
 SBVPPattern >> matches: aVisualPrimitive withBinding: aCollection [
 
 	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPattern >> removeImplicitChildren [
+
+	self connections: (self connections reject: [:child | child isImplicitChild]).
+	self connections do: [:child | child removeImplicitChildren]
 ]
 
 { #category : #'as yet unclassified' }

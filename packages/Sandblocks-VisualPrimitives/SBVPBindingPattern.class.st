@@ -78,7 +78,14 @@ SBVPBindingPattern class >> writeBackClosure: aClosure connections: aCollection 
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> addImplicitChildren: anArray [
 
-	self flag: #TODO
+	| implicitChildrenIndices |
+	implicitChildrenIndices := anArray at: self bindingIndex.
+	
+	implicitChildrenIndices withIndexDo: [:bindingIndex :index | | implicitChild |
+		implicitChild := SBVPEllipsisPattern bindingIndex: bindingIndex.
+		implicitChild isImplicitChild: true.
+		self connections add: implicitChild beforeIndex: 2*index].
+	
 ]
 
 { #category : #accessing }
@@ -142,13 +149,14 @@ SBVPBindingPattern >> buildImplicitChildren: anArray [
 	| implicitChildren nextIndex oldConnections addImplicitChild |
 	implicitChildren := OrderedCollection new.
 	nextIndex := anArray size + 1.
-	anArray do: [:subArray | nextIndex := nextIndex max: subArray max].
+	anArray do: [:subArray | nextIndex := nextIndex max: (subArray ifEmpty: [0] ifNotEmpty: [subArray max + 1])].
 	
 	oldConnections := self connections copy.
 	
 	addImplicitChild := [:index | | implicitChild |
 		implicitChild := SBVPEllipsisPattern bindingIndex: nextIndex.
-		self connections add: implicitChild at: index + implicitChildren size + 1.
+		implicitChild isImplicitChild: true.
+		self connections add: implicitChild afterIndex: index + implicitChildren size.
 		implicitChildren add: nextIndex.
 		nextIndex := nextIndex + 1].
 	
@@ -234,12 +242,6 @@ SBVPBindingPattern >> drawOn: aCanvas [
 SBVPBindingPattern >> enoughChildren: aVisualPrimitive [
 
 	^ self childrenInCurrentMatch <= aVisualPrimitive connections size
-]
-
-{ #category : #accessing }
-SBVPBindingPattern >> explicitChildrenMatching: anObject [
-
-	explicitChildrenMatching := anObject
 ]
 
 { #category : #'as yet unclassified' }
