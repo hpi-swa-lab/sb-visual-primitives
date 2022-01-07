@@ -112,19 +112,9 @@ SBVPBindingPattern >> addToWorld: aWorld [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPBindingPattern >> attachTreeDecorator [
-
-	| decorator |
-	decorator := SBTreeDecorator new.
-	self connections do: [:child | child attachTreeDecorator].
-	self attachDecorator: decorator.
-	self connections do: [:child | child withDecorator: SBTreeDecorator do: [:childDecorator | decorator addChild: childDecorator]]
-]
-
-{ #category : #'as yet unclassified' }
 SBVPBindingPattern >> bindingFor: aVisualPrimitive [
 
-	^ (self getCurrentPrimitive: aVisualPrimitive) origin
+	^ self getCurrentPrimitive: aVisualPrimitive
 ]
 
 { #category : #accessing }

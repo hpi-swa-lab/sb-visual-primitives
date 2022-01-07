@@ -423,7 +423,7 @@ SBVPCase >> output: anObject [
 SBVPCase >> replace: aNumber matches: anObject [
 
 	| matcher currentPrimitive match iteration |
-	currentPrimitive := anObject asVisualPrimitive.
+	currentPrimitive := SBVisualPrimitive newFromObject: anObject.
 	matcher := (SBVPPatternMatcher input: currentPrimitive pattern: self input) strategy: self strategy.
 	iteration := 0.
 	[(match := matcher getNextMatch) notNil and: [(iteration := iteration + 1) < aNumber]] whileTrue: [
@@ -460,8 +460,6 @@ SBVPCase >> replaceAllMatches: anObject [
 	[match := matcher getNextMatch] whileNotNil: [
 		currentPrimitive := matcher build: self output fromBinding: match.
 		matcher input: currentPrimitive].
-	self flag: #TODO.
-	"implement fromVP with reversed mapping in VP (not in DummyNode/TomObject)"
 	^ currentPrimitive getObjectFromVisualPrimitive
 ]
 

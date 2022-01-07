@@ -99,7 +99,13 @@ SBVPTomGrammarObject >> visualPrimitiveMapping [
 		#shape -> CircleMorph.
 		#topLeftLabel -> #type.
 		#innerLabel -> #objectName.
-		#connections -> ((self members
+		SBVPPropertyMapping
+			getter: [(self members ifNil: [self content ifNotNil: [{self content}] ifNil: [{}]]) reject: [:entry | entry isNil]]
+			setter: [:vp |
+				self members: (vp connections collect:[:connection|connection getObjectFromVisualPrimitive])]
+			position: #connections
+			optionalArgs: Dictionary new}
+	"#connections -> ((self members
 			ifNotNil: [self members]
-			ifNil: [self content ifNotNil: [{self content}] ifNil: [{}]]) reject: [:entry | entry isNil])}
+			ifNil: [self content ifNotNil: [{self content}] ifNil: [{}]]) reject: [:entry | entry isNil])"
 ]

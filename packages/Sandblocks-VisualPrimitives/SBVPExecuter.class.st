@@ -79,12 +79,11 @@ SBVPExecuter class >> exampleGrammarRuleMergeRepeats [
 					SBVPBindingPattern bindingIndex: 2.
 					SBVPBindingPattern bindingIndex: 3 connections: {SBVPBindingPattern bindingIndex: 4}}.
 				SBVPConstraintPattern constraint: [:a :b :c :d |
-					a type = 'SEQ'
-						and: [c type = 'REPEAT']
-						and: [b objectName = d objectName]
-						and: [b type = 'SYMBOL']
-						and: [d type = 'SYMBOL'].
-					Transcript showln: a]})
+					a origin type = 'SEQ'
+						and: [c origin type = 'REPEAT']
+						and: [b origin objectName = d origin objectName]
+						and: [b origin type = 'SYMBOL']
+						and: [d origin type = 'SYMBOL']]})
 			output: (SBVPGroupPattern patterns: {SBVPBindingPattern constant: bio connections: {SBVPBindingPattern bindingIndex: 2}})
 			strategy: (Dictionary new
 				add: #explicitRootMatching -> false;
@@ -232,31 +231,21 @@ SBVPExecuter >> evaluationReceiver [
 SBVPExecuter >> execute [
 	<action>
 
-	self outputBlock removeAllMorphs.
-	"(self case value: self input code firstSubmorph evaluate value) asVisualPrimitiveIn: self outputBlock"
-	SBVisualPrimitive
-		newFromObject: (self case value: self input code firstSubmorph evaluate value)
-		in: self outputBlock
+	self showOutput: (self case value: self input code firstSubmorph evaluate value)
 ]
 
 { #category : #accessing }
 SBVPExecuter >> execute100Times [
 	<action>
 
-	self outputBlock removeAllMorphs.
-	SBVisualPrimitive
-		newFromObject: (self case replace: 100 matches: self input code firstSubmorph evaluate value)
-		in: self outputBlock
+	self showOutput: (self case replace: 15 matches: self input code firstSubmorph evaluate value)
 ]
 
 { #category : #accessing }
 SBVPExecuter >> executeAll [
 	<action>
 
-	self outputBlock removeAllMorphs.
-	SBVisualPrimitive
-		newFromObject: (self case replaceAllMatches: self input code firstSubmorph evaluate value)
-		in: self outputBlock
+	self showOutput: (self case replaceAllMatches: self input code firstSubmorph evaluate value)
 ]
 
 { #category : #accessing }
@@ -363,6 +352,16 @@ SBVPExecuter >> outputBlock: anObject [
 SBVPExecuter >> saveTryFixing: aFixBoolean quick: aQuickBoolean [
 
 	
+]
+
+{ #category : #accessing }
+SBVPExecuter >> showOutput: anObject [
+
+	| vp |
+	self outputBlock removeAllMorphs.
+	vp := SBVisualPrimitive newFromObject: anObject in: self outputBlock.
+	vp attachTreeDecorator.
+	vp withDecorator: SBTreeDecorator do: [:dec | dec layout]
 ]
 
 { #category : #'as yet unclassified' }

@@ -55,13 +55,15 @@ SBVPVisualizer >> code: anObject [
 { #category : #accessing }
 SBVPVisualizer >> code: aCodeBlock showCode: aBoolean [
 
-	| aSandblock |
+	| aSandblock vp |
 	self code removeAllMorphs.
 	self visual removeAllMorphs.
 	aSandblock := aCodeBlock asSandblock.
 	self code addMorphBack: aSandblock.
 	aBoolean ifFalse: [aSandblock hide].
-	self visualPrimitiveFrom: aSandblock evaluate value
+	vp := SBVisualPrimitive newFromObject: aSandblock evaluate value in: self visual.
+	vp attachTreeDecorator.
+	vp withDecorator: SBTreeDecorator do: [:dec | dec layout]
 ]
 
 { #category : #accessing }
