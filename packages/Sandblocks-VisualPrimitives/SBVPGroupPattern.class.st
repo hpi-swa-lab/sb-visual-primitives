@@ -2,7 +2,6 @@ Class {
 	#name : #SBVPGroupPattern,
 	#superclass : #SBVPPattern,
 	#instVars : [
-		'patterns',
 		'row'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
@@ -29,7 +28,7 @@ SBVPGroupPattern class >> patterns: aCollection [
 { #category : #'as yet unclassified' }
 SBVPGroupPattern >> addImplicitChildren: anArray [
 
-	self patterns do: [:pattern | pattern addImplicitChildren: anArray]
+	self connections do: [:pattern | pattern addImplicitChildren: anArray]
 ]
 
 { #category : #'as yet unclassified' }
@@ -41,26 +40,26 @@ SBVPGroupPattern >> addToWorld: aWorld [
 { #category : #'as yet unclassified' }
 SBVPGroupPattern >> buildFromBinding: anArray [
 
-	^ self patterns first buildFromBinding: anArray
+	^ self connections first buildFromBinding: anArray
 ]
 
 { #category : #'as yet unclassified' }
 SBVPGroupPattern >> buildImplicitChildren: anArray [
 
-	self patterns do: [:pattern | pattern buildImplicitChildren: anArray]
+	self connections do: [:pattern | pattern buildImplicitChildren: anArray]
 ]
 
 { #category : #'as yet unclassified' }
 SBVPGroupPattern >> findConstant [
 
-	self patterns do: [:child | child findConstant ifNotNil: [:constant | ^ constant]].
+	self connections do: [:child | child findConstant ifNotNil: [:constant | ^ constant]].
 	^ nil
 ]
 
 { #category : #'as yet unclassified' }
 SBVPGroupPattern >> getNext: aVisualPrimitive [
 
-	self patterns do: [:pattern |
+	self connections do: [:pattern |
 		(pattern getNext: aVisualPrimitive)
 			ifFalse: [pattern reset]
 			ifTrue: [^ true]].
@@ -68,19 +67,10 @@ SBVPGroupPattern >> getNext: aVisualPrimitive [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPGroupPattern >> highestBindingVariable [
-
-	^ self patterns
-		ifEmpty: [0]
-		ifNotEmpty: [(self patterns collect: [:pattern | pattern highestBindingVariable]) max]
-]
-
-{ #category : #'as yet unclassified' }
 SBVPGroupPattern >> initialize [
 
 	super initialize.
 	self removeAllMorphs.
-	self patterns: {}.
 	
 	self
 		addKeyboardCaptureFilter: self;
@@ -97,16 +87,16 @@ SBVPGroupPattern >> initialize [
 { #category : #'as yet unclassified' }
 SBVPGroupPattern >> matches: aVisualPrimitive withBinding: aCollection [
 
-	^ self patterns allSatisfy: [:pattern | pattern matches: aVisualPrimitive withBinding: aCollection]
+	^ self connections allSatisfy: [:pattern | pattern matches: aVisualPrimitive withBinding: aCollection]
 ]
 
 { #category : #accessing }
 SBVPGroupPattern >> patternBlocks: aCollection [
 
 	| isBindingPattern |
-	patterns := aCollection.
+	self connections: aCollection.
 	self row removeAllMorphs.
-	self patterns
+	self connections
 		do: [:aPattern |
 			isBindingPattern := SBVPBindingPattern withAllSubclasses anySatisfy: [:subclass | subclass = aPattern class].
 			isBindingPattern
@@ -135,27 +125,15 @@ SBVPGroupPattern >> patternBlocks: aCollection [
 ]
 
 { #category : #accessing }
-SBVPGroupPattern >> patterns [
-
-	^ patterns
-]
-
-{ #category : #accessing }
-SBVPGroupPattern >> patterns: aCollection [
-
-	patterns := aCollection
-]
-
-{ #category : #accessing }
 SBVPGroupPattern >> removeImplicitChildren [
 
-	self patterns do: [:child | child removeImplicitChildren]
+	self connections do: [:child | child removeImplicitChildren]
 ]
 
 { #category : #'as yet unclassified' }
 SBVPGroupPattern >> reset [
 
-	self patterns do: [:pattern | pattern reset]
+	self connections do: [:pattern | pattern reset]
 ]
 
 { #category : #accessing }
@@ -179,14 +157,14 @@ SBVPGroupPattern >> seperatorString [
 { #category : #accessing }
 SBVPGroupPattern >> setBindingFor: aVisualPrimitive in: aCollection [
 
-	^ self patterns allSatisfy: [:pattern | pattern setBindingFor: aVisualPrimitive in: aCollection]
+	^ self connections allSatisfy: [:pattern | pattern setBindingFor: aVisualPrimitive in: aCollection]
 ]
 
 { #category : #'as yet unclassified' }
 SBVPGroupPattern >> writeSourceOn: aStream [
 
 	aStream nextPutAll: '(', self class name, ' patterns: {'.
-	self patterns do: [:pattern |
+	self connections do: [:pattern |
 		pattern writeSourceOn: aStream.
 		aStream nextPut: $.].
 	aStream nextPutAll: '})'

@@ -22,7 +22,7 @@ SBVPOrGroupPattern >> seperatorString [
 { #category : #'as yet unclassified' }
 SBVPOrGroupPattern >> setBindingFor: aVisualPrimitive in: aCollection [
 
-	^ self patterns
+	^ self connections
 		detect: [:pattern | pattern setBindingFor: aVisualPrimitive in: aCollection]
 		ifFound: [:pattern |
 			boundPattern := pattern.

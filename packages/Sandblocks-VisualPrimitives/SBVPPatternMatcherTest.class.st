@@ -32,21 +32,25 @@ SBVPPatternMatcherTest >> buildTree: aCollection [
 SBVPPatternMatcherTest >> examplePatternChildSmallerThanParent [
 
 	^ SBVPGroupPattern patterns: {
-		SBVPBindingPattern bindingIndex: 1 connections: {
-			SBVPEllipsisPattern bindingIndex: 2.
-			SBVPBindingPattern bindingIndex: 3 connections: {SBVPEllipsisPattern bindingIndex: 5}.
-			SBVPEllipsisPattern bindingIndex: 4}.
-		SBVPConstraintPattern constraint: [:a :b :c :d :e | c label asInteger < a label asInteger]}
+		SBVPBindingPattern bindingIndex: #a connections: {
+			SBVPEllipsisPattern bindingIndex: #b.
+			SBVPBindingPattern
+				bindingIndex: #c
+				connections: {SBVPEllipsisPattern bindingIndex: #e}.
+			SBVPEllipsisPattern bindingIndex: #d}.
+		SBVPConstraintPattern constraint: [:bindings | (bindings at: #c) label asInteger < (bindings at: #a) label asInteger]}
 ]
 
 { #category : #'as yet unclassified' }
 SBVPPatternMatcherTest >> examplePatternChildSmallerThanParentOutput [
 
 	^ SBVPGroupPattern patterns: {
-		SBVPBindingPattern bindingIndex: 3 connections: {
-			SBVPEllipsisPattern bindingIndex: 2.
-			SBVPBindingPattern bindingIndex: 1 connections: {SBVPEllipsisPattern bindingIndex: 5}.
-			SBVPEllipsisPattern bindingIndex: 4}}
+		SBVPBindingPattern bindingIndex: #c connections: {
+			SBVPEllipsisPattern bindingIndex: #b.
+			SBVPBindingPattern
+				bindingIndex: #a
+				connections: {SBVPEllipsisPattern bindingIndex: #e}.
+			SBVPEllipsisPattern bindingIndex: #d}}
 ]
 
 { #category : #'as yet unclassified' }
@@ -54,128 +58,146 @@ SBVPPatternMatcherTest >> examplePatternSimpleTree [
 
 	^ SBVPGroupPattern patterns: {
 		SBVPBindingPattern
-			bindingIndex: 1
-			connections: {SBVPBindingPattern bindingIndex: 2. SBVPBindingPattern bindingIndex: 3}.
-		SBVPConstraintPattern constraint: [:a :b :c | a label asInteger = (b label asInteger + c label asInteger)]}
+			bindingIndex: #a
+			connections: {SBVPBindingPattern bindingIndex: #b. SBVPBindingPattern bindingIndex: #c}.
+		SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label asInteger = ((bindings at: #b) label asInteger + (bindings at: #c) label asInteger)]}
 ]
 
 { #category : #'as yet unclassified' }
 SBVPPatternMatcherTest >> examplePatternSimpleTreeOutput [
 
 	^ SBVPBindingPattern
-		bindingIndex: 1
-		connections: {SBVPBindingPattern bindingIndex: 3. SBVPBindingPattern bindingIndex: 2}
+		bindingIndex: #a
+		connections: {SBVPBindingPattern bindingIndex: #c. SBVPBindingPattern bindingIndex: #b}
 ]
 
 { #category : #'as yet unclassified' }
 SBVPPatternMatcherTest >> examplePatternSingleNode [
 
-	^ SBVPGroupPattern patterns: {SBVPBindingPattern bindingIndex: 1. SBVPConstraintPattern constraint: [:a | a label asInteger = 10]}
+	^ SBVPGroupPattern patterns: {
+		SBVPBindingPattern bindingIndex: #a.
+		SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label asInteger = 10]}
 ]
 
 { #category : #'as yet unclassified' }
 SBVPPatternMatcherTest >> examplePatternSortTree [
 
 	^ SBVPGroupPattern patterns: {
-		SBVPWildcardPattern bindingIndex: 6 connections: {
-			SBVPEllipsisPattern bindingIndex: 7.
-			SBVPBindingPattern bindingIndex: 1 connections: {
-				SBVPBindingPattern bindingIndex: 2 connections: {SBVPEllipsisPattern bindingIndex: 4}.
-				SBVPBindingPattern bindingIndex: 3 connections: {SBVPEllipsisPattern bindingIndex: 5}}.
-			SBVPEllipsisPattern bindingIndex: 8}.
-		SBVPConstraintPattern constraint: [:a :b :c :d :e :f :g :h | b label asInteger > c label asInteger]}
+		SBVPWildcardPattern bindingIndex: #f connections: {
+			SBVPEllipsisPattern bindingIndex: #g.
+			SBVPBindingPattern bindingIndex: #a connections: {
+				SBVPBindingPattern
+					bindingIndex: #b
+					connections: {SBVPEllipsisPattern bindingIndex: #d}.
+				SBVPBindingPattern
+					bindingIndex: #c
+					connections: {SBVPEllipsisPattern bindingIndex: #e}}.
+			SBVPEllipsisPattern bindingIndex: #h}.
+		SBVPConstraintPattern constraint: [:bindings | (bindings at: #b) label asInteger > (bindings at: #c) label asInteger]}
 ]
 
 { #category : #'as yet unclassified' }
 SBVPPatternMatcherTest >> examplePatternSortTreeOutput [
 
 	^ SBVPGroupPattern patterns: {
-		SBVPWildcardPattern bindingIndex: 6 connections: {
-			SBVPEllipsisPattern bindingIndex: 7.
-			SBVPBindingPattern bindingIndex: 1 connections: {
-				SBVPBindingPattern bindingIndex: 3 connections: {SBVPEllipsisPattern bindingIndex: 5}.
-				SBVPBindingPattern bindingIndex: 2 connections: {SBVPEllipsisPattern bindingIndex: 4}}.
-			SBVPEllipsisPattern bindingIndex: 8}}
+		SBVPWildcardPattern bindingIndex: #f connections: {
+			SBVPEllipsisPattern bindingIndex: #g.
+			SBVPBindingPattern bindingIndex: #a connections: {
+				SBVPBindingPattern
+					bindingIndex: #c
+					connections: {SBVPEllipsisPattern bindingIndex: #e}.
+				SBVPBindingPattern
+					bindingIndex: #b
+					connections: {SBVPEllipsisPattern bindingIndex: #d}}.
+			SBVPEllipsisPattern bindingIndex: #h}}
 ]
 
 { #category : #'as yet unclassified' }
 SBVPPatternMatcherTest >> examplePatternTreeWithEllipses [
 
 	^ SBVPGroupPattern patterns: {
-		SBVPWildcardPattern bindingIndex: 4 connections: {
-			SBVPEllipsisPattern bindingIndex: 5.
-			SBVPBindingPattern bindingIndex: 1 connections: {
-				SBVPBindingPattern bindingIndex: 2 connections: {SBVPEllipsisPattern bindingIndex: 6}.
-				SBVPBindingPattern bindingIndex: 3 connections: {SBVPEllipsisPattern bindingIndex: 7}}.
-			SBVPEllipsisPattern bindingIndex: 8}.
-		SBVPConstraintPattern constraint: [:a :b :c | a label asInteger = (b label asInteger + c label asInteger)]}
+		SBVPWildcardPattern bindingIndex: #d connections: {
+			SBVPEllipsisPattern bindingIndex: #e.
+			SBVPBindingPattern bindingIndex: #a connections: {
+				SBVPBindingPattern
+					bindingIndex: #b
+					connections: {SBVPEllipsisPattern bindingIndex: #f}.
+				SBVPBindingPattern
+					bindingIndex: #c
+					connections: {SBVPEllipsisPattern bindingIndex: #g}}.
+			SBVPEllipsisPattern bindingIndex: #h}.
+		SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label asInteger = ((bindings at: #b) label asInteger + (bindings at: #c) label asInteger)]}
 ]
 
 { #category : #'as yet unclassified' }
 SBVPPatternMatcherTest >> examplePatternTreeWithLabeledEllipses [
 
 	^ SBVPBindingPattern
-		bindingIndex: 1
-		connections: {SBVPEllipsisPattern bindingIndex: 2. SBVPBindingPattern bindingIndex: 3}
+		bindingIndex: #a
+		connections: {SBVPEllipsisPattern bindingIndex: #b. SBVPBindingPattern bindingIndex: #c}
 ]
 
 { #category : #'as yet unclassified' }
 SBVPPatternMatcherTest >> examplePatternTreeWithLabeledEllipsesOutput [
 
 	^ SBVPBindingPattern
-		bindingIndex: 1
-		connections: {SBVPBindingPattern bindingIndex: 3. SBVPEllipsisPattern bindingIndex: 2}
+		bindingIndex: #a
+		connections: {SBVPBindingPattern bindingIndex: #c. SBVPEllipsisPattern bindingIndex: #b}
 ]
 
 { #category : #'as yet unclassified' }
 SBVPPatternMatcherTest >> examplePatternTwoNodes [
 
 	^ SBVPGroupPattern patterns: {
-		SBVPBindingPattern bindingIndex: 1 connections: {SBVPBindingPattern bindingIndex: 2}.
-		SBVPConstraintPattern constraint: [:a :b | a label asInteger = (b label asInteger + 10)]}
+		SBVPBindingPattern bindingIndex: #a connections: {SBVPBindingPattern bindingIndex: #b}.
+		SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label asInteger = ((bindings at: #b) label asInteger + 10)]}
 ]
 
 { #category : #'as yet unclassified' }
 SBVPPatternMatcherTest >> examplePatternTwoNodesWithLabeledWildcard [
 
 	^ SBVPGroupPattern patterns: {
-		SBVPBindingPattern bindingIndex: 1 connections: {
-			SBVPWildcardPattern
-				bindingIndex: 3
-				connections: {SBVPBindingPattern bindingIndex: 2 connections: {SBVPWildcardPattern bindingIndex: 4}}}.
-		SBVPConstraintPattern constraint: [:a :b :c :d | a label asInteger = (b label asInteger + 10)]}
+		SBVPBindingPattern bindingIndex: #a connections: {
+			SBVPWildcardPattern bindingIndex: #c connections: {
+				SBVPBindingPattern
+					bindingIndex: #b
+					connections: {SBVPWildcardPattern bindingIndex: #d}}}.
+		SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label asInteger = ((bindings at: #b) label asInteger + 10)]}
 ]
 
 { #category : #'as yet unclassified' }
 SBVPPatternMatcherTest >> examplePatternTwoNodesWithLabeledWildcardOutput [
 
-	^ SBVPBindingPattern bindingIndex: 1 connections: {
-		SBVPWildcardPattern
-			bindingIndex: 4
-			connections: {SBVPWildcardPattern bindingIndex: 3 connections: {SBVPBindingPattern bindingIndex: 2}}}
+	^ SBVPBindingPattern bindingIndex: #a connections: {
+		SBVPWildcardPattern bindingIndex: #d connections: {
+			SBVPWildcardPattern
+				bindingIndex: #c
+				connections: {SBVPBindingPattern bindingIndex: #b}}}
 ]
 
 { #category : #'as yet unclassified' }
 SBVPPatternMatcherTest >> examplePatternTwoNodesWithWildcard [
 
 	^ SBVPGroupPattern patterns: {
-		SBVPBindingPattern bindingIndex: 1 connections: {
-			SBVPWildcardPattern
-				bindingIndex: 3
-				connections: {SBVPBindingPattern bindingIndex: 2 connections: {SBVPWildcardPattern bindingIndex: 4}}}.
-		SBVPConstraintPattern constraint: [:a :b | a label asInteger = (b label asInteger + 10)]}
+		SBVPBindingPattern bindingIndex: #a connections: {
+			SBVPWildcardPattern bindingIndex: #c connections: {
+				SBVPBindingPattern
+					bindingIndex: #b
+					connections: {SBVPWildcardPattern bindingIndex: #d}}}.
+		SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label asInteger = ((bindings at: #b) label asInteger + 10)]}
 ]
 
 { #category : #'as yet unclassified' }
 SBVPPatternMatcherTest >> examplePatternTwoWildcardList [
 
 	^ SBVPGroupPattern patterns: {
-		SBVPWildcardPattern bindingIndex: 3 connections: {
-			SBVPBindingPattern bindingIndex: 1 connections: {
-				SBVPWildcardPattern
-					bindingIndex: 4
-					connections: {SBVPBindingPattern bindingIndex: 2 connections: {SBVPWildcardPattern bindingIndex: 5}}}}.
-		SBVPConstraintPattern constraint: [:a :b | a label asInteger = (b label asInteger + 10)]}
+		SBVPWildcardPattern bindingIndex: #c connections: {
+			SBVPBindingPattern bindingIndex: #a connections: {
+				SBVPWildcardPattern bindingIndex: #d connections: {
+					SBVPBindingPattern
+						bindingIndex: #b
+						connections: {SBVPWildcardPattern bindingIndex: #e}}}}.
+		SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label asInteger = ((bindings at: #b) label asInteger + 10)]}
 ]
 
 { #category : #'as yet unclassified' }
@@ -217,7 +239,7 @@ SBVPPatternMatcherTest >> testComplexTree [
 			{vp3. vp1. vp3 connections second}.
 			{vp1. vp1 connections first. vp1 connections second}.
 			{vp7. vp7 connections first. vp7 connections second}} asSet
-		equals: (matcher getAllMatches collect: [:match | {match first. match second. match third}]) asSet
+		equals: (matcher getAllMatches collect: [:match | {match at: #a. match at: #b. match at: #c}]) asSet
 ]
 
 { #category : #'as yet unclassified' }
@@ -242,7 +264,7 @@ SBVPPatternMatcherTest >> testFiveNodesWithWildcard [
 			{primitives second. primitives fourth}.
 			{primitives second. primitives eighth}.
 			{primitives sixth. primitives eighth}}
-		equals: (matcher getAllMatches collect: [:match | {match first. match second}]) asArray
+		equals: (matcher getAllMatches collect: [:match | {match at: #a. match at: #b}]) asArray
 ]
 
 { #category : #'as yet unclassified' }
@@ -261,7 +283,7 @@ SBVPPatternMatcherTest >> testMatchAllChildrenTree [
 			{vp5. vp2. vp3}.
 			{vp2. vp2 connections first. vp2 connections second}.
 			{vp3. vp3 connections first. vp3 connections second}} asSet
-		equals: (matcher getAllMatches collect: [:match | {match first. match second. match third}]) asSet
+		equals: (matcher getAllMatches collect: [:match | {match at: #a. match at: #b. match at: #c}]) asSet
 ]
 
 { #category : #'as yet unclassified' }
@@ -271,7 +293,7 @@ SBVPPatternMatcherTest >> testSimpleTree [
 	root := (self buildTree: {10 -> {7. 3}}) first.
 	matcher := SBVPPatternMatcher input: root pattern: self examplePatternSimpleTree.
 	self
-		assert: {{root. root connections first. root connections second}}
+		assert: {{#a -> root. #b -> root connections first. #c -> root connections second} asDictionary}
 		equals: matcher getAllMatches asArray
 ]
 
@@ -307,7 +329,7 @@ SBVPPatternMatcherTest >> testSingleNodeMatch [
 	matcher := SBVPPatternMatcher
 		input: primitives first
 		pattern: self examplePatternSingleNode.
-	self assert: {{primitives first}} equals: matcher getAllMatches asArray
+	self assert: {{#a -> primitives first} asDictionary} equals: matcher getAllMatches asArray
 ]
 
 { #category : #'as yet unclassified' }
@@ -331,7 +353,7 @@ SBVPPatternMatcherTest >> testThreeNodesWithWildcard [
 		pattern: self examplePatternTwoNodesWithWildcard.
 	self
 		assert: {{primitives first. primitives third}. {primitives first. primitives fourth}}
-		equals: (matcher getAllMatches collect: [:match | {match first. match second}]) asArray
+		equals: (matcher getAllMatches collect: [:match | {match at: #a. match at: #b}]) asArray
 ]
 
 { #category : #'as yet unclassified' }
@@ -359,5 +381,7 @@ SBVPPatternMatcherTest >> testTwoNodesWithoutWildcard [
 	matcher := SBVPPatternMatcher
 		input: primitives first
 		pattern: self examplePatternTwoNodes.
-	self assert: {{primitives first. primitives second}} equals: matcher getAllMatches asArray
+	self
+		assert: {{#a -> primitives first. #b -> primitives second} asDictionary}
+		equals: matcher getAllMatches asArray
 ]

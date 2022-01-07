@@ -136,27 +136,42 @@ SBVPBindingPattern >> bindingIndex [
 { #category : #accessing }
 SBVPBindingPattern >> bindingIndex: anObject [
 
+	| label |
 	bindingIndex := anObject isSandblock
 		ifTrue: [anObject evaluate]
 		ifFalse: [anObject].
-	self label: bindingIndex asString.
+	label := SBTextBubble new contents: bindingIndex asString.
+	label when: #contentsChanged send: #bindingIndexChanged to: self.
+	self innerLabel: label.
 	self labelDict removeKey: #innerLabel
 ]
 
-{ #category : #'as yet unclassified' }
-SBVPBindingPattern >> buildChildrenFromBinding: anArray [
+{ #category : #accessing }
+SBVPBindingPattern >> bindingIndexChanged [
 
-	^ self connections gather: [:pattern | pattern buildFromBinding: anArray]
+	self bindingIndex: self innerLabel contents asSymbol
 ]
 
 { #category : #'as yet unclassified' }
-SBVPBindingPattern >> buildFromBinding: anArray [
+SBVPBindingPattern >> bindingOf: aSymbol [
+
+	self halt
+]
+
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern >> buildChildrenFromBinding: aDict [
+
+	^ self connections gather: [:pattern | pattern buildFromBinding: aDict]
+]
+
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern >> buildFromBinding: aDict [
 
 	| output |
 	output := self constant
 		ifNotNil: [self constant asVisualPrimitive]
-		ifNil: [(anArray at: self bindingIndex) copy].
-	output connections: (self buildChildrenFromBinding: anArray).
+		ifNil: [(aDict at: self bindingIndex) copy].
+	output connections: (self buildChildrenFromBinding: aDict).
 	output labelDict addAll: self labelDict.
 	^ {output}
 ]
@@ -212,6 +227,13 @@ SBVPBindingPattern >> childrenInCurrentMatch [
 		inject: 0
 		into: [:sum :connection | sum + connection indexOffset].
 	^ self connections size + offsetSum
+]
+
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern >> collectBindingsInto: aCollection [
+
+	super collectBindingsInto: aCollection.
+	aCollection add: self bindingIndex
 ]
 
 { #category : #accessing }
@@ -354,28 +376,28 @@ SBVPBindingPattern >> searchRootFor: aVisualPrimitive at: anIndex [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPBindingPattern >> setBindingFor: aVisualPrimitive in: aCollection [
+SBVPBindingPattern >> setBindingFor: aVisualPrimitive in: aDict [
 
 	| currentPrimitive |
 	currentPrimitive := self getCurrentPrimitive: aVisualPrimitive.
 	self bindingIndex ifNotNil: [ | binding |
 		binding := self bindingFor: aVisualPrimitive.
-		(aCollection at: self bindingIndex)
+		(aDict at: self bindingIndex ifAbsent: [nil])
 			ifNotNil: [:previousValue | previousValue = binding ifFalse: [^ false]]
-			ifNil: [aCollection at: self bindingIndex put: binding]].
+			ifNil: [aDict at: self bindingIndex put: binding]].
 	self writeBackClosure ifNotNil: [self writeBackClosure value: currentPrimitive origin].
-	^ (self couldMatch: currentPrimitive) and: [self setConnectionBindingFor: currentPrimitive in: aCollection]
+	^ (self couldMatch: currentPrimitive) and: [self setConnectionBindingFor: currentPrimitive in: aDict]
 ]
 
 { #category : #'as yet unclassified' }
-SBVPBindingPattern >> setConnectionBindingFor: aVisualPrimitive in: aCollection [
+SBVPBindingPattern >> setConnectionBindingFor: aVisualPrimitive in: aDict [
 
 	| offset |
 	offset := 0.
 	^ self connections withIndexAllSatisfy: [:connection :index | | wasSuccessful |
 		wasSuccessful := connection
 			setBindingFor: (connection searchRootFor: (self getCurrentPrimitive: aVisualPrimitive) at: index + offset)
-			in: aCollection.
+			in: aDict.
 		offset := offset + connection indexOffset.
 		wasSuccessful]
 ]
@@ -420,8 +442,8 @@ SBVPBindingPattern >> writeSourceOn: aStream [
 	
 	self bindingIndex ifNotNil: [
 		aStream
-			nextPutAll: ' bindingIndex: ';
-			nextPutAll: self bindingIndex asString].
+			nextPutAll: ' bindingIndex: #';
+			nextPutAll: self bindingIndex].
 	
 	self constant ifNotNil: [
 		aStream

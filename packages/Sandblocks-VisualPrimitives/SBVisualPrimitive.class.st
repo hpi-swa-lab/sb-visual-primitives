@@ -201,6 +201,12 @@ SBVisualPrimitive >> initializeLabelBlocks [
 	self labelPositions do: [:labelPosition | self blockDict at: labelPosition put: SBColumn new]
 ]
 
+{ #category : #'as yet unclassified' }
+SBVisualPrimitive >> innerLabel [
+
+	^ (self blockDict at: #innerLabel) firstSubmorph firstSubmorph
+]
+
 { #category : #accessing }
 SBVisualPrimitive >> innerLabel: anObject [
 

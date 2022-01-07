@@ -20,6 +20,12 @@ SBVPPattern >> buildImplicitChildren: anArray [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPPattern >> collectBindingsInto: aCollection [
+
+	self connections do: [:connection | connection collectBindingsInto: aCollection]
+]
+
+{ #category : #'as yet unclassified' }
 SBVPPattern >> findConstant [
 
 	self connections do: [:child | child findConstant ifNotNil: [:constant | ^ constant]].
@@ -37,14 +43,6 @@ SBVPPattern >> getNext: aVisualPrimitive [
 	"updates the visual primitive the pattern will bind to and returns whether a new binding was found. Whether the binding is correct needs to be checked with matches: withBinding:."
 
 	^ false
-]
-
-{ #category : #'as yet unclassified' }
-SBVPPattern >> highestBindingVariable [
-
-	^ (self bindingIndex ifNil: [0]) max: (self connections
-		ifEmpty: [0]
-		ifNotEmpty: [(self connections collect: [:connection | connection highestBindingVariable]) max])
 ]
 
 { #category : #accessing }

@@ -53,13 +53,13 @@ SBVPExecuter class >> exampleBuildHeapWithImplicitChildren [
 		case: (SBVPCase
 			input: (SBVPGroupPattern patterns: {
 				SBVPBindingPattern
-					bindingIndex: 1
-					connections: {SBVPBindingPattern bindingIndex: 2 connections: {}}.
-				SBVPConstraintPattern constraint: [:a :b | b label asInteger < a label asInteger]})
+					bindingIndex: #a
+					connections: {SBVPBindingPattern bindingIndex: #b connections: {}}.
+				SBVPConstraintPattern constraint: [:bindings | (bindings at: #b) label asInteger < (bindings at: #a) label asInteger]})
 			output: (SBVPGroupPattern patterns: {
 				SBVPBindingPattern
-					bindingIndex: 2
-					connections: {SBVPBindingPattern bindingIndex: 1 connections: {}}})
+					bindingIndex: #b
+					connections: {SBVPBindingPattern bindingIndex: #a connections: {}}})
 			strategy: {#explicitRootMatching -> false. #explicitChildrenMatching -> false} asDictionary)
 		input: (SBVPVisualizer
 			code: [SBVPDummyNode buildTree: {9 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}]
@@ -72,17 +72,20 @@ SBVPExecuter class >> exampleOrPattern [
 	^ SBVPExecuter
 		case: (SBVPCase
 			input: (SBVPOrGroupPattern patterns: {
-				SBVPBindingPattern
-					bindingIndex: 1
-					connections: {SBVPBindingPattern bindingIndex: 2 connections: {SBVPEllipsisPattern bindingIndex: 3}}.
+				SBVPBindingPattern bindingIndex: #a connections: {
+					SBVPBindingPattern
+						bindingIndex: #b
+						connections: {SBVPEllipsisPattern bindingIndex: #c}}.
 				SBVPGroupPattern patterns: {
-					SBVPBindingPattern bindingIndex: 1 connections: {SBVPEllipsisPattern bindingIndex: 3}.
-					SBVPConstraintPattern constraint: [:a :b :c | a label asInteger = 3]}})
+					SBVPBindingPattern
+						bindingIndex: #a
+						connections: {SBVPEllipsisPattern bindingIndex: #c}.
+					SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label asInteger = 3]}})
 			output: (SBVPGroupPattern patterns: {
 				SBVPBindingPattern
-					bindingIndex: 1
+					bindingIndex: #a
 					labelDict: {#innerLabel -> 42}
-					connections: {SBVPEllipsisPattern bindingIndex: 3}})
+					connections: {SBVPEllipsisPattern bindingIndex: #c}})
 			strategy: (Dictionary new
 				add: #explicitRootMatching -> false;
 				add: #explicitChildrenMatching -> true;
@@ -102,14 +105,15 @@ SBVPExecuter class >> exampleWithConstants [
 			salzstangen := SBVPDummyNode buildTree: {9 -> {10 -> {8}}}.
 			SBVPCase
 				input: (SBVPGroupPattern patterns: {
-					SBVPBindingPattern
-						constant: salzstangen
-						connections: {SBVPBindingPattern bindingIndex: 1 connections: {SBVPEllipsisPattern bindingIndex: 2}}})
+					SBVPBindingPattern constant: salzstangen connections: {
+						SBVPBindingPattern
+							bindingIndex: #a
+							connections: {SBVPEllipsisPattern bindingIndex: #b}}})
 				output: (SBVPGroupPattern patterns: {
-					SBVPBindingPattern bindingIndex: 1 connections: {
+					SBVPBindingPattern bindingIndex: #a connections: {
 						SBVPBindingPattern
 							constant: salzstangen
-							connections: {SBVPEllipsisPattern bindingIndex: 2}}})
+							connections: {SBVPEllipsisPattern bindingIndex: #b}}})
 				strategy: {#explicitRootMatching -> false} asDictionary
 				replaceAll: true]
 		showCode: true
@@ -121,14 +125,15 @@ SBVPExecuter class >> exampleWithConstants: salzstangen [
 	| case |
 	case := SBVPCase
 		input: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern
-				constant: salzstangen
-				connections: {SBVPBindingPattern bindingIndex: 1 connections: {SBVPEllipsisPattern bindingIndex: 2}}})
+			SBVPBindingPattern constant: salzstangen connections: {
+				SBVPBindingPattern
+					bindingIndex: #a
+					connections: {SBVPEllipsisPattern bindingIndex: #b}}})
 		output: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern bindingIndex: 1 connections: {
+			SBVPBindingPattern bindingIndex: #a connections: {
 				SBVPBindingPattern
 					constant: salzstangen
-					connections: {SBVPEllipsisPattern bindingIndex: 2}}})
+					connections: {SBVPEllipsisPattern bindingIndex: #b}}})
 		strategy: {#explicitRootMatching -> false. #explicitChildrenMatching -> true} asDictionary.
 	^ case replaceAllMatches: salzstangen
 ]

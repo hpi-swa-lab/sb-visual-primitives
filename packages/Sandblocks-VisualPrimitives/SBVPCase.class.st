@@ -134,8 +134,8 @@ SBVPCase >> buildImplicitChildrenMatchingPattern [
 	self output ifNotNil: #removeImplicitChildren.
 	
 	self explicitChildrenMatching ifFalse: [ | additionalNodes additionalNodes2 |
-		additionalNodes := self emptyBindingArray.
-		additionalNodes2 := self emptyBindingArray.
+		additionalNodes := Dictionary new.
+		additionalNodes2 := Dictionary new.
 		self input buildImplicitChildren: additionalNodes.
 		self flag: #TODO.
 		"FIgure this out"
@@ -159,8 +159,8 @@ SBVPCase >> color [
 SBVPCase >> colorDifferences [
 
 	| inputRoot outputRoot inputBindingDict outputBindingDict colors |
-	inputRoot := self input patterns first.
-	outputRoot := self output patterns first.
+	inputRoot := self input connections first.
+	outputRoot := self output connections first.
 	
 	inputBindingDict := self findAllBindings: inputRoot.
 	outputBindingDict := self findAllBindings: outputRoot.
@@ -180,12 +180,6 @@ SBVPCase >> colorDifferences [
 					connection label = (outputConnection ifNotNil: #label) ifFalse: [
 						connection color: c.
 						(outputBindingDict at: connection label ifAbsent: [nil]) ifNotNil: [:o | o color: c]]]]]
-]
-
-{ #category : #'as yet unclassified' }
-SBVPCase >> emptyBindingArray [
-
-	^ Array new: self input highestBindingVariable withAll: Array new
 ]
 
 { #category : #'as yet unclassified' }

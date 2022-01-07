@@ -44,7 +44,7 @@ SBVPPatternMatcher >> buildImplicitChildrenMatchingPattern [
 	self output removeImplicitChildren.
 	
 	self explicitChildrenMatching ifFalse: [ | additionalNodes |
-		additionalNodes := self emptyBindingArray.
+		additionalNodes := Dictionary new.
 		self input buildImplicitChildren: additionalNodes.
 		self output addImplicitChildren: additionalNodes]
 ]
@@ -82,12 +82,6 @@ SBVPPatternMatcher >> dealWithUndefinedResult [
 ]
 
 { #category : #accessing }
-SBVPPatternMatcher >> emptyBindingArray [
-
-	^ Array new: self pattern highestBindingVariable
-]
-
-{ #category : #accessing }
 SBVPPatternMatcher >> explicitChildrenMatching [
 
 	^ self strategy at: #explicitChildrenMatching ifAbsent: [true]
@@ -106,7 +100,7 @@ SBVPPatternMatcher >> getAllMatches [
 SBVPPatternMatcher >> getMatch [
 
 	| bindings |
-	bindings := self emptyBindingArray.
+	bindings := Dictionary new.
 	(self pattern setBindingFor: self currentPrimitive in: bindings) ifFalse: [^ self getNextMatch].
 	(self pattern matches: self currentPrimitive withBinding: bindings) ifFalse: [^ self getNextMatch].
 	^ bindings

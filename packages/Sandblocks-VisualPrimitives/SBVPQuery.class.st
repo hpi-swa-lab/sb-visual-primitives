@@ -23,7 +23,7 @@ SBVPQuery class >> exampleExtractLeafOf: salzstangen [
 				SBVPBindingPattern constant: currentSnack connections: {
 					SBVPBindingPattern
 						writeBackClosure: [:var | gerhard := var]
-						connections: {SBVPEllipsisPattern bindingIndex: 1}}})
+						connections: {SBVPEllipsisPattern bindingIndex: #a}}})
 			strategy: {#explicitRootMatching -> true} asDictionary] whileNotNil: [
 		Transcript showln: gerhard key.
 		currentSnack := gerhard].

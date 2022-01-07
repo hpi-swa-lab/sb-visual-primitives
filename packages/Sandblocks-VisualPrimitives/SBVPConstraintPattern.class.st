@@ -16,6 +16,12 @@ SBVPConstraintPattern class >> constraint: aClosure [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPConstraintPattern class >> constraintInputName [
+
+	^ 'bindings'
+]
+
+{ #category : #'as yet unclassified' }
 SBVPConstraintPattern class >> matches: aBlock [
 
 	^ self selector: #constraint: receiverMatches: aBlock
@@ -24,7 +30,17 @@ SBVPConstraintPattern class >> matches: aBlock [
 { #category : #'as yet unclassified' }
 SBVPConstraintPattern class >> newFor: aBlock [
 
-	^ self new constraintBlock: aBlock arguments first
+	| constraintBlock |
+	constraintBlock := aBlock arguments first.
+	constraintBlock allBlocksDo: [:britta |
+		((britta isKindOf: SBStMessageSend)
+			and: [britta receiver contents = self constraintInputName]
+			and: [britta selector = 'at:']) ifTrue: [ | variableName |
+			variableName := britta arguments first evaluate.
+			britta replaceBy: ((SBVPConstraintVariable poolDeclaration: variableName) binding: variableName -> SBVisualPrimitive new)]].
+	constraintBlock bindings do: [:b | b owner hide].
+	"  :(  "
+	^ self new constraintBlock: constraintBlock
 ]
 
 { #category : #accessing }
@@ -37,6 +53,20 @@ SBVPConstraintPattern >> addToWorld: aWorld [
 SBVPConstraintPattern >> artefactSaved: aMethodBlock [
 
 	constraint := self constraintBlock evaluate
+]
+
+{ #category : #'as yet unclassified' }
+SBVPConstraintPattern >> binding: aString for: block class: aClass ifPresent: aBlock [
+
+	| bindingsSet |
+	bindingsSet := Set new.
+	self root collectBindingsInto: bindingsSet.
+	(bindingsSet includes: aString asSymbol) ifTrue: [ | variable |
+		variable := (SBVPConstraintVariable poolDeclaration: aString) binding: aString asSymbol -> SBVisualPrimitive new.
+		(block isKindOf: SBVPConstraintVariable) ifFalse: [block replaceBy: variable].
+		"avoid replacing same block multiple times"
+		^ aBlock value: variable].
+	^ super binding: aString for: block class: aClass ifPresent: aBlock
 ]
 
 { #category : #accessing }
@@ -76,12 +106,6 @@ SBVPConstraintPattern >> constraintBlockBasic: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPConstraintPattern >> highestBindingVariable [
-
-	^ self constraint numArgs
-]
-
-{ #category : #'as yet unclassified' }
 SBVPConstraintPattern >> initialize [
 
 	super initialize.
@@ -90,9 +114,9 @@ SBVPConstraintPattern >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPConstraintPattern >> matches: aVisualPrimitive withBinding: aCollection [
+SBVPConstraintPattern >> matches: aVisualPrimitive withBinding: aDict [
 
-	^ self constraint valueWithEnoughArguments: aCollection
+	^ self constraint value: aDict
 ]
 
 { #category : #'as yet unclassified' }
