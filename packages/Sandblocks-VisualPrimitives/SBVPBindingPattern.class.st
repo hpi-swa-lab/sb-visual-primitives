@@ -124,7 +124,7 @@ SBVPBindingPattern >> attachTreeDecorator [
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> bindingFor: aVisualPrimitive [
 
-	^ self getCurrentPrimitive: aVisualPrimitive
+	^ (self getCurrentPrimitive: aVisualPrimitive) origin
 ]
 
 { #category : #accessing }

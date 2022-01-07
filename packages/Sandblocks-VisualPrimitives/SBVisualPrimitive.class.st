@@ -7,7 +7,8 @@ Class {
 		'shape',
 		'connections',
 		'parent',
-		'origin'
+		'origin',
+		'propertyMappings'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
@@ -19,12 +20,6 @@ SBVisualPrimitive class >> buildTree: aCollection [
 		element isVariableBinding
 			ifTrue: [(self new: element key) connections: (self buildTree: element value)]
 			ifFalse: [self new: element]]
-]
-
-{ #category : #'as yet unclassified' }
-SBVisualPrimitive class >> fromVisualPrimitive: aVisualPrimitive [
-
-	^ aVisualPrimitive
 ]
 
 { #category : #'as yet unclassified' }
@@ -85,8 +80,9 @@ SBVisualPrimitive >> addPropertyMapping: anSBVPPropertyMapping [
 		propertyMapping := SBVPPropertyMapping
 			fromAssociation: anSBVPPropertyMapping
 			for: self origin].
-	
+	self flag: #TODO. "figure out, if adding to label dict is necessary..."
 	self labelDict at: propertyMapping position put: propertyMapping.
+	self propertyMappings at: propertyMapping position put: propertyMapping.
 	value := propertyMapping getter value.
 	
 	propertyMapping position
@@ -95,7 +91,10 @@ SBVisualPrimitive >> addPropertyMapping: anSBVPPropertyMapping [
 			[#innerLabel] -> [self innerLabel: value].
 			[#connections] -> [
 				value do: [:connection |
-					(self class newFromObject: connection in: self owner)
+					
+					(self owner
+						ifNil: [SBVisualPrimitive newFromObject: connection]
+						ifNotNil: [SBVisualPrimitive newFromObject: connection in: self owner])
 						withDecorator: SBTreeDecorator
 						do: [:childDecorator | self withDecorator: SBTreeDecorator do: [:treeDecorator | treeDecorator addChild: childDecorator]]]]}
 		otherwise: [
@@ -173,6 +172,16 @@ SBVisualPrimitive >> getLabelMorph: anObject [
 ]
 
 { #category : #'as yet unclassified' }
+SBVisualPrimitive >> getObjectFromVisualPrimitive [
+
+	|  anObject |
+	anObject := self origin copy.
+	self propertyMappings do: [:propertyMapping | propertyMapping setter value: self ].
+	
+	^ anObject
+]
+
+{ #category : #'as yet unclassified' }
 SBVisualPrimitive >> initialize [
 
 	super initialize.
@@ -180,6 +189,7 @@ SBVisualPrimitive >> initialize [
 	self
 		blockDict: Dictionary new;
 		labelDict: Dictionary new;
+		propertyMappings: Dictionary new;
 		initializeLabelBlocks;
 		shape: CircleMorph.
 	
@@ -287,6 +297,16 @@ SBVisualPrimitive >> printOn: aStream [
 	aStream
 		nextPutAll: ' innerLabel: ';
 		nextPutAll: self label asString
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> propertyMappings [
+	^ propertyMappings
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> propertyMappings: anObject [
+	propertyMappings := anObject
 ]
 
 { #category : #accessing }

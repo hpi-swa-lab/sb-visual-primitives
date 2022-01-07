@@ -420,16 +420,16 @@ SBVPCase >> output: anObject [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPCase >> replace: aNumber matches: aDummyNode [
+SBVPCase >> replace: aNumber matches: anObject [
 
 	| matcher currentPrimitive match iteration |
-	currentPrimitive := aDummyNode asVisualPrimitive.
+	currentPrimitive := anObject asVisualPrimitive.
 	matcher := (SBVPPatternMatcher input: currentPrimitive pattern: self input) strategy: self strategy.
 	iteration := 0.
 	[(match := matcher getNextMatch) notNil and: [(iteration := iteration + 1) < aNumber]] whileTrue: [
 		currentPrimitive := matcher build: self output fromBinding: match.
 		matcher input: currentPrimitive].
-	^ aDummyNode class fromVisualPrimitive: currentPrimitive
+	^ currentPrimitive getObjectFromVisualPrimitive
 ]
 
 { #category : #accessing }
@@ -452,15 +452,17 @@ SBVPCase >> replaceAllMatches [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPCase >> replaceAllMatches: aDummyNode [
+SBVPCase >> replaceAllMatches: anObject [
 
 	| matcher currentPrimitive match |
-	currentPrimitive := aDummyNode asVisualPrimitive.
+	currentPrimitive := SBVisualPrimitive newFromObject: anObject.
 	matcher := (SBVPPatternMatcher input: currentPrimitive pattern: self input) strategy: self strategy.
 	[match := matcher getNextMatch] whileNotNil: [
 		currentPrimitive := matcher build: self output fromBinding: match.
 		matcher input: currentPrimitive].
-	^ aDummyNode class fromVisualPrimitive: currentPrimitive
+	self flag: #TODO.
+	"implement fromVP with reversed mapping in VP (not in DummyNode/TomObject)"
+	^ currentPrimitive getObjectFromVisualPrimitive
 ]
 
 { #category : #accessing }
@@ -499,16 +501,16 @@ SBVPCase >> value [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPCase >> value: aDummyNode [
+SBVPCase >> value: anObject [
 
 	| matcher match |
 	matcher := (SBVPPatternMatcher
-		input: aDummyNode asVisualPrimitive
+		input: (SBVisualPrimitive newFromObject: anObject)
 		pattern: self input) strategy: self strategy.
 	match := matcher getNextMatch.
 	^ match
-		ifNil: [aDummyNode]
-		ifNotNil: [aDummyNode class fromVisualPrimitive: (matcher build: self output fromBinding: match)]
+		ifNil: [anObject]
+		ifNotNil: [(matcher build: self output fromBinding: match) getObjectFromVisualPrimitive]
 ]
 
 { #category : #'as yet unclassified' }

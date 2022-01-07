@@ -19,8 +19,8 @@ SBVPPropertyMapping class >> fromAssociation: anAssociation for: anObject [
 		ifTrue: [[anObject perform: anAssociation value]]
 		ifFalse: [[anAssociation value]].
 	setterBlock := anAssociation value isSymbol
-		ifTrue: [[:changedValue | anObject perform: anAssociation value asSimpleSetter with: changedValue]]
-		ifFalse: [[]].
+		ifTrue: [[:vp | anObject perform: anAssociation value asSimpleSetter with: (vp perform: anAssociation key asSimpleGetter )]]
+		ifFalse: [["Maybe handle constant values here and simply return them.?"]].
 	
 	^ SBVPPropertyMapping
 		getter: getterBlock

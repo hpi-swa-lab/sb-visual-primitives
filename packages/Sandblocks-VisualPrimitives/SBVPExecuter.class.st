@@ -67,6 +67,47 @@ SBVPExecuter class >> exampleBuildHeapWithImplicitChildren [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPExecuter class >> exampleGrammarRuleMergeRepeats [
+
+	| bio |
+	bio := SBVPTomGrammarObject new.
+	bio type: 'REPEAT1'.
+	^ SBVPExecuter
+		case: (SBVPCase
+			input: (SBVPGroupPattern patterns: {
+				SBVPBindingPattern bindingIndex: 1 connections: {
+					SBVPBindingPattern bindingIndex: 2.
+					SBVPBindingPattern bindingIndex: 3 connections: {SBVPBindingPattern bindingIndex: 4}}.
+				SBVPConstraintPattern constraint: [:a :b :c :d |
+					a type = 'SEQ'
+						and: [c type = 'REPEAT']
+						and: [b objectName = d objectName]
+						and: [b type = 'SYMBOL']
+						and: [d type = 'SYMBOL'].
+					Transcript showln: a]})
+			output: (SBVPGroupPattern patterns: {SBVPBindingPattern constant: bio connections: {SBVPBindingPattern bindingIndex: 2}})
+			strategy: (Dictionary new
+				add: #explicitRootMatching -> false;
+				add: #explicitChildrenMatching -> true;
+				yourself))
+		input: (SBVPVisualizer
+			code: [
+				SBVPTomGrammarObject new
+					type: 'SEQ';
+					members: {
+						SBVPTomGrammarObject new
+							type: 'SYMBOL';
+							objectName: 'aahh'.
+						SBVPTomGrammarObject new
+							type: 'REPEAT';
+							content: (SBVPTomGrammarObject new
+								type: 'SYMBOL';
+								objectName: 'aahh')};
+					yourself]
+			showCode: true)
+]
+
+{ #category : #'as yet unclassified' }
 SBVPExecuter class >> exampleOrPattern [
 
 	^ SBVPExecuter
@@ -192,7 +233,10 @@ SBVPExecuter >> execute [
 	<action>
 
 	self outputBlock removeAllMorphs.
-	(self case value: self input code firstSubmorph evaluate value) asVisualPrimitiveIn: self outputBlock
+	"(self case value: self input code firstSubmorph evaluate value) asVisualPrimitiveIn: self outputBlock"
+	SBVisualPrimitive
+		newFromObject: (self case value: self input code firstSubmorph evaluate value)
+		in: self outputBlock
 ]
 
 { #category : #accessing }
@@ -200,7 +244,9 @@ SBVPExecuter >> execute100Times [
 	<action>
 
 	self outputBlock removeAllMorphs.
-	(self case replace: 100 matches: self input code firstSubmorph evaluate value) asVisualPrimitiveIn: self outputBlock
+	SBVisualPrimitive
+		newFromObject: (self case replace: 100 matches: self input code firstSubmorph evaluate value)
+		in: self outputBlock
 ]
 
 { #category : #accessing }
@@ -208,7 +254,9 @@ SBVPExecuter >> executeAll [
 	<action>
 
 	self outputBlock removeAllMorphs.
-	(self case replaceAllMatches: self input code firstSubmorph evaluate value) asVisualPrimitiveIn: self outputBlock
+	SBVisualPrimitive
+		newFromObject: (self case replaceAllMatches: self input code firstSubmorph evaluate value)
+		in: self outputBlock
 ]
 
 { #category : #accessing }

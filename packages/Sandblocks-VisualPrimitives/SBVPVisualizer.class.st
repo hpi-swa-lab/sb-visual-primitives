@@ -138,6 +138,27 @@ SBVPVisualizer >> exampleSimpleRectangle [
 ]
 
 { #category : #accessing }
+SBVPVisualizer >> exampleSimpleTomGrammar [
+
+	SBVPVisualizer
+		code: [ | tom |
+			tom := SBVPTomGrammarObject new.
+			tom
+				type: 'SEQ';
+				members: {
+					SBVPTomGrammarObject new
+						type: 'SYMBOL';
+						objectName: 'aahh'.
+					SBVPTomGrammarObject new
+						type: 'REPEAT';
+						content: (SBVPTomGrammarObject new
+							type: 'SYMBOL';
+							objectName: 'aahh')}.
+			tom]
+		showCode: true
+]
+
+{ #category : #accessing }
 SBVPVisualizer >> initialize [
 
 	super initialize.

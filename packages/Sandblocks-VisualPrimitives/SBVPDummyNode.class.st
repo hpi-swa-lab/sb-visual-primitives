@@ -151,5 +151,12 @@ SBVPDummyNode >> visualPrimitiveMapping [
 	^ {
 		#shape -> RectangleMorph.
 		#innerLabel -> #key.
-		#connections -> ({self left. self right} reject: [:connection | connection isNil])}
+		SBVPPropertyMapping
+			getter: [{self left. self right} reject: [:connection | connection isNil]]
+			setter: [:vp  |
+				vp connections first ifNotNil: [self left: vp connections first].
+				vp connections second ifNotNil: [self right: vp connections second]]
+			position: #connections
+			optionalArgs: Dictionary new}
+	" ({self left. self right} reject: [:connection | connection isNil])"
 ]
