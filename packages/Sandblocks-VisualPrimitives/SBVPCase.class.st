@@ -355,12 +355,12 @@ SBVPCase >> informationRow: aBlock [
 SBVPCase >> initialize [
 
 	super initialize.
-	informationRow := SBRow new.
+	informationRow := SBRow new cellInset: 3.
 	self
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
 		changeTableLayout;
-		layoutInset: 6;
+		cellInset: 3;
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> true;
 			add: #explicitChildrenMatching -> true;
@@ -386,8 +386,11 @@ SBVPCase >> input: anSBBlock output: anotherSBBlock [
 
 	self
 		addMorph: (SBColumn new
+			cellPositioning: #center;
 			addMorphBack: self informationRow;
 			addMorphBack: (SBRow new
+				cellInset: 3;
+				cellPositioning: #center;
 				addMorphBack: anSBBlock;
 				addMorphBack: SBIcon iconArrowRight;
 				addMorphBack: anotherSBBlock));

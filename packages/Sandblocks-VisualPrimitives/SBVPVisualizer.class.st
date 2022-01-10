@@ -150,14 +150,14 @@ SBVPVisualizer >> initialize [
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
 		changeTableLayout;
-		layoutInset: 6;
+		cellInset: 6;
 		addMorphBack: (visual := SBSandboxPasteUpMorph new
 			hResizing: #shrinkWrap;
 			vResizing: #shrinkWrap;
 			borderColor: Color black;
 			layoutInset: 6;
 			when: #reportError send: #reportError: to: self);
-		addMorphBack: (code := SBColumn new layoutInset: 0)
+		addMorphBack: (code := SBColumn new)
 ]
 
 { #category : #accessing }

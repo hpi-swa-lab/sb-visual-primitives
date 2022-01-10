@@ -228,23 +228,32 @@ SBVPExecuter >> initialize [
 		vResizing: #shrinkWrap;
 		changeTableLayout;
 		layoutInset: 6;
+		cellInset: 3;
 		addMorphBack: (SBTextBubble new contents: 'Executer');
+		addMorphBack: (SBRow new
+			cellInset: 3;
+			addMorphBack: (SBButton new label: 'execute ones' shortcut: nil do: [self execute]);
+			addMorphBack: (SBButton new label: 'execute 100 times' shortcut: nil do: [self execute100Times]);
+			addMorphBack: (SBButton new label: 'execute all' shortcut: nil do: [self executeAll]));
 		addMorphBack: (SBRow new
 			hResizing: #shrinkWrap;
 			vResizing: #shrinkWrap;
+			cellInset: 3;
 			addMorphBack: (SBColumn new
 				hResizing: #shrinkWrap;
 				vResizing: #shrinkWrap;
-				layoutInset: 6;
+				cellInset: 3;
 				addMorphBack: (SBTextBubble new contents: 'Input');
 				addMorphBack: (inputBlock := SBSandboxPasteUpMorph new
 					hResizing: #shrinkWrap;
 					vResizing: #shrinkWrap;
+					cellInset: 6;
 					borderColor: Color black;
 					when: #reportError send: #reportError: to: self));
 			addMorphBack: (SBColumn new
 				hResizing: #shrinkWrap;
 				vResizing: #shrinkWrap;
+				cellInset: 3;
 				addMorphBack: (SBTextBubble new contents: 'Transformation');
 				addMorphBack: (caseBlock := SBSandboxPasteUpMorph new
 					hResizing: #shrinkWrap;
@@ -254,7 +263,7 @@ SBVPExecuter >> initialize [
 			addMorphBack: (SBColumn new
 				hResizing: #shrinkWrap;
 				vResizing: #shrinkWrap;
-				layoutInset: 6;
+				cellInset: 3;
 				addMorphBack: (SBTextBubble new contents: 'Output');
 				addMorphBack: (outputBlock := SBSandboxPasteUpMorph new
 					hResizing: #shrinkWrap;

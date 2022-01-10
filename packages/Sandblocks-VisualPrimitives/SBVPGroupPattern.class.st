@@ -78,10 +78,12 @@ SBVPGroupPattern >> initialize [
 		hResizing: #shrinkWrap;
 		vResizing: #shrinkWrap;
 		changeTableLayout;
-		layoutInset: 6;
+		layoutInset: 4;
 		addMorphBack: (row := SBRow new
 			hResizing: #shrinkWrap;
-			vResizing: #shrinkWrap)
+			vResizing: #shrinkWrap;
+			cellInset: 3;
+			cellPositioning: #center)
 ]
 
 { #category : #'as yet unclassified' }
