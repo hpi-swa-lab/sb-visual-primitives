@@ -22,12 +22,6 @@ SBVisualPrimitive class >> buildTree: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive class >> fromVisualPrimitive: aVisualPrimitive [
-
-	^ aVisualPrimitive
-]
-
-{ #category : #'as yet unclassified' }
 SBVisualPrimitive class >> matches: aBlock [
 
 	^ false
@@ -42,14 +36,14 @@ SBVisualPrimitive class >> new: aLabel [
 { #category : #'as yet unclassified' }
 SBVisualPrimitive class >> newFromObject: anObject [
 
-	| vp treeDecorator |
+	| vp |
 	vp := self new.
 	vp origin: anObject.
 	
-	treeDecorator := SBTreeDecorator new.
-	vp attachDecorator: treeDecorator.
+	"treeDecorator := SBTreeDecorator new.
+	vp attachDecorator: treeDecorator."
 	vp addPropertyMappings: anObject visualPrimitiveMapping.
-	treeDecorator layout.
+	"treeDecorator layout."
 	^ vp
 ]
 
@@ -77,27 +71,38 @@ SBVisualPrimitive class >> selector: aString receiverMatches: aMessage [
 ]
 
 { #category : #accessing }
+SBVisualPrimitive >> addConnection: aVisualPrimitive [
+
+	self connections add: aVisualPrimitive
+	"aVisualPrimitive parent: self"
+]
+
+{ #category : #accessing }
 SBVisualPrimitive >> addPropertyMapping: anSBVPPropertyMapping [
 
-	| morphy value positionBlock propertyMapping |
+	| morphy value positionBlock propertyMapping child |
 	propertyMapping := anSBVPPropertyMapping.
 	anSBVPPropertyMapping isPropertyMapping ifFalse: [
 		propertyMapping := SBVPPropertyMapping
 			fromAssociation: anSBVPPropertyMapping
 			for: self origin].
-	
-	self labelDict at: propertyMapping position put: propertyMapping.
 	value := propertyMapping getter value.
+	self labelDict at: propertyMapping position put: value.
 	
 	propertyMapping position
 		caseOf: {
 			[#shape] -> [self shape: value].
 			[#innerLabel] -> [self innerLabel: value].
 			[#connections] -> [
+				self connections: OrderedCollection new.
 				value do: [:connection |
-					(self class newFromObject: connection in: self owner)
+					child := self owner
+						ifNil: [SBVisualPrimitive newFromObject: connection]
+						ifNotNil: [SBVisualPrimitive newFromObject: connection in: self owner].
+					self addConnection: child
+					"child
 						withDecorator: SBTreeDecorator
-						do: [:childDecorator | self withDecorator: SBTreeDecorator do: [:treeDecorator | treeDecorator addChild: childDecorator]]]]}
+						do: [:childDecorator | self withDecorator: SBTreeDecorator do: [:treeDecorator | treeDecorator addChild: childDecorator]]"]]}
 		otherwise: [
 			(self labelPositions includes: propertyMapping position) ifTrue: [
 				morphy := self getLabelMorph: value.
@@ -123,6 +128,18 @@ SBVisualPrimitive >> addToWorld: aWorld [
 SBVisualPrimitive >> asVisualPrimitive [
 
 	^ self
+]
+
+{ #category : #nil }
+SBVisualPrimitive >> attachTreeDecorator [
+
+	| decorator |
+	self withDecorator: SBTreeDecorator do: [:d | decorator := d] ifAbsent: [
+		decorator := SBTreeDecorator new.
+		self attachDecorator: decorator].
+	
+	self connections do: [:child | child attachTreeDecorator].
+	self connections do: [:child | child withDecorator: SBTreeDecorator do: [:childDecorator | decorator addChild: childDecorator]]
 ]
 
 { #category : #accessing }
@@ -170,6 +187,19 @@ SBVisualPrimitive >> getLabelMorph: anObject [
 	^ (anObject isString or: [anObject isNumber])
 		ifTrue: [SBTextBubble new contents: anObject asString]
 		ifFalse: [anObject]
+]
+
+{ #category : #'as yet unclassified' }
+SBVisualPrimitive >> getObjectFromVisualPrimitive [
+
+	| anObject |
+	anObject := self origin copy.
+	anObject visualPrimitiveMapping do: [:propertyMapping |
+		(propertyMapping isPropertyMapping
+			ifFalse: [SBVPPropertyMapping fromAssociation: propertyMapping for: anObject]
+			ifTrue: [propertyMapping]) setter value: self].
+	
+	^ anObject
 ]
 
 { #category : #'as yet unclassified' }

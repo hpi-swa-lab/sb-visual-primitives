@@ -55,13 +55,15 @@ SBVPVisualizer >> code: anObject [
 { #category : #accessing }
 SBVPVisualizer >> code: aCodeBlock showCode: aBoolean [
 
-	| aSandblock |
+	| aSandblock vp |
 	self code removeAllMorphs.
 	self visual removeAllMorphs.
 	aSandblock := aCodeBlock asSandblock.
 	self code addMorphBack: aSandblock.
 	aBoolean ifFalse: [aSandblock hide].
-	self visualPrimitiveFrom: aSandblock evaluate value
+	vp := SBVisualPrimitive newFromObject: aSandblock evaluate value in: self visual.
+	vp attachTreeDecorator.
+	vp withDecorator: SBTreeDecorator do: [:dec | dec layout]
 ]
 
 { #category : #accessing }
@@ -134,6 +136,27 @@ SBVPVisualizer >> exampleSimpleRectangle [
 					left: n1;
 					right: n2.
 				root]]
+		showCode: true
+]
+
+{ #category : #accessing }
+SBVPVisualizer >> exampleSimpleTomGrammar [
+
+	SBVPVisualizer
+		code: [ | tom |
+			tom := SBVPTomGrammarObject new.
+			tom
+				type: 'SEQ';
+				members: {
+					SBVPTomGrammarObject new
+						type: 'SYMBOL';
+						objectName: 'aahh'.
+					SBVPTomGrammarObject new
+						type: 'REPEAT';
+						content: (SBVPTomGrammarObject new
+							type: 'SYMBOL';
+							objectName: 'aahh')}.
+			tom]
 		showCode: true
 ]
 

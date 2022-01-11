@@ -69,6 +69,7 @@ SBVPDummyNode >> asVisualPrimitive [
 SBVPDummyNode >> asVisualPrimitiveIn: aWorld [
 
 	| decorator vs |
+	self halt.
 	decorator := SBTreeDecorator new.
 	vs := (SBVisualPrimitive new label: self key asString) attachDecorator: decorator.
 	aWorld addMorphBack: vs.
@@ -151,5 +152,15 @@ SBVPDummyNode >> visualPrimitiveMapping [
 	^ {
 		#shape -> RectangleMorph.
 		#innerLabel -> #key.
-		#connections -> ({self left. self right} reject: [:connection | connection isNil])}
+		SBVPPropertyMapping
+			getter: [{self left. self right} reject: [:connection | connection isNil]]
+			setter: [:vp |
+				vp connections size >= 1
+					ifTrue: [self left: vp connections first getObjectFromVisualPrimitive]
+					ifFalse: [self left: nil].
+				vp connections size >= 2
+					ifTrue: [self right: vp connections second getObjectFromVisualPrimitive]
+					ifFalse: [self right: nil]]
+			position: #connections
+			optionalArgs: Dictionary new}
 ]
