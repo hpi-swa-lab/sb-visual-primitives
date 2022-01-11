@@ -37,7 +37,7 @@ SBVPVisualizer class >> newFor: aBlock [
 { #category : #'as yet unclassified' }
 SBVPVisualizer >> artefactSaved: aMethodBlock [
 
-	self code: self code firstSubmorph showCode: true
+	self code: self code firstSubmorph showCode: self showCode
 ]
 
 { #category : #accessing }
@@ -184,30 +184,15 @@ SBVPVisualizer >> initialize [
 ]
 
 { #category : #accessing }
-SBVPVisualizer >> labelPositions [
-
-	^ {
-		#innerLabel.
-		#topLeftLabel.
-		#topCenterLabel.
-		#topRightLabel.
-		#rightLabel.
-		#bottomRightLabel.
-		#bottomCenterLabel.
-		#bottomLeftLabel.
-		#leftLabel}
-]
-
-{ #category : #accessing }
 SBVPVisualizer >> showCode [
 
 	^ showCode
 ]
 
 { #category : #accessing }
-SBVPVisualizer >> showCode: anObject [
+SBVPVisualizer >> showCode: aBoolean [
 
-	showCode := anObject
+	showCode := aBoolean
 ]
 
 { #category : #accessing }
@@ -225,9 +210,8 @@ SBVPVisualizer >> visual: anObject [
 { #category : #accessing }
 SBVPVisualizer >> visualPrimitiveFrom: anObject [
 
-	| vp |
-	vp := SBVisualPrimitive newFromObject: anObject in: self visual.
-	^ vp
+	^ SBVisualPrimitive newFromObject: anObject in: self visual.
+	
 ]
 
 { #category : #accessing }
@@ -236,6 +220,7 @@ SBVPVisualizer >> writeSourceOn: aStream [
 	aStream nextPutAll: '(SBVPVisualizer code: '.
 	self code submorphsDo: [:morph | morph writeSourceOn: aStream].
 	aStream nextPutAll: ' showCode: '.
+	self halt.
 	self showCode storeOn: aStream.
 	aStream nextPut: $)
 ]

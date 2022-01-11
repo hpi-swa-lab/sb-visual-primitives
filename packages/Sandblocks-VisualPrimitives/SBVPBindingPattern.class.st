@@ -28,12 +28,12 @@ SBVPBindingPattern class >> bindingIndex: anObject connections: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPBindingPattern class >> bindingIndex: anObject labelDict: aDict connections: aCollection [
-
+SBVPBindingPattern class >> bindingIndex: anObject labelDict: aCollection connections: anotherCollection [
+	
 	^ self new
 		bindingIndex: anObject;
-		connections: aCollection;
-		addPropertyMappings: aDict
+		connections: anotherCollection;
+		addPropertyMappings: aCollection
 ]
 
 { #category : #'as yet unclassified' }
@@ -331,6 +331,7 @@ SBVPBindingPattern >> matches: aVisualPrimitive withBinding: aCollection [
 
 	| offset |
 	offset := 0.
+	self labelDict keysAndValuesDo: [:position :value | (aVisualPrimitive labelDict at: position ifAbsent:[^false]) = value ifFalse: [^false] ].
 	^ self connections withIndexAllSatisfy: [:connection :index | | wasSuccessful |
 		wasSuccessful := connection
 			matches: (connection searchRootFor: (self getCurrentPrimitive: aVisualPrimitive) at: index + offset)
@@ -431,9 +432,8 @@ SBVPBindingPattern >> writeSourceOn: aStream [
 		nextPutAll: self class name.
 	
 	self bindingIndex ifNotNil: [
-		aStream
-			nextPutAll: ' bindingIndex: #';
-			nextPutAll: self bindingIndex].
+		aStream nextPutAll: ' bindingIndex: '.
+		self bindingIndex printOn: aStream].
 	
 	self constant ifNotNil: [
 		aStream
@@ -444,6 +444,11 @@ SBVPBindingPattern >> writeSourceOn: aStream [
 		aStream
 			nextPutAll: ' writeBackClosure: ';
 			nextPutAll: self writeBackClosureString].
+		
+	self labelDict ifNotEmpty: [
+		aStream
+			nextPutAll: ' labelDict: '.
+		self labelDict associations printOn: aStream].
 	
 	self connections ifNotEmpty: [
 		aStream nextPutAll: ' connections: {'.
