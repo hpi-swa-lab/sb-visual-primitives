@@ -27,16 +27,20 @@ SBVPExecuter class >> exampleBuildHeap [
 	^ SBVPExecuter
 		case: (SBVPCase
 			input: (SBVPGroupPattern patterns: {
-				SBVPBindingPattern bindingIndex: 1 connections: {
-					SBVPEllipsisPattern bindingIndex: 2.
-					SBVPBindingPattern bindingIndex: 3 connections: {SBVPEllipsisPattern bindingIndex: 5}.
-					SBVPEllipsisPattern bindingIndex: 4}.
-				SBVPConstraintPattern constraint: [:a :b :c :d :e | c label asInteger < a label asInteger]})
+				SBVPBindingPattern bindingIndex: #a connections: {
+					SBVPEllipsisPattern bindingIndex: #b.
+					SBVPBindingPattern
+						bindingIndex: #boi
+						connections: {SBVPEllipsisPattern bindingIndex: #e}.
+					SBVPEllipsisPattern bindingIndex: #d}.
+				SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label asInteger < (bindings at: #boi) label asInteger]})
 			output: (SBVPGroupPattern patterns: {
-				SBVPBindingPattern bindingIndex: 3 connections: {
-					SBVPEllipsisPattern bindingIndex: 2.
-					SBVPBindingPattern bindingIndex: 1 connections: {SBVPEllipsisPattern bindingIndex: 5}.
-					SBVPEllipsisPattern bindingIndex: 4}})
+				SBVPBindingPattern bindingIndex: #boi connections: {
+					SBVPEllipsisPattern bindingIndex: #b.
+					SBVPBindingPattern
+						bindingIndex: #a
+						connections: {SBVPEllipsisPattern bindingIndex: #e}.
+					SBVPEllipsisPattern bindingIndex: #d}})
 			strategy: (Dictionary new
 				add: #explicitRootMatching -> false;
 				add: #explicitChildrenMatching -> true;
@@ -232,7 +236,7 @@ SBVPExecuter >> initialize [
 		addMorphBack: (SBTextBubble new contents: 'Executer');
 		addMorphBack: (SBRow new
 			cellInset: 3;
-			addMorphBack: (SBButton new label: 'execute ones' shortcut: nil do: [self execute]);
+			addMorphBack: (SBButton new label: 'execute once' shortcut: nil do: [self execute]);
 			addMorphBack: (SBButton new label: 'execute 100 times' shortcut: nil do: [self execute100Times]);
 			addMorphBack: (SBButton new label: 'execute all' shortcut: nil do: [self executeAll]));
 		addMorphBack: (SBRow new
