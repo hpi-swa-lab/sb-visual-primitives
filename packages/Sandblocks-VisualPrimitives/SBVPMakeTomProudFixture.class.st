@@ -18,7 +18,7 @@ SBVPMakeTomProudFixture >> children [
 { #category : #accessing }
 SBVPMakeTomProudFixture >> children: anObject [
 
-	children := anObject.
+	children := anObject
 ]
 
 { #category : #accessing }
@@ -30,7 +30,7 @@ SBVPMakeTomProudFixture >> key [
 { #category : #accessing }
 SBVPMakeTomProudFixture >> key: anObject [
 
-	key := anObject.
+	key := anObject
 ]
 
 { #category : #accessing }
@@ -42,7 +42,7 @@ SBVPMakeTomProudFixture >> type [
 { #category : #accessing }
 SBVPMakeTomProudFixture >> type: anObject [
 
-	type := anObject.
+	type := anObject
 ]
 
 { #category : #'as yet unclassified' }

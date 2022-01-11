@@ -39,11 +39,7 @@ SBVisualPrimitive class >> newFromObject: anObject [
 	| vp |
 	vp := self new.
 	vp origin: anObject.
-	
-	"treeDecorator := SBTreeDecorator new.
-	vp attachDecorator: treeDecorator."
 	vp addPropertyMappings: anObject visualPrimitiveMapping.
-	"treeDecorator layout."
 	^ vp
 ]
 

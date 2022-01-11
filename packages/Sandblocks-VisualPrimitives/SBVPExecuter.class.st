@@ -258,7 +258,7 @@ SBVPExecuter >> execute [
 SBVPExecuter >> execute100Times [
 	<action>
 
-	self showOutput: (self case replace: 15 matches: self input code firstSubmorph evaluate value)
+	self showOutput: (self case replace: 100 matches: self input code firstSubmorph evaluate value)
 ]
 
 { #category : #accessing }
