@@ -28,6 +28,14 @@ SBVPBindingPattern class >> bindingIndex: anObject connections: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPBindingPattern class >> bindingIndex: anObject labelDict: aCollection [
+
+	^ self new
+		bindingIndex: anObject;
+		addPropertyMappings: aCollection
+]
+
+{ #category : #'as yet unclassified' }
 SBVPBindingPattern class >> bindingIndex: anObject labelDict: aCollection connections: anotherCollection [
 
 	^ self new
@@ -69,10 +77,17 @@ SBVPBindingPattern class >> newFor: aBlock [
 		ifFalse: [
 			aBlock arguments size > 1
 				ifTrue: [
-					self
-						perform: aBlock selector asSymbol
-						with: aBlock arguments first
-						with: aBlock arguments second childSandblocks]
+					(aBlock selector endsWith: 'connections:')
+						ifTrue: [
+							self
+								perform: aBlock selector asSymbol
+								with: aBlock arguments first
+								with: aBlock arguments second childSandblocks]
+						ifFalse: [
+							self
+								perform: aBlock selector asSymbol
+								with: aBlock arguments first
+								with: aBlock arguments second evaluate]]
 				ifFalse: [self perform: aBlock selector asSymbol with: aBlock arguments first]]
 ]
 
@@ -425,6 +440,22 @@ SBVPBindingPattern >> writeBackClosureString: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPBindingPattern >> writeLabelDictOn: aStream [
+	"Currently only works when we have text bubbles. Otherwise we need to get a smart solution for this."
+
+	aStream nextPutAll: ' labelDict: {'.
+	self blockDict keysAndValuesDo: [:position :block | | value |
+		((position = #innerLabel) not and: [block submorphs notEmpty]) ifTrue: [
+			"We avoid the innerlabel as it is enclosed in the shape morph and is currently used as bindingIndex."
+			value := block firstSubmorph contents.
+			position printOn: aStream.
+			aStream nextPutAll: ' -> ('.
+			value printOn: aStream.
+			aStream nextPutAll: ').']].
+	aStream nextPutAll: '}'
+]
+
+{ #category : #'as yet unclassified' }
 SBVPBindingPattern >> writeSourceOn: aStream [
 
 	aStream
@@ -445,9 +476,7 @@ SBVPBindingPattern >> writeSourceOn: aStream [
 			nextPutAll: ' writeBackClosure: ';
 			nextPutAll: self writeBackClosureString].
 	
-	self labelDict ifNotEmpty: [
-		aStream nextPutAll: ' labelDict: '.
-		self labelDict associations printOn: aStream].
+	self constant ifNil: [self writeLabelDictOn: aStream].
 	
 	self connections ifNotEmpty: [
 		aStream nextPutAll: ' connections: {'.

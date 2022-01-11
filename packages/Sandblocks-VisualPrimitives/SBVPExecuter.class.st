@@ -117,7 +117,7 @@ SBVPExecuter class >> exampleGrammarRuleMergeRepeat [
 						content: (SBVPTomGrammarObject new
 							type: 'SYMBOL';
 							objectName: 'aahh')}]
-		showCode: true.
+		showCode: false.
 	
 	SBVPVisualizer
 		code: [ | bio |
@@ -125,16 +125,17 @@ SBVPExecuter class >> exampleGrammarRuleMergeRepeat [
 			bio type: 'REPEAT1'.
 			(SBVPCase
 				input: (SBVPGroupPattern patterns: {
-					SBVPBindingPattern bindingIndex: #a labelDict: {#topLeftLabel -> 'YEEEE'} connections: {
-						SBVPBindingPattern bindingIndex: #b.
-						SBVPBindingPattern bindingIndex: #c connections: {SBVPBindingPattern bindingIndex: #d}}.
-					SBVPConstraintPattern constraint: [:bindings |
-						(bindings at: #a) origin type = 'SEQ'
-							and: [(bindings at: #c) origin type = 'REPEAT']
-							and: [(bindings at: #b) origin objectName = (bindings at: #d) origin objectName]
-							and: [(bindings at: #b) origin type = 'SYMBOL']
-							and: [(bindings at: #d) origin type = 'SYMBOL']]})
-				output: (SBVPGroupPattern patterns: {SBVPBindingPattern constant: bio connections: {SBVPBindingPattern bindingIndex: #b}})
+					SBVPBindingPattern bindingIndex: #a labelDict: {#topLeftLabel -> 'SEQ'} connections: {
+						SBVPBindingPattern bindingIndex: #b labelDict: {#topLeftLabel -> 'SYMBOL'}.
+						SBVPBindingPattern
+							bindingIndex: #c
+							labelDict: {#topLeftLabel -> 'REPEAT'}
+							connections: {SBVPBindingPattern bindingIndex: #d labelDict: {#topLeftLabel -> 'SYMBOL'}}}.
+					SBVPConstraintPattern constraint: [:bindings | (bindings at: #b) origin objectName = (bindings at: #d) origin objectName]})
+				output: (SBVPGroupPattern patterns: {
+					SBVPBindingPattern
+						constant: bio
+						connections: {SBVPBindingPattern bindingIndex: #b labelDict: {}}})
 				strategy: (Dictionary new
 					add: #explicitRootMatching -> false;
 					add: #explicitChildrenMatching -> true;
