@@ -132,17 +132,19 @@ SBVPPatternMatcherTest >> examplePatternTreeWithEllipses [
 { #category : #'as yet unclassified' }
 SBVPPatternMatcherTest >> examplePatternTreeWithLabeledEllipses [
 
-	^ SBVPBindingPattern
-		bindingIndex: #a
-		connections: {SBVPEllipsisPattern bindingIndex: #b. SBVPBindingPattern bindingIndex: #c}
+	^ SBVPGroupPattern patterns: {
+		SBVPBindingPattern
+			bindingIndex: #a
+			connections: {SBVPEllipsisPattern bindingIndex: #b. SBVPBindingPattern bindingIndex: #c}}
 ]
 
 { #category : #'as yet unclassified' }
 SBVPPatternMatcherTest >> examplePatternTreeWithLabeledEllipsesOutput [
 
-	^ SBVPBindingPattern
-		bindingIndex: #a
-		connections: {SBVPBindingPattern bindingIndex: #c. SBVPEllipsisPattern bindingIndex: #b}
+	^ SBVPGroupPattern patterns: {
+		SBVPBindingPattern
+			bindingIndex: #a
+			connections: {SBVPBindingPattern bindingIndex: #c. SBVPEllipsisPattern bindingIndex: #b}}
 ]
 
 { #category : #'as yet unclassified' }
@@ -225,21 +227,17 @@ SBVPPatternMatcherTest >> getLabelTree: aPrimitive [
 SBVPPatternMatcherTest >> testComplexTree [
 
 	| matcher root vp10 vp3 vp7 vp1 |
-	root := (self buildTree: {42 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}) first.
-	vp10 := root connections first.
-	vp3 := vp10 connections first.
-	vp7 := vp10 connections second.
-	vp1 := vp3 connections first.
+	root := SBVPDummyNode buildTree: {42 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}.
+	vp10 := root left.
+	vp3 := vp10 left.
+	vp7 := vp10 right.
+	vp1 := vp3 left.
 	matcher := SBVPPatternMatcher
-		input: root
+		input: root asVisualPrimitive
 		pattern: self examplePatternTreeWithEllipses.
 	self
-		assert: {
-			{vp10. vp3. vp7}.
-			{vp3. vp1. vp3 connections second}.
-			{vp1. vp1 connections first. vp1 connections second}.
-			{vp7. vp7 connections first. vp7 connections second}} asSet
-		equals: (matcher getAllMatches collect: [:match | {match at: #a. match at: #b. match at: #c}]) asSet
+		assert: {{vp10. vp3. vp7}. {vp3. vp1. vp3 right}. {vp1. vp1 left. vp1 right}. {vp7. vp7 left. vp7 right}} asSet
+		equals: (matcher getAllMatches collect: [:match | {match at: #a. match at: #b. match at: #c} collect: [:node | node origin]]) asSet
 ]
 
 { #category : #'as yet unclassified' }
@@ -271,52 +269,53 @@ SBVPPatternMatcherTest >> testFiveNodesWithWildcard [
 SBVPPatternMatcherTest >> testMatchAllChildrenTree [
 
 	| matcher root vp3 vp2 vp5 |
-	root := (self buildTree: {10 -> {5 -> {2 -> {1. 1}. 3 -> {2. 1}}}}) first.
-	vp5 := root connections first.
-	vp2 := vp5 connections first.
-	vp3 := vp5 connections second.
+	root := SBVPDummyNode buildTree: {10 -> {5 -> {2 -> {1. 1}. 3 -> {2. 1}}}}.
+	vp5 := root left.
+	vp2 := vp5 left.
+	vp3 := vp5 right.
 	matcher := SBVPPatternMatcher
-		input: root
+		input: root asVisualPrimitive
 		pattern: self examplePatternTreeWithEllipses.
 	self
-		assert: {
-			{vp5. vp2. vp3}.
-			{vp2. vp2 connections first. vp2 connections second}.
-			{vp3. vp3 connections first. vp3 connections second}} asSet
-		equals: (matcher getAllMatches collect: [:match | {match at: #a. match at: #b. match at: #c}]) asSet
+		assert: {{vp5. vp2. vp3}. {vp2. vp2 left. vp2 right}. {vp3. vp3 left. vp3 right}} asSet
+		equals: (matcher getAllMatches collect: [:match | {match at: #a. match at: #b. match at: #c} collect: [:node | node origin]]) asSet
 ]
 
 { #category : #'as yet unclassified' }
 SBVPPatternMatcherTest >> testSimpleTree [
 
 	| matcher root |
-	root := (self buildTree: {10 -> {7. 3}}) first.
-	matcher := SBVPPatternMatcher input: root pattern: self examplePatternSimpleTree.
+	root := SBVPDummyNode buildTree: {10 -> {7. 3}}.
+	matcher := SBVPPatternMatcher
+		input: root asVisualPrimitive
+		pattern: self examplePatternSimpleTree.
 	self
-		assert: {{#a -> root. #b -> root connections first. #c -> root connections second} asDictionary}
-		equals: matcher getAllMatches asArray
+		assert: {{#a -> root. #b -> root left. #c -> root right} asDictionary}
+		equals: (matcher getAllMatches collect: [:match | match collect: [:node | node origin]]) asArray
 ]
 
 { #category : #'as yet unclassified' }
 SBVPPatternMatcherTest >> testSimpleTreeEllipsisOutput [
 
 	| matcher root output |
-	root := (self buildTree: {10 -> {1. 2 -> {-1}. 3. 4}}) first.
+	root := SBVPDummyNode buildTree: {10 -> {2 -> {-1}. 4}}.
 	matcher := SBVPPatternMatcher
-		input: root
+		input: root asVisualPrimitive
 		pattern: self examplePatternTreeWithLabeledEllipses.
 	
 	output := self examplePatternTreeWithLabeledEllipsesOutput buildFromBinding: matcher getNextMatch.
 	
-	self assert: 10 -> {4. 1. 2 -> {-1}. 3} equals: (self getLabelTree: output first)
+	self assert: 10 -> {4. 2 -> {-1}} equals: (self getLabelTree: output first)
 ]
 
 { #category : #'as yet unclassified' }
 SBVPPatternMatcherTest >> testSimpleTreeOutput [
 
 	| matcher root output |
-	root := (self buildTree: {10 -> {7. 3}}) first.
-	matcher := SBVPPatternMatcher input: root pattern: self examplePatternSimpleTree.
+	root := SBVPDummyNode buildTree: {10 -> {7. 3}}.
+	matcher := SBVPPatternMatcher
+		input: root asVisualPrimitive
+		pattern: self examplePatternSimpleTree.
 	output := (self examplePatternSimpleTreeOutput buildFromBinding: matcher getNextMatch) first.
 	self assert: 10 -> {3. 7} equals: (self getLabelTree: output)
 ]
@@ -336,11 +335,13 @@ SBVPPatternMatcherTest >> testSingleNodeMatch [
 SBVPPatternMatcherTest >> testSortTreeOutput [
 
 	| root output |
-	root := (self buildTree: {0 -> {1 -> {3 -> {5. 4}. 2 -> {6. 7}}}}) first.
+	root := SBVPDummyNode buildTree: {0 -> {1 -> {3 -> {5. 4}. 2 -> {6. 7}}}}.
 	output := (SBVPCase
 		input: SBVPPatternMatcherTest new examplePatternSortTree
 		output: SBVPPatternMatcherTest new examplePatternSortTreeOutput) replaceAllMatches: root.
-	self assert: {0 -> {1 -> {2 -> {6. 7}. 3 -> {4. 5}}}} equals: {self getLabelTree: output}
+	self
+		assert: {0 -> {1 -> {2 -> {6. 7}. 3 -> {4. 5}}}}
+		equals: {self getLabelTree: output asVisualPrimitive}
 ]
 
 { #category : #'as yet unclassified' }

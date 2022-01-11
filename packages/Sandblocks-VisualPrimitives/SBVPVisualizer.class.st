@@ -7,7 +7,8 @@ Class {
 	#instVars : [
 		'visual',
 		'code',
-		'showCode'
+		'showCode',
+		'isImplicit'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
@@ -23,15 +24,21 @@ SBVPVisualizer class >> code: aCode showCode: aBoolean [
 SBVPVisualizer class >> matches: aBlock [
 
 	(super matches: aBlock) ifFalse: [^ false].
-	^ (aBlock receiver satisfies: #(#notNil #isBinding))
-		and: [aBlock receiver contents = self name]
-		and: [aBlock selector = 'code:showCode:']
+	^ ((aBlock receiver satisfies: #(#notNil #isBinding)) and: [aBlock receiver contents = self name and: ['code:showCode:' = aBlock selector]]) or: [{'showAsVisualPrimitive'} includes: aBlock selector]
 ]
 
 { #category : #'as yet unclassified' }
 SBVPVisualizer class >> newFor: aBlock [
 
-	^ self new code: aBlock arguments first showCode: aBlock arguments second evaluate
+	aBlock arguments size >= 2
+		ifTrue: [^ self new code: aBlock arguments first showCode: aBlock arguments second evaluate]
+		ifFalse: [
+			aBlock selector = 'showAsVisualPrimitive'
+				ifTrue: [
+					^ self new
+						code: aBlock receiver showCode: false;
+						isImplicit: true]
+				ifFalse: [^ self new code: aBlock receiver showCode: false]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -64,6 +71,12 @@ SBVPVisualizer >> code: aCodeBlock showCode: aBoolean [
 	vp := SBVisualPrimitive newFromObject: aSandblock evaluate value in: self visual.
 	vp attachTreeDecorator.
 	vp withDecorator: SBTreeDecorator do: [:dec | dec layout]
+]
+
+{ #category : #accessing }
+SBVPVisualizer >> evaluate [
+
+	^ self code evaluate
 ]
 
 { #category : #accessing }
@@ -184,6 +197,19 @@ SBVPVisualizer >> initialize [
 ]
 
 { #category : #accessing }
+SBVPVisualizer >> isImplicit [
+
+	^ isImplicit
+]
+
+{ #category : #accessing }
+SBVPVisualizer >> isImplicit: aBoolean [
+	"Sometimes, e.g. when using showAsVisualPrimitive, we implicitly show a Visualizer, which we don't want to see in the writeSourceOn:"
+
+	isImplicit := aBoolean
+]
+
+{ #category : #accessing }
 SBVPVisualizer >> showCode [
 
 	^ showCode
@@ -210,17 +236,20 @@ SBVPVisualizer >> visual: anObject [
 { #category : #accessing }
 SBVPVisualizer >> visualPrimitiveFrom: anObject [
 
-	^ SBVisualPrimitive newFromObject: anObject in: self visual.
-	
+	^ SBVisualPrimitive newFromObject: anObject in: self visual
 ]
 
 { #category : #accessing }
 SBVPVisualizer >> writeSourceOn: aStream [
 
-	aStream nextPutAll: '(SBVPVisualizer code: '.
-	self code submorphsDo: [:morph | morph writeSourceOn: aStream].
-	aStream nextPutAll: ' showCode: '.
-	self halt.
-	self showCode storeOn: aStream.
-	aStream nextPut: $)
+	self isImplicit
+		ifTrue: [
+			self code submorphsDo: [:morph | morph writeSourceOn: aStream].
+			aStream nextPutAll: ' showAsVisualPrimitive']
+		ifFalse: [
+			aStream nextPutAll: '(SBVPVisualizer code: '.
+			self code submorphsDo: [:morph | morph writeSourceOn: aStream].
+			aStream nextPutAll: ' showCode: '.
+			self showCode storeOn: aStream.
+			aStream nextPut: $)]
 ]

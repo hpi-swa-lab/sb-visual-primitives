@@ -93,12 +93,9 @@ SBVisualPrimitive >> addPropertyMapping: anSBVPPropertyMapping [
 				self connections: OrderedCollection new.
 				value do: [:connection |
 					child := self owner
-						ifNil: [SBVisualPrimitive newFromObject: connection]
+						ifNil: [connection asVisualPrimitive]
 						ifNotNil: [SBVisualPrimitive newFromObject: connection in: self owner].
-					self addConnection: child
-					"child
-						withDecorator: SBTreeDecorator
-						do: [:childDecorator | self withDecorator: SBTreeDecorator do: [:treeDecorator | treeDecorator addChild: childDecorator]]"]]}
+					self addConnection: child]]}
 		otherwise: [
 			(self labelPositions includes: propertyMapping position) ifTrue: [
 				morphy := self getLabelMorph: value.

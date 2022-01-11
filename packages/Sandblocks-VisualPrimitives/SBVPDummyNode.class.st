@@ -5,7 +5,6 @@ Class {
 		'left',
 		'right',
 		'parent',
-		'isBlue',
 		'key'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
@@ -52,50 +51,6 @@ SBVPDummyNode class >> fromVisualPrimitive: aVisualPrimitive withParent: aDummyN
 		parent: aDummyNode;
 		key: aVisualPrimitive label.
 	^ node
-]
-
-{ #category : #accessing }
-SBVPDummyNode >> asVisualPrimitive [
-
-	| vs |
-	vs := SBVisualPrimitive new label: self key asString.
-	self left ifNotNil: [:left | vs connections add: left asVisualPrimitive].
-	self right ifNotNil: [:right | vs connections add: right asVisualPrimitive].
-	vs origin: self.
-	^ vs
-]
-
-{ #category : #accessing }
-SBVPDummyNode >> asVisualPrimitiveIn: aWorld [
-
-	| decorator vs |
-	self halt.
-	decorator := SBTreeDecorator new.
-	vs := (SBVisualPrimitive new label: self key asString) attachDecorator: decorator.
-	aWorld addMorphBack: vs.
-	self left ifNotNil: [:left |
-		(left asVisualPrimitiveIn: aWorld)
-			withDecorator: SBTreeDecorator
-			do: [:childDecorator | decorator addChild: childDecorator]].
-	self right ifNotNil: [:right |
-		(right asVisualPrimitiveIn: aWorld)
-			withDecorator: SBTreeDecorator
-			do: [:childDecorator | decorator addChild: childDecorator]].
-	self parent ifNil: [decorator layout].
-	vs origin: self.
-	^ vs
-]
-
-{ #category : #accessing }
-SBVPDummyNode >> isBlue [
-
-	^ isBlue
-]
-
-{ #category : #accessing }
-SBVPDummyNode >> isBlue: aBoolean [
-
-	isBlue := aBoolean
 ]
 
 { #category : #accessing }

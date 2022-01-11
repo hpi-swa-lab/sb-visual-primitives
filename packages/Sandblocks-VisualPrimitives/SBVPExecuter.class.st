@@ -51,6 +51,37 @@ SBVPExecuter class >> exampleBuildHeap [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPExecuter class >> exampleBuildHeap: aTree [
+
+	self
+		example: [SBVPExecuter]
+		args: [
+			{
+				(SBVPDummyNode buildTree: {9 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}) showAsVisualPrimitive}]
+		label: 'example'.
+	^ (SBVPCase
+		input: (SBVPGroupPattern patterns: {
+			SBVPBindingPattern bindingIndex: #a connections: {
+				SBVPEllipsisPattern bindingIndex: #b.
+				SBVPBindingPattern
+					bindingIndex: #boi
+					connections: {SBVPEllipsisPattern bindingIndex: #e}.
+				SBVPEllipsisPattern bindingIndex: #d}.
+			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label asInteger < (bindings at: #boi) label asInteger]})
+		output: (SBVPGroupPattern patterns: {
+			SBVPBindingPattern bindingIndex: #boi connections: {
+				SBVPEllipsisPattern bindingIndex: #b.
+				SBVPBindingPattern
+					bindingIndex: #a
+					connections: {SBVPEllipsisPattern bindingIndex: #e}.
+				SBVPEllipsisPattern bindingIndex: #d}})
+		strategy: (Dictionary new
+			add: #explicitRootMatching -> false;
+			add: #explicitChildrenMatching -> false;
+			yourself)) value: aTree
+]
+
+{ #category : #'as yet unclassified' }
 SBVPExecuter class >> exampleBuildHeapWithImplicitChildren [
 
 	^ SBVPExecuter

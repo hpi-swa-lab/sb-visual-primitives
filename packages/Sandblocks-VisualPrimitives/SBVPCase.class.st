@@ -420,7 +420,7 @@ SBVPCase >> output: anObject [
 SBVPCase >> replace: aNumber matches: anObject [
 
 	| matcher currentPrimitive match iteration |
-	currentPrimitive := SBVisualPrimitive newFromObject: anObject.
+	currentPrimitive := anObject asVisualPrimitive.
 	matcher := (SBVPPatternMatcher input: currentPrimitive pattern: self input) strategy: self strategy.
 	iteration := 0.
 	[(match := matcher getNextMatch) notNil and: [(iteration := iteration + 1) < aNumber]] whileTrue: [
@@ -452,7 +452,7 @@ SBVPCase >> replaceAllMatches [
 SBVPCase >> replaceAllMatches: anObject [
 
 	| matcher currentPrimitive match |
-	currentPrimitive := SBVisualPrimitive newFromObject: anObject.
+	currentPrimitive := anObject asVisualPrimitive.
 	matcher := (SBVPPatternMatcher input: currentPrimitive pattern: self input) strategy: self strategy.
 	[match := matcher getNextMatch] whileNotNil: [
 		currentPrimitive := matcher build: self output fromBinding: match.
@@ -499,9 +499,7 @@ SBVPCase >> value [
 SBVPCase >> value: anObject [
 
 	| matcher match |
-	matcher := (SBVPPatternMatcher
-		input: (SBVisualPrimitive newFromObject: anObject)
-		pattern: self input) strategy: self strategy.
+	matcher := (SBVPPatternMatcher input: anObject asVisualPrimitive pattern: self input) strategy: self strategy.
 	match := matcher getNextMatch.
 	^ match
 		ifNil: [anObject]

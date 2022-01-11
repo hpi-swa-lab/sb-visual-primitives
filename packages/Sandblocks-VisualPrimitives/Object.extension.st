@@ -3,7 +3,7 @@ Extension { #name : #Object }
 { #category : #'*Sandblocks-VisualPrimitives' }
 Object >> asVisualPrimitive [
 
-	^ SBVisualPrimitive new label: (self printStringLimitedTo: 10)
+	^ SBVisualPrimitive newFromObject: self
 ]
 
 { #category : #'*Sandblocks-VisualPrimitives' }
@@ -16,6 +16,12 @@ Object >> isPropertyMapping [
 Object >> isVisualPrimitive [
 
 	^ false
+]
+
+{ #category : #'*Sandblocks-VisualPrimitives' }
+Object >> showAsVisualPrimitive [
+	"marker"
+	^ self
 ]
 
 { #category : #'*Sandblocks-VisualPrimitives' }
