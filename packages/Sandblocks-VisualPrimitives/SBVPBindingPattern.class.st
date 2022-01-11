@@ -144,7 +144,7 @@ SBVPBindingPattern >> buildFromBinding: anArray [
 
 	| output |
 	output := self constant
-		ifNotNil: [self constant asVisualPrimitive]
+		ifNotNil: [SBVisualPrimitive newFromObject: self constant]
 		ifNil: [(anArray at: self bindingIndex) copy].
 	output connections: (self buildChildrenFromBinding: anArray).
 	output labelDict addAll: self labelDict.

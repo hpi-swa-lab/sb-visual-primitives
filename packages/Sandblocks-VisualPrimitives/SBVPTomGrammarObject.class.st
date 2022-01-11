@@ -101,8 +101,7 @@ SBVPTomGrammarObject >> visualPrimitiveMapping [
 		#innerLabel -> #objectName.
 		SBVPPropertyMapping
 			getter: [(self members ifNil: [self content ifNotNil: [{self content}] ifNil: [{}]]) reject: [:entry | entry isNil]]
-			setter: [:vp |
-				self members: (vp connections collect:[:connection|connection getObjectFromVisualPrimitive])]
+			setter: [:vp | self members: (vp connections collect: [:connection | connection getObjectFromVisualPrimitive])]
 			position: #connections
 			optionalArgs: Dictionary new}
 	"#connections -> ((self members

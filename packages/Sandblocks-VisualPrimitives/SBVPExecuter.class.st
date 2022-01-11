@@ -67,43 +67,54 @@ SBVPExecuter class >> exampleBuildHeapWithImplicitChildren [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPExecuter class >> exampleGrammarRuleMergeRepeats [
+SBVPExecuter class >> exampleGrammarRuleMergeRepeat [
 
-	| bio |
-	bio := SBVPTomGrammarObject new.
-	bio type: 'REPEAT1'.
-	^ SBVPExecuter
-		case: (SBVPCase
-			input: (SBVPGroupPattern patterns: {
-				SBVPBindingPattern bindingIndex: 1 connections: {
-					SBVPBindingPattern bindingIndex: 2.
-					SBVPBindingPattern bindingIndex: 3 connections: {SBVPBindingPattern bindingIndex: 4}}.
-				SBVPConstraintPattern constraint: [:a :b :c :d |
-					a origin type = 'SEQ'
-						and: [c origin type = 'REPEAT']
-						and: [b origin objectName = d origin objectName]
-						and: [b origin type = 'SYMBOL']
-						and: [d origin type = 'SYMBOL']]})
-			output: (SBVPGroupPattern patterns: {SBVPBindingPattern constant: bio connections: {SBVPBindingPattern bindingIndex: 2}})
-			strategy: (Dictionary new
-				add: #explicitRootMatching -> false;
-				add: #explicitChildrenMatching -> true;
-				yourself))
-		input: (SBVPVisualizer
-			code: [
-				SBVPTomGrammarObject new
-					type: 'SEQ';
-					members: {
-						SBVPTomGrammarObject new
+	SBVPVisualizer
+		code: [
+			SBVPTomGrammarObject new
+				type: 'SEQ';
+				members: {
+					SBVPTomGrammarObject new
+						type: 'SYMBOL';
+						objectName: 'aahh'.
+					SBVPTomGrammarObject new
+						type: 'REPEAT';
+						content: (SBVPTomGrammarObject new
 							type: 'SYMBOL';
-							objectName: 'aahh'.
-						SBVPTomGrammarObject new
-							type: 'REPEAT';
-							content: (SBVPTomGrammarObject new
-								type: 'SYMBOL';
-								objectName: 'aahh')};
-					yourself]
-			showCode: true)
+							objectName: 'aahh')}]
+		showCode: false.
+	
+	SBVPVisualizer
+		code: [ | bio |
+			bio := SBVPTomGrammarObject new.
+			bio type: 'REPEAT1'.
+			(SBVPCase
+				input: (SBVPGroupPattern patterns: {
+					SBVPBindingPattern bindingIndex: 1 connections: {
+						SBVPBindingPattern bindingIndex: 2.
+						SBVPBindingPattern bindingIndex: 3 connections: {SBVPBindingPattern bindingIndex: 4}}.
+					SBVPConstraintPattern constraint: [:a :b :c :d |
+						a origin type = 'SEQ'
+							and: [c origin type = 'REPEAT']
+							and: [b origin objectName = d origin objectName]
+							and: [b origin type = 'SYMBOL']
+							and: [d origin type = 'SYMBOL']]})
+				output: (SBVPGroupPattern patterns: {SBVPBindingPattern constant: bio connections: {SBVPBindingPattern bindingIndex: 2}})
+				strategy: (Dictionary new
+					add: #explicitRootMatching -> false;
+					add: #explicitChildrenMatching -> true;
+					yourself)) replaceAllMatches: (SBVPTomGrammarObject new
+				type: 'SEQ';
+				members: {
+					SBVPTomGrammarObject new
+						type: 'SYMBOL';
+						objectName: 'aahh'.
+					SBVPTomGrammarObject new
+						type: 'REPEAT';
+						content: (SBVPTomGrammarObject new
+							type: 'SYMBOL';
+							objectName: 'aahh')})]
+		showCode: true
 ]
 
 { #category : #'as yet unclassified' }

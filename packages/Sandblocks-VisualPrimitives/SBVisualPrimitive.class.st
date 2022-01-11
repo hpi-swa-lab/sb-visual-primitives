@@ -87,11 +87,8 @@ SBVisualPrimitive >> addPropertyMapping: anSBVPPropertyMapping [
 		propertyMapping := SBVPPropertyMapping
 			fromAssociation: anSBVPPropertyMapping
 			for: self origin].
-	self flag: #TODO.
-	"figure out, if adding to label dict is necessary..."
-	"self labelDict at: propertyMapping position put: propertyMapping."
-	"self propertyMappings at: propertyMapping position put: propertyMapping."
 	value := propertyMapping getter value.
+	self labelDict at: propertyMapping position put: value.
 	
 	propertyMapping position
 		caseOf: {
