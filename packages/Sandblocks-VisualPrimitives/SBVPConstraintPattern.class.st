@@ -55,20 +55,6 @@ SBVPConstraintPattern >> artefactSaved: aMethodBlock [
 	constraint := self constraintBlock evaluate
 ]
 
-{ #category : #'as yet unclassified' }
-SBVPConstraintPattern >> binding: aString for: block class: aClass ifPresent: aBlock [
-
-	| bindingsSet |
-	bindingsSet := Set new.
-	self root collectBindingsInto: bindingsSet.
-	(bindingsSet includes: aString asSymbol) ifTrue: [ | variable |
-		variable := (SBVPConstraintVariable poolDeclaration: aString) binding: aString asSymbol -> SBVisualPrimitive new.
-		(block isKindOf: SBVPConstraintVariable) ifFalse: [block replaceBy: variable].
-		"avoid replacing same block multiple times"
-		^ aBlock value: variable].
-	^ super binding: aString for: block class: aClass ifPresent: aBlock
-]
-
 { #category : #accessing }
 SBVPConstraintPattern >> constraint [
 

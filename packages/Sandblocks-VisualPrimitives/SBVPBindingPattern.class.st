@@ -127,6 +127,12 @@ SBVPBindingPattern >> addToWorld: aWorld [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPBindingPattern >> bindingBlock [
+
+	^ self innerLabel
+]
+
+{ #category : #'as yet unclassified' }
 SBVPBindingPattern >> bindingFor: aVisualPrimitive [
 
 	^ self getCurrentPrimitive: aVisualPrimitive
@@ -145,7 +151,14 @@ SBVPBindingPattern >> bindingIndex: anObject [
 	bindingIndex := anObject isSandblock
 		ifTrue: [anObject evaluate]
 		ifFalse: [anObject].
-	label := SBTextBubble new contents: bindingIndex asString.
+	label := SBStName new
+		autoCast: [:name :owner | | case |
+			case := self root parentSandblock.
+			((case isKindOf: SBVPCase) and: [name hasOwner: case input])
+				ifTrue: [name behaviorClass: SBStDeclarationForVPBinding]
+				ifFalse: [name behaviorClass: SBStBinding]];
+		behavior: SBStDeclarationForBlock new;
+		contents: bindingIndex asString.
 	label when: #contentsChanged send: #bindingIndexChanged to: self.
 	self innerLabel: label.
 	self labelDict removeKey: #innerLabel
@@ -238,7 +251,7 @@ SBVPBindingPattern >> childrenInCurrentMatch [
 SBVPBindingPattern >> collectBindingsInto: aCollection [
 
 	super collectBindingsInto: aCollection.
-	aCollection add: self bindingIndex
+	aCollection add: self bindingBlock
 ]
 
 { #category : #accessing }

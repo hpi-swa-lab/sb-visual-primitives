@@ -300,7 +300,7 @@ SBTreeDecorator >> secondWalk: aValue [
 	self x: self x + aValue.
 	self morph
 		fullBounds;
-		center: self x @ self depth * 100.
+		center: self x @ self depth * 40.
 	self children do: [:child | child secondWalk: aValue + self mod]
 ]
 

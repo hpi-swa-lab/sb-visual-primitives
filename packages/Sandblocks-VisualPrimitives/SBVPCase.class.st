@@ -128,6 +128,16 @@ SBVPCase >> addToggleButtonFor: aSymbol [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPCase >> binding: aString for: block class: aClass ifPresent: aBlock [
+
+	| bindingsSet |
+	bindingsSet := Set new.
+	self inputRoot collectBindingsInto: bindingsSet.
+	bindingsSet detect: [:b | b contents = aString] ifFound: [:b | ^ aBlock value: b].
+	^ super binding: aString for: block class: aClass ifPresent: aBlock
+]
+
+{ #category : #'as yet unclassified' }
 SBVPCase >> buildImplicitChildrenMatchingPattern [
 
 	self input ifNotNil: #removeImplicitChildren.
@@ -400,6 +410,12 @@ SBVPCase >> input: anSBBlock output: anotherSBBlock [
 	self buildImplicitChildrenMatchingPattern
 	";
 		colorDifferences"
+]
+
+{ #category : #'as yet unclassified' }
+SBVPCase >> inputRoot [
+
+	^ self input connections first
 ]
 
 { #category : #accessing }
