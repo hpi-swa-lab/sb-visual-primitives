@@ -341,7 +341,7 @@ SBTreeDecorator >> secondWalk: aValue layerHeights: height [
 		center: self x - (self distance / 2) @ (height * self depth).
 	self children do: [:child | child secondWalk: aValue + self mod layerHeights: height].
 	
-	self addConnectionLines.
+	self addConnectionLines
 ]
 
 { #category : #accessing }
