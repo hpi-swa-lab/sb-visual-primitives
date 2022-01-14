@@ -43,7 +43,7 @@ SBVPExecuter class >> exampleBuildHeap [
 					SBVPEllipsisPattern bindingIndex: #d}})
 			strategy: (Dictionary new
 				add: #explicitRootMatching -> false;
-				add: #explicitChildrenMatching -> true;
+				add: #explicitChildrenMatching -> false;
 				yourself))
 		input: (SBVPVisualizer
 			code: [SBVPDummyNode buildTree: {9 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}]
@@ -312,7 +312,6 @@ SBVPExecuter >> initialize [
 		vResizing: #shrinkWrap;
 		changeTableLayout;
 		layoutInset: 6;
-		cellInset: 3;
 		addMorphBack: (SBTextBubble new contents: 'Executer');
 		addMorphBack: (SBRow new
 			cellInset: 3;
@@ -328,33 +327,26 @@ SBVPExecuter >> initialize [
 				vResizing: #shrinkWrap;
 				cellInset: 3;
 				addMorphBack: (SBTextBubble new contents: 'Input');
-				addMorphBack: (inputBlock := SBSandboxPasteUpMorph new
+				addMorphBack: (inputBlock := SBRow new
 					hResizing: #shrinkWrap;
-					vResizing: #shrinkWrap;
-					cellInset: 6;
-					borderColor: Color black;
-					when: #reportError send: #reportError: to: self));
+					vResizing: #shrinkWrap));
 			addMorphBack: (SBColumn new
 				hResizing: #shrinkWrap;
 				vResizing: #shrinkWrap;
 				cellInset: 3;
 				addMorphBack: (SBTextBubble new contents: 'Transformation');
-				addMorphBack: (caseBlock := SBSandboxPasteUpMorph new
+				addMorphBack: (caseBlock := SBRow new
 					hResizing: #shrinkWrap;
-					vResizing: #shrinkWrap;
-					borderColor: Color black;
-					when: #reportError send: #reportError: to: self));
+					vResizing: #shrinkWrap));
 			addMorphBack: (SBColumn new
 				hResizing: #shrinkWrap;
 				vResizing: #shrinkWrap;
 				cellInset: 3;
 				addMorphBack: (SBTextBubble new contents: 'Output');
-				addMorphBack: (outputBlock := SBSandboxPasteUpMorph new
+				addMorphBack: (outputBlock := SBBlock new
 					hResizing: #shrinkWrap;
 					vResizing: #shrinkWrap;
-					borderColor: Color black;
-					layoutInset: 6;
-					when: #reportError send: #reportError: to: self)))
+					cellInset: 3)))
 ]
 
 { #category : #accessing }

@@ -103,22 +103,22 @@ SBVPGroupPattern >> patternBlocks: aCollection [
 			isBindingPattern := SBVPBindingPattern withAllSubclasses anySatisfy: [:subclass | subclass = aPattern class].
 			isBindingPattern
 				ifTrue: [ | patternContainer |
-					patternContainer := SBSandboxPasteUpMorph new
+					patternContainer := SBBlock new
 						hResizing: #shrinkWrap;
 						vResizing: #shrinkWrap;
-						borderColor: Color black;
 						layoutInset: 6;
 						when: #reportError send: #reportError: to: self.
-					patternContainer extent: 300 @ 300.
-					self row addMorphBack: (TransformMorph new
-						hResizing: #shrinkWrap;
-						vResizing: #shrinkWrap;
-						changeTableLayout;
-						addMorph: patternContainer).
 					aPattern
 						addToWorld: patternContainer;
 						attachTreeDecorator;
-						withDecorator: SBTreeDecorator do: [:treeDecorator | treeDecorator layout]]
+						withDecorator: SBTreeDecorator do: [:treeDecorator | treeDecorator layout].
+					patternContainer
+						hResizing: #shrinkWrap;
+						vResizing: #shrinkWrap.
+					self row addMorphBack: (SBRow new
+						addMorphBack: patternContainer;
+						hResizing: #shrinkWrap;
+						vResizing: #shrinkWrap)]
 				ifFalse: [aPattern addToWorld: self row]]
 		separatedBy: [
 			self row addMorphBack: (SBTextBubble new

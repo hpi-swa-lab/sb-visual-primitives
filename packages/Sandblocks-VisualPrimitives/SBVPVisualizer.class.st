@@ -188,12 +188,14 @@ SBVPVisualizer >> initialize [
 		vResizing: #shrinkWrap;
 		changeTableLayout;
 		cellInset: 6;
-		addMorphBack: (visual := SBSandboxPasteUpMorph new
+		addMorphBack: (SBRow new
+			addMorphBack: (visual := SBBlock new
+				hResizing: #shrinkWrap;
+				vResizing: #shrinkWrap;
+				layoutInset: 6;
+				when: #reportError send: #reportError: to: self);
 			hResizing: #shrinkWrap;
-			vResizing: #shrinkWrap;
-			borderColor: Color black;
-			layoutInset: 6;
-			when: #reportError send: #reportError: to: self);
+			vResizing: #shrinkWrap);
 		addMorphBack: (code := SBColumn new)
 ]
 

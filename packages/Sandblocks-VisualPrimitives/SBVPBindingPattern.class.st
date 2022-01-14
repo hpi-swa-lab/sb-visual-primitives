@@ -476,7 +476,7 @@ SBVPBindingPattern >> writeSourceOn: aStream [
 			nextPutAll: ' writeBackClosure: ';
 			nextPutAll: self writeBackClosureString].
 	
-	self constant ifNil: [self writeLabelDictOn: aStream].
+	self labelDict ifNotEmpty: [self writeLabelDictOn: aStream].
 	
 	self connections ifNotEmpty: [
 		aStream nextPutAll: ' connections: {'.
