@@ -8,6 +8,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBVPEllipsisPattern >> addImplicitChildren: aDict [
+
+	
+]
+
+{ #category : #'as yet unclassified' }
 SBVPEllipsisPattern >> buildFromBinding: anArray [
 
 	^ (anArray at: self bindingIndex) veryDeepCopy

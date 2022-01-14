@@ -133,6 +133,7 @@ SBVPCase >> binding: aString for: block class: aClass ifPresent: aBlock [
 	| bindingsSet |
 	bindingsSet := Set new.
 	self inputRoot collectBindingsInto: bindingsSet.
+	"self halt."
 	bindingsSet detect: [:b | b contents = aString] ifFound: [:b | ^ aBlock value: b].
 	^ super binding: aString for: block class: aClass ifPresent: aBlock
 ]
@@ -140,16 +141,20 @@ SBVPCase >> binding: aString for: block class: aClass ifPresent: aBlock [
 { #category : #'as yet unclassified' }
 SBVPCase >> buildImplicitChildrenMatchingPattern [
 
-	self input ifNotNil: #removeImplicitChildren.
-	self output ifNotNil: #removeImplicitChildren.
-	
-	self explicitChildrenMatching ifFalse: [ | additionalNodes additionalNodes2 |
-		additionalNodes := Dictionary new.
-		additionalNodes2 := Dictionary new.
-		self input buildImplicitChildren: additionalNodes.
-		self flag: #TODO.
-		"show implicit children in output and use same bindings as in input"
-		self output addImplicitChildren: additionalNodes]
+	(self input notNil and: [self output notNil]) ifTrue: [
+		self input removeImplicitChildren.
+		self output removeImplicitChildren.
+		
+		self explicitChildrenMatching ifFalse: [ | additionalNodes |
+			additionalNodes := Dictionary new.
+			self input
+				buildImplicitChildren: additionalNodes;
+				attachTreeDecorator.
+			self output
+				addImplicitChildren: additionalNodes;
+				attachTreeDecorator].
+		self input layout.
+		self output layout]
 ]
 
 { #category : #'as yet unclassified' }

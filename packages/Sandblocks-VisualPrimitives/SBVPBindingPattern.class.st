@@ -126,15 +126,31 @@ SBVPBindingPattern class >> writeBackClosure: aClosure connections: aCollection 
 ]
 
 { #category : #'as yet unclassified' }
-SBVPBindingPattern >> addImplicitChildren: anArray [
+SBVPBindingPattern >> addImplicitChildren: aDict [
 
-	| implicitChildrenIndices |
-	implicitChildrenIndices := anArray at: self bindingIndex.
-	
-	implicitChildrenIndices withIndexDo: [:bindingIndex :index | | implicitChild |
-		implicitChild := SBVPEllipsisPattern bindingIndex: bindingIndex.
+	| addImplicitChild implicitChildrenIndices implicitChildrenCount oldConnections |
+	self connections do: [:connection | connection addImplicitChildren: aDict].
+	implicitChildrenIndices := aDict at: self bindingIndex.
+	implicitChildrenCount := 0.
+	addImplicitChild := [:index | | implicitChild |
+		implicitChild := SBVPEllipsisPattern bindingIndex: (implicitChildrenIndices at: implicitChildrenCount + 1).
 		implicitChild isImplicitChild: true.
-		self connections add: implicitChild beforeIndex: 2 * index]
+		self addConnection: implicitChild afterIndex: index + implicitChildrenCount.
+		self owner addMorphBack: implicitChild.
+		implicitChildrenCount := implicitChildrenCount + 1].
+	
+	oldConnections := self connections copy.
+	(self connections isEmpty or: [self connections first wantsImplicitNeighbors]) ifTrue: [addImplicitChild value: 0].
+	
+	oldConnections withIndexDo: [:connection :index |
+		implicitChildrenCount >= implicitChildrenIndices size ifTrue: [^ self].
+		(connection wantsImplicitNeighbors and: [
+			self connections
+				at: index + 1
+				ifPresent: [:nextChild | nextChild wantsImplicitNeighbors]
+				ifAbsent: [true]]) ifTrue: [addImplicitChild value: index]].
+	
+	[implicitChildrenCount < implicitChildrenIndices size] whileTrue: [addImplicitChild value: oldConnections size]
 ]
 
 { #category : #accessing }
@@ -170,16 +186,22 @@ SBVPBindingPattern >> bindingIndex: anObject [
 		ifTrue: [anObject evaluate]
 		ifFalse: [anObject].
 	label := SBStName new
-		autoCast: [:name :owner | | case |
-			case := self root parentSandblock.
-			((case isKindOf: SBVPCase) and: [name hasOwner: case input])
-				ifTrue: [name behaviorClass: SBStDeclarationForVPBinding]
-				ifFalse: [name behaviorClass: SBStBinding]];
+		autoCast: self bindingIndexAutoCast;
 		behavior: SBStDeclarationForBlock new;
 		contents: bindingIndex asString.
 	label when: #contentsChanged send: #bindingIndexChanged to: self.
 	self innerLabel: label.
 	self labelDict removeKey: #innerLabel
+]
+
+{ #category : #accessing }
+SBVPBindingPattern >> bindingIndexAutoCast [
+
+	^ [:name :owner | | case |
+			case := self root parentSandblock.
+			((case isKindOf: SBVPCase) and: [name hasOwner: case input])
+				ifTrue: [name behaviorClass: SBStDeclarationForVPBinding]
+				ifFalse: [name behaviorClass: SBStBinding]]
 ]
 
 { #category : #accessing }
@@ -214,21 +236,23 @@ SBVPBindingPattern >> buildFromBinding: aDict [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPBindingPattern >> buildImplicitChildren: anArray [
+SBVPBindingPattern >> buildImplicitChildren: aDict [
 
 	| implicitChildren nextIndex oldConnections addImplicitChild |
 	implicitChildren := OrderedCollection new.
-	nextIndex := anArray size + 1.
-	anArray do: [:subArray | nextIndex := nextIndex max: (subArray ifEmpty: [0] ifNotEmpty: [subArray max + 1])].
+	nextIndex := ((aDict collect: [:subArray | subArray size])
+		ifEmpty: [0]
+		ifNotEmpty: [:guy | guy sum]) + 1.
 	
 	oldConnections := self connections copy.
 	
-	addImplicitChild := [:index | | implicitChild |
-		implicitChild := SBVPEllipsisPattern bindingIndex: nextIndex.
+	addImplicitChild := [:index | | implicitChild bindingIndex |
+		bindingIndex := self implicitChildIdentifierForIndex: nextIndex.
+		implicitChild := SBVPEllipsisPattern bindingIndex: bindingIndex.
 		implicitChild isImplicitChild: true.
 		self addConnection: implicitChild afterIndex: index + implicitChildren size.
 		self owner addMorphBack: implicitChild.
-		implicitChildren add: nextIndex.
+		implicitChildren add: bindingIndex.
 		nextIndex := nextIndex + 1].
 	
 	(self connections isEmpty or: [self connections first wantsImplicitNeighbors]) ifTrue: [addImplicitChild value: 0].
@@ -240,9 +264,9 @@ SBVPBindingPattern >> buildImplicitChildren: anArray [
 				ifPresent: [:nextChild | nextChild wantsImplicitNeighbors]
 				ifAbsent: [true]]) ifTrue: [addImplicitChild value: index]].
 	
-	anArray at: self bindingIndex put: implicitChildren asArray.
+	aDict at: self bindingIndex put: implicitChildren asArray.
 	
-	oldConnections do: [:connections | connections buildImplicitChildren: anArray]
+	oldConnections do: [:connections | connections buildImplicitChildren: aDict]
 ]
 
 { #category : #accessing }
@@ -360,6 +384,12 @@ SBVPBindingPattern >> getNext: aVisualPrimitive [
 				ifFalse: [connection reset].
 			offset := offset + connection indexOffset]].
 	^ false
+]
+
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern >> implicitChildIdentifierForIndex: aNumber [
+
+	^ ('i_', (Character alphabet at: aNumber)) asSymbol
 ]
 
 { #category : #'as yet unclassified' }

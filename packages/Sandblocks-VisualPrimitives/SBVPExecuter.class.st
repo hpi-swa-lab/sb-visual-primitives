@@ -92,18 +92,23 @@ SBVPExecuter class >> exampleBuildHeapTest: aTree [
 		label: 'example'.
 	^ (SBVPCase
 		input: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern
-				bindingIndex: #a
-				connections: {SBVPBindingPattern bindingIndex: #boi}.
-			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label asInteger < (bindings at: #boi) label asInteger]})
+			SBVPBindingPattern bindingIndex: #a connections: {
+				SBVPEllipsisPattern bindingIndex: #'i_a'.
+				SBVPBindingPattern
+					bindingIndex: #boi
+					connections: {SBVPEllipsisPattern bindingIndex: #'i_c'}.
+				SBVPEllipsisPattern bindingIndex: #'i_b'}.
+			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label asInteger < (bindings at: #boi) label asInteger and: [(bindings at: #i_c) size < 2]]})
 		output: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern
-				bindingIndex: #boi
-				connections: {SBVPBindingPattern bindingIndex: #a}})
+			SBVPBindingPattern bindingIndex: #boi connections: {
+				SBVPEllipsisPattern bindingIndex: #'i_c'.
+				SBVPBindingPattern
+					bindingIndex: #a
+					connections: {SBVPEllipsisPattern bindingIndex: #'i_a'. SBVPEllipsisPattern bindingIndex: #'i_b'}}})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> false;
 			add: #explicitChildrenMatching -> false;
-			yourself)) value: aTree
+			yourself)) replaceAllMatches: aTree
 ]
 
 { #category : #'as yet unclassified' }

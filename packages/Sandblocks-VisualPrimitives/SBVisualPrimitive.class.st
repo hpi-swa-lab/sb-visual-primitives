@@ -69,16 +69,14 @@ SBVisualPrimitive class >> selector: aString receiverMatches: aMessage [
 SBVisualPrimitive >> addConnection: aVisualPrimitive [
 
 	self connections add: aVisualPrimitive.
-	"aVisualPrimitive parent: self"
-	aVisualPrimitive addToParent: self
+	aVisualPrimitive parent: self.
 ]
 
 { #category : #accessing }
 SBVisualPrimitive >> addConnection: aVisualPrimitive afterIndex: aNumber [
 
 	self connections add: aVisualPrimitive afterIndex: aNumber.
-	aVisualPrimitive addToParent: self
-	"aVisualPrimitive parent: self"
+	aVisualPrimitive parent: self
 ]
 
 { #category : #accessing }
@@ -111,16 +109,6 @@ SBVisualPrimitive >> addPropertyMapping: anSBVPPropertyMapping [
 SBVisualPrimitive >> addPropertyMappings: aCollection [
 
 	aCollection do: [:mappingEntry | self addPropertyMapping: mappingEntry]
-]
-
-{ #category : #accessing }
-SBVisualPrimitive >> addToParent: aVisualPrimitive [
-
-	self attachTreeDecorator.
-	self withDecorator: SBTreeDecorator do: [:ownDecorator |
-		aVisualPrimitive withDecorator: SBTreeDecorator do: [:parentDecorator |
-			ownDecorator parent: parentDecorator.
-			ownDecorator layout]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -295,6 +283,15 @@ SBVisualPrimitive >> labelDict: anObject [
 SBVisualPrimitive >> labelPositions [
 
 	^ self topLabelPositions, self middleLabelPositions, self bottomLabelPositions
+]
+
+{ #category : #'as yet unclassified' }
+SBVisualPrimitive >> layout [
+
+	self
+		withDecorator: SBTreeDecorator
+		do: [:dec | dec layout]
+		ifAbsent: [self connections do: [:connection | connection layout]]
 ]
 
 { #category : #'as yet unclassified' }

@@ -55,6 +55,12 @@ SBVPConstraintPattern >> artefactSaved: aMethodBlock [
 	constraint := self constraintBlock evaluate
 ]
 
+{ #category : #'as yet unclassified' }
+SBVPConstraintPattern >> attachTreeDecorator [
+
+	
+]
+
 { #category : #accessing }
 SBVPConstraintPattern >> constraint [
 

@@ -39,6 +39,12 @@ SBVPGroupPattern >> addToWorld: aWorld [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPGroupPattern >> attachTreeDecorator [
+
+	self connections do: [:child | child attachTreeDecorator]
+]
+
+{ #category : #'as yet unclassified' }
 SBVPGroupPattern >> buildFromBinding: anArray [
 
 	^ self connections first buildFromBinding: anArray
