@@ -151,7 +151,7 @@ SBTreeDecorator >> depth: aValue [
 { #category : #'as yet unclassified' }
 SBTreeDecorator >> distance [
 
-	^ 1
+	^ self morph fullBounds width + 10
 ]
 
 { #category : #'as yet unclassified' }
@@ -186,7 +186,7 @@ SBTreeDecorator >> firstWalk [
 	left := self leftSibling.
 	
 	self children
-		ifEmpty: [left ifNil: [self x: 0] ifNotNil: [self x: left x + self distance]]
+		ifEmpty: [self x: self distance + (left ifNil: [0] ifNotNil: [left x])]
 		ifNotEmpty: [ | defaultAncestor midpoint |
 			defaultAncestor := self children first.
 			self children do: [:child |
@@ -194,10 +194,10 @@ SBTreeDecorator >> firstWalk [
 				child firstWalk.
 				defaultAncestor := child apportion: defaultAncestor].
 			self executeShifts.
-			midpoint := self children first x + self children last x / 2.
-			left ifNil: [self x: midpoint] ifNotNil: [
+			midpoint := self children first x - self children first distance + self children last x / 2.
+			left ifNil: [self x: midpoint + (self distance / 2)] ifNotNil: [
 				self x: left x + self distance.
-				self mod: self x - midpoint]]
+				self mod: self x - midpoint - (self distance / 2)]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -215,7 +215,7 @@ SBTreeDecorator >> layout [
 	self
 		resetAll;
 		firstWalk;
-		secondWalk: 0
+		secondWalk: 0 layerHeights: self maximumHeight
 ]
 
 { #category : #'as yet unclassified' }
@@ -231,6 +231,15 @@ SBTreeDecorator >> leftSibling [
 		last := nil.
 		self parent children do: [:child | child = self ifTrue: [^ last] ifFalse: [last := child]].
 		^ self parent children]
+]
+
+{ #category : #'as yet unclassified' }
+SBTreeDecorator >> maximumHeight [
+
+	| h |
+	h := self morph fullBounds height.
+	self children do: [:child | h := h max: child maximumHeight].
+	^ h
 ]
 
 { #category : #accessing }
@@ -281,7 +290,7 @@ SBTreeDecorator >> removeConnector: aConnector [
 { #category : #'as yet unclassified' }
 SBTreeDecorator >> reset [
 
-	depth := 0.
+	depth := 1.
 	mod := 0.
 	shift := 0.
 	change := 0
@@ -295,13 +304,13 @@ SBTreeDecorator >> resetAll [
 ]
 
 { #category : #'as yet unclassified' }
-SBTreeDecorator >> secondWalk: aValue [
+SBTreeDecorator >> secondWalk: aValue layerHeights: height [
 
 	self x: self x + aValue.
 	self morph
 		fullBounds;
-		center: self x @ self depth * 100.
-	self children do: [:child | child secondWalk: aValue + self mod]
+		center: self x - (self distance / 2) @ (height * self depth).
+	self children do: [:child | child secondWalk: aValue + self mod layerHeights: height]
 ]
 
 { #category : #accessing }

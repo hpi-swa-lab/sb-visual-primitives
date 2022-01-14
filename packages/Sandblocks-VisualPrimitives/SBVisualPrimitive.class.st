@@ -54,7 +54,6 @@ SBVisualPrimitive class >> newFromObject: anObject in: aMorph [
 	treeDecorator := SBTreeDecorator new.
 	vp attachDecorator: treeDecorator.
 	vp addPropertyMappings: anObject visualPrimitiveMapping.
-	treeDecorator layout.
 	^ vp
 ]
 
