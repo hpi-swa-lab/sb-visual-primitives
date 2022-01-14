@@ -8,7 +8,8 @@ Class {
 		'constant',
 		'bindingIndex',
 		'writeBackClosure',
-		'writeBackClosureString'
+		'writeBackClosureString',
+		'labelBindingDict'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
@@ -25,6 +26,23 @@ SBVPBindingPattern class >> bindingIndex: anObject connections: aCollection [
 	^ self new
 		bindingIndex: anObject;
 		connections: aCollection
+]
+
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern class >> bindingIndex: anObject labelBindingDict: aCollection [
+
+	^ self new
+		bindingIndex: anObject;
+		labelBindingDict: aCollection
+]
+
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern class >> bindingIndex: anObject labelBindingDict: aCollection connections: anotherCollection [
+
+	^ self new
+		bindingIndex: anObject;
+		connections: anotherCollection;
+		labelBindingDict: aCollection
 ]
 
 { #category : #'as yet unclassified' }
@@ -61,7 +79,7 @@ SBVPBindingPattern class >> constant: anObject connections: aCollection [
 { #category : #'as yet unclassified' }
 SBVPBindingPattern class >> matches: aBlock [
 
-	^ {#bindingIndex:. #constant:. #writeBackClosure:. #bindingIndex:labelDict:} anySatisfy: [:methodName | (self selector: methodName receiverMatches: aBlock) or: [self selector: methodName, #connections: receiverMatches: aBlock]]
+	^ {#bindingIndex:. #constant:. #writeBackClosure:. #bindingIndex:labelDict:. #bindingIndex:labelBindingDict:} anySatisfy: [:methodName | (self selector: methodName receiverMatches: aBlock) or: [self selector: methodName, #connections: receiverMatches: aBlock]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -145,6 +163,8 @@ SBVPBindingPattern >> bindingIndex: anObject [
 	bindingIndex := anObject isSandblock
 		ifTrue: [anObject evaluate]
 		ifFalse: [anObject].
+	self flag: #TODO.
+	"Use Name instead of TextBubble once replacing works"
 	label := SBTextBubble new contents: bindingIndex asString.
 	label when: #contentsChanged send: #bindingIndexChanged to: self.
 	self innerLabel: label.
@@ -178,6 +198,7 @@ SBVPBindingPattern >> buildFromBinding: aDict [
 		ifNil: [(aDict at: self bindingIndex) copy].
 	output connections: (self buildChildrenFromBinding: aDict).
 	output labelDict addAll: self labelDict.
+	self labelBindingDict keysAndValuesDo: [:labelPosition :bindingName | output labelDict at: labelPosition put: (aDict at: bindingName)].
 	^ {output}
 ]
 
@@ -342,6 +363,38 @@ SBVPBindingPattern >> indexOffset [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPBindingPattern >> initialize [
+
+	super initialize.
+	self labelBindingDict: Dictionary new
+]
+
+{ #category : #accessing }
+SBVPBindingPattern >> labelBindingChanged [
+
+	self labelBindingDict copy keysAndValuesDo: [:key :value | self labelBindingDict at: key put: ((self labelContentAt: key) as: value class)]
+]
+
+{ #category : #accessing }
+SBVPBindingPattern >> labelBindingDict [
+
+	^ labelBindingDict
+]
+
+{ #category : #accessing }
+SBVPBindingPattern >> labelBindingDict: anObject [
+
+	labelBindingDict := anObject.
+	self flag: #TODO.
+	"Use Name instead of TextBubble once replacing works"
+	labelBindingDict keysAndValuesDo: [:key :value |
+		(self setLabelAt: key to: value)
+			when: #contentsChanged
+			send: #labelBindingChanged
+			to: self]
+]
+
+{ #category : #'as yet unclassified' }
 SBVPBindingPattern >> matches: aVisualPrimitive withBinding: aCollection [
 
 	| offset |
@@ -384,13 +437,15 @@ SBVPBindingPattern >> searchRootFor: aVisualPrimitive at: anIndex [
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> setBindingFor: aVisualPrimitive in: aDict [
 
-	| currentPrimitive |
+	| currentPrimitive setBinding |
+	setBinding := [:bindingName :binding |
+		aDict
+			at: bindingName
+			ifPresent: [:previousValue | previousValue = binding ifFalse: [^ false]]
+			ifAbsent: [aDict at: bindingName put: binding]].
 	currentPrimitive := self getCurrentPrimitive: aVisualPrimitive.
-	self bindingIndex ifNotNil: [ | binding |
-		binding := self bindingFor: aVisualPrimitive.
-		(aDict at: self bindingIndex ifAbsent: [nil])
-			ifNotNil: [:previousValue | previousValue = binding ifFalse: [^ false]]
-			ifNil: [aDict at: self bindingIndex put: binding]].
+	self bindingIndex ifNotNil: [setBinding value: self bindingIndex value: (self bindingFor: aVisualPrimitive)].
+	self labelBindingDict keysAndValuesDo: [:labelPosition :bindingName | setBinding value: bindingName value: (aVisualPrimitive labelDict at: labelPosition)].
 	self writeBackClosure ifNotNil: [self writeBackClosure value: currentPrimitive origin].
 	^ (self couldMatch: currentPrimitive) and: [self setConnectionBindingFor: currentPrimitive in: aDict]
 ]
@@ -477,6 +532,10 @@ SBVPBindingPattern >> writeSourceOn: aStream [
 			nextPutAll: self writeBackClosureString].
 	
 	self labelDict ifNotEmpty: [self writeLabelDictOn: aStream].
+	
+	self labelBindingDict ifNotEmpty: [
+		aStream nextPutAll: ' labelBindingDict: '.
+		self labelBindingDict storeOn: aStream].
 	
 	self connections ifNotEmpty: [
 		aStream nextPutAll: ' connections: {'.

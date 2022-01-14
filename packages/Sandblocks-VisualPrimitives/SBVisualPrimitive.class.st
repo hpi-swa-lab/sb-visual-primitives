@@ -75,7 +75,7 @@ SBVisualPrimitive >> addConnection: aVisualPrimitive [
 { #category : #accessing }
 SBVisualPrimitive >> addPropertyMapping: anSBVPPropertyMapping [
 
-	| morphy value positionBlock propertyMapping child |
+	| value propertyMapping child |
 	propertyMapping := anSBVPPropertyMapping.
 	anSBVPPropertyMapping isPropertyMapping ifFalse: [
 		propertyMapping := SBVPPropertyMapping
@@ -95,13 +95,7 @@ SBVisualPrimitive >> addPropertyMapping: anSBVPPropertyMapping [
 						ifNil: [connection asVisualPrimitive]
 						ifNotNil: [SBVisualPrimitive newFromObject: connection in: self owner].
 					self addConnection: child]]}
-		otherwise: [
-			(self labelPositions includes: propertyMapping position) ifTrue: [
-				morphy := self getLabelMorph: value.
-				positionBlock := self blockDict at: propertyMapping position.
-				positionBlock
-					removeAllMorphs;
-					addMorphBack: morphy]]
+		otherwise: [(self labelPositions includes: propertyMapping position) ifTrue: [self setLabelAt: propertyMapping position to: value]]
 ]
 
 { #category : #accessing }
@@ -260,6 +254,12 @@ SBVisualPrimitive >> label: anObject [
 	^ self innerLabel: (SBTextBubble new contents: anObject asString)
 ]
 
+{ #category : #'as yet unclassified' }
+SBVisualPrimitive >> labelContentAt: aSymbol [
+
+	^ (self blockDict at: aSymbol) firstSubmorph contents
+]
+
 { #category : #accessing }
 SBVisualPrimitive >> labelDict [
 
@@ -321,6 +321,18 @@ SBVisualPrimitive >> printOn: aStream [
 SBVisualPrimitive >> root [
 
 	^ self parent ifNil: [self] ifNotNil: [self parent root]
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> setLabelAt: aSymbol to: anObject [
+
+	| morphy positionBlock |
+	morphy := self getLabelMorph: anObject.
+	positionBlock := self blockDict at: aSymbol.
+	positionBlock
+		removeAllMorphs;
+		addMorphBack: morphy.
+	^ morphy
 ]
 
 { #category : #accessing }

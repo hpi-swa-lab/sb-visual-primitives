@@ -78,7 +78,7 @@ SBVPExecuter class >> exampleBuildHeap: aTree [
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> false;
 			add: #explicitChildrenMatching -> false;
-			yourself)) value: aTree
+			yourself)) replaceAllMatches: aTree
 ]
 
 { #category : #'as yet unclassified' }
@@ -102,55 +102,87 @@ SBVPExecuter class >> exampleBuildHeapWithImplicitChildren [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPExecuter class >> exampleGrammarRuleMergeRepeat [
+SBVPExecuter class >> exampleGrammarRuleMergeRepeat: aGrammarObject [
 
-	SBVPVisualizer
-		code: [
-			SBVPTomGrammarObject new
-				type: 'SEQ';
-				members: {
-					SBVPTomGrammarObject new
-						type: 'SYMBOL';
-						objectName: 'aahh'.
-					SBVPTomGrammarObject new
-						type: 'REPEAT';
-						content: (SBVPTomGrammarObject new
+	| bio |
+	self
+		example: [SBVPExecuter]
+		args: [
+			{
+				(SBVPTomGrammarObject new
+					type: 'SEQ';
+					members: {
+						SBVPTomGrammarObject new
 							type: 'SYMBOL';
-							objectName: 'aahh')}]
-		showCode: false.
-	
-	SBVPVisualizer
-		code: [ | bio |
-			bio := SBVPTomGrammarObject new.
-			bio type: 'REPEAT1'.
-			(SBVPCase
-				input: (SBVPGroupPattern patterns: {
-					SBVPBindingPattern bindingIndex: #a labelDict: {#topLeftLabel -> 'SEQ'} connections: {
-						SBVPBindingPattern bindingIndex: #b labelDict: {#topLeftLabel -> 'SYMBOL'}.
-						SBVPBindingPattern
-							bindingIndex: #c
-							labelDict: {#topLeftLabel -> 'REPEAT'}
-							connections: {SBVPBindingPattern bindingIndex: #d labelDict: {#topLeftLabel -> 'SYMBOL'}}}.
-					SBVPConstraintPattern constraint: [:bindings | (bindings at: #b) origin objectName = (bindings at: #d) origin objectName]})
-				output: (SBVPGroupPattern patterns: {
-					SBVPBindingPattern
-						constant: bio
-						connections: {SBVPBindingPattern bindingIndex: #b labelDict: {}}})
-				strategy: (Dictionary new
-					add: #explicitRootMatching -> false;
-					add: #explicitChildrenMatching -> true;
-					yourself)) replaceAllMatches: (SBVPTomGrammarObject new
-				type: 'SEQ';
-				members: {
-					SBVPTomGrammarObject new
-						type: 'SYMBOL';
-						objectName: 'aahh'.
-					SBVPTomGrammarObject new
-						type: 'REPEAT';
-						content: (SBVPTomGrammarObject new
+							objectName: 'aahh'.
+						SBVPTomGrammarObject new
+							type: 'REPEAT';
+							content: (SBVPTomGrammarObject new
+								type: 'SYMBOL';
+								objectName: 'aahh')}) showAsVisualPrimitive}]
+		label: 'example'.
+	bio := SBVPTomGrammarObject new.
+	bio type: 'REPEAT1'.
+	^ (SBVPCase
+		input: (SBVPGroupPattern patterns: {
+			SBVPBindingPattern bindingIndex: #a labelDict: {#topLeftLabel -> 'SEQ'} connections: {
+				SBVPBindingPattern bindingIndex: #b labelDict: {#topLeftLabel -> 'SYMBOL'}.
+				SBVPBindingPattern
+					bindingIndex: #c
+					labelDict: {#topLeftLabel -> 'REPEAT'}
+					connections: {SBVPBindingPattern bindingIndex: #d labelDict: {#topLeftLabel -> 'SYMBOL'}}}.
+			SBVPConstraintPattern constraint: [:bindings | (bindings at: #b) origin objectName = (bindings at: #d) origin objectName]})
+		output: (SBVPGroupPattern patterns: {SBVPBindingPattern constant: bio connections: {SBVPBindingPattern bindingIndex: #b}})
+		strategy: (Dictionary new
+			add: #explicitRootMatching -> false;
+			add: #explicitChildrenMatching -> true;
+			yourself)) replaceAllMatches: aGrammarObject
+]
+
+{ #category : #'as yet unclassified' }
+SBVPExecuter class >> exampleGrammarRuleWeird: aGrammarObject [
+
+	| bio |
+	self
+		example: [SBVPExecuter]
+		args: [
+			{
+				(SBVPTomGrammarObject new
+					type: 'SEQ';
+					members: {
+						SBVPTomGrammarObject new
 							type: 'SYMBOL';
-							objectName: 'aahh')})]
-		showCode: true
+							objectName: 'aahh'.
+						SBVPTomGrammarObject new
+							type: 'REPEAT';
+							content: (SBVPTomGrammarObject new
+								type: 'SYMBOL';
+								objectName: 'aahh')}) showAsVisualPrimitive}]
+		label: 'example'.
+	bio := SBVPTomGrammarObject new.
+	bio type: 'REPEAT1'.
+	^ (SBVPCase
+		input: (SBVPGroupPattern patterns: {
+			SBVPBindingPattern bindingIndex: #a labelDict: {#topLeftLabel -> 'SEQ'} connections: {
+				SBVPBindingPattern bindingIndex: #b labelBindingDict: (Dictionary new
+					add: #topLeftLabel -> #type;
+					yourself).
+				SBVPBindingPattern
+					bindingIndex: #c
+					labelDict: {#topLeftLabel -> 'REPEAT'}
+					connections: {SBVPBindingPattern bindingIndex: #d labelDict: {#topLeftLabel -> 'SYMBOL'}}}.
+			SBVPConstraintPattern constraint: [:bindings | (bindings at: #b) origin objectName = (bindings at: #d) origin objectName]})
+		output: (SBVPGroupPattern patterns: {
+			SBVPBindingPattern
+				bindingIndex: #c
+				labelBindingDict: (Dictionary new
+					add: #topLeftLabel -> #type;
+					yourself)
+				connections: {SBVPBindingPattern bindingIndex: #b}})
+		strategy: (Dictionary new
+			add: #explicitRootMatching -> false;
+			add: #explicitChildrenMatching -> true;
+			yourself)) replaceAllMatches: aGrammarObject
 ]
 
 { #category : #'as yet unclassified' }

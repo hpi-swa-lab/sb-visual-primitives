@@ -9,8 +9,8 @@ SBWatchView >> reportValue: anObject [
 	[
 		applyingChange := true.
 		hadValue ifFalse: [hadValue := true].
-		(anObject isKindOf: SBVPDummyNode) 
-			ifTrue: [
+		anObject visualPrimitiveMapping
+			ifNotEmpty: [
 				morph := SBBlock new
 					hResizing: #shrinkWrap;
 					vResizing: #shrinkWrap;
@@ -22,7 +22,7 @@ SBWatchView >> reportValue: anObject [
 					addMorphBack: morph;
 					hResizing: #shrinkWrap;
 					vResizing: #shrinkWrap)]
-			ifFalse: [SBToggledCode comment: '' active: 1 do: {
+			 ifEmpty: [SBToggledCode comment: '' active: 1 do: {
 				[self useDisplay: (SBExplorer on: anObject)].
 				[self useDisplay: (anObject convertedFor: self watchObjectInterface do: #yourself)]}].
 		
