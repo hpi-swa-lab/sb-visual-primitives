@@ -68,7 +68,16 @@ SBVisualPrimitive class >> selector: aString receiverMatches: aMessage [
 { #category : #accessing }
 SBVisualPrimitive >> addConnection: aVisualPrimitive [
 
-	self connections add: aVisualPrimitive
+	self connections add: aVisualPrimitive.
+	"aVisualPrimitive parent: self"
+	aVisualPrimitive addToParent: self
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> addConnection: aVisualPrimitive afterIndex: aNumber [
+
+	self connections add: aVisualPrimitive afterIndex: aNumber.
+	aVisualPrimitive addToParent: self
 	"aVisualPrimitive parent: self"
 ]
 
@@ -102,6 +111,16 @@ SBVisualPrimitive >> addPropertyMapping: anSBVPPropertyMapping [
 SBVisualPrimitive >> addPropertyMappings: aCollection [
 
 	aCollection do: [:mappingEntry | self addPropertyMapping: mappingEntry]
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> addToParent: aVisualPrimitive [
+
+	self attachTreeDecorator.
+	self withDecorator: SBTreeDecorator do: [:ownDecorator |
+		aVisualPrimitive withDecorator: SBTreeDecorator do: [:parentDecorator |
+			ownDecorator parent: parentDecorator.
+			ownDecorator layout]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -153,9 +172,9 @@ SBVisualPrimitive >> connections [
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> connections: anObject [
+SBVisualPrimitive >> connections: aCollection [
 
-	connections := anObject asOrderedCollection.
+	connections := aCollection asOrderedCollection.
 	connections do: [:child | child parent: self]
 ]
 

@@ -137,10 +137,8 @@ SBVPCase >> buildImplicitChildrenMatchingPattern [
 		additionalNodes := Dictionary new.
 		additionalNodes2 := Dictionary new.
 		self input buildImplicitChildren: additionalNodes.
-		self flag: #TODO.
-		"FIgure this out"
-		self output buildImplicitChildren: additionalNodes2
-		"self output addImplicitChildren: additionalNodes"]
+		self flag: #TODO. "show implicit children in output and use same bindings as in input"
+		self output addImplicitChildren:  additionalNodes]
 ]
 
 { #category : #'as yet unclassified' }
@@ -402,6 +400,7 @@ SBVPCase >> strategyButtonFor: aSymbol [
 SBVPCase >> toggleStrategy: aSymbol [
 
 	self strategy at: aSymbol put: (self strategy at: aSymbol) not.
+	aSymbol = self class childrenStrategy ifTrue: [self buildImplicitChildrenMatchingPattern].
 	self addToggleButtonFor: aSymbol
 ]
 

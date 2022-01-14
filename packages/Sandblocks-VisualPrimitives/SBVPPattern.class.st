@@ -73,6 +73,9 @@ SBVPPattern >> matches: aVisualPrimitive withBinding: aCollection [
 { #category : #'as yet unclassified' }
 SBVPPattern >> removeImplicitChildren [
 
+	self connections
+		select: [:child | child isImplicitChild]
+		thenDo: [:implicitChild | implicitChild abandon].
 	self connections: (self connections reject: [:child | child isImplicitChild]).
 	self connections do: [:child | child removeImplicitChildren]
 ]

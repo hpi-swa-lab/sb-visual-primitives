@@ -215,7 +215,8 @@ SBVPBindingPattern >> buildImplicitChildren: anArray [
 	addImplicitChild := [:index | | implicitChild |
 		implicitChild := SBVPEllipsisPattern bindingIndex: nextIndex.
 		implicitChild isImplicitChild: true.
-		self connections add: implicitChild afterIndex: index + implicitChildren size.
+		self addConnection: implicitChild afterIndex: index + implicitChildren size.
+		self owner addMorphBack: implicitChild.
 		implicitChildren add: nextIndex.
 		nextIndex := nextIndex + 1].
 	

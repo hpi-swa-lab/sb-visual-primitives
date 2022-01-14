@@ -34,6 +34,7 @@ SBVPGroupPattern >> addImplicitChildren: anArray [
 { #category : #'as yet unclassified' }
 SBVPGroupPattern >> addToWorld: aWorld [
 
+	self connections do: [:pattern | pattern addToWorld: aWorld].
 	aWorld addMorphBack: self
 ]
 

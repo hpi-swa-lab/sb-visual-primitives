@@ -47,6 +47,28 @@ SBTreeDecorator >> addChild: aDecorator [
 ]
 
 { #category : #'as yet unclassified' }
+SBTreeDecorator >> addChild: aDecorator afterIndex: aNumber [
+
+	self children add: aDecorator afterIndex: aNumber.
+	aDecorator parent: self.
+	
+	(self morph containingFloat owner ifNil: [self morph containingFloat]) addMorphBack: ((SBNodeConnector connect: self morph to: aDecorator morph)
+		connectorType: #line;
+		lineWidth: 1;
+		color: Color black)
+]
+
+{ #category : #'as yet unclassified' }
+SBTreeDecorator >> addConnectionLines [
+
+	self children do: [:child |
+		(self morph containingFloat owner ifNil: [self morph containingFloat]) addMorphBack: ((SBNodeConnector connect: self morph to: child morph)
+			connectorType: #line;
+			lineWidth: 1;
+			color: Color black)]
+]
+
+{ #category : #'as yet unclassified' }
 SBTreeDecorator >> addExampleChildIn: aContainer [
 
 	| child |
@@ -127,7 +149,7 @@ SBTreeDecorator >> change: anObject [
 { #category : #accessing }
 SBTreeDecorator >> children [
 
-	^ children
+	^ self morph connections collect: [:connection | connection withDecorator: SBTreeDecorator do: [:childDecorator | childDecorator]]
 ]
 
 { #category : #accessing }
@@ -212,10 +234,17 @@ SBTreeDecorator >> initialize [
 { #category : #'as yet unclassified' }
 SBTreeDecorator >> layout [
 
-	self
-		resetAll;
-		firstWalk;
-		secondWalk: 0 layerHeights: self maximumHeight
+	self children do: [:child |
+		(self morph containingFloat owner ifNil: [self morph containingFloat]) addMorphBack: ((SBNodeConnector connect: self morph to: child morph)
+			connectorType: #line;
+			lineWidth: 1;
+			color: Color black)].
+	
+	self parent ifNotNil: [:parent | parent layout] ifNil: [
+		self
+			resetAll;
+			firstWalk;
+			secondWalk: 0 layerHeights: self maximumHeight]
 ]
 
 { #category : #'as yet unclassified' }
@@ -310,7 +339,9 @@ SBTreeDecorator >> secondWalk: aValue layerHeights: height [
 	self morph
 		fullBounds;
 		center: self x - (self distance / 2) @ (height * self depth).
-	self children do: [:child | child secondWalk: aValue + self mod layerHeights: height]
+	self children do: [:child | child secondWalk: aValue + self mod layerHeights: height].
+	
+	self addConnectionLines.
 ]
 
 { #category : #accessing }

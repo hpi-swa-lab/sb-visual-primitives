@@ -33,12 +33,9 @@ SBVPVisualizer class >> newFor: aBlock [
 	aBlock arguments size >= 2
 		ifTrue: [^ self new code: aBlock arguments first showCode: aBlock arguments second evaluate]
 		ifFalse: [
-			aBlock selector = 'showAsVisualPrimitive'
-				ifTrue: [
-					^ self new
-						code: aBlock receiver showCode: false;
-						isImplicit: true]
-				ifFalse: [^ self new code: aBlock receiver showCode: false]]
+			^ self new
+				code: aBlock receiver showCode: false;
+				isImplicit: aBlock selector = 'showAsVisualPrimitive']
 ]
 
 { #category : #'as yet unclassified' }
@@ -178,6 +175,7 @@ SBVPVisualizer >> exampleSimpleTomGrammar [
 SBVPVisualizer >> initialize [
 
 	super initialize.
+	self isImplicit: false.
 	
 	self showCode: true.
 	
