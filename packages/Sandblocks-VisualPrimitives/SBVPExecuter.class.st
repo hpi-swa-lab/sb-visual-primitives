@@ -43,7 +43,7 @@ SBVPExecuter class >> exampleBuildHeap [
 					SBVPEllipsisPattern bindingIndex: #d}})
 			strategy: (Dictionary new
 				add: #explicitRootMatching -> false;
-				add: #explicitChildrenMatching -> false;
+				add: #explicitChildrenMatching -> true;
 				yourself))
 		input: (SBVPVisualizer
 			code: [SBVPDummyNode buildTree: {9 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}]
