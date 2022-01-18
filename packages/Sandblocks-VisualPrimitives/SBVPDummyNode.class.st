@@ -63,7 +63,7 @@ SBVPDummyNode class >> staticVisualPrimitiveMapping [
 SBVPDummyNode >> dynamicVisualPrimitiveMapping [
 
 	^ {
-		#innerLabel -> #key.
+		SBVPPropertyMappingNumber property: #key primitiveProperty: #innerLabel on: self.
 		SBVPPropertyMapping
 			getter: [{self left. self right} reject: [:connection | connection isNil]]
 			setter: [:vp |

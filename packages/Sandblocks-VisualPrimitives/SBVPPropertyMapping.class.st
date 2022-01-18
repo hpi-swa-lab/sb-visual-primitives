@@ -46,6 +46,20 @@ SBVPPropertyMapping class >> getter: aBlock setter: anotherBlock position: aSymb
 		yourself
 ]
 
+{ #category : #'as yet unclassified' }
+SBVPPropertyMapping class >> property: aSymbol primitiveProperty: anotherSymbol on: anObject [
+
+	| getterBlock setterBlock |
+	getterBlock := [anObject perform: aSymbol asSimpleGetter].
+	setterBlock := [:vp | anObject perform: aSymbol asSimpleSetter with: (vp propertyAt: anotherSymbol)].
+	
+	^ SBVPPropertyMapping
+		getter: getterBlock
+		setter: setterBlock
+		position: anotherSymbol
+		optionalArgs: Dictionary new
+]
+
 { #category : #accessing }
 SBVPPropertyMapping >> color [
 

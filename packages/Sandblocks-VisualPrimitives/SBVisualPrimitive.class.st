@@ -126,7 +126,10 @@ SBVisualPrimitive >> attachTreeDecorator [
 	self withDecorator: SBTreeDecorator do: [:d | ] ifAbsent: [ | decorator |
 		decorator := SBTreeDecorator new.
 		self attachDecorator: decorator.
-		self parent ifNotNil: [:parent | parent withDecorator: SBTreeDecorator do: [:parentDecorator | parentDecorator addChild: decorator afterIndex: (parent connections indexOf: self) - 1]]].
+		self parent ifNotNil: [:parent |
+			parent
+				withDecorator: SBTreeDecorator
+				do: [:parentDecorator | parentDecorator addChild: decorator afterIndex: (parent connections indexOf: self) - 1]]].
 	
 	self connections do: [:child | child attachTreeDecorator]
 ]
@@ -327,6 +330,19 @@ SBVisualPrimitive >> printOn: aStream [
 	aStream
 		nextPutAll: ' innerLabel: ';
 		nextPutAll: self label asString
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> propertyAt: aSymbol [
+
+	aSymbol = #innerLabel ifTrue: [^ self innerLabel].
+	(self labelPositions includes: aSymbol) ifTrue: [
+		^ self blockDict
+			at: aSymbol
+			ifPresent: [:block | self getLabelContents: block]
+			ifAbsent: [nil]].
+	aSymbol = #connections ifTrue: [^ self connections].
+	aSymbol = #shape ifTrue: [^ self shape]
 ]
 
 { #category : #accessing }
