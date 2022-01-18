@@ -51,13 +51,13 @@ SBTreeDecorator >> addChild: aDecorator afterIndex: anIndex [
 	self children add: aDecorator afterIndex: anIndex.
 	aDecorator parent: self.
 	
-	newConnector := ((SBConnectorLine connect: self morph to: aDecorator morph)
+	newConnector := (SBConnectorLine connect: self morph to: aDecorator morph)
 		connectorType: #line;
 		lineWidth: 1;
-		color: Color black).
+		color: Color black.
 	
 	(self morph containingFloat owner ifNil: [self morph containingFloat]) addMorphBack: newConnector.
-	aDecorator connectorToParent: newConnector.
+	aDecorator connectorToParent: newConnector
 ]
 
 { #category : #'as yet unclassified' }
@@ -337,7 +337,7 @@ SBTreeDecorator >> secondWalk: aValue layerHeights: height [
 	self morph
 		fullBounds;
 		center: self x - (self distance / 2) @ (height * self depth).
-	self children do: [:child | child secondWalk: aValue + self mod layerHeights: height].
+	self children do: [:child | child secondWalk: aValue + self mod layerHeights: height]
 ]
 
 { #category : #accessing }
