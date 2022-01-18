@@ -1,3 +1,6 @@
+"
+Algorithm modified from https://llimllib.github.io/pymag-trees/
+"
 Class {
 	#name : #SBTreeDecorator,
 	#superclass : #SBBlockDecorator,
@@ -9,7 +12,8 @@ Class {
 		'x',
 		'ancestor',
 		'shift',
-		'change'
+		'change',
+		'connectorToParent'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
@@ -43,23 +47,17 @@ SBTreeDecorator >> addChild: aDecorator [
 { #category : #'as yet unclassified' }
 SBTreeDecorator >> addChild: aDecorator afterIndex: anIndex [
 
+	| newConnector |
 	self children add: aDecorator afterIndex: anIndex.
 	aDecorator parent: self.
 	
-	(self morph containingFloat owner ifNil: [self morph containingFloat]) addMorphBack: ((SBNodeConnector connect: self morph to: aDecorator morph)
+	newConnector := ((SBConnectorLine connect: self morph to: aDecorator morph)
 		connectorType: #line;
 		lineWidth: 1;
-		color: Color black)
-]
-
-{ #category : #'as yet unclassified' }
-SBTreeDecorator >> addConnectionLines [
-
-	self children do: [:child |
-		(self morph containingFloat owner ifNil: [self morph containingFloat]) addMorphBack: ((SBNodeConnector connect: self morph to: child morph)
-			connectorType: #line;
-			lineWidth: 1;
-			color: Color black)]
+		color: Color black).
+	
+	(self morph containingFloat owner ifNil: [self morph containingFloat]) addMorphBack: newConnector.
+	aDecorator connectorToParent: newConnector.
 ]
 
 { #category : #'as yet unclassified' }
@@ -107,8 +105,8 @@ SBTreeDecorator >> apportion: aDefaultAncestor [
 			vir := vir children first.
 			vol := vol children first.
 			vor := vor children last.
-			shift := vil x + sil - (vir x + sir) + self distance.
 			vor ancestor: self.
+			shift := vil x + sil - (vir x + sir) + self distance.
 			shift > 0 ifTrue: [ | a |
 				a := (self parent children includes: vil ancestor)
 					ifTrue: [vil ancestor]
@@ -150,6 +148,18 @@ SBTreeDecorator >> children [
 SBTreeDecorator >> children: anObject [
 
 	children := anObject
+]
+
+{ #category : #accessing }
+SBTreeDecorator >> connectorToParent [
+
+	^ connectorToParent
+]
+
+{ #category : #accessing }
+SBTreeDecorator >> connectorToParent: aMorph [
+
+	connectorToParent := aMorph
 ]
 
 { #category : #accessing }
@@ -228,12 +238,6 @@ SBTreeDecorator >> initialize [
 { #category : #'as yet unclassified' }
 SBTreeDecorator >> layout [
 
-	self children do: [:child |
-		(self morph containingFloat owner ifNil: [self morph containingFloat]) addMorphBack: ((SBNodeConnector connect: self morph to: child morph)
-			connectorType: #line;
-			lineWidth: 1;
-			color: Color black)].
-	
 	self parent ifNotNil: [:parent | parent layout] ifNil: [
 		self
 			resetAll;
@@ -306,14 +310,8 @@ SBTreeDecorator >> removeChild: aSandblock [
 
 	aSandblock withDecorator: SBTreeDecorator do: [:childDecorator |
 		self children remove: childDecorator.
+		childDecorator connectorToParent abandon.
 		childDecorator parent: nil]
-]
-
-{ #category : #accessing }
-SBTreeDecorator >> removeConnector: aConnector [
-
-	self removeChild: aConnector to.
-	aConnector abandon
 ]
 
 { #category : #'as yet unclassified' }
@@ -340,8 +338,6 @@ SBTreeDecorator >> secondWalk: aValue layerHeights: height [
 		fullBounds;
 		center: self x - (self distance / 2) @ (height * self depth).
 	self children do: [:child | child secondWalk: aValue + self mod layerHeights: height].
-	
-	self addConnectionLines
 ]
 
 { #category : #accessing }

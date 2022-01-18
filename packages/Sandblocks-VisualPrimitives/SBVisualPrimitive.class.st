@@ -129,7 +129,7 @@ SBVisualPrimitive >> attachTreeDecorator [
 		self parent ifNotNil: [:parent |
 			parent
 				withDecorator: SBTreeDecorator
-				do: [:parentDecorator | parentDecorator addChild: decorator afterIndex: (parent connections indexOf: self) - 1]]].
+				do: [:parentDecorator | parentDecorator addChild: decorator afterIndex: self siblingIndex - 1]]].
 	
 	self connections do: [:child | child attachTreeDecorator]
 ]
@@ -243,6 +243,12 @@ SBVisualPrimitive >> innerLabel: anObject [
 ]
 
 { #category : #'as yet unclassified' }
+SBVisualPrimitive >> isExpression [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBVisualPrimitive >> isVisualPrimitive [
 
 	^ true
@@ -346,6 +352,14 @@ SBVisualPrimitive >> propertyAt: aSymbol [
 ]
 
 { #category : #accessing }
+SBVisualPrimitive >> removeConnection: aVisualPrimitive [
+
+	self withDecorator: SBTreeDecorator do: [:dec | dec removeChild: aVisualPrimitive].
+	self connections remove: aVisualPrimitive.
+	aVisualPrimitive parent: nil
+]
+
+{ #category : #accessing }
 SBVisualPrimitive >> root [
 
 	^ self parent ifNil: [self] ifNotNil: [self parent root]
@@ -382,6 +396,12 @@ SBVisualPrimitive >> shape: aClass [
 		hResizing: #shrinkWrap.
 	innerLabel ifNotNil: [:label | innerBlock addMorphBack: label].
 	innerBlockWrapper addMorphBack: innerBlock
+]
+
+{ #category : #'as yet unclassified' }
+SBVisualPrimitive >> siblingIndex [
+
+	^ self parent connections indexOf: self
 ]
 
 { #category : #'as yet unclassified' }

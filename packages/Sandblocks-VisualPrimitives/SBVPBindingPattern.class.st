@@ -110,6 +110,16 @@ SBVPBindingPattern class >> newFor: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPBindingPattern class >> registerShortcuts: aProvider [
+
+	aProvider
+		registerShortcut: Character backspace do: #deleteSubtree;
+		registerShortcut: Character delete do: #deleteSubtree;
+		registerShortcut: Character space do: #addNewChild;
+		registerShortcut: Character space shift do: #addNewParent
+]
+
+{ #category : #'as yet unclassified' }
 SBVPBindingPattern class >> writeBackClosure: aClosure [
 	"should look like [:var | yourVariable := var]"
 
@@ -151,6 +161,33 @@ SBVPBindingPattern >> addImplicitChildren: aDict [
 				ifAbsent: [true]]) ifTrue: [addImplicitChild value: index]].
 	
 	[implicitChildrenCount < implicitChildrenIndices size] whileTrue: [addImplicitChild value: oldConnections size]
+]
+
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern >> addNewChild [
+	<action>
+
+	| newChild |
+	newChild := self class bindingIndex: #boio.
+	self addConnection: newChild.
+	self owner addMorphBack: newChild.
+	self root attachTreeDecorator.
+	self root layout
+]
+
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern >> addNewParent [
+	<action>
+
+	| newParent |
+	newParent := self class bindingIndex: #parent.
+	self parent addConnection: newParent afterIndex: self siblingIndex.
+	self parent removeConnection: self.
+	newParent addConnection: self.
+	self owner addMorphBack: newParent.
+	self allPatternsDo: [:pattern | pattern detachDecorators: SBTreeDecorator].
+	self root attachTreeDecorator.
+	self root layout
 ]
 
 { #category : #accessing }
@@ -341,6 +378,14 @@ SBVPBindingPattern >> couldMatch: aVisualPrimitive [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPBindingPattern >> deleteSubtree [
+	<action>
+
+	self parent ifNotNil: [self parent removeConnection: self].
+	self allPatternsDo: [:block | block abandon]
+]
+
+{ #category : #'as yet unclassified' }
 SBVPBindingPattern >> drawOn: aCanvas [
 
 	self writeBackClosure ifNotNil: [aCanvas frameOval: (self bounds outsetBy: 5) width: 2 color: Color black].
@@ -512,6 +557,13 @@ SBVPBindingPattern >> setConnectionBindingFor: aVisualPrimitive in: aDict [
 			in: aDict.
 		offset := offset + connection indexOffset.
 		wasSuccessful]
+]
+
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern >> typeNewLine [
+	<action>
+
+	self halt
 ]
 
 { #category : #accessing }

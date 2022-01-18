@@ -114,3 +114,34 @@ SBVPEllipsisPattern >> wantsImplicitNeighbors [
 
 	^ false
 ]
+
+{ #category : #'as yet unclassified' }
+SBVPEllipsisPattern >> wrapInMessageSend [
+	"NO CHILDREN ALLOWED!
+	
+              ,-----.
+            W/,-. ,-.\W
+            ()>a   a<()
+            (.--(_)--.)
+          ,'/.-'/-\`-.\`.
+        ,' /    `-'    \ `.
+       /   \           /   \
+      /     `.       ,'     \
+     /    /   `-._.-'   \    \
+   ,-`-._/|     |=|o    |\_.-<
+  <,--.)  |_____| |o____|  )_ \
+   `-)|    |//   _   \\|     )/
+     ||    |'    |    `|
+     ||    |     |     |
+     ||    (    )|(    )
+     ||    |     |     |
+     ||    |     |     |
+     ||    |_.--.|.--._|
+     ||     /'"
+	"| |"
+	"`\
+     []     `===' `==='  hjw"
+	<action>
+
+	
+]
