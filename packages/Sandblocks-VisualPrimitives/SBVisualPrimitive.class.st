@@ -126,7 +126,7 @@ SBVisualPrimitive >> attachTreeDecorator [
 	self withDecorator: SBTreeDecorator do: [:d | ] ifAbsent: [ | decorator |
 		decorator := SBTreeDecorator new.
 		self attachDecorator: decorator.
-		self parent ifNotNil: [:parent | parent withDecorator: SBTreeDecorator do: [:parentDecorator | parentDecorator addChild: decorator]]].
+		self parent ifNotNil: [:parent | parent withDecorator: SBTreeDecorator do: [:parentDecorator | parentDecorator addChild: decorator afterIndex: (parent connections indexOf: self) - 1]]].
 	
 	self connections do: [:child | child attachTreeDecorator]
 ]
