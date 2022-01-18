@@ -14,6 +14,12 @@ SBVPPattern >> addImplicitChildren: anArray [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPPattern >> allPatternsDo: aBlock [
+
+	self connections do: [:connection | connection allPatternsDo: aBlock]
+]
+
+{ #category : #'as yet unclassified' }
 SBVPPattern >> buildImplicitChildren: anArray [
 
 	

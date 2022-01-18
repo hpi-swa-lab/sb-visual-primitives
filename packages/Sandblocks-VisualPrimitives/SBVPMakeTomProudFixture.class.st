@@ -21,6 +21,16 @@ SBVPMakeTomProudFixture >> children: anObject [
 	children := anObject
 ]
 
+{ #category : #'as yet unclassified' }
+SBVPMakeTomProudFixture >> dynamicVisualPrimitiveMapping [
+
+	^ {
+		#shape -> CircleMorph.
+		#innerLabel -> #key.
+		#topLeftLabel -> #type.
+		#connections -> (self children reject: [:child | child isNil])}
+]
+
 { #category : #accessing }
 SBVPMakeTomProudFixture >> key [
 
@@ -43,14 +53,4 @@ SBVPMakeTomProudFixture >> type [
 SBVPMakeTomProudFixture >> type: anObject [
 
 	type := anObject
-]
-
-{ #category : #'as yet unclassified' }
-SBVPMakeTomProudFixture >> visualPrimitiveMapping [
-
-	^ {
-		#shape -> CircleMorph.
-		#innerLabel -> #key.
-		#topLeftLabel -> #type.
-		#connections -> (self children reject: [:child | child isNil])}
 ]

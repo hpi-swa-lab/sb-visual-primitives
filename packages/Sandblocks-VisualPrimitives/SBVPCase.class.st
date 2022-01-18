@@ -5,8 +5,8 @@ Class {
 		'input',
 		'output',
 		'strategy',
-		'replaceAll',
-		'informationRow'
+		'informationRow',
+		'defaultPatternVisualizationClass'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
@@ -49,17 +49,13 @@ SBVPCase class >> input: anInputVisualizer output: anOutputVisualizer strategy: 
 ]
 
 { #category : #'as yet unclassified' }
-SBVPCase class >> input: anInputVisualizer output: anOutputVisualizer strategy: aDict replaceAll: aBoolean [
+SBVPCase class >> input: anInputVisualizer output: anOutputVisualizer strategy: aDict visualizePatternsAs: aClass [
 	" marker "
 
-	| case |
-	case := self new
+	^ self new
 		input: anInputVisualizer output: anOutputVisualizer;
-		strategy: aDict.
-	
-	^ aBoolean
-		ifNotNil: [aBoolean ifTrue: [case replaceAllMatches] ifFalse: [case value]]
-		ifNil: [case]
+		strategy: aDict;
+		visualizePatternsAs: aClass
 ]
 
 { #category : #'as yet unclassified' }
@@ -69,7 +65,7 @@ SBVPCase class >> matches: aBlock [
 	
 	^ (aBlock receiver satisfies: #(#notNil #isBinding))
 		and: [aBlock receiver contents = self name]
-		and: [{#input:output:. #input:output:strategy:. #input:output:strategy:replaceAll:} anySatisfy: [:selector | self selector: selector receiverMatches: aBlock]]
+		and: [{#input:output:. #input:output:strategy:. #input:output:strategy:visualizePatternsAs:} anySatisfy: [:selector | self selector: selector receiverMatches: aBlock]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -82,9 +78,16 @@ SBVPCase class >> newFor: aBlock [
 	output isVisualPrimitive ifFalse: [output := output evaluate].
 	
 	^ aBlock arguments size > 2
-		ifTrue: [ | replaceAll |
-			replaceAll := aBlock arguments size > 3 ifTrue: [aBlock arguments fourth evaluate].
-			(self input: input output: output strategy: aBlock arguments third evaluate) replaceAll: replaceAll]
+		ifTrue: [ | strategy |
+			strategy := aBlock arguments third evaluate.
+			aBlock arguments size > 3
+				ifTrue: [
+					self
+						input: input
+						output: output
+						strategy: strategy
+						visualizePatternsAs: aBlock arguments fourth evaluate]
+				ifFalse: [self input: input output: output strategy: strategy]]
 		ifFalse: [self input: input output: output]
 ]
 
@@ -194,6 +197,18 @@ SBVPCase >> colorDifferences [
 					connection label = (outputConnection ifNotNil: #label) ifFalse: [
 						connection color: c.
 						(outputBindingDict at: connection label ifAbsent: [nil]) ifNotNil: [:o | o color: c]]]]]
+]
+
+{ #category : #accessing }
+SBVPCase >> defaultPatternVisualizationClass [
+
+	^ defaultPatternVisualizationClass
+]
+
+{ #category : #accessing }
+SBVPCase >> defaultPatternVisualizationClass: anObject [
+
+	defaultPatternVisualizationClass := anObject
 ]
 
 { #category : #'as yet unclassified' }
@@ -365,19 +380,6 @@ SBVPCase >> replace: aNumber matches: anObject [
 	^ currentPrimitive getObjectFromVisualPrimitive
 ]
 
-{ #category : #accessing }
-SBVPCase >> replaceAll [
-
-	^ replaceAll
-]
-
-{ #category : #accessing }
-SBVPCase >> replaceAll: anObject [
-
-	replaceAll := anObject.
-	anObject ifNotNil: [self color: (anObject ifTrue: [Color seaFoam] ifFalse: [Color spindrift])]
-]
-
 { #category : #'as yet unclassified' }
 SBVPCase >> replaceAllMatches [
 
@@ -444,6 +446,16 @@ SBVPCase >> value: anObject [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPCase >> visualizePatternsAs: aClass [
+
+	self defaultPatternVisualizationClass: aClass.
+	self input allPatternsDo: [:pattern | pattern addPropertyMappings: aClass staticVisualPrimitiveMapping].
+	self output allPatternsDo: [:pattern | pattern addPropertyMappings: aClass staticVisualPrimitiveMapping].
+	self input layout.
+	self output layout.
+]
+
+{ #category : #'as yet unclassified' }
 SBVPCase >> writeSourceOn: aStream [
 
 	aStream nextPutAll: '(SBVPCase input: '.
@@ -455,9 +467,9 @@ SBVPCase >> writeSourceOn: aStream [
 		aStream nextPutAll: ' strategy: '.
 		self strategy storeOn: aStream].
 	
-	self replaceAll ifNotNil: [
-		aStream nextPutAll: ' replaceAll: '.
-		self replaceAll storeOn: aStream].
+	self defaultPatternVisualizationClass ifNotNil: [
+		aStream nextPutAll: ' visualizePatternsAs: '.
+		self defaultPatternVisualizationClass storeOn: aStream].
 	
 	aStream nextPut: $)
 ]

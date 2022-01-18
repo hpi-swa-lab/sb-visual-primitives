@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBVPCircleFixture >> visualPrimitiveMapping [
+SBVPCircleFixture >> dynamicVisualPrimitiveMapping [
 
 	^ {
 		#shape -> CircleMorph.

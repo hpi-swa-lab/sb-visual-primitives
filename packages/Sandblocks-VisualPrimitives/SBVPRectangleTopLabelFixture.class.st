@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBVPRectangleTopLabelFixture >> visualPrimitiveMapping [
+SBVPRectangleTopLabelFixture >> dynamicVisualPrimitiveMapping [
 
 	^ {
 		#shape -> RectangleMorph.

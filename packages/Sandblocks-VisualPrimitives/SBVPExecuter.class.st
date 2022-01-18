@@ -98,7 +98,7 @@ SBVPExecuter class >> exampleBuildHeapTest: aTree [
 					bindingIndex: #boi
 					connections: {SBVPEllipsisPattern bindingIndex: #'i_c'}.
 				SBVPEllipsisPattern bindingIndex: #'i_b'}.
-			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label asInteger < (bindings at: #boi) label asInteger and: [(bindings at: #i_c) size < 2]]})
+			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label asInteger < (bindings at: #boi) label asInteger and: [(bindings at: #'i_c') size < 2]]})
 		output: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern bindingIndex: #boi connections: {
 				SBVPEllipsisPattern bindingIndex: #'i_c'.
@@ -108,7 +108,8 @@ SBVPExecuter class >> exampleBuildHeapTest: aTree [
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> false;
 			add: #explicitChildrenMatching -> false;
-			yourself)) replaceAllMatches: aTree
+			yourself)
+		visualizePatternsAs: SBVPDummyNode) replaceAllMatches: aTree
 ]
 
 { #category : #'as yet unclassified' }
@@ -252,7 +253,7 @@ SBVPExecuter class >> exampleWithConstants [
 	SBVPVisualizer
 		code: [
 			salzstangen := SBVPDummyNode buildTree: {9 -> {10 -> {8}}}.
-			SBVPCase
+			(SBVPCase
 				input: (SBVPGroupPattern patterns: {
 					SBVPBindingPattern constant: salzstangen connections: {
 						SBVPBindingPattern
@@ -263,8 +264,7 @@ SBVPExecuter class >> exampleWithConstants [
 						SBVPBindingPattern
 							constant: salzstangen
 							connections: {SBVPEllipsisPattern bindingIndex: #b}}})
-				strategy: {#explicitRootMatching -> false} asDictionary
-				replaceAll: true]
+				strategy: {#explicitRootMatching -> false} asDictionary) replaceAllMatches]
 		showCode: true
 ]
 

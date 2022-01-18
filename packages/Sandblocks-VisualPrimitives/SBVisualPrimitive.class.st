@@ -227,7 +227,7 @@ SBVisualPrimitive >> initializeLabelBlocks [
 { #category : #'as yet unclassified' }
 SBVisualPrimitive >> innerLabel [
 
-	^ (self blockDict at: #innerLabel) firstSubmorph firstSubmorph
+	^ (self blockDict at: #innerLabel) firstSubmorphOrNil firstSubmorphOrNil
 ]
 
 { #category : #accessing }
@@ -360,14 +360,15 @@ SBVisualPrimitive >> shape [
 { #category : #accessing }
 SBVisualPrimitive >> shape: aClass [
 
-	| innerBlockWrapper innerBlock |
+	| innerBlockWrapper innerBlock innerLabel |
 	shape := aClass.
 	innerBlockWrapper := self blockDict at: #innerLabel.
+	innerLabel := self innerLabel.
 	innerBlockWrapper removeAllMorphs.
 	innerBlock := aClass new
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap.
-	self labelDict at: #innerLabel ifPresent: [:label | innerBlock addMorphBack: label].
+	innerLabel ifNotNil: [:label | innerBlock addMorphBack: label].
 	innerBlockWrapper addMorphBack: innerBlock
 ]
 

@@ -161,6 +161,13 @@ SBVPBindingPattern >> addToWorld: aWorld [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPBindingPattern >> allPatternsDo: aBlock [
+
+	aBlock value: self.
+	super allPatternsDo: aBlock
+]
+
+{ #category : #'as yet unclassified' }
 SBVPBindingPattern >> bindingBlock [
 
 	^ self innerLabel

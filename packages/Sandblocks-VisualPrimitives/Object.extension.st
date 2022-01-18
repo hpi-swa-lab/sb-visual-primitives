@@ -7,6 +7,12 @@ Object >> asVisualPrimitive [
 ]
 
 { #category : #'*Sandblocks-VisualPrimitives' }
+Object >> dynamicVisualPrimitiveMapping [
+
+	^ {}
+]
+
+{ #category : #'*Sandblocks-VisualPrimitives' }
 Object >> isPropertyMapping [
 
 	^ false
@@ -27,5 +33,5 @@ Object >> showAsVisualPrimitive [
 { #category : #'*Sandblocks-VisualPrimitives' }
 Object >> visualPrimitiveMapping [
 
-	^ {}
+	^ self class staticVisualPrimitiveMapping , self dynamicVisualPrimitiveMapping
 ]
