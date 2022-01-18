@@ -46,13 +46,10 @@ SBVisualPrimitive class >> newFromObject: anObject [
 { #category : #'as yet unclassified' }
 SBVisualPrimitive class >> newFromObject: anObject in: aMorph [
 
-	| vp treeDecorator |
+	| vp |
 	vp := self new.
 	aMorph addMorphBack: vp.
 	vp origin: anObject.
-	
-	treeDecorator := SBTreeDecorator new.
-	vp attachDecorator: treeDecorator.
 	vp addPropertyMappings: anObject visualPrimitiveMapping.
 	^ vp
 ]
@@ -126,13 +123,13 @@ SBVisualPrimitive >> asVisualPrimitive [
 { #category : #nil }
 SBVisualPrimitive >> attachTreeDecorator [
 
+	self withDecorator: SBTreeDecorator do: [:d | ] ifAbsent: [
 	| decorator |
-	self withDecorator: SBTreeDecorator do: [:d | decorator := d] ifAbsent: [
 		decorator := SBTreeDecorator new.
-		self attachDecorator: decorator].
+		self attachDecorator: decorator.
+		self parent ifNotNil: [:parent | parent withDecorator: SBTreeDecorator do: [:parentDecorator | parentDecorator addChild: decorator]]].
 	
-	self connections do: [:child | child attachTreeDecorator].
-	self connections do: [:child | child withDecorator: SBTreeDecorator do: [:childDecorator | decorator addChild: childDecorator]]
+	self connections do: [:child | child attachTreeDecorator]
 ]
 
 { #category : #accessing }

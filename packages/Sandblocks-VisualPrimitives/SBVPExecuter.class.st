@@ -476,7 +476,7 @@ SBVPExecuter >> showOutput: anObject [
 	self outputBlock removeAllMorphs.
 	vp := SBVisualPrimitive newFromObject: anObject in: self outputBlock.
 	vp attachTreeDecorator.
-	vp withDecorator: SBTreeDecorator do: [:dec | dec layout]
+	vp layout
 ]
 
 { #category : #'as yet unclassified' }

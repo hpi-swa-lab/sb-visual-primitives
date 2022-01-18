@@ -17,7 +17,7 @@ SBWatchView >> reportValue: anObject [
 					layoutInset: 6.
 				vp := SBVisualPrimitive newFromObject: anObject in: morph.
 				vp attachTreeDecorator.
-				vp withDecorator: SBTreeDecorator do: [:dec | dec layout].
+				vp layout.
 				self useDisplay: (SBRow new
 					addMorphBack: morph;
 					hResizing: #shrinkWrap;

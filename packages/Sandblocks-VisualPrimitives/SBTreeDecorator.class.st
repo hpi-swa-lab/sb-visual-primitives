@@ -47,18 +47,6 @@ SBTreeDecorator >> addChild: aDecorator [
 ]
 
 { #category : #'as yet unclassified' }
-SBTreeDecorator >> addChild: aDecorator afterIndex: aNumber [
-
-	self children add: aDecorator afterIndex: aNumber.
-	aDecorator parent: self.
-	
-	(self morph containingFloat owner ifNil: [self morph containingFloat]) addMorphBack: ((SBNodeConnector connect: self morph to: aDecorator morph)
-		connectorType: #line;
-		lineWidth: 1;
-		color: Color black)
-]
-
-{ #category : #'as yet unclassified' }
 SBTreeDecorator >> addConnectionLines [
 
 	self children do: [:child |
@@ -149,7 +137,7 @@ SBTreeDecorator >> change: anObject [
 { #category : #accessing }
 SBTreeDecorator >> children [
 
-	^ self morph connections collect: [:connection | connection withDecorator: SBTreeDecorator do: [:childDecorator | childDecorator]]
+	^ children
 ]
 
 { #category : #accessing }

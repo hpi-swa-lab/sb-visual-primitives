@@ -68,7 +68,7 @@ SBVPVisualizer >> code: aCodeBlock showCode: aBoolean [
 	aBoolean ifFalse: [aSandblock hide].
 	vp := SBVisualPrimitive newFromObject: aSandblock evaluate value in: self visual.
 	vp attachTreeDecorator.
-	vp withDecorator: SBTreeDecorator do: [:dec | dec layout]
+	vp layout
 ]
 
 { #category : #accessing }

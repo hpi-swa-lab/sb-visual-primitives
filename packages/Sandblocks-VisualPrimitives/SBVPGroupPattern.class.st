@@ -118,7 +118,7 @@ SBVPGroupPattern >> patternBlocks: aCollection [
 					aPattern
 						addToWorld: patternContainer;
 						attachTreeDecorator;
-						withDecorator: SBTreeDecorator do: [:treeDecorator | treeDecorator layout].
+						layout.
 					patternContainer
 						hResizing: #shrinkWrap;
 						vResizing: #shrinkWrap.
