@@ -198,10 +198,10 @@ SBVPBindingPattern >> bindingIndex: anObject [
 SBVPBindingPattern >> bindingIndexAutoCast [
 
 	^ [:name :owner | | case |
-			case := self root parentSandblock.
-			((case isKindOf: SBVPCase) and: [name hasOwner: case input])
-				ifTrue: [name behaviorClass: SBStDeclarationForVPBinding]
-				ifFalse: [name behaviorClass: SBStBinding]]
+		case := self root parentSandblock.
+		((case isKindOf: SBVPCase) and: [name hasOwner: case input])
+			ifTrue: [name behaviorClass: SBStDeclarationForVPBinding]
+			ifFalse: [name behaviorClass: SBStBinding]]
 ]
 
 { #category : #accessing }
@@ -549,6 +549,7 @@ SBVPBindingPattern >> writeLabelDictOn: aStream [
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> writeSourceOn: aStream [
 
+	self isImplicitChild ifTrue: [^ nil].
 	aStream
 		nextPut: $(;
 		nextPutAll: self class name.
@@ -575,7 +576,7 @@ SBVPBindingPattern >> writeSourceOn: aStream [
 	
 	self connections ifNotEmpty: [
 		aStream nextPutAll: ' connections: {'.
-		self connections do: [:connection |
+		(self connections reject: [:connection | connection isImplicitChild]) do: [:connection |
 			connection writeSourceOn: aStream.
 			aStream nextPut: $.].
 		aStream nextPut: $}].

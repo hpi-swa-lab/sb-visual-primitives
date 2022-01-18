@@ -72,6 +72,15 @@ SBVPEllipsisPattern >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPEllipsisPattern >> isImplicitChild: aBoolean [
+
+	super isImplicitChild: aBoolean.
+	self isImplicitChild ifTrue: [
+		self childSandblocksDo: [:block | block color: Color gray].
+		self firstSubmorph firstSubmorph color: Color gray]
+]
+
+{ #category : #'as yet unclassified' }
 SBVPEllipsisPattern >> reset [
 
 	super reset.

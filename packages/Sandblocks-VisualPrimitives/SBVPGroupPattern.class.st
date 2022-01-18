@@ -173,7 +173,7 @@ SBVPGroupPattern >> setBindingFor: aVisualPrimitive in: aCollection [
 SBVPGroupPattern >> writeSourceOn: aStream [
 
 	aStream nextPutAll: '(', self class name, ' patterns: {'.
-	self connections do: [:pattern |
+	(self connections reject: [:pattern | pattern isImplicitChild]) do: [:pattern |
 		pattern writeSourceOn: aStream.
 		aStream nextPut: $.].
 	aStream nextPutAll: '})'

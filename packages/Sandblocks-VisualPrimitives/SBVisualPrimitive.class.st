@@ -69,7 +69,7 @@ SBVisualPrimitive class >> selector: aString receiverMatches: aMessage [
 SBVisualPrimitive >> addConnection: aVisualPrimitive [
 
 	self connections add: aVisualPrimitive.
-	aVisualPrimitive parent: self.
+	aVisualPrimitive parent: self
 ]
 
 { #category : #accessing }
