@@ -37,7 +37,13 @@ SBTreeDecorator class >> createExampleIn: aContainer [
 { #category : #'as yet unclassified' }
 SBTreeDecorator >> addChild: aDecorator [
 
-	self children add: aDecorator.
+	self addChild: aDecorator afterIndex: self children size
+]
+
+{ #category : #'as yet unclassified' }
+SBTreeDecorator >> addChild: aDecorator afterIndex: anIndex [
+
+	self children add: aDecorator afterIndex: anIndex.
 	aDecorator parent: self.
 	
 	(self morph containingFloat owner ifNil: [self morph containingFloat]) addMorphBack: ((SBNodeConnector connect: self morph to: aDecorator morph)
@@ -296,11 +302,17 @@ SBTreeDecorator >> parent: anObject [
 ]
 
 { #category : #accessing }
+SBTreeDecorator >> removeChild: aSandblock [
+
+	aSandblock withDecorator: SBTreeDecorator do: [:childDecorator |
+		self children remove: childDecorator.
+		childDecorator parent: nil]
+]
+
+{ #category : #accessing }
 SBTreeDecorator >> removeConnector: aConnector [
 
-	aConnector to withDecorator: SBTreeDecorator do: [:childDecorator |
-		self children remove: childDecorator.
-		childDecorator parent: nil].
+	self removeChild: aConnector to.
 	aConnector abandon
 ]
 

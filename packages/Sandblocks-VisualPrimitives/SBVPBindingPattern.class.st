@@ -190,7 +190,7 @@ SBVPBindingPattern >> bindingIndex: anObject [
 
 	| label |
 	bindingIndex := anObject isSandblock
-		ifTrue: [anObject evaluate]
+		ifTrue: [[anObject evaluate] on: Error do: [anObject sourceString]]
 		ifFalse: [anObject].
 	label := SBStName new
 		autoCast: self bindingIndexAutoCast;
