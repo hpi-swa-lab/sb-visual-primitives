@@ -130,7 +130,7 @@ SBVPBindingPattern >> addImplicitChildren: aDict [
 
 	| addImplicitChild implicitChildrenIndices implicitChildrenCount oldConnections |
 	self connections do: [:connection | connection addImplicitChildren: aDict].
-	implicitChildrenIndices := aDict at: self bindingIndex.
+	implicitChildrenIndices := aDict at: self bindingIndex ifAbsent: [^ self].
 	implicitChildrenCount := 0.
 	addImplicitChild := [:index | | implicitChild |
 		implicitChild := SBVPEllipsisPattern bindingIndex: (implicitChildrenIndices at: implicitChildrenCount + 1).
