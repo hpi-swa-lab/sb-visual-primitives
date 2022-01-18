@@ -36,20 +36,6 @@ SBVPPatternMatcher >> build: aPattern fromBinding: anArray currentPrimitive: aVi
 ]
 
 { #category : #accessing }
-SBVPPatternMatcher >> buildImplicitChildrenMatchingPattern [
-
-	self flag: #TODO.
-	"Move everything to SBVPCase"
-	self input removeImplicitChildren.
-	self output removeImplicitChildren.
-	
-	self explicitChildrenMatching ifFalse: [ | additionalNodes |
-		additionalNodes := Dictionary new.
-		self input buildImplicitChildren: additionalNodes.
-		self output addImplicitChildren: additionalNodes]
-]
-
-{ #category : #accessing }
 SBVPPatternMatcher >> currentPrimitive [
 
 	^ self searchStack last

@@ -123,8 +123,7 @@ SBVisualPrimitive >> asVisualPrimitive [
 { #category : #nil }
 SBVisualPrimitive >> attachTreeDecorator [
 
-	self withDecorator: SBTreeDecorator do: [:d | ] ifAbsent: [
-	| decorator |
+	self withDecorator: SBTreeDecorator do: [:d | ] ifAbsent: [ | decorator |
 		decorator := SBTreeDecorator new.
 		self attachDecorator: decorator.
 		self parent ifNotNil: [:parent | parent withDecorator: SBTreeDecorator do: [:parentDecorator | parentDecorator addChild: decorator]]].

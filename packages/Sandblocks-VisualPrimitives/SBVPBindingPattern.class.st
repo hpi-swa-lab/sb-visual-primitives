@@ -205,8 +205,8 @@ SBVPBindingPattern >> bindingIndex: anObject [
 SBVPBindingPattern >> bindingIndexAutoCast [
 
 	^ [:name :owner | | case |
-		case := self root parentSandblock.
-		((case isKindOf: SBVPCase) and: [name hasOwner: case input])
+		case := self parentCase.
+		(case notNil and: [name hasOwner: case input])
 			ifTrue: [name behaviorClass: SBStDeclarationForVPBinding]
 			ifFalse: [name behaviorClass: SBStBinding]]
 ]
@@ -449,6 +449,14 @@ SBVPBindingPattern >> matches: aVisualPrimitive withBinding: aCollection [
 			withBinding: aCollection.
 		offset := offset + connection indexOffset.
 		wasSuccessful]
+]
+
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern >> parentCase [
+
+	| case |
+	case := self root parentSandblock.
+	^ (case isKindOf: SBVPCase) ifTrue: [case] ifFalse: [nil]
 ]
 
 { #category : #'as yet unclassified' }

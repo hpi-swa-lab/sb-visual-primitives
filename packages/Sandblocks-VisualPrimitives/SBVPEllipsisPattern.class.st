@@ -51,6 +51,12 @@ SBVPEllipsisPattern >> currentSize: anObject [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPEllipsisPattern >> doubleClick: anEvent [
+
+	self isImplicitChild: self isImplicitChild not
+]
+
+{ #category : #'as yet unclassified' }
 SBVPEllipsisPattern >> getNext: aVisualPrimitive [
 
 	self currentSize: self currentSize + 1.
@@ -74,10 +80,18 @@ SBVPEllipsisPattern >> initialize [
 { #category : #'as yet unclassified' }
 SBVPEllipsisPattern >> isImplicitChild: aBoolean [
 
+	| setColor previousImplicit |
+	previousImplicit := self isImplicitChild.
 	super isImplicitChild: aBoolean.
-	self isImplicitChild ifTrue: [
-		self childSandblocksDo: [:block | block color: Color gray].
-		self firstSubmorph firstSubmorph color: Color gray]
+	previousImplicit = self isImplicitChild ifTrue: [^ self].
+	setColor := [:color |
+		self childSandblocksDo: [:block | block color: color].
+		self firstSubmorph firstSubmorph color: color].
+	self isImplicitChild
+		ifTrue: [setColor value: Color gray]
+		ifFalse: [setColor value: Color black].
+	"If called with isImplicitChild not changing, this leads to an infinite loop."
+	self parentCase ifNotNil: [:parentCase | parentCase toggleImplicitChildTo: self isImplicitChild withBinding: self bindingIndex]
 ]
 
 { #category : #'as yet unclassified' }

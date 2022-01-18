@@ -421,6 +421,22 @@ SBVPCase >> strategyButtonFor: aSymbol [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPCase >> toggleImplicitChildTo: aBoolean withBinding: aString [
+
+	self toggleImplicitChildTo: aBoolean withBinding: aString on: self input.
+	self toggleImplicitChildTo: aBoolean withBinding: aString on: self output
+]
+
+{ #category : #'as yet unclassified' }
+SBVPCase >> toggleImplicitChildTo: aBoolean withBinding: aString on: aSBVPPattern [
+
+	aSBVPPattern allPatternsDo: [:pattern |
+		pattern bindingIndex = aString ifTrue: [
+			pattern isImplicitChild: aBoolean.
+			^ self]]
+]
+
+{ #category : #'as yet unclassified' }
 SBVPCase >> toggleStrategy: aSymbol [
 
 	self strategy at: aSymbol put: (self strategy at: aSymbol) not.
@@ -452,7 +468,7 @@ SBVPCase >> visualizePatternsAs: aClass [
 	self input allPatternsDo: [:pattern | pattern addPropertyMappings: aClass staticVisualPrimitiveMapping].
 	self output allPatternsDo: [:pattern | pattern addPropertyMappings: aClass staticVisualPrimitiveMapping].
 	self input layout.
-	self output layout.
+	self output layout
 ]
 
 { #category : #'as yet unclassified' }
