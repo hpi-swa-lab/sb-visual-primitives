@@ -136,7 +136,6 @@ SBVPCase >> binding: aString for: block class: aClass ifPresent: aBlock [
 	| bindingsSet |
 	bindingsSet := Set new.
 	self inputRoot collectBindingsInto: bindingsSet.
-	"self halt."
 	bindingsSet detect: [:b | b contents = aString] ifFound: [:b | ^ aBlock value: b].
 	^ super binding: aString for: block class: aClass ifPresent: aBlock
 ]
