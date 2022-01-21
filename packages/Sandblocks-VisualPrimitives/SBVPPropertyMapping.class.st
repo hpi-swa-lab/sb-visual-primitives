@@ -72,6 +72,12 @@ SBVPPropertyMapping >> color: anObject [
 	color := anObject
 ]
 
+{ #category : #'as yet unclassified' }
+SBVPPropertyMapping >> getMorph [
+
+	^ self getter value
+]
+
 { #category : #accessing }
 SBVPPropertyMapping >> getter [
 

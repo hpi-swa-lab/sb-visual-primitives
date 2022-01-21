@@ -90,7 +90,7 @@ SBVisualPrimitive >> addPropertyMapping: anSBVPPropertyMapping [
 	propertyMapping position
 		caseOf: {
 			[#shape] -> [self shape: value].
-			[#innerLabel] -> [self innerLabel: value].
+			[#innerLabel] -> [self innerLabel: propertyMapping getMorph].
 			[#connections] -> [
 				self connections: OrderedCollection new.
 				value do: [:connection |
@@ -98,7 +98,10 @@ SBVisualPrimitive >> addPropertyMapping: anSBVPPropertyMapping [
 						ifNil: [connection asVisualPrimitive]
 						ifNotNil: [SBVisualPrimitive newFromObject: connection in: self owner].
 					self addConnection: child]]}
-		otherwise: [(self labelPositions includes: propertyMapping position) ifTrue: [self setLabelAt: propertyMapping position to: value]]
+		otherwise: [
+			(self labelPositions includes: propertyMapping position) ifTrue: [
+				self blockDict at: propertyMapping position put: propertyMapping getMorph.
+				self setLabelAt: propertyMapping position to: value]]
 ]
 
 { #category : #accessing }
@@ -229,7 +232,7 @@ SBVisualPrimitive >> innerLabel [
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> innerLabel: anObject [
+SBVisualPrimitive >> innerLabel: aMorph [
 
 	| morph |
 	(self blockDict at: #innerLabel)
@@ -237,8 +240,8 @@ SBVisualPrimitive >> innerLabel: anObject [
 		addMorphBack: (morph := shape new
 			hResizing: #shrinkWrap;
 			vResizing: #shrinkWrap).
-	self labelDict at: #innerLabel put: (self getLabelContents: anObject).
-	morph addMorphBack: (self getLabelMorph: anObject)
+	self labelDict at: #innerLabel put: (self getLabelContents: aMorph).
+	morph addMorphBack: aMorph
 ]
 
 { #category : #'as yet unclassified' }
@@ -340,7 +343,7 @@ SBVisualPrimitive >> printOn: aStream [
 { #category : #accessing }
 SBVisualPrimitive >> propertyAt: aSymbol [
 
-	aSymbol = #innerLabel ifTrue: [^ self innerLabel].
+	aSymbol = #innerLabel ifTrue: [^ self innerLabel contents].
 	(self labelPositions includes: aSymbol) ifTrue: [
 		^ self blockDict
 			at: aSymbol

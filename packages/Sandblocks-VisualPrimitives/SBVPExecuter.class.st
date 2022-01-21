@@ -113,6 +113,41 @@ SBVPExecuter class >> exampleBuildHeapBrokenBindings: aTree [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPExecuter class >> exampleBuildHeapStrings: aTree [
+
+	self
+		example: [SBVPExecuter]
+		args: [
+			{
+				(SBVPStringDummyNode buildTree: {
+					'b' -> {
+						'asda' -> {
+							'asd' -> {'ös' -> {'rt4'. 'bbbbbb'}. 'ghui' -> {'dödö'}}.
+							'alk' -> {'rüdiger' -> {'britta'. 'wante'}. 'onkqel' -> {'baum'}}}}}) showAsVisualPrimitive}]
+		label: 'example'.
+	^ (SBVPCase
+		input: (SBVPGroupPattern patterns: {
+			SBVPBindingPattern bindingIndex: #a connections: {
+				SBVPEllipsisPattern bindingIndex: #b.
+				SBVPBindingPattern
+					bindingIndex: #boi
+					connections: {SBVPEllipsisPattern bindingIndex: #e}.
+				SBVPEllipsisPattern bindingIndex: #d}.
+			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label < (bindings at: #boi) label]})
+		output: (SBVPGroupPattern patterns: {
+			SBVPBindingPattern bindingIndex: #boi connections: {
+				SBVPEllipsisPattern bindingIndex: #b.
+				SBVPBindingPattern
+					bindingIndex: #a
+					connections: {SBVPEllipsisPattern bindingIndex: #e}.
+				SBVPEllipsisPattern bindingIndex: #d}})
+		strategy: (Dictionary new
+			add: #explicitRootMatching -> false;
+			add: #explicitChildrenMatching -> false;
+			yourself)) replaceAllMatches: aTree
+]
+
+{ #category : #'as yet unclassified' }
 SBVPExecuter class >> exampleBuildHeapTest: aTree [
 
 	self
