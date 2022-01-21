@@ -398,8 +398,8 @@ SBVisualPrimitive >> shape: aClass [
 	innerBlock := aClass new
 		vResizing: #shrinkWrap;
 		hResizing: #shrinkWrap.
-	innerLabel ifNotNil: [:label | innerBlock addMorphBack: label].
-	innerBlockWrapper addMorphBack: innerBlock
+	innerBlockWrapper addMorphBack: innerBlock.
+	innerLabel ifNotNil: [:label | innerBlock addMorphBack: label]
 ]
 
 { #category : #'as yet unclassified' }

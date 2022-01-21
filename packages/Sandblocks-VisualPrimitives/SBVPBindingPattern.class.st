@@ -4,7 +4,6 @@ Class {
 	#instVars : [
 		'firstChildOffset',
 		'canMatchAllChildren',
-		'connectionBlocks',
 		'constant',
 		'bindingIndex',
 		'writeBackClosure',
@@ -256,12 +255,6 @@ SBVPBindingPattern >> bindingIndexChanged [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPBindingPattern >> bindingOf: aSymbol [
-
-	self halt
-]
-
-{ #category : #'as yet unclassified' }
 SBVPBindingPattern >> buildChildrenFromBinding: aDict [
 
 	^ self connections gather: [:pattern | pattern buildFromBinding: aDict]
@@ -341,18 +334,6 @@ SBVPBindingPattern >> collectBindingsInto: aCollection [
 
 	super collectBindingsInto: aCollection.
 	aCollection add: self bindingBlock
-]
-
-{ #category : #accessing }
-SBVPBindingPattern >> connectionBlocks [
-
-	^ connectionBlocks
-]
-
-{ #category : #accessing }
-SBVPBindingPattern >> connectionBlocks: aCollection [
-
-	connections := aCollection
 ]
 
 { #category : #accessing }
