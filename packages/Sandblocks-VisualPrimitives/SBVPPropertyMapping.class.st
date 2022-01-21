@@ -12,27 +12,31 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBVPPropertyMapping class >> defaultGetterBlockWith: aSymbol on: anObject [
+
+	^ aSymbol isSymbol
+		ifTrue: [[anObject perform: aSymbol asSimpleGetter]]
+		ifFalse: [[aSymbol]]
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPropertyMapping class >> defaultSetterBlockWith: aSymbol for: anotherSymbol on: anObject [
+
+	^ aSymbol isSymbol
+		ifTrue: [[:vp | anObject perform: aSymbol asSimpleSetter with: (vp propertyAt: anotherSymbol)]]
+		ifFalse: [
+			[:vp | "do nothing, because value should be constant"
+			]]
+]
+
+{ #category : #'as yet unclassified' }
 SBVPPropertyMapping class >> fromAssociation: anAssociation for: anObject [
 
 	| getterBlock setterBlock |
-	getterBlock := anAssociation value isSymbol
-		ifTrue: [[anObject perform: anAssociation value]]
-		ifFalse: [[anAssociation value]].
-	setterBlock := anAssociation value isSymbol
-		ifTrue: [
-			[:vp |
-				anObject
-					perform: anAssociation value asSimpleSetter
-					with: (vp labelDict at: anAssociation key ifAbsent: [vp perform: anAssociation key asSimpleGetter])]]
-		ifFalse: [
-			[:vp | "do nothing, because value should be constant"
-			]].
+	getterBlock := self defaultGetterBlockWith: anAssociation value on: anObject.
+	setterBlock := self defaultSetterBlockWith: anAssociation value for: anAssociation key on: anObject.
 	
-	^ SBVPPropertyMapping
-		getter: getterBlock
-		setter: setterBlock
-		position: anAssociation key
-		optionalArgs: Dictionary new
+	^ self getter: getterBlock setter: setterBlock position: anAssociation key optionalArgs: Dictionary new
 ]
 
 { #category : #'as yet unclassified' }
@@ -50,14 +54,10 @@ SBVPPropertyMapping class >> getter: aBlock setter: anotherBlock position: aSymb
 SBVPPropertyMapping class >> property: aSymbol primitiveProperty: anotherSymbol on: anObject [
 
 	| getterBlock setterBlock |
-	getterBlock := [anObject perform: aSymbol asSimpleGetter].
-	setterBlock := [:vp | anObject perform: aSymbol asSimpleSetter with: (vp propertyAt: anotherSymbol)].
+	getterBlock := self defaultGetterBlockWith: aSymbol on: anObject.
+	setterBlock := self defaultSetterBlockWith: aSymbol for: anotherSymbol on: anObject.
 	
-	^ SBVPPropertyMapping
-		getter: getterBlock
-		setter: setterBlock
-		position: anotherSymbol
-		optionalArgs: Dictionary new
+	^ self getter: getterBlock setter: setterBlock position: anotherSymbol optionalArgs: Dictionary new
 ]
 
 { #category : #accessing }

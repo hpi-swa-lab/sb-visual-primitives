@@ -5,17 +5,13 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMappingString class >> property: aSymbol primitiveProperty: anotherSymbol on: anObject [
+SBVPPropertyMappingString class >> defaultSetterBlockWith: aSymbol for: anotherSymbol on: anObject [
 
-	| getterBlock setterBlock |
-	getterBlock := [anObject perform: aSymbol asSimpleGetter].
-	setterBlock := [:vp | anObject perform: aSymbol asSimpleSetter with: (vp propertyAt: anotherSymbol) asString].
-	
-	^ SBVPPropertyMappingString
-		getter: getterBlock
-		setter: setterBlock
-		position: anotherSymbol
-		optionalArgs: Dictionary new
+	^ aSymbol isSymbol
+		ifTrue: [[:vp | anObject perform: aSymbol asSimpleSetter with: (vp propertyAt: anotherSymbol) asString]]
+		ifFalse: [
+			[:vp | "do nothing, because value should be constant"
+			]]
 ]
 
 { #category : #'as yet unclassified' }

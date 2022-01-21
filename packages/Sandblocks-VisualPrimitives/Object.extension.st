@@ -25,6 +25,12 @@ Object >> isVisualPrimitive [
 ]
 
 { #category : #'*Sandblocks-VisualPrimitives' }
+Object >> propertyMappingClass [
+
+	^ SBVPPropertyMapping
+]
+
+{ #category : #'*Sandblocks-VisualPrimitives' }
 Object >> showAsVisualPrimitive [
 	"marker"
 	^ self

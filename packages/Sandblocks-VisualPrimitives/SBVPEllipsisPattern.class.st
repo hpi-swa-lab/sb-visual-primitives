@@ -86,7 +86,7 @@ SBVPEllipsisPattern >> isImplicitChild: aBoolean [
 	previousImplicit = self isImplicitChild ifTrue: [^ self].
 	setColor := [:color |
 		self childSandblocksDo: [:block | block color: color].
-		self firstSubmorph firstSubmorph color: color].
+		self firstSubmorph firstSubmorph class = SBColumn ifFalse: [self firstSubmorph firstSubmorph color: color]].
 	self isImplicitChild
 		ifTrue: [setColor value: Color gray]
 		ifFalse: [setColor value: Color black].

@@ -158,19 +158,20 @@ SBVPExecuter class >> exampleBuildHeapTest: aTree [
 		label: 'example'.
 	^ (SBVPCase
 		input: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern bindingIndex: #a connections: {
-				SBVPEllipsisPattern bindingIndex: #'i_a'.
+			SBVPBindingPattern bindingIndex: #a labelDict: {} connections: {
+				SBVPEllipsisPattern bindingIndex: #'i_a' labelDict: {}.
 				SBVPBindingPattern
 					bindingIndex: #boi
-					connections: {SBVPEllipsisPattern bindingIndex: #'i_c'}.
-				SBVPEllipsisPattern bindingIndex: #'i_b'}.
-			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label asInteger < (bindings at: #boi) label asInteger and: [(bindings at: #'i_c') size < 2]]})
+					labelDict: {}
+					connections: {SBVPEllipsisPattern bindingIndex: #'i_c' labelDict: {}}.
+				SBVPEllipsisPattern bindingIndex: #'i_b' labelDict: {}}.
+			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label < (bindings at: #boi) label and: [(bindings at: #'i_c') size < 2]]})
 		output: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern bindingIndex: #boi connections: {
-				SBVPEllipsisPattern bindingIndex: #'i_c'.
-				SBVPBindingPattern
-					bindingIndex: #a
-					connections: {SBVPEllipsisPattern bindingIndex: #'i_a'. SBVPEllipsisPattern bindingIndex: #'i_b'}}})
+			SBVPBindingPattern bindingIndex: #boi labelDict: {} connections: {
+				SBVPEllipsisPattern bindingIndex: #'i_c' labelDict: {}.
+				SBVPBindingPattern bindingIndex: #a labelDict: {} connections: {
+					SBVPEllipsisPattern bindingIndex: #'i_a' labelDict: {}.
+					SBVPEllipsisPattern bindingIndex: #'i_b' labelDict: {}}}})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> false;
 			add: #explicitChildrenMatching -> false;

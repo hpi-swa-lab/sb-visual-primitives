@@ -8,7 +8,7 @@ Class {
 		'objectName',
 		'objectValue'
 	],
-	#category : #'Sandblocks-VisualPrimitives'
+	#category : #'Sandblocks-VisualPrimitives-Fixtures'
 }
 
 { #category : #'as yet unclassified' }
@@ -44,8 +44,14 @@ SBVPTomGrammarObject >> content: anObject [
 SBVPTomGrammarObject >> dynamicVisualPrimitiveMapping [
 
 	^ {
-		#topLeftLabel -> #type.
-		#innerLabel -> #objectName.
+		SBVPPropertyMappingString
+			property: #type
+			primitiveProperty: #topLeftLabel
+			on: self.
+		SBVPPropertyMappingString
+			property: #objectName
+			primitiveProperty: #innerLabel
+			on: self.
 		SBVPPropertyMapping
 			getter: [(self members ifNil: [self content ifNotNil: [{self content}] ifNil: [{}]]) reject: [:entry | entry isNil]]
 			setter: [:vp | self members: (vp connections collect: [:connection | connection getObjectFromVisualPrimitive])]
@@ -109,21 +115,4 @@ SBVPTomGrammarObject >> type [
 SBVPTomGrammarObject >> type: aString [
 
 	type := aString
-]
-
-{ #category : #'as yet unclassified' }
-SBVPTomGrammarObject >> visualPrimitiveMapping [
-
-	^ {
-		#shape -> CircleMorph.
-		#topLeftLabel -> #type.
-		#innerLabel -> #objectName.
-		SBVPPropertyMapping
-			getter: [(self members ifNil: [self content ifNotNil: [{self content}] ifNil: [{}]]) reject: [:entry | entry isNil]]
-			setter: [:vp | self members: (vp connections collect: [:connection | connection getObjectFromVisualPrimitive])]
-			position: #connections
-			optionalArgs: Dictionary new}
-	"#connections -> ((self members
-			ifNotNil: [self members]
-			ifNil: [self content ifNotNil: [{self content}] ifNil: [{}]]) reject: [:entry | entry isNil])"
 ]
