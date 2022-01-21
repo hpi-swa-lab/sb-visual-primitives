@@ -7,7 +7,7 @@ Class {
 		'parent',
 		'key'
 	],
-	#category : #'Sandblocks-VisualPrimitives'
+	#category : #'Sandblocks-VisualPrimitives-Fixtures'
 }
 
 { #category : #'as yet unclassified' }

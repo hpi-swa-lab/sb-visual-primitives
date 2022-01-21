@@ -81,7 +81,7 @@ SBVisualPrimitive >> addPropertyMapping: anSBVPPropertyMapping [
 	| value propertyMapping child |
 	propertyMapping := anSBVPPropertyMapping.
 	anSBVPPropertyMapping isPropertyMapping ifFalse: [
-		propertyMapping := SBVPPropertyMapping
+		propertyMapping := anSBVPPropertyMapping value propertyMappingClass
 			fromAssociation: anSBVPPropertyMapping
 			for: self origin].
 	value := propertyMapping getter value.
@@ -100,7 +100,9 @@ SBVisualPrimitive >> addPropertyMapping: anSBVPPropertyMapping [
 					self addConnection: child]]}
 		otherwise: [
 			(self labelPositions includes: propertyMapping position) ifTrue: [
-				self blockDict at: propertyMapping position put: propertyMapping getMorph.
+				(self blockDict at: propertyMapping position)
+					removeAllMorphs;
+					addMorphBack: propertyMapping getMorph.
 				self setLabelAt: propertyMapping position to: value]]
 ]
 
@@ -172,7 +174,7 @@ SBVisualPrimitive >> getLabelContents: anObject [
 
 	^ (anObject isString or: [anObject isNumber])
 		ifTrue: [anObject]
-		ifFalse: [anObject contents]
+		ifFalse: [anObject firstSubmorph contents]
 ]
 
 { #category : #accessing }
