@@ -302,6 +302,14 @@ SBVisualPrimitive >> layout [
 ]
 
 { #category : #'as yet unclassified' }
+SBVisualPrimitive >> leftSibling [
+
+	^ self parent ifNotNil: [:parent | | index |
+		index := parent connections indexOf: self.
+		index > 1 ifTrue: [parent connections at: index - 1]]
+]
+
+{ #category : #'as yet unclassified' }
 SBVisualPrimitive >> middleLabelPositions [
 
 	^ {#leftLabel. #innerLabel. #rightLabel}
@@ -359,6 +367,14 @@ SBVisualPrimitive >> removeConnection: aVisualPrimitive [
 	self withDecorator: SBTreeDecorator do: [:dec | dec removeChild: aVisualPrimitive].
 	self connections remove: aVisualPrimitive.
 	aVisualPrimitive parent: nil
+]
+
+{ #category : #'as yet unclassified' }
+SBVisualPrimitive >> rightSibling [
+
+	^ self parent ifNotNil: [:parent | | index |
+		index := parent connections indexOf: self.
+		index < parent connections size ifTrue: [parent connections at: index + 1]]
 ]
 
 { #category : #accessing }

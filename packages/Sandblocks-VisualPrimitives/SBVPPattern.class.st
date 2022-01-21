@@ -8,6 +8,16 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBVPPattern class >> registerShortcuts: aProvider [
+
+	aProvider
+		registerShortcut: $h do: #selectLeftSibling;
+		registerShortcut: $j do: #selectCenterChild;
+		registerShortcut: $k do: #selectParent;
+		registerShortcut: $l do: #selectRightSibling
+]
+
+{ #category : #'as yet unclassified' }
 SBVPPattern >> addImplicitChildren: anArray [
 
 	
@@ -54,7 +64,7 @@ SBVPPattern >> getNext: aVisualPrimitive [
 { #category : #'as yet unclassified' }
 SBVPPattern >> identifierForIndex: aNumber [
 
-	^ ('i_', (Character alphabet at: aNumber)) asSymbol
+	^ ('i_', (Character alphabet at: aNumber - 1 // 26 + 1), (Character alphabet at: aNumber - 1 \\ 26 + 1)) asSymbol
 ]
 
 { #category : #accessing }
@@ -111,6 +121,34 @@ SBVPPattern >> reset [
 	"do nothing"
 
 	
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPattern >> selectCenterChild [
+	<action>
+
+	self connections ifNotEmpty: [(self connections at: self connections size + 1 / 2) select]
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPattern >> selectLeftSibling [
+	<action>
+
+	self leftSibling ifNotNil: #select
+]
+
+{ #category : #accessing }
+SBVPPattern >> selectParent [
+	<action>
+
+	self parent ifNotNil: #select
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPattern >> selectRightSibling [
+	<action>
+
+	self rightSibling ifNotNil: #select
 ]
 
 { #category : #'as yet unclassified' }

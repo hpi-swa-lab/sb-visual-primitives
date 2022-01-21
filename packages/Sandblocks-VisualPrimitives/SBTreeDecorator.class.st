@@ -13,7 +13,8 @@ Class {
 		'ancestor',
 		'shift',
 		'change',
-		'connectorToParent'
+		'connectorToParent',
+		'thread'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
@@ -100,29 +101,34 @@ SBTreeDecorator >> apportion: aDefaultAncestor [
 		sor := self mod.
 		sil := vil mod.
 		sol := vol mod.
-		[vil children notEmpty and: vir children notEmpty] whileTrue: [
-			vil := vil children last.
-			vir := vir children first.
-			vol := vol children first.
-			vor := vor children last.
+		[vil nextRight notNil and: vir nextLeft notNil] whileTrue: [
+			vil := vil nextRight.
+			vir := vir nextLeft.
+			vol := vol nextLeft.
+			vor := vor nextRight.
 			vor ancestor: self.
-			shift := vil x + sil - (vir x + sir) + self distance.
+			shift := (vil x + sil ) - (vir x + sir) + self distance.
+
 			shift > 0 ifTrue: [ | a |
 				a := (self parent children includes: vil ancestor)
 					ifTrue: [vil ancestor]
-					ifFalse: [aDefaultAncestor].
+					ifFalse: [newDefaultAncestor].
 				a moveSubtree: self by: shift.
 				sir := sir + shift.
 				sor := sor + shift].
 			sil := sil + vil mod.
 			sir := sir + vir mod.
 			sol := sol + vol mod.
-			sor := sor + vor mod.
-			(vil children notEmpty and: vor children isEmpty)
-				ifTrue: [vor mod: vor mod + sil - sor]
+			sor := sor + vor mod].
+			(vil nextRight notNil and: vor nextRight isNil)
+				ifTrue: [
+					vor thread: vil nextRight.
+					vor mod: vor mod + sil - sor]
 				ifFalse: [
-					(vir children notEmpty and: vol children isEmpty) ifTrue: [vol mod: vol mod + sir - sol].
-					newDefaultAncestor := self]]].
+					(vir nextLeft notNil and: vol nextLeft isNil) ifTrue: [
+						vol thread: vir nextLeft.
+						vol mod: vol mod + sir - sol].
+					newDefaultAncestor := self]].
 	^ newDefaultAncestor
 ]
 
@@ -242,22 +248,24 @@ SBTreeDecorator >> layout [
 		self
 			resetAll;
 			firstWalk;
+			assert: self mod = 0;
 			secondWalk: 0 layerHeights: self maximumHeight]
 ]
 
 { #category : #'as yet unclassified' }
 SBTreeDecorator >> leftMostSibling [
 
-	self parent ifNil: [^ nil] ifNotNil: [^ self parent children first]
+	^ self parent ifNotNil: [ | left |
+		left := self parent children first.
+		left = self ifFalse: [left]]
 ]
 
 { #category : #'as yet unclassified' }
 SBTreeDecorator >> leftSibling [
 
-	self parent ifNil: [^ nil] ifNotNil: [ | last |
-		last := nil.
-		self parent children do: [:child | child = self ifTrue: [^ last] ifFalse: [last := child]].
-		^ self parent children]
+	^ self parent ifNotNil: [:parent | | index |
+		index := parent children indexOf: self.
+		index > 1 ifTrue: [parent children at: index - 1]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -293,6 +301,18 @@ SBTreeDecorator >> moveSubtree: aNode by: aShiftValue [
 	self change: self change + aShiftValue / numberOfSubtrees
 ]
 
+{ #category : #'as yet unclassified' }
+SBTreeDecorator >> nextLeft [
+
+	^ self children ifEmpty: [self thread] ifNotEmpty: [self children first]
+]
+
+{ #category : #nil }
+SBTreeDecorator >> nextRight [
+
+	^ self children ifEmpty: [self thread] ifNotEmpty: [self children last]
+]
+
 { #category : #accessing }
 SBTreeDecorator >> parent [
 
@@ -320,7 +340,10 @@ SBTreeDecorator >> reset [
 	depth := 1.
 	mod := 0.
 	shift := 0.
-	change := 0
+	change := 0.
+	ancestor := self.
+	thread := nil.
+	x := -1000
 ]
 
 { #category : #'as yet unclassified' }
@@ -355,21 +378,19 @@ SBTreeDecorator >> shift: anObject [
 { #category : #'as yet unclassified' }
 SBTreeDecorator >> siblingIndex [
 
-	^ self parent ifNotNil: [self parent children indexOf: self] ifNil: [0]
+	^ self parent ifNotNil: [self parent children indexOf: self] ifNil: [1]
 ]
 
-{ #category : #'as yet unclassified' }
-SBTreeDecorator >> traverse [
+{ #category : #accessing }
+SBTreeDecorator >> thread [
 
-	| index desiredX |
-	index := 0.
-	self x: 0.
-	self children do: [:child |
-		child depth: self depth + 1.
-		child traverse.
-		index := index + 1.
-		child x: index].
-	desiredX := self children length - 1 / 2
+	^ thread
+]
+
+{ #category : #accessing }
+SBTreeDecorator >> thread: anObject [
+
+	thread := anObject
 ]
 
 { #category : #accessing }
