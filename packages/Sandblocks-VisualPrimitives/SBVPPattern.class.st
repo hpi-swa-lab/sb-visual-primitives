@@ -51,6 +51,12 @@ SBVPPattern >> getNext: aVisualPrimitive [
 	^ false
 ]
 
+{ #category : #'as yet unclassified' }
+SBVPPattern >> identifierForIndex: aNumber [
+
+	^ ('i_', (Character alphabet at: aNumber)) asSymbol
+]
+
 { #category : #accessing }
 SBVPPattern >> initialize [
 
@@ -74,6 +80,20 @@ SBVPPattern >> isImplicitChild: aBoolean [
 SBVPPattern >> matches: aVisualPrimitive withBinding: aCollection [
 
 	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPattern >> nextIdentifier [
+
+	| invalidIdentifiers currentAttempt possibleIdentifer |
+	invalidIdentifiers := Array streamContents: [:stream | self allPatternsDo: [:pattern | stream nextPut: pattern bindingIndex]].
+	
+	currentAttempt := 1.
+	[
+		possibleIdentifer := self identifierForIndex: currentAttempt.
+		invalidIdentifiers includes: possibleIdentifer] whileTrue: [currentAttempt := currentAttempt + 1].
+	
+	^ possibleIdentifer
 ]
 
 { #category : #'as yet unclassified' }

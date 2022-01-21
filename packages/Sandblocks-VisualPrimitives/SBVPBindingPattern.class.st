@@ -168,7 +168,7 @@ SBVPBindingPattern >> addNewChild [
 	<action>
 
 	| newChild |
-	newChild := self class bindingIndex: #boio.
+	newChild := self class bindingIndex: self root nextIdentifier.
 	self addConnection: newChild.
 	self owner addMorphBack: newChild.
 	self root attachTreeDecorator.
@@ -180,9 +180,10 @@ SBVPBindingPattern >> addNewParent [
 	<action>
 
 	| newParent |
-	newParent := self class bindingIndex: #parent.
-	self parent addConnection: newParent afterIndex: self siblingIndex.
-	self parent removeConnection: self.
+	newParent := self class bindingIndex: self root nextIdentifier.
+	self parent ifNotNil: [
+		self parent addConnection: newParent afterIndex: self siblingIndex.
+		self parent removeConnection: self].
 	newParent addConnection: self.
 	self owner addMorphBack: newParent.
 	self allPatternsDo: [:pattern | pattern detachDecorators: SBTreeDecorator].
@@ -291,7 +292,7 @@ SBVPBindingPattern >> buildImplicitChildren: aDict [
 	oldConnections := self connections copy.
 	
 	addImplicitChild := [:index | | implicitChild bindingIndex |
-		bindingIndex := self implicitChildIdentifierForIndex: nextIndex.
+		bindingIndex := self root nextIdentifier.
 		implicitChild := SBVPEllipsisPattern bindingIndex: bindingIndex.
 		implicitChild isImplicitChild: true.
 		self addConnection: implicitChild afterIndex: index + implicitChildren size.
@@ -439,12 +440,6 @@ SBVPBindingPattern >> getNext: aVisualPrimitive [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPBindingPattern >> implicitChildIdentifierForIndex: aNumber [
-
-	^ ('i_', (Character alphabet at: aNumber)) asSymbol
-]
-
-{ #category : #'as yet unclassified' }
 SBVPBindingPattern >> indexOffset [
 
 	^ 0
@@ -494,6 +489,13 @@ SBVPBindingPattern >> matches: aVisualPrimitive withBinding: aCollection [
 			withBinding: aCollection.
 		offset := offset + connection indexOffset.
 		wasSuccessful]
+]
+
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern >> noteNewOwner: newOwner [
+
+	super noteNewOwner: newOwner.
+	self parentCase ifNotNil: [:case | case defaultPatternVisualizationClass ifNotNil: [:visClass | self addPropertyMappings: visClass staticVisualPrimitiveMapping]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -601,9 +603,13 @@ SBVPBindingPattern >> writeBackClosureString: aString [
 SBVPBindingPattern >> writeLabelDictOn: aStream [
 	"Currently only works when we have text bubbles. Otherwise we need to get a smart solution for this."
 
+	| staticMapping |
+	staticMapping := self parentCase defaultPatternVisualizationClass staticVisualPrimitiveMapping.
 	aStream nextPutAll: ' labelDict: {'.
 	self blockDict keysAndValuesDo: [:position :block | | value |
-		((position = #innerLabel) not and: [block submorphs notEmpty]) ifTrue: [
+		((position = #innerLabel) not
+			and: [block submorphs notEmpty]
+			and: [(staticMapping anySatisfy: [:association | association key = position]) not]) ifTrue: [
 			"We avoid the innerlabel as it is enclosed in the shape morph and is currently used as bindingIndex."
 			value := block firstSubmorph contents.
 			position printOn: aStream.

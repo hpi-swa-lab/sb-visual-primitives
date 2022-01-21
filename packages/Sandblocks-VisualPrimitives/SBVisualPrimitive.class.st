@@ -65,8 +65,7 @@ SBVisualPrimitive class >> selector: aString receiverMatches: aMessage [
 { #category : #accessing }
 SBVisualPrimitive >> addConnection: aVisualPrimitive [
 
-	self connections add: aVisualPrimitive.
-	aVisualPrimitive parent: self
+	self addConnection: aVisualPrimitive afterIndex: self connections size
 ]
 
 { #category : #accessing }
