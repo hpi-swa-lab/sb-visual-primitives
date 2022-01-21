@@ -44,9 +44,10 @@ SBVPTomGrammarObject >> content: anObject [
 SBVPTomGrammarObject >> dynamicVisualPrimitiveMapping [
 
 	^ {
-		SBVPPropertyMappingString
+		SBVPPropertyMappingSelect
 			property: #type
 			primitiveProperty: #topLeftLabel
+			choices: {'SEQ'. 'REPEAT'. 'REPEAT1'. 'SYMBOL'}
 			on: self.
 		SBVPPropertyMappingString
 			property: #objectName

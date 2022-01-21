@@ -102,8 +102,8 @@ SBVisualPrimitive >> addPropertyMapping: anSBVPPropertyMapping [
 			(self labelPositions includes: propertyMapping position) ifTrue: [
 				(self blockDict at: propertyMapping position)
 					removeAllMorphs;
-					addMorphBack: propertyMapping getMorph.
-				self setLabelAt: propertyMapping position to: value]]
+					addMorphBack: propertyMapping getMorph
+				"self setLabelAt: propertyMapping position to: value"]]
 ]
 
 { #category : #accessing }
@@ -373,6 +373,7 @@ SBVisualPrimitive >> root [
 SBVisualPrimitive >> setLabelAt: aSymbol to: anObject [
 
 	| morphy positionBlock |
+	self halt.
 	morphy := self getLabelMorph: anObject.
 	positionBlock := self blockDict at: aSymbol.
 	positionBlock
