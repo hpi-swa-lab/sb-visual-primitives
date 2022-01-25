@@ -111,8 +111,6 @@ SBVPBindingPattern class >> newFor: aBlock [
 { #category : #'as yet unclassified' }
 SBVPBindingPattern class >> registerShortcuts: aProvider [
 
-	super registerShortcuts: aProvider.
-	
 	aProvider
 		registerShortcut: Character backspace do: #deleteSubtree;
 		registerShortcut: Character delete do: #deleteSubtree;
@@ -245,7 +243,7 @@ SBVPBindingPattern >> bindingIndexAutoCast [
 
 	^ [:name :owner | | case |
 		case := self parentCase.
-		(case notNil and: [name hasOwner: case input])
+		(case notNil and: [(name hasOwner: case input) and: [(name ownerSatisfying: [:o | o isBlockBody]) isNil]])
 			ifTrue: [name behaviorClass: SBStDeclarationForVPBinding]
 			ifFalse: [name behaviorClass: SBStBinding]]
 ]
