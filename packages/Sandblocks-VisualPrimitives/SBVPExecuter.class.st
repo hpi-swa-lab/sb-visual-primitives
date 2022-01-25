@@ -113,6 +113,58 @@ SBVPExecuter class >> exampleBuildHeapBrokenBindings: aTree [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPExecuter class >> exampleBuildHeapChain: aTree [
+
+	| maxHeap |
+	self
+		example: [SBVPExecuter]
+		args: [
+			{
+				(SBVPDummyNode buildTree: {9 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}) showAsVisualPrimitive}]
+		label: 'example'.
+	maxHeap := (SBVPCase
+		input: (SBVPGroupPattern patterns: {
+			SBVPBindingPattern bindingIndex: #a connections: {
+				SBVPEllipsisPattern bindingIndex: #b.
+				SBVPBindingPattern
+					bindingIndex: #boi
+					connections: {SBVPEllipsisPattern bindingIndex: #e}.
+				SBVPEllipsisPattern bindingIndex: #d}.
+			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label asInteger < (bindings at: #boi) label asInteger]})
+		output: (SBVPGroupPattern patterns: {
+			SBVPBindingPattern bindingIndex: #boi connections: {
+				SBVPEllipsisPattern bindingIndex: #b.
+				SBVPBindingPattern
+					bindingIndex: #a
+					connections: {SBVPEllipsisPattern bindingIndex: #e}.
+				SBVPEllipsisPattern bindingIndex: #d}})
+		strategy: (Dictionary new
+			add: #explicitRootMatching -> false;
+			add: #explicitChildrenMatching -> false;
+			yourself)) replaceAllMatches: aTree.
+	^ (SBVPCase
+		input: (SBVPGroupPattern patterns: {
+			SBVPBindingPattern bindingIndex: #a connections: {
+				SBVPEllipsisPattern bindingIndex: #b.
+				SBVPBindingPattern
+					bindingIndex: #boi
+					connections: {SBVPEllipsisPattern bindingIndex: #e}.
+				SBVPEllipsisPattern bindingIndex: #d}.
+			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label asInteger > (bindings at: #boi) label asInteger]})
+		output: (SBVPGroupPattern patterns: {
+			SBVPBindingPattern bindingIndex: #boi connections: {
+				SBVPEllipsisPattern bindingIndex: #b.
+				SBVPBindingPattern
+					bindingIndex: #a
+					connections: {SBVPEllipsisPattern bindingIndex: #e}.
+				SBVPEllipsisPattern bindingIndex: #d}})
+		strategy: (Dictionary new
+			add: #explicitRootMatching -> false;
+			add: #explicitChildrenMatching -> false;
+			yourself)) replaceAllMatches: maxHeap
+]
+
+{ #category : #'as yet unclassified' }
 SBVPExecuter class >> exampleBuildHeapStrings: aTree [
 
 	self

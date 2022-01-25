@@ -14,6 +14,21 @@ SBVPEllipsisPattern >> addImplicitChildren: aDict [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPEllipsisPattern >> bindingIndexWithImplicitPrefix: aBoolean [
+
+	self bindingIndex ifNil: [^ nil].
+	aBoolean
+		ifTrue: [
+			(self bindingIndex beginsWith: self implicitPrefix)
+				ifTrue: [^ self bindingIndex]
+				ifFalse: [^ self implicitPrefix, self bindingIndex]]
+		ifFalse: [
+			(self bindingIndex beginsWith: self implicitPrefix)
+				ifTrue: [^ self bindingIndex from: self implicitPrefix size + 1]
+				ifFalse: [^ self bindingIndex]]
+]
+
+{ #category : #'as yet unclassified' }
 SBVPEllipsisPattern >> buildFromBinding: anArray [
 
 	^ (anArray at: self bindingIndex) veryDeepCopy
@@ -64,6 +79,12 @@ SBVPEllipsisPattern >> getNext: aVisualPrimitive [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPEllipsisPattern >> implicitPrefix [
+
+	^ 'i_'
+]
+
+{ #category : #'as yet unclassified' }
 SBVPEllipsisPattern >> indexOffset [
 
 	^ self currentSize - 1
@@ -80,10 +101,12 @@ SBVPEllipsisPattern >> initialize [
 { #category : #'as yet unclassified' }
 SBVPEllipsisPattern >> isImplicitChild: aBoolean [
 
-	| setColor previousImplicit |
+	| setColor previousImplicit prevBindingIndex |
 	previousImplicit := self isImplicitChild.
 	super isImplicitChild: aBoolean.
 	previousImplicit = self isImplicitChild ifTrue: [^ self].
+	prevBindingIndex := self bindingIndex.
+	self bindingIndex: (self bindingIndexWithImplicitPrefix: aBoolean).
 	setColor := [:color |
 		self childSandblocksDo: [:block | block color: color].
 		self firstSubmorph firstSubmorph class = SBColumn ifFalse: [self firstSubmorph firstSubmorph color: color]].
@@ -91,7 +114,7 @@ SBVPEllipsisPattern >> isImplicitChild: aBoolean [
 		ifTrue: [setColor value: Color gray]
 		ifFalse: [setColor value: Color black].
 	"If called with isImplicitChild not changing, this leads to an infinite loop."
-	self parentCase ifNotNil: [:parentCase | parentCase toggleImplicitChildTo: self isImplicitChild withBinding: self bindingIndex]
+	self parentCase ifNotNil: [:parentCase | parentCase toggleImplicitChildTo: self isImplicitChild withBinding: prevBindingIndex]
 ]
 
 { #category : #'as yet unclassified' }

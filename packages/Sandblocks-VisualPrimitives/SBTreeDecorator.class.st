@@ -107,8 +107,8 @@ SBTreeDecorator >> apportion: aDefaultAncestor [
 			vol := vol nextLeft.
 			vor := vor nextRight.
 			vor ancestor: self.
-			shift := (vil x + sil ) - (vir x + sir) + self distance.
-
+			shift := vil x + sil - (vir x + sir) + self distance.
+			
 			shift > 0 ifTrue: [ | a |
 				a := (self parent children includes: vil ancestor)
 					ifTrue: [vil ancestor]
@@ -120,15 +120,15 @@ SBTreeDecorator >> apportion: aDefaultAncestor [
 			sir := sir + vir mod.
 			sol := sol + vol mod.
 			sor := sor + vor mod].
-			(vil nextRight notNil and: vor nextRight isNil)
-				ifTrue: [
-					vor thread: vil nextRight.
-					vor mod: vor mod + sil - sor]
-				ifFalse: [
-					(vir nextLeft notNil and: vol nextLeft isNil) ifTrue: [
-						vol thread: vir nextLeft.
-						vol mod: vol mod + sir - sol].
-					newDefaultAncestor := self]].
+		(vil nextRight notNil and: vor nextRight isNil)
+			ifTrue: [
+				vor thread: vil nextRight.
+				vor mod: vor mod + sil - sor]
+			ifFalse: [
+				(vir nextLeft notNil and: vol nextLeft isNil) ifTrue: [
+					vol thread: vir nextLeft.
+					vol mod: vol mod + sir - sol].
+				newDefaultAncestor := self]].
 	^ newDefaultAncestor
 ]
 
