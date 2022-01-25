@@ -25,7 +25,7 @@ SBVPTomGrammarObject class >> fromJsonObject: aJsonObject [
 { #category : #'as yet unclassified' }
 SBVPTomGrammarObject class >> staticVisualPrimitiveMapping [
 
-	^ {#shape -> CircleMorph}
+	^ {#shape -> CircleMorph new}
 ]
 
 { #category : #accessing }
@@ -44,9 +44,10 @@ SBVPTomGrammarObject >> content: anObject [
 SBVPTomGrammarObject >> dynamicVisualPrimitiveMapping [
 
 	^ {
-		SBVPPropertyMappingString
+		SBVPPropertyMappingSelect
 			property: #type
 			primitiveProperty: #topLeftLabel
+			choices: {'SEQ'. 'REPEAT'. 'REPEAT1'. 'SYMBOL'}
 			on: self.
 		SBVPPropertyMappingString
 			property: #objectName
@@ -55,8 +56,7 @@ SBVPTomGrammarObject >> dynamicVisualPrimitiveMapping [
 		SBVPPropertyMapping
 			getter: [(self members ifNil: [self content ifNotNil: [{self content}] ifNil: [{}]]) reject: [:entry | entry isNil]]
 			setter: [:vp | self members: (vp connections collect: [:connection | connection getObjectFromVisualPrimitive])]
-			position: #connections
-			optionalArgs: Dictionary new}
+			position: #connections}
 ]
 
 { #category : #'as yet unclassified' }

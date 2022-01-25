@@ -234,8 +234,8 @@ SBVPBindingPattern >> bindingIndex: anObject [
 		behavior: SBStDeclarationForBlock new;
 		contents: bindingIndex asString.
 	label when: #contentsChanged send: #bindingIndexChanged to: self.
-	self innerLabel: label.
-	self labelDict removeKey: #innerLabel
+	self innerLabel: label
+	"self labelDict removeKey: #innerLabel"
 ]
 
 { #category : #accessing }
@@ -348,7 +348,7 @@ SBVPBindingPattern >> constant: anObject [
 	constant := anObject isSandblock
 		ifTrue: [
 			self innerLabel: anObject.
-			self labelDict removeKey: #innerLabel.
+			"self labelDict removeKey: #innerLabel."
 			anObject evaluate ifNil: [#placeholder]]
 		ifFalse: [anObject]
 ]

@@ -4,9 +4,7 @@ Class {
 	#instVars : [
 		'getter',
 		'setter',
-		'position',
-		'color',
-		'shape'
+		'position'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
@@ -36,17 +34,16 @@ SBVPPropertyMapping class >> fromAssociation: anAssociation for: anObject [
 	getterBlock := self defaultGetterBlockWith: anAssociation value on: anObject.
 	setterBlock := self defaultSetterBlockWith: anAssociation value for: anAssociation key on: anObject.
 	
-	^ self getter: getterBlock setter: setterBlock position: anAssociation key optionalArgs: Dictionary new
+	^ self getter: getterBlock setter: setterBlock position: anAssociation key
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMapping class >> getter: aBlock setter: anotherBlock position: aSymbol optionalArgs: aDict [
+SBVPPropertyMapping class >> getter: aBlock setter: anotherBlock position: aSymbol [
 
 	^ self new
 		getter: aBlock;
 		setter: anotherBlock;
 		position: aSymbol;
-		color: (aDict at: #color ifPresent: [:color | color] ifAbsent: []);
 		yourself
 ]
 
@@ -57,19 +54,7 @@ SBVPPropertyMapping class >> property: aSymbol primitiveProperty: anotherSymbol 
 	getterBlock := self defaultGetterBlockWith: aSymbol on: anObject.
 	setterBlock := self defaultSetterBlockWith: aSymbol for: anotherSymbol on: anObject.
 	
-	^ self getter: getterBlock setter: setterBlock position: anotherSymbol optionalArgs: Dictionary new
-]
-
-{ #category : #accessing }
-SBVPPropertyMapping >> color [
-
-	^ color
-]
-
-{ #category : #accessing }
-SBVPPropertyMapping >> color: anObject [
-
-	color := anObject
+	^ self getter: getterBlock setter: setterBlock position: anotherSymbol
 ]
 
 { #category : #'as yet unclassified' }
@@ -124,16 +109,4 @@ SBVPPropertyMapping >> setter [
 SBVPPropertyMapping >> setter: anObject [
 
 	setter := anObject
-]
-
-{ #category : #accessing }
-SBVPPropertyMapping >> shape [
-
-	^ shape
-]
-
-{ #category : #accessing }
-SBVPPropertyMapping >> shape: anObject [
-
-	shape := anObject
 ]

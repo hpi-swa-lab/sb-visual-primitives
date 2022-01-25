@@ -56,7 +56,7 @@ SBVPDummyNode class >> fromVisualPrimitive: aVisualPrimitive withParent: aDummyN
 { #category : #'as yet unclassified' }
 SBVPDummyNode class >> staticVisualPrimitiveMapping [
 
-	^ {#shape -> RectangleMorph. #topLeftLabel -> SBIcon iconBug}
+	^ {#shape -> RectangleMorph new. #topLeftLabel -> SBIcon iconBug}
 ]
 
 { #category : #accessing }
@@ -73,8 +73,7 @@ SBVPDummyNode >> dynamicVisualPrimitiveMapping [
 				vp connections size >= 2
 					ifTrue: [self right: vp connections second getObjectFromVisualPrimitive]
 					ifFalse: [self right: nil]]
-			position: #connections
-			optionalArgs: Dictionary new}
+			position: #connections}
 ]
 
 { #category : #accessing }

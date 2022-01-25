@@ -7,14 +7,5 @@ Class {
 { #category : #'as yet unclassified' }
 SBVPRectangleTopLabelFixture >> dynamicVisualPrimitiveMapping [
 
-	^ {
-		#shape -> RectangleMorph.
-		#topCenterLabel -> 'top'.
-		SBVPPropertyMapping
-			getter: [SBTextBubble new contents: 'Test']
-			setter: [:aString | Transcript showln: aString]
-			position: #bottomCenterLabel
-			optionalArgs: {} asDictionary.
-		#innerLabel -> #key.
-		#connections -> ({self left. self right} reject: [:connection | connection isNil])}
+	^ super dynamicVisualPrimitiveMapping, {SBVPPropertyMappingString property: #key primitiveProperty: #innerLabel on: self}
 ]

@@ -93,6 +93,12 @@ SBVPGroupPattern >> initialize [
 			cellPositioning: #center)
 ]
 
+{ #category : #accessing }
+SBVPGroupPattern >> label [
+
+	^ nil
+]
+
 { #category : #'as yet unclassified' }
 SBVPGroupPattern >> matches: aVisualPrimitive withBinding: aCollection [
 

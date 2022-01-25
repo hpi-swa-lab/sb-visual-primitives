@@ -8,7 +8,7 @@ Class {
 SBVPCircleAllLabelFixture >> dynamicVisualPrimitiveMapping [
 
 	^ {
-		#shape -> CircleMorph.
+		#shape -> CircleMorph new.
 		#innerLabel -> #key.
 		#topLeftLabel -> SBIcon iconUsb.
 		#topCenterLabel -> 'tc'.
