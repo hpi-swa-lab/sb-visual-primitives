@@ -132,7 +132,7 @@ SBVPGroupPattern >> patternBlocks: aCollection [
 						addMorphBack: patternContainer;
 						hResizing: #shrinkWrap;
 						vResizing: #shrinkWrap)]
-				ifFalse: [aPattern addToWorld: self row]]
+				ifFalse: [self row addMorphBack: aPattern]]
 		separatedBy: [
 			self row addMorphBack: (SBTextBubble new
 				contents: self seperatorString;
