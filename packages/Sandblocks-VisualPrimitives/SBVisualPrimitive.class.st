@@ -4,7 +4,6 @@ Class {
 	#instVars : [
 		'labelDict',
 		'blockDict',
-		'shape',
 		'connections',
 		'parent',
 		'origin'
@@ -207,7 +206,7 @@ SBVisualPrimitive >> initialize [
 		blockDict: Dictionary new;
 		labelDict: Dictionary new;
 		initializeLabelBlocks;
-		shape: CircleMorph.
+		shape: CircleMorph new.
 	
 	self
 		addAllMorphs: {
@@ -241,14 +240,12 @@ SBVisualPrimitive >> innerLabel [
 { #category : #accessing }
 SBVisualPrimitive >> innerLabel: aMorph [
 
-	| morph |
-	(self blockDict at: #innerLabel)
+	self shape
 		removeAllMorphs;
-		addMorphBack: (morph := shape new
-			hResizing: #shrinkWrap;
-			vResizing: #shrinkWrap).
-	self labelDict at: #innerLabel put: (self getLabelContents: aMorph).
-	morph addMorphBack: aMorph
+		addMorphFullBoundsCentered: aMorph.
+	
+	
+	"self labelDict at: #innerLabel put: (self getLabelContents: aMorph)."
 ]
 
 { #category : #'as yet unclassified' }
@@ -266,7 +263,7 @@ SBVisualPrimitive >> isVisualPrimitive [
 { #category : #accessing }
 SBVisualPrimitive >> label [
 
-	^ self labelDict at: #innerLabel ifAbsent: nil
+	^ self innerLabel contents
 ]
 
 { #category : #accessing }
@@ -394,7 +391,6 @@ SBVisualPrimitive >> root [
 SBVisualPrimitive >> setLabelAt: aSymbol to: anObject [
 
 	| morphy positionBlock |
-	self halt.
 	morphy := self getLabelMorph: anObject.
 	positionBlock := self blockDict at: aSymbol.
 	positionBlock
@@ -406,22 +402,19 @@ SBVisualPrimitive >> setLabelAt: aSymbol to: anObject [
 { #category : #accessing }
 SBVisualPrimitive >> shape [
 
-	^ shape
+	^ (self blockDict at: #innerLabel) firstSubmorphOrNil
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> shape: aClass [
+SBVisualPrimitive >> shape: aMorph [
 
 	| innerBlockWrapper innerBlock innerLabel |
-	shape := aClass.
 	innerBlockWrapper := self blockDict at: #innerLabel.
 	innerLabel := self innerLabel.
 	innerBlockWrapper removeAllMorphs.
-	innerBlock := aClass new
-		vResizing: #shrinkWrap;
-		hResizing: #shrinkWrap.
+	innerBlock := aMorph.
 	innerBlockWrapper addMorphBack: innerBlock.
-	innerLabel ifNotNil: [:label | innerBlock addMorphBack: label]
+	innerLabel ifNotNil: [:label | innerBlock addMorphFullBoundsCentered: label]
 ]
 
 { #category : #'as yet unclassified' }

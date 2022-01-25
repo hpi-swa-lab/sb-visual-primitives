@@ -8,7 +8,7 @@ Class {
 SBVPCircleFixture >> dynamicVisualPrimitiveMapping [
 
 	^ {
-		#shape -> CircleMorph.
+		#shape -> CircleMorph new.
 		#innerLabel -> #key.
 		#connections -> ({self left. self right} reject: [:connection | connection isNil])}
 ]
