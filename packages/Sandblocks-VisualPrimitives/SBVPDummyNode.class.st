@@ -56,7 +56,12 @@ SBVPDummyNode class >> fromVisualPrimitive: aVisualPrimitive withParent: aDummyN
 { #category : #'as yet unclassified' }
 SBVPDummyNode class >> staticVisualPrimitiveMapping [
 
-	^ {#shape -> RectangleMorph new. #topLeftLabel -> SBIcon iconBug}
+	^ {
+		#shape -> (RectangleMorph new
+			color: Color seaFoam;
+			yourself).
+		#topLeftLabel -> SBIcon iconBug}
+	"vResizing: #shrinkWrap; hResizing: #shrinkWrap;"
 ]
 
 { #category : #accessing }

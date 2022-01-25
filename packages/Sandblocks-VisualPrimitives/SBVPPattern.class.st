@@ -8,16 +8,6 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBVPPattern class >> registerShortcuts: aProvider [
-
-	aProvider
-		registerShortcut: $h do: #selectLeftSibling;
-		registerShortcut: $j do: #selectCenterChild;
-		registerShortcut: $k do: #selectParent;
-		registerShortcut: $l do: #selectRightSibling
-]
-
-{ #category : #'as yet unclassified' }
 SBVPPattern >> addImplicitChildren: anArray [
 
 	
@@ -33,6 +23,12 @@ SBVPPattern >> allPatternsDo: aBlock [
 SBVPPattern >> buildImplicitChildren: anArray [
 
 	
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPattern >> centerChild [
+
+	^ self connections ifNotEmpty: [self connections at: self connections size + 1 / 2]
 ]
 
 { #category : #'as yet unclassified' }
@@ -93,6 +89,42 @@ SBVPPattern >> matches: aVisualPrimitive withBinding: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPPattern >> moveCursorDown [
+	<action>
+
+	self floating
+		ifTrue: [self centerChild ifNotNil: #select ifNil: [self selectBottomToplevel]]
+		ifFalse: [self sandblockEditor cursor moveCursorDown]
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPattern >> moveCursorLeft [
+	<action>
+
+	self floating
+		ifTrue: [self leftSibling ifNotNil: #select ifNil: [self selectLeftToplevel]]
+		ifFalse: [self sandblockEditor cursor moveCursorLeft]
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPattern >> moveCursorRight [
+	<action>
+
+	self floating
+		ifTrue: [self rightSibling ifNotNil: #select ifNil: [self selectRightToplevel]]
+		ifFalse: [self sandblockEditor cursor moveCursorRight]
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPattern >> moveCursorUp [
+	<action>
+
+	self floating
+		ifTrue: [self parent ifNotNil: #select ifNil: [self selectTopToplevel]]
+		ifFalse: [self sandblockEditor cursor moveCursorUp]
+]
+
+{ #category : #'as yet unclassified' }
 SBVPPattern >> nextIdentifier [
 
 	| invalidIdentifiers currentAttempt possibleIdentifer |
@@ -121,34 +153,6 @@ SBVPPattern >> reset [
 	"do nothing"
 
 	
-]
-
-{ #category : #'as yet unclassified' }
-SBVPPattern >> selectCenterChild [
-	<action>
-
-	self connections ifNotEmpty: [(self connections at: self connections size + 1 / 2) select]
-]
-
-{ #category : #'as yet unclassified' }
-SBVPPattern >> selectLeftSibling [
-	<action>
-
-	self leftSibling ifNotNil: #select
-]
-
-{ #category : #accessing }
-SBVPPattern >> selectParent [
-	<action>
-
-	self parent ifNotNil: #select
-]
-
-{ #category : #'as yet unclassified' }
-SBVPPattern >> selectRightSibling [
-	<action>
-
-	self rightSibling ifNotNil: #select
 ]
 
 { #category : #'as yet unclassified' }

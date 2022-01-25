@@ -178,7 +178,7 @@ SBVisualPrimitive >> getLabelContents: anObject [
 
 	^ (anObject isString or: [anObject isNumber])
 		ifTrue: [anObject]
-		ifFalse: [anObject firstSubmorph contents]
+		ifFalse: [[anObject firstSubmorph contents] on: Error do: [nil]]
 ]
 
 { #category : #accessing }
@@ -240,7 +240,7 @@ SBVisualPrimitive >> initializeLabelBlocks [
 { #category : #'as yet unclassified' }
 SBVisualPrimitive >> innerLabel [
 
-	^ (self blockDict at: #innerLabel) firstSubmorphOrNil
+	^ (self blockDict at: #innerLabel ifAbsent: [nil]) firstSubmorphOrNil
 ]
 
 { #category : #accessing }
@@ -418,8 +418,8 @@ SBVisualPrimitive >> shape: aMorph [
 
 	| innerBlockWrapper innerBlock innerLabel |
 	innerBlockWrapper := self blockDict at: #shape.
-	self blockDict at: #innerLabel put: aMorph.
 	innerLabel := self innerLabel.
+	self blockDict at: #innerLabel put: aMorph.
 	innerBlockWrapper removeAllMorphs.
 	innerBlock := aMorph.
 	innerBlockWrapper addMorphBack: innerBlock.
