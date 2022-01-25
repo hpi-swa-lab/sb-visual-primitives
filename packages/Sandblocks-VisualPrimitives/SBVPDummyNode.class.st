@@ -73,8 +73,7 @@ SBVPDummyNode >> dynamicVisualPrimitiveMapping [
 				vp connections size >= 2
 					ifTrue: [self right: vp connections second getObjectFromVisualPrimitive]
 					ifFalse: [self right: nil]]
-			position: #connections
-			optionalArgs: Dictionary new}
+			position: #connections}
 ]
 
 { #category : #accessing }

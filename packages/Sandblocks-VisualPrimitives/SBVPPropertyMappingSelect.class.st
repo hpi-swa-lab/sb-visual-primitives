@@ -27,7 +27,7 @@ SBVPPropertyMappingSelect class >> property: aSymbol primitiveProperty: anotherS
 	getterBlock := self defaultGetterBlockWith: aSymbol on: anObject.
 	setterBlock := self defaultSetterBlockWith: aSymbol for: anotherSymbol on: anObject.
 	
-	^ (self getter: getterBlock setter: setterBlock position: anotherSymbol optionalArgs: Dictionary new)
+	^ (self getter: getterBlock setter: setterBlock position: anotherSymbol)
 		choices: aCollection;
 		representations: anotherCollection
 ]

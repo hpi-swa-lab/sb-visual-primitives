@@ -56,8 +56,7 @@ SBVPTomGrammarObject >> dynamicVisualPrimitiveMapping [
 		SBVPPropertyMapping
 			getter: [(self members ifNil: [self content ifNotNil: [{self content}] ifNil: [{}]]) reject: [:entry | entry isNil]]
 			setter: [:vp | self members: (vp connections collect: [:connection | connection getObjectFromVisualPrimitive])]
-			position: #connections
-			optionalArgs: Dictionary new}
+			position: #connections}
 ]
 
 { #category : #'as yet unclassified' }

@@ -14,8 +14,7 @@ SBVPSpecialShapeFixture >> dynamicVisualPrimitiveMapping [
 					color: (Color r: 0.5 g: 0.5 b: (self key ifNotNil: [:key | key asInteger / 255] ifNil: [0]));
 					yourself]
 			setter: [:vp | self key: ((vp propertyAt: #shape) color blue * 255) rounded]
-			position: #shape
-			optionalArgs: Dictionary new.
+			position: #shape.
 		SBVPPropertyMappingNumber property: #key primitiveProperty: #innerLabel on: self.
 		SBVPPropertyMapping
 			getter: [{self left. self right} reject: [:connection | connection isNil]]
@@ -26,6 +25,5 @@ SBVPSpecialShapeFixture >> dynamicVisualPrimitiveMapping [
 				vp connections size >= 2
 					ifTrue: [self right: vp connections second getObjectFromVisualPrimitive]
 					ifFalse: [self right: nil]]
-			position: #connections
-			optionalArgs: Dictionary new}
+			position: #connections}
 ]

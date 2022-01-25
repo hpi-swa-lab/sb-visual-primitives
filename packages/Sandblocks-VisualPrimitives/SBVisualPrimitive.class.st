@@ -89,7 +89,6 @@ SBVisualPrimitive >> addPropertyMapping: anSBVPPropertyMapping [
 	propertyMapping position
 		caseOf: {
 			[#shape] -> [self shape: value].
-			[#innerLabel] -> [self innerLabel: propertyMapping getMorph].
 			[#connections] -> [
 				self connections: OrderedCollection new.
 				value do: [:connection |
@@ -101,7 +100,7 @@ SBVisualPrimitive >> addPropertyMapping: anSBVPPropertyMapping [
 			(self labelPositions includes: propertyMapping position) ifTrue: [
 				(self blockDict at: propertyMapping position)
 					removeAllMorphs;
-					addMorphBack: propertyMapping getMorph
+					addMorphFullBoundsCentered: propertyMapping getMorph
 				"self setLabelAt: propertyMapping position to: value"]]
 ]
 
@@ -147,6 +146,12 @@ SBVisualPrimitive >> blockDict [
 SBVisualPrimitive >> blockDict: anObject [
 
 	blockDict := anObject
+]
+
+{ #category : #'as yet unclassified' }
+SBVisualPrimitive >> blockPositions [
+
+	^ self topLabelPositions, self middleBlockPositions, self bottomLabelPositions
 ]
 
 { #category : #'as yet unclassified' }
@@ -207,11 +212,12 @@ SBVisualPrimitive >> initialize [
 		labelDict: Dictionary new;
 		initializeLabelBlocks;
 		shape: CircleMorph new.
+	self blockDict at: #innerLabel put: self shape.
 	
 	self
 		addAllMorphs: {
 			SBRow new addAllMorphs: (self topLabelPositions collect: [:position | self blockDict at: position]).
-			SBRow new addAllMorphs: (self middleLabelPositions collect: [:position | self blockDict at: position]).
+			SBRow new addAllMorphs: (self middleBlockPositions collect: [:position | self blockDict at: position]).
 			SBRow new addAllMorphs: (self bottomLabelPositions collect: [:position | self blockDict at: position])};
 		changeTableLayout;
 		vResizing: #shrinkWrap;
@@ -223,8 +229,8 @@ SBVisualPrimitive >> initialize [
 { #category : #'as yet unclassified' }
 SBVisualPrimitive >> initializeLabelBlocks [
 
-	self labelPositions do: [:labelPosition |
-		self blockDict at: labelPosition put: (SBColumn new
+	self blockPositions do: [:blockPosition |
+		self blockDict at: blockPosition put: (SBColumn new
 			changeTableLayout;
 			vResizing: #shrinkWrap;
 			hResizing: #shrinkWrap;
@@ -234,7 +240,7 @@ SBVisualPrimitive >> initializeLabelBlocks [
 { #category : #'as yet unclassified' }
 SBVisualPrimitive >> innerLabel [
 
-	^ (self blockDict at: #innerLabel) firstSubmorphOrNil firstSubmorphOrNil
+	^ (self blockDict at: #innerLabel) firstSubmorphOrNil
 ]
 
 { #category : #accessing }
@@ -242,10 +248,7 @@ SBVisualPrimitive >> innerLabel: aMorph [
 
 	self shape
 		removeAllMorphs;
-		addMorphFullBoundsCentered: aMorph.
-	
-	
-	"self labelDict at: #innerLabel put: (self getLabelContents: aMorph)."
+		addMorphFullBoundsCentered: aMorph
 ]
 
 { #category : #'as yet unclassified' }
@@ -314,6 +317,12 @@ SBVisualPrimitive >> leftSibling [
 ]
 
 { #category : #'as yet unclassified' }
+SBVisualPrimitive >> middleBlockPositions [
+
+	^ {#leftLabel. #shape. #rightLabel}
+]
+
+{ #category : #'as yet unclassified' }
 SBVisualPrimitive >> middleLabelPositions [
 
 	^ {#leftLabel. #innerLabel. #rightLabel}
@@ -355,7 +364,6 @@ SBVisualPrimitive >> printOn: aStream [
 { #category : #accessing }
 SBVisualPrimitive >> propertyAt: aSymbol [
 
-	aSymbol = #innerLabel ifTrue: [^ self innerLabel contents].
 	(self labelPositions includes: aSymbol) ifTrue: [
 		^ self blockDict
 			at: aSymbol
@@ -402,14 +410,15 @@ SBVisualPrimitive >> setLabelAt: aSymbol to: anObject [
 { #category : #accessing }
 SBVisualPrimitive >> shape [
 
-	^ (self blockDict at: #innerLabel) firstSubmorphOrNil
+	^ (self blockDict at: #shape) firstSubmorphOrNil
 ]
 
 { #category : #accessing }
 SBVisualPrimitive >> shape: aMorph [
 
 	| innerBlockWrapper innerBlock innerLabel |
-	innerBlockWrapper := self blockDict at: #innerLabel.
+	innerBlockWrapper := self blockDict at: #shape.
+	self blockDict at: #innerLabel put: aMorph.
 	innerLabel := self innerLabel.
 	innerBlockWrapper removeAllMorphs.
 	innerBlock := aMorph.
