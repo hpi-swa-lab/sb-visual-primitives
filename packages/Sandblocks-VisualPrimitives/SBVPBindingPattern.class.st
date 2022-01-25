@@ -111,6 +111,8 @@ SBVPBindingPattern class >> newFor: aBlock [
 { #category : #'as yet unclassified' }
 SBVPBindingPattern class >> registerShortcuts: aProvider [
 
+	super registerShortcuts: aProvider.
+	
 	aProvider
 		registerShortcut: Character backspace do: #deleteSubtree;
 		registerShortcut: Character delete do: #deleteSubtree;
