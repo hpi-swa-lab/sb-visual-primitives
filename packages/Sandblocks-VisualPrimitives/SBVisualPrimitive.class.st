@@ -224,7 +224,12 @@ SBVisualPrimitive >> initialize [
 { #category : #'as yet unclassified' }
 SBVisualPrimitive >> initializeLabelBlocks [
 
-	self labelPositions do: [:labelPosition | self blockDict at: labelPosition put: SBColumn new]
+	self labelPositions do: [:labelPosition |
+		self blockDict at: labelPosition put: (SBColumn new
+			changeTableLayout;
+			vResizing: #shrinkWrap;
+			hResizing: #shrinkWrap;
+			yourself)]
 ]
 
 { #category : #'as yet unclassified' }

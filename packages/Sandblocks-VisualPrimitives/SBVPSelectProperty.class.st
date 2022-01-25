@@ -80,14 +80,21 @@ SBVPSelectProperty >> getRepresentationMorphAt: anIndex [
 	| representation |
 	representation := self representations at: anIndex.
 	
-	(representation isNumber or: [representation isString]) ifTrue: [
-		self flag: #TODO.
-		"make it, so the double click actually registers here. Furthermore, the content should be immutable (only changeable by selecting from the UIManager Popup"
-		^ SBTextBubble new contents: representation asString].
+	(representation isNumber or: [representation isString]) ifTrue: [^ SBStringMorph new contents: representation asString].
 	representation isMorph ifTrue: [^ representation].
 	
 	^ nil
 	"maybe throw error, because we don't support this right noẁ"
+]
+
+{ #category : #accessing }
+SBVPSelectProperty >> initialize [
+
+	super initialize.
+	self
+		changeTableLayout;
+		vResizing: #shrinkWrap;
+		hResizing: #shrinkWrap
 ]
 
 { #category : #accessing }
