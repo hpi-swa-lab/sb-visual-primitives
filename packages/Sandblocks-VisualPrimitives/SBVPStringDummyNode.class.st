@@ -1,7 +1,7 @@
 Class {
 	#name : #SBVPStringDummyNode,
 	#superclass : #SBVPDummyNode,
-	#category : #'Sandblocks-VisualPrimitives'
+	#category : #'Sandblocks-VisualPrimitives-Fixtures'
 }
 
 { #category : #'as yet unclassified' }

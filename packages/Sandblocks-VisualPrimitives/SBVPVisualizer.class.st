@@ -189,6 +189,19 @@ SBVPVisualizer >> exampleSpecialShape [
 ]
 
 { #category : #accessing }
+SBVPVisualizer >> exampleTomCard [
+
+	SBVPVisualizer
+		code: [
+			SBVPTomCard new
+				attack: 5;
+				defense: 6;
+				icon: 'fire';
+				yourself]
+		showCode: true
+]
+
+{ #category : #accessing }
 SBVPVisualizer >> initialize [
 
 	super initialize.
