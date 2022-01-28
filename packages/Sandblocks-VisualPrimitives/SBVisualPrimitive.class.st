@@ -54,6 +54,16 @@ SBVisualPrimitive class >> newFromObject: anObject in: aMorph [
 ]
 
 { #category : #'as yet unclassified' }
+SBVisualPrimitive class >> registerShortcuts: aProvider [
+
+	aProvider
+		registerShortcut: Character backspace do: #removeSelf;
+		registerShortcut: Character delete do: #removeSelf;
+		registerShortcut: Character space do: #addNewConnection;
+		registerShortcut: Character space shift do: #addNewParent
+]
+
+{ #category : #'as yet unclassified' }
 SBVisualPrimitive class >> selector: aString receiverMatches: aMessage [
 
 	(aMessage isSandblock and: [(aMessage isMessageSend and: [aMessage receiver notNil]) or: [self matchesCascades and: [aMessage isCascade]]]) ifFalse: [^ false].
@@ -114,6 +124,12 @@ SBVisualPrimitive >> addPropertyMappings: aCollection [
 SBVisualPrimitive >> addToWorld: aWorld [
 
 	^ self subclassResponsibility
+]
+
+{ #category : #nil }
+SBVisualPrimitive >> allConnectionsDo: aBlock [
+
+	self connections do: [:connection | connection allConnectionsDo: aBlock]
 ]
 
 { #category : #'as yet unclassified' }
@@ -379,6 +395,17 @@ SBVisualPrimitive >> removeConnection: aVisualPrimitive [
 	self withDecorator: SBTreeDecorator do: [:dec | dec removeChild: aVisualPrimitive].
 	self connections remove: aVisualPrimitive.
 	aVisualPrimitive parent: nil
+]
+
+{ #category : #'as yet unclassified' }
+SBVisualPrimitive >> removeSelf [
+	<action>
+
+	| oldParent |
+	oldParent := self parent.
+	self parent ifNotNil: [self parent removeConnection: self].
+	self allConnectionsDo: [:block | block abandon].
+	oldParent ifNotNil: #layout
 ]
 
 { #category : #'as yet unclassified' }

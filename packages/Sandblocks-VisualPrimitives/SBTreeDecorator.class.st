@@ -57,8 +57,15 @@ SBTreeDecorator >> addChild: aDecorator afterIndex: anIndex [
 		lineWidth: 1;
 		color: Color black.
 	
-	(self morph containingFloat owner ifNil: [self morph containingFloat]) addMorphBack: newConnector.
 	aDecorator connectorToParent: newConnector
+]
+
+{ #category : #'as yet unclassified' }
+SBTreeDecorator >> addConnectorLineToWorld [
+
+	self connectorToParent ifNotNil: [:connector |
+		connector owner ifNotNil: [:owner | owner removeMorph: connector].
+		(self morph containingFloat owner ifNil: [self morph containingFloat]) addMorphBack: self connectorToParent]
 ]
 
 { #category : #'as yet unclassified' }
@@ -165,7 +172,8 @@ SBTreeDecorator >> connectorToParent [
 { #category : #accessing }
 SBTreeDecorator >> connectorToParent: aMorph [
 
-	connectorToParent := aMorph
+	connectorToParent := aMorph.
+	self addConnectorLineToWorld
 ]
 
 { #category : #accessing }
@@ -360,6 +368,7 @@ SBTreeDecorator >> secondWalk: aValue layerHeights: height [
 	self morph
 		fullBounds;
 		center: self x - (self distance / 2) @ (height * self depth).
+	self addConnectorLineToWorld.
 	self children do: [:child | child secondWalk: aValue + self mod layerHeights: height]
 ]
 

@@ -46,6 +46,12 @@ SBVPBindingPattern class >> bindingDict: aDict expressionDict: anotherDict conne
 ]
 
 { #category : #'as yet unclassified' }
+SBVPBindingPattern class >> canDeleteChild: aBlock [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBVPBindingPattern class >> expressionDict: aDict [
 
 	^ self new expressionDict: aDict asDictionary
@@ -112,9 +118,8 @@ SBVPBindingPattern class >> newFor: aBlock [
 { #category : #'as yet unclassified' }
 SBVPBindingPattern class >> registerShortcuts: aProvider [
 
+	super registerShortcuts: aProvider.
 	aProvider
-		registerShortcut: Character backspace do: #deleteSubtree;
-		registerShortcut: Character delete do: #deleteSubtree;
 		registerShortcut: Character space do: #addNewChild;
 		registerShortcut: Character space shift do: #addNewParent
 ]
@@ -199,7 +204,7 @@ SBVPBindingPattern >> addNewParent [
 		self parent removeConnection: self].
 	newParent addConnection: self.
 	self owner addMorphBack: newParent.
-	self allPatternsDo: [:pattern | pattern detachDecorators: SBTreeDecorator].
+	self allConnectionsDo: [:pattern | pattern detachDecorators: SBTreeDecorator].
 	self root attachTreeDecorator.
 	self root layout
 ]
@@ -212,10 +217,10 @@ SBVPBindingPattern >> addToWorld: aWorld [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPBindingPattern >> allPatternsDo: aBlock [
+SBVPBindingPattern >> allConnectionsDo: aBlock [
 
 	aBlock value: self.
-	super allPatternsDo: aBlock
+	super allConnectionsDo: aBlock
 ]
 
 { #category : #'as yet unclassified' }
@@ -373,7 +378,7 @@ SBVPBindingPattern >> convertToEllipsisPattern [
 		
 		self owner addMorphBack: newChild.
 		self parent removeConnection: self].
-	self allPatternsDo: [:block | block abandon].
+	self allConnectionsDo: [:block | block abandon].
 	newChild root attachTreeDecorator.
 	newChild root layout
 ]
@@ -382,17 +387,6 @@ SBVPBindingPattern >> convertToEllipsisPattern [
 SBVPBindingPattern >> couldMatch: aVisualPrimitive [
 
 	^ self childrenInCurrentMatch = aVisualPrimitive connections size and: [self constant isNil or: [self constant value = aVisualPrimitive origin]]
-]
-
-{ #category : #'as yet unclassified' }
-SBVPBindingPattern >> deleteSubtree [
-	<action>
-
-	| oldParent |
-	oldParent := self parent.
-	self parent ifNotNil: [self parent removeConnection: self].
-	self allPatternsDo: [:block | block abandon].
-	oldParent ifNotNil: #layout
 ]
 
 { #category : #'as yet unclassified' }

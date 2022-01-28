@@ -8,6 +8,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBVPGroupPattern class >> canDeleteChild: aBlock [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBVPGroupPattern class >> matches: aBlock [
 
 	^ self selector: #patterns: receiverMatches: aBlock
@@ -16,19 +22,61 @@ SBVPGroupPattern class >> matches: aBlock [
 { #category : #'as yet unclassified' }
 SBVPGroupPattern class >> newFor: aBlock [
 
-	^ self new patternBlocks: aBlock arguments first childSandblocks
+	^ self new connections: aBlock arguments first childSandblocks
 ]
 
 { #category : #'as yet unclassified' }
 SBVPGroupPattern class >> patterns: aCollection [
 
-	^ self new patternBlocks: aCollection
+	^ self new connections: aCollection
+]
+
+{ #category : #'as yet unclassified' }
+SBVPGroupPattern class >> registerShortcuts: aProvider [
+
+	aProvider registerShortcut: Character space do: #addNewPattern
+]
+
+{ #category : #accessing }
+SBVPGroupPattern >> addConnection: aPattern [
+
+	super addConnection: aPattern.
+	self openPatternAsChild: aPattern.
+	aPattern parent: self
 ]
 
 { #category : #'as yet unclassified' }
 SBVPGroupPattern >> addImplicitChildren: anArray [
 
 	self connections do: [:pattern | pattern addImplicitChildren: anArray]
+]
+
+{ #category : #'as yet unclassified' }
+SBVPGroupPattern >> addNewBindingPattern [
+
+	| newPattern |
+	newPattern := SBVPBindingPattern bindingDict: {#identity -> #a} connections: {}.
+	
+	self addConnection: newPattern
+]
+
+{ #category : #'as yet unclassified' }
+SBVPGroupPattern >> addNewConstraintPattern [
+
+	| newPattern |
+	newPattern := SBVPConstraintPattern constraint: [:bindings | true].
+	
+	self addConnection: newPattern
+]
+
+{ #category : #'as yet unclassified' }
+SBVPGroupPattern >> addNewPattern [
+	<action>
+
+	| selectedIndex options |
+	options := {#addNewBindingPattern. #addNewConstraintPattern}.
+	selectedIndex := UIManager default chooseFrom: options.
+	self perform: (options at: selectedIndex ifAbsent: [])
 ]
 
 { #category : #'as yet unclassified' }
@@ -108,40 +156,41 @@ SBVPGroupPattern >> matches: aVisualPrimitive withBinding: aCollection [
 { #category : #'as yet unclassified' }
 SBVPGroupPattern >> noteNewOwner: aMorph [
 
-	| isBindingPattern |
 	super noteNewOwner: aMorph.
 	
-	self parentCase ifNotNil: [
-		self row removeAllMorphs.
-		self connections
-			do: [:aPattern |
-				isBindingPattern := SBVPBindingPattern withAllSubclasses anySatisfy: [:subclass | subclass = aPattern class].
-				isBindingPattern
-					ifTrue: [ | patternContainer |
-						patternContainer := SBBlock new
-							hResizing: #shrinkWrap;
-							vResizing: #shrinkWrap;
-							layoutInset: 6;
-							when: #reportError send: #reportError: to: self.
-						self row addMorphBack: (SBRow new
-							addMorphBack: patternContainer;
-							hResizing: #shrinkWrap;
-							vResizing: #shrinkWrap).
-						aPattern
-							addToWorld: patternContainer;
-							attachTreeDecorator;
-							layout]
-					ifFalse: [self row addMorphBack: aPattern]]
-			separatedBy: [
-				self row addMorphBack: (SBTextBubble new
-					contents: self seperatorString;
-					yourself)]]
+	self resetVisualization
 ]
 
 { #category : #accessing }
-SBVPGroupPattern >> patternBlocks: aCollection [
+SBVPGroupPattern >> openPatternAsChild: aPattern [
 
-	self connections: aCollection
+	| isBindingPattern |
+	isBindingPattern := SBVPBindingPattern withAllSubclasses anySatisfy: [:subclass | subclass = aPattern class].
+	aPattern siblingIndex > 1 ifTrue: [self row addMorphBack: (SBTextBubble new contents: self seperatorString)].
+	isBindingPattern
+		ifTrue: [ | patternContainer |
+			patternContainer := SBBlock new
+				hResizing: #shrinkWrap;
+				vResizing: #shrinkWrap;
+				layoutInset: 6;
+				when: #reportError send: #reportError: to: self.
+			self row addMorphBack: (SBRow new
+				addMorphBack: patternContainer;
+				hResizing: #shrinkWrap;
+				vResizing: #shrinkWrap).
+			aPattern
+				addToWorld: patternContainer;
+				attachTreeDecorator;
+				layout]
+		ifFalse: [self row addMorphBack: aPattern]
+]
+
+{ #category : #'as yet unclassified' }
+SBVPGroupPattern >> removeConnection: aPattern [
+
+	super removeConnection: aPattern.
+	self halt.
+	self resetVisualization
 ]
 
 { #category : #accessing }
@@ -154,6 +203,14 @@ SBVPGroupPattern >> removeImplicitChildren [
 SBVPGroupPattern >> reset [
 
 	self connections do: [:pattern | pattern reset]
+]
+
+{ #category : #'as yet unclassified' }
+SBVPGroupPattern >> resetVisualization [
+
+	self parentCase ifNotNil: [
+		self row removeAllMorphs.
+		self connections do: [:aPattern | self openPatternAsChild: aPattern]]
 ]
 
 { #category : #accessing }

@@ -70,10 +70,13 @@ SBVPConstraintPattern >> constraint [
 { #category : #accessing }
 SBVPConstraintPattern >> constraint: aBlockClosure [
 
+	| block |
 	constraint := aBlockClosure.
-	self constraintBlockBasic: (aBlockClosure decompile asSandblock
+	block := aBlockClosure decompile asSandblock
 		hResizing: #shrinkWrap;
-		vResizing: #shrinkWrap)
+		vResizing: #shrinkWrap.
+	block bindings do: [:b | b owner hide].
+	self constraintBlockBasic: block
 ]
 
 { #category : #accessing }

@@ -223,14 +223,21 @@ SBVPExecuter class >> exampleBuildHeapTest: aTree [
 		label: 'example'.
 	^ (SBVPCase
 		input: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern
-				bindingDict: {#identity -> #a}
-				connections: {SBVPBindingPattern bindingDict: {#identity -> #boi}}.
-			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label < (bindings at: #boi) label]})
+			SBVPBindingPattern bindingDict: {#identity -> 'a'} connections: {
+				SBVPEllipsisPattern bindingDict: {#identity -> 'aa'}.
+				SBVPBindingPattern
+					bindingDict: {#identity -> 'boi'}
+					connections: {SBVPEllipsisPattern bindingDict: {#identity -> 'ac'}}.
+				SBVPEllipsisPattern bindingDict: {#identity -> 'ab'}}.
+			SBVPConstraintPattern constraint: [:bindings | false].
+			SBVPBindingPattern bindingDict: {#identity -> 'a'}})
 		output: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern
-				bindingDict: {#identity -> #boi}
-				connections: {SBVPBindingPattern bindingDict: {#identity -> #a}}})
+			SBVPBindingPattern bindingDict: {#identity -> 'boi'} connections: {
+				SBVPEllipsisPattern bindingDict: {#identity -> 'aa'}.
+				SBVPBindingPattern
+					bindingDict: {#identity -> 'a'}
+					connections: {SBVPEllipsisPattern bindingDict: {#identity -> 'ac'}}.
+				SBVPEllipsisPattern bindingDict: {#identity -> 'ab'}}})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> false;
 			add: #explicitChildrenMatching -> false;

@@ -14,9 +14,9 @@ SBVPPattern >> addImplicitChildren: anArray [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPattern >> allPatternsDo: aBlock [
+SBVPPattern >> allConnectionsDo: aBlock [
 
-	self connections do: [:connection | connection allPatternsDo: aBlock]
+	self connections do: [:connection | connection allConnectionsDo: aBlock]
 ]
 
 { #category : #'as yet unclassified' }
@@ -35,6 +35,17 @@ SBVPPattern >> centerChild [
 SBVPPattern >> collectBindingsInto: aCollection [
 
 	self connections do: [:connection | connection collectBindingsInto: aCollection]
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPattern >> deletePattern [
+	<action>
+
+	| oldParent |
+	oldParent := self parent.
+	self parent ifNotNil: [self parent removeConnection: self].
+	self allConnectionsDo: [:block | block abandon].
+	oldParent ifNotNil: #layout
 ]
 
 { #category : #'as yet unclassified' }
@@ -128,7 +139,7 @@ SBVPPattern >> moveCursorUp [
 SBVPPattern >> nextIdentifier [
 
 	| invalidIdentifiers currentAttempt possibleIdentifer |
-	invalidIdentifiers := Array streamContents: [:stream | self allPatternsDo: [:pattern | stream nextPut: pattern bindingIndex]].
+	invalidIdentifiers := Array streamContents: [:stream | self allConnectionsDo: [:pattern | stream nextPut: pattern bindingIndex]].
 	
 	currentAttempt := 1.
 	[

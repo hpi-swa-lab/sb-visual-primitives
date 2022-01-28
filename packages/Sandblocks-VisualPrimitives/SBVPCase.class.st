@@ -428,7 +428,7 @@ SBVPCase >> toggleImplicitChildTo: aBoolean withBinding: aString [
 { #category : #'as yet unclassified' }
 SBVPCase >> toggleImplicitChildTo: aBoolean withBinding: aString on: aSBVPPattern [
 
-	aSBVPPattern allPatternsDo: [:pattern |
+	aSBVPPattern allConnectionsDo: [:pattern |
 		pattern bindingIndex = aString ifTrue: [
 			pattern isImplicitChild: aBoolean.
 			^ self]]
