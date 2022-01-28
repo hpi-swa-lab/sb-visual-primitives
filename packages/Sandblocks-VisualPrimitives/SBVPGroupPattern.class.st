@@ -105,38 +105,43 @@ SBVPGroupPattern >> matches: aVisualPrimitive withBinding: aCollection [
 	^ self connections allSatisfy: [:pattern | pattern matches: aVisualPrimitive withBinding: aCollection]
 ]
 
+{ #category : #'as yet unclassified' }
+SBVPGroupPattern >> noteNewOwner: aMorph [
+
+	| isBindingPattern |
+	super noteNewOwner: aMorph.
+	
+	self parentCase ifNotNil: [
+		self row removeAllMorphs.
+		self connections
+			do: [:aPattern |
+				isBindingPattern := SBVPBindingPattern withAllSubclasses anySatisfy: [:subclass | subclass = aPattern class].
+				isBindingPattern
+					ifTrue: [ | patternContainer |
+						patternContainer := SBBlock new
+							hResizing: #shrinkWrap;
+							vResizing: #shrinkWrap;
+							layoutInset: 6;
+							when: #reportError send: #reportError: to: self.
+						self row addMorphBack: (SBRow new
+							addMorphBack: patternContainer;
+							hResizing: #shrinkWrap;
+							vResizing: #shrinkWrap).
+						aPattern
+							addToWorld: patternContainer;
+							attachTreeDecorator;
+							layout]
+					ifFalse: [self row addMorphBack: aPattern]]
+			separatedBy: [
+				self row addMorphBack: (SBTextBubble new
+					contents: self seperatorString;
+					yourself)]]
+]
+
 { #category : #accessing }
 SBVPGroupPattern >> patternBlocks: aCollection [
 
-	| isBindingPattern |
-	self connections: aCollection.
-	self row removeAllMorphs.
-	self connections
-		do: [:aPattern |
-			isBindingPattern := SBVPBindingPattern withAllSubclasses anySatisfy: [:subclass | subclass = aPattern class].
-			isBindingPattern
-				ifTrue: [ | patternContainer |
-					patternContainer := SBBlock new
-						hResizing: #shrinkWrap;
-						vResizing: #shrinkWrap;
-						layoutInset: 6;
-						when: #reportError send: #reportError: to: self.
-					aPattern
-						addToWorld: patternContainer;
-						attachTreeDecorator;
-						layout.
-					patternContainer
-						hResizing: #shrinkWrap;
-						vResizing: #shrinkWrap.
-					self row addMorphBack: (SBRow new
-						addMorphBack: patternContainer;
-						hResizing: #shrinkWrap;
-						vResizing: #shrinkWrap)]
-				ifFalse: [self row addMorphBack: aPattern]]
-		separatedBy: [
-			self row addMorphBack: (SBTextBubble new
-				contents: self seperatorString;
-				yourself)]
+	self connections: aCollection
 ]
 
 { #category : #accessing }

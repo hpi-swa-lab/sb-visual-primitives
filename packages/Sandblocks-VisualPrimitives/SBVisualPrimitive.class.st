@@ -400,6 +400,7 @@ SBVisualPrimitive >> setLabelAt: aSymbol to: anObject [
 
 	| morphy positionBlock |
 	morphy := self getLabelMorph: anObject.
+	aSymbol = #innerLabel ifTrue: [^ self innerLabel: morphy].
 	positionBlock := self blockDict at: aSymbol.
 	positionBlock
 		removeAllMorphs;

@@ -139,6 +139,14 @@ SBVPPattern >> nextIdentifier [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPPattern >> parentCase [
+
+	| case |
+	case := self root parentSandblock.
+	^ (case isKindOf: SBVPCase) ifTrue: [case] ifFalse: [nil]
+]
+
+{ #category : #'as yet unclassified' }
 SBVPPattern >> removeImplicitChildren [
 
 	self connections select: [:child | child isImplicitChild] thenDo: [:implicitChild |

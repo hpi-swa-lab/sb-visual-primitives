@@ -10,6 +10,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBVPPropertyMapping class >> constant: anObject position: aSymbol [
+
+	^ SBVPPropertyMapping getter: [anObject] setter: [:ignore | ] position: aSymbol
+]
+
+{ #category : #'as yet unclassified' }
 SBVPPropertyMapping class >> defaultGetterBlockWith: aSymbol on: anObject [
 
 	^ aSymbol isSymbol
@@ -87,6 +93,12 @@ SBVPPropertyMapping >> isPropertyMapping [
 	^ true
 ]
 
+{ #category : #'as yet unclassified' }
+SBVPPropertyMapping >> key [
+
+	^ self position
+]
+
 { #category : #accessing }
 SBVPPropertyMapping >> position [
 
@@ -109,4 +121,10 @@ SBVPPropertyMapping >> setter [
 SBVPPropertyMapping >> setter: anObject [
 
 	setter := anObject
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPropertyMapping >> value [
+
+	^ self getter value
 ]

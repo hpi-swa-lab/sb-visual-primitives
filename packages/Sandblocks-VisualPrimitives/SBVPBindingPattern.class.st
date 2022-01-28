@@ -8,7 +8,8 @@ Class {
 		'bindingIndex',
 		'writeBackClosure',
 		'writeBackClosureString',
-		'labelBindingDict'
+		'labelBindingDict',
+		'labelExpressionDict'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
@@ -206,8 +207,8 @@ SBVPBindingPattern >> addNewParent [
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> addToWorld: aWorld [
 
-	self connections do: [:child | child addToWorld: aWorld].
-	aWorld addMorphBack: self
+	aWorld addMorphBack: self.
+	self connections do: [:child | child addToWorld: aWorld]
 ]
 
 { #category : #'as yet unclassified' }
@@ -215,12 +216,6 @@ SBVPBindingPattern >> allPatternsDo: aBlock [
 
 	aBlock value: self.
 	super allPatternsDo: aBlock
-]
-
-{ #category : #'as yet unclassified' }
-SBVPBindingPattern >> bindingBlock [
-
-	^ self innerLabel
 ]
 
 { #category : #'as yet unclassified' }
@@ -247,15 +242,9 @@ SBVPBindingPattern >> bindingIndex [
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> bindingIndex: anObject [
 
-	| label |
 	bindingIndex := anObject isSandblock
 		ifTrue: [[anObject evaluate] on: Error do: [anObject sourceString]]
-		ifFalse: [anObject].
-	label := SBStName new
-		autoCast: self bindingIndexAutoCast;
-		behavior: SBStDeclarationForBlock new;
-		contents: bindingIndex asString.
-	self innerLabel: label
+		ifFalse: [anObject]
 ]
 
 { #category : #'as yet unclassified' }
@@ -269,6 +258,15 @@ SBVPBindingPattern >> bindingIndexAutoCast [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPBindingPattern >> bindingLabelBlockFrom: aString [
+
+	^ SBStName new
+		autoCast: self bindingIndexAutoCast;
+		behavior: SBStDeclarationForBlock new;
+		contents: aString
+]
+
+{ #category : #'as yet unclassified' }
 SBVPBindingPattern >> buildChildrenFromBinding: aDict [
 
 	^ self connections gather: [:pattern | pattern buildFromBinding: aDict]
@@ -279,7 +277,7 @@ SBVPBindingPattern >> buildFromBinding: aDict [
 
 	| output |
 	output := self constant
-		ifNotNil: [self constant asVisualPrimitive]
+		ifNotNil: [self constant value asVisualPrimitive]
 		ifNil: [(aDict at: self bindingIndex) copy].
 	output connections: (self buildChildrenFromBinding: aDict).
 	self dynamicLabelDict associationsDo: [:assoc | output addPropertyMapping: assoc].
@@ -318,7 +316,7 @@ SBVPBindingPattern >> buildImplicitChildren: aDict [
 	
 	aDict at: self bindingIndex put: implicitChildren asArray.
 	
-	oldConnections do: [:connections | connections buildImplicitChildren: aDict]
+	oldConnections do: [:connection | connection buildImplicitChildren: aDict]
 ]
 
 { #category : #'as yet unclassified' }
@@ -347,7 +345,8 @@ SBVPBindingPattern >> childrenInCurrentMatch [
 SBVPBindingPattern >> collectBindingsInto: aCollection [
 
 	super collectBindingsInto: aCollection.
-	aCollection add: self bindingBlock
+	
+	self blockDict keysAndValuesDo: [:position :value | (value firstSubmorphOrNil satisfies: #(#notNil #isSandblock #isName #isBlockBinding)) ifTrue: [aCollection add: value firstSubmorph]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -359,8 +358,7 @@ SBVPBindingPattern >> constant [
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> constant: aBlock [
 
-	self innerLabel: aBlock asSandblock.
-	constant := aBlock value ifNil: [#placeholder]
+	constant := aBlock
 ]
 
 { #category : #'as yet unclassified' }
@@ -383,7 +381,7 @@ SBVPBindingPattern >> convertToEllipsisPattern [
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> couldMatch: aVisualPrimitive [
 
-	^ self childrenInCurrentMatch = aVisualPrimitive connections size and: [self constant isNil or: [self constant = aVisualPrimitive origin]]
+	^ self childrenInCurrentMatch = aVisualPrimitive connections size and: [self constant isNil or: [self constant value = aVisualPrimitive origin]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -427,16 +425,13 @@ SBVPBindingPattern >> expressionDict: aDict [
 		self constant: (aDict at: self class identityName).
 		aDict removeKey: self class identityName].
 	
-	self addPropertyMappings: (aDict associations collect: [:association |
-		SBVPPropertyMappingExpression
-			expression: association value
-			position: association key])
+	self labelExpressionDict: aDict
 ]
 
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> findConstant [
 
-	^ self constant ifNil: [super findConstant]
+	^ self constant value ifNil: [super findConstant]
 ]
 
 { #category : #'as yet unclassified' }
@@ -473,6 +468,15 @@ SBVPBindingPattern >> getNext: aVisualPrimitive [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPBindingPattern >> identityLabelPosition [
+
+	^ self staticVisualPrimitiveMapping
+		detect: [:mapping | mapping key = #identityLabelPosition]
+		ifFound: [:mapping | mapping value]
+		ifNone: [#innerLabel]
+]
+
+{ #category : #'as yet unclassified' }
 SBVPBindingPattern >> indexOffset [
 
 	^ 0
@@ -482,7 +486,8 @@ SBVPBindingPattern >> indexOffset [
 SBVPBindingPattern >> initialize [
 
 	super initialize.
-	self labelBindingDict: Dictionary new
+	self labelBindingDict: Dictionary new.
+	self labelExpressionDict: Dictionary new
 ]
 
 { #category : #'as yet unclassified' }
@@ -500,14 +505,19 @@ SBVPBindingPattern >> labelBindingDict [
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> labelBindingDict: aDict [
 
-	labelBindingDict := aDict.
-	self flag: #TODO.
-	"Use Name instead of TextBubble once replacing works"
-	labelBindingDict keysAndValuesDo: [:key :value |
-		(self setLabelAt: key to: value)
-			when: #contentsChanged
-			send: #labelBindingChanged
-			to: self]
+	labelBindingDict := aDict
+]
+
+{ #category : #accessing }
+SBVPBindingPattern >> labelExpressionDict [
+
+	^ labelExpressionDict
+]
+
+{ #category : #accessing }
+SBVPBindingPattern >> labelExpressionDict: anObject [
+
+	labelExpressionDict := anObject
 ]
 
 { #category : #'as yet unclassified' }
@@ -528,15 +538,22 @@ SBVPBindingPattern >> matches: aVisualPrimitive withBinding: aCollection [
 SBVPBindingPattern >> noteNewOwner: newOwner [
 
 	super noteNewOwner: newOwner.
-	self parentCase ifNotNil: [:case | case defaultPatternVisualizationClass ifNotNil: [:visClass | self addPropertyMappings: visClass staticVisualPrimitiveMapping]]
-]
-
-{ #category : #'as yet unclassified' }
-SBVPBindingPattern >> parentCase [
-
-	| case |
-	case := self root parentSandblock.
-	^ (case isKindOf: SBVPCase) ifTrue: [case] ifFalse: [nil]
+	self parentCase ifNotNil: [:case |
+		self addPropertyMappings: self staticVisualPrimitiveMapping.
+		self addPropertyMappings: (self labelExpressionDict associations collect: [:association |
+			SBVPPropertyMappingExpression
+				expression: association value
+				position: association key]).
+		self labelBindingDict keysAndValuesDo: [:key :value |
+			(self setLabelAt: key to: (self bindingLabelBlockFrom: value))
+				when: #contentsChanged
+				send: #labelBindingChanged
+				to: self].
+		self constant ifNotNil: [self setLabelAt: self identityLabelPosition to: self constant asSandblock].
+		self bindingIndex ifNotNil: [
+			self
+				setLabelAt: self identityLabelPosition
+				to: (self bindingLabelBlockFrom: self bindingIndex asString)]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -597,9 +614,10 @@ SBVPBindingPattern >> setConnectionBindingFor: aVisualPrimitive in: aDict [
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> staticVisualPrimitiveMapping [
 
-	^ self parentCase defaultPatternVisualizationClass
-		ifNil: {}
-		ifNotNil: #staticVisualPrimitiveMapping
+	^ self parentCase ifNil: {} ifNotNil: [:case |
+		case defaultPatternVisualizationClass
+			ifNil: {}
+			ifNotNil: #staticVisualPrimitiveMapping]
 ]
 
 { #category : #'as yet unclassified' }
@@ -669,18 +687,18 @@ SBVPBindingPattern >> writeSourceOn: aStream [
 	bindings ifNotEmpty: [
 		aStream nextPutAll: ' bindingDict: {'.
 		bindings keysAndValuesDo: [:key :value |
-			key = #innerLabel
+			key = self identityLabelPosition
 				ifTrue: [self class identityName storeOn: aStream]
 				ifFalse: [key storeOn: aStream].
 			aStream nextPutAll: ' -> ('.
-			value contents storeOn: aStream.
+			value contents asSymbol storeOn: aStream.
 			aStream nextPutAll: ').'].
 		aStream nextPut: $}].
 	
 	expressions ifNotEmpty: [
 		aStream nextPutAll: ' expressionDict: {'.
 		expressions keysAndValuesDo: [:key :value |
-			key = #innerLabel
+			key = self identityLabelPosition
 				ifTrue: [self class identityName storeOn: aStream]
 				ifFalse: [key storeOn: aStream].
 			aStream nextPutAll: ' -> ('.

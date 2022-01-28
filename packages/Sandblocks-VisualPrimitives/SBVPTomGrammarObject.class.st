@@ -25,7 +25,9 @@ SBVPTomGrammarObject class >> fromJsonObject: aJsonObject [
 { #category : #'as yet unclassified' }
 SBVPTomGrammarObject class >> staticVisualPrimitiveMapping [
 
-	^ {#shape -> CircleMorph new}
+	^ {
+		#shape -> CircleMorph new.
+		SBVPPropertyMapping constant: #bottomCenterLabel position: #identityLabelPosition}
 ]
 
 { #category : #accessing }

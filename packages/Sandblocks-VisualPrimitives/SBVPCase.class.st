@@ -53,9 +53,9 @@ SBVPCase class >> input: anInputVisualizer output: anOutputVisualizer strategy: 
 	" marker "
 
 	^ self new
+		defaultPatternVisualizationClass: aClass;
 		input: anInputVisualizer output: anOutputVisualizer;
-		strategy: aDict;
-		visualizePatternsAs: aClass
+		strategy: aDict
 ]
 
 { #category : #'as yet unclassified' }
@@ -324,18 +324,21 @@ SBVPCase >> input: anObject [
 { #category : #'as yet unclassified' }
 SBVPCase >> input: anSBBlock output: anotherSBBlock [
 
+	| row |
 	self
 		addMorph: (SBColumn new
 			cellPositioning: #center;
 			addMorphBack: self informationRow;
-			addMorphBack: (SBRow new
+			addMorphBack: (row := SBRow new
 				cellInset: 3;
-				cellPositioning: #center;
-				addMorphBack: anSBBlock;
-				addMorphBack: SBIcon iconArrowRight;
-				addMorphBack: anotherSBBlock));
+				cellPositioning: #center));
 		input: anSBBlock;
 		output: anotherSBBlock.
+	
+	row
+		addMorphBack: anSBBlock;
+		addMorphBack: SBIcon iconArrowRight;
+		addMorphBack: anotherSBBlock.
 	
 	self buildImplicitChildrenMatchingPattern
 	";
@@ -454,16 +457,6 @@ SBVPCase >> value: anObject [
 	^ match
 		ifNil: [anObject]
 		ifNotNil: [(matcher build: self output fromBinding: match) getObjectFromVisualPrimitive]
-]
-
-{ #category : #'as yet unclassified' }
-SBVPCase >> visualizePatternsAs: aClass [
-
-	self defaultPatternVisualizationClass: aClass.
-	self input allPatternsDo: [:pattern | pattern addPropertyMappings: aClass staticVisualPrimitiveMapping].
-	self output allPatternsDo: [:pattern | pattern addPropertyMappings: aClass staticVisualPrimitiveMapping].
-	self input layout.
-	self output layout
 ]
 
 { #category : #'as yet unclassified' }

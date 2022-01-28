@@ -260,7 +260,7 @@ SBVPExecuter class >> exampleGrammarRuleMergeRepeat: aGrammarObject [
 		label: 'example'.
 	biop := SBVPTomGrammarObject new.
 	biop type: 'REPEAT1'.
-	rüdigerString := 'SEK'.
+	rüdigerString := 'SEQ'.
 	^ (SBVPCase
 		input: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern
@@ -280,12 +280,13 @@ SBVPExecuter class >> exampleGrammarRuleMergeRepeat: aGrammarObject [
 			SBVPConstraintPattern constraint: [:bindings | (bindings at: #b) origin objectName = (bindings at: #d) origin objectName]})
 		output: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern
-				expressionDict: {#identity -> [biop]}
-				connections: {SBVPBindingPattern bindingDict: {#identity -> 'b'}}})
+				expressionDict: {#identity -> [biop]. #innerLabel -> ['bbii']}
+				connections: {SBVPBindingPattern bindingDict: {#identity -> #b}}})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> false;
 			add: #explicitChildrenMatching -> true;
-			yourself)) replaceAllMatches: aGrammarObject
+			yourself)
+		visualizePatternsAs: SBVPTomGrammarObject) replaceAllMatches: aGrammarObject
 ]
 
 { #category : #'as yet unclassified' }
@@ -332,7 +333,8 @@ SBVPExecuter class >> exampleGrammarRuleWeird: aGrammarObject [
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> false;
 			add: #explicitChildrenMatching -> true;
-			yourself)) replaceAllMatches: aGrammarObject
+			yourself)
+		visualizePatternsAs: SBVPTomGrammarObject) replaceAllMatches: aGrammarObject
 ]
 
 { #category : #'as yet unclassified' }
