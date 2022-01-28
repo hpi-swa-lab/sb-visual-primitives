@@ -80,20 +80,20 @@ SBVPExecuter class >> exampleBuildHeap: aTree [
 		label: 'example'.
 	^ (SBVPCase
 		input: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern bindingIndex: #a connections: {
-				SBVPEllipsisPattern bindingIndex: #b.
+			SBVPBindingPattern bindingDict: {#identity -> #a} connections: {
+				SBVPEllipsisPattern bindingDict: {#identity -> #b}.
 				SBVPBindingPattern
-					bindingIndex: #boi
-					connections: {SBVPEllipsisPattern bindingIndex: #e}.
-				SBVPEllipsisPattern bindingIndex: #d}.
+					bindingDict: {#identity -> #boi}
+					connections: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}.
+				SBVPEllipsisPattern bindingDict: {#identity -> #d}}.
 			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label asInteger < (bindings at: #boi) label asInteger]})
 		output: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern bindingIndex: #boi connections: {
-				SBVPEllipsisPattern bindingIndex: #b.
+			SBVPBindingPattern bindingDict: {#identity -> #boi} connections: {
+				SBVPEllipsisPattern bindingDict: {#identity -> #b}.
 				SBVPBindingPattern
-					bindingIndex: #a
-					connections: {SBVPEllipsisPattern bindingIndex: #e}.
-				SBVPEllipsisPattern bindingIndex: #d}})
+					bindingDict: {#identity -> #a}
+					connections: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}.
+				SBVPEllipsisPattern bindingDict: {#identity -> #d}}})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> false;
 			add: #explicitChildrenMatching -> false;
@@ -397,24 +397,25 @@ SBVPExecuter class >> exampleOrPattern [
 	^ SBVPExecuter
 		case: (SBVPCase
 			input: (SBVPOrGroupPattern patterns: {
-				SBVPBindingPattern bindingIndex: #a connections: {
+				SBVPBindingPattern bindingDict: {#identity -> #a} connections: {
 					SBVPBindingPattern
-						bindingIndex: #b
-						connections: {SBVPEllipsisPattern bindingIndex: #c}}.
+						bindingDict: {#identity -> #b}
+						connections: {SBVPEllipsisPattern bindingDict: {#identity -> #c}}}.
 				SBVPGroupPattern patterns: {
 					SBVPBindingPattern
-						bindingIndex: #a
-						connections: {SBVPEllipsisPattern bindingIndex: #c}.
+						bindingDict: {#identity -> #a}
+						connections: {SBVPEllipsisPattern bindingDict: {#identity -> #c}}.
 					SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label asInteger = 3]}})
 			output: (SBVPGroupPattern patterns: {
 				SBVPBindingPattern
-					bindingIndex: #a
-					labelDict: {#innerLabel -> 42}
-					connections: {SBVPEllipsisPattern bindingIndex: #c}})
+					bindingDict: {#identity -> #a}
+					expressionDict: {#innerLabel -> [42]}
+					connections: {SBVPEllipsisPattern bindingDict: {#identity -> #c}}})
 			strategy: (Dictionary new
 				add: #explicitRootMatching -> false;
 				add: #explicitChildrenMatching -> true;
-				yourself))
+				yourself)
+			visualizePatternsAs: SBVPDummyNode)
 		input: (SBVPVisualizer
 			code: [SBVPDummyNode buildTree: {9 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}]
 			showCode: true)

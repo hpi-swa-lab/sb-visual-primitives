@@ -162,12 +162,6 @@ SBVPCase >> buildImplicitChildrenMatchingPattern [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPCase >> buildOutput: aPattern fromBinding: anArray [
-
-	^ aPattern buildFromBinding: anArray
-]
-
-{ #category : #'as yet unclassified' }
 SBVPCase >> color [
 
 	^ color

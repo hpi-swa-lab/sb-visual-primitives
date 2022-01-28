@@ -255,7 +255,7 @@ SBVPBindingPattern >> bindingIndex: anObject [
 		autoCast: self bindingIndexAutoCast;
 		behavior: SBStDeclarationForBlock new;
 		contents: bindingIndex asString.
-	self innerLabel: label.
+	self innerLabel: label
 ]
 
 { #category : #'as yet unclassified' }
@@ -282,8 +282,8 @@ SBVPBindingPattern >> buildFromBinding: aDict [
 		ifNotNil: [self constant asVisualPrimitive]
 		ifNil: [(aDict at: self bindingIndex) copy].
 	output connections: (self buildChildrenFromBinding: aDict).
-	output labelDict addAll: self labelDict.
-	self labelBindingDict keysAndValuesDo: [:labelPosition :bindingName | output labelDict at: labelPosition put: (aDict at: bindingName)].
+	self dynamicLabelDict associationsDo: [:assoc | output addPropertyMapping: assoc].
+	self labelBindingDict keysAndValuesDo: [:labelPosition :bindingName | output addPropertyMapping: labelPosition -> (aDict at: bindingName)].
 	^ {output}
 ]
 
@@ -389,6 +389,15 @@ SBVPBindingPattern >> drawOn: aCanvas [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPBindingPattern >> dynamicLabelDict [
+
+	| dict |
+	dict := Dictionary new.
+	self labelDict keysAndValuesDo: [:position :value | (self staticVisualPrimitiveMapping anySatisfy: [:association | association key = position]) ifFalse: [dict at: position put: value]].
+	^ dict
+]
+
+{ #category : #'as yet unclassified' }
 SBVPBindingPattern >> enoughChildren: aVisualPrimitive [
 
 	^ self childrenInCurrentMatch <= aVisualPrimitive connections size
@@ -489,7 +498,7 @@ SBVPBindingPattern >> matches: aVisualPrimitive withBinding: aCollection [
 
 	| offset |
 	offset := 0.
-	self labelDict keysAndValuesDo: [:position :value | (aVisualPrimitive labelDict at: position ifAbsent: [^ false]) = value ifFalse: [^ false]].
+	self dynamicLabelDict keysAndValuesDo: [:position :value | (aVisualPrimitive labelDict at: position ifAbsent: [^ false]) = value ifFalse: [^ false]].
 	^ self connections withIndexAllSatisfy: [:connection :index | | wasSuccessful |
 		wasSuccessful := connection
 			matches: (connection searchRootFor: (self getCurrentPrimitive: aVisualPrimitive) at: index + offset)
@@ -569,6 +578,14 @@ SBVPBindingPattern >> setConnectionBindingFor: aVisualPrimitive in: aDict [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPBindingPattern >> staticVisualPrimitiveMapping [
+
+	^ self parentCase defaultPatternVisualizationClass
+		ifNil: {}
+		ifNotNil: #staticVisualPrimitiveMapping
+]
+
+{ #category : #'as yet unclassified' }
 SBVPBindingPattern >> typeNewLine [
 	<action>
 
@@ -607,32 +624,10 @@ SBVPBindingPattern >> writeBackClosureString: aString [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPBindingPattern >> writeLabelDictOn: aStream [
-	"Currently only works when we have text bubbles. Otherwise we need to get a smart solution for this."
-
-	| staticMapping |
-	staticMapping := self parentCase defaultPatternVisualizationClass staticVisualPrimitiveMapping.
-	aStream nextPutAll: ' labelDict: {'.
-	self blockDict keysAndValuesDo: [:position :block | | value |
-		((position = #innerLabel) not
-			and: [block submorphs notEmpty]
-			and: [(staticMapping anySatisfy: [:association | association key = position]) not]) ifTrue: [
-			"We avoid the innerlabel as it is enclosed in the shape morph and is currently used as bindingIndex."
-			value := block firstSubmorph contents.
-			position printOn: aStream.
-			aStream nextPutAll: ' -> ('.
-			value printOn: aStream.
-			aStream nextPutAll: ').']].
-	aStream nextPutAll: '}'
-]
-
-{ #category : #'as yet unclassified' }
 SBVPBindingPattern >> writeSourceOn: aStream [
 
 	| bindings expressions staticMapping |
-	staticMapping := self parentCase defaultPatternVisualizationClass
-		ifNil: {}
-		ifNotNil: #staticVisualPrimitiveMapping.
+	staticMapping := self staticVisualPrimitiveMapping.
 	self isImplicitChild ifTrue: [^ nil].
 	aStream
 		nextPut: $(;
@@ -642,7 +637,9 @@ SBVPBindingPattern >> writeSourceOn: aStream [
 	bindings := Dictionary new.
 	
 	self blockDict keysAndValuesDo: [:position :value |
-		(value hasSubmorphs and: [(staticMapping anySatisfy: [:association | association key = position]) not] and: [self labelPositions includes: position]) ifTrue: [
+		(value hasSubmorphs
+			and: [(staticMapping anySatisfy: [:association | association key = position]) not]
+			and: [self labelPositions includes: position]) ifTrue: [
 			value firstSubmorph isBlockBody
 				ifTrue: [expressions at: position put: value firstSubmorph]
 				ifFalse: [bindings at: position put: value firstSubmorph]]].

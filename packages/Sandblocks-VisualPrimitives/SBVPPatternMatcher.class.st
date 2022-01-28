@@ -29,7 +29,6 @@ SBVPPatternMatcher >> build: aPattern fromBinding: anArray currentPrimitive: aVi
 
 	| subtreeRoot |
 	subtreeRoot := self searchStack last.
-	
 	^ aVisualPrimitive = subtreeRoot
 		ifTrue: [(aPattern buildFromBinding: anArray) first]
 		ifFalse: [aVisualPrimitive copy connections: (aVisualPrimitive connections collect: [:primitive | self build: aPattern fromBinding: anArray currentPrimitive: primitive])]

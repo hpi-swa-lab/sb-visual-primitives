@@ -266,7 +266,7 @@ SBVisualPrimitive >> isVisualPrimitive [
 { #category : #accessing }
 SBVisualPrimitive >> label [
 
-	^ self innerLabel ifNotNil: [:label| label contents] ifNil: [nil]  
+	^ self innerLabel ifNotNil: [:label | label contents] ifNil: [nil]
 ]
 
 { #category : #accessing }
