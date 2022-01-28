@@ -48,6 +48,13 @@ SBVPEllipsisPattern >> connections: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPEllipsisPattern >> convertToEllipsisPattern [
+	"we done here"
+
+	
+]
+
+{ #category : #'as yet unclassified' }
 SBVPEllipsisPattern >> couldMatch: aVisualPrimitive [
 
 	^ true

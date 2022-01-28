@@ -364,6 +364,23 @@ SBVPBindingPattern >> constant: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPBindingPattern >> convertToEllipsisPattern [
+	<action>
+
+	| oldParent newChild |
+	oldParent := self parent.
+	self parent ifNotNil: [
+		newChild := SBVPEllipsisPattern bindingDict: {self class identityName -> self bindingIndex} asDictionary.
+		self parent addConnection: newChild afterIndex: self siblingIndex.
+		
+		self owner addMorphBack: newChild.
+		self parent removeConnection: self].
+	self allPatternsDo: [:block | block abandon].
+	newChild root attachTreeDecorator.
+	newChild root layout
+]
+
+{ #category : #'as yet unclassified' }
 SBVPBindingPattern >> couldMatch: aVisualPrimitive [
 
 	^ self childrenInCurrentMatch = aVisualPrimitive connections size and: [self constant isNil or: [self constant = aVisualPrimitive origin]]
