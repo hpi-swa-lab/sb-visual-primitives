@@ -5,6 +5,14 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBVPSpecialShapeFixture class >> staticVisualPrimitiveMapping [
+
+	^ {
+		#shape -> (CircleMorph new color: (Color r: 0.5 g: 0.5 b: 0.1) yourself).
+		#topLeftLabel -> SBIcon iconBug}
+]
+
+{ #category : #'as yet unclassified' }
 SBVPSpecialShapeFixture >> dynamicVisualPrimitiveMapping [
 
 	^ {

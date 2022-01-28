@@ -41,35 +41,6 @@ SBVPExecuter class >> case: aVPCase input: aVisualizer [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPExecuter class >> exampleBuildHeap [
-
-	^ SBVPExecuter
-		case: (SBVPCase
-			input: (SBVPGroupPattern patterns: {
-				SBVPBindingPattern bindingIndex: #a connections: {
-					SBVPEllipsisPattern bindingIndex: #b.
-					SBVPBindingPattern
-						bindingIndex: #boi
-						connections: {SBVPEllipsisPattern bindingIndex: #e}.
-					SBVPEllipsisPattern bindingIndex: #d}.
-				SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label asInteger < (bindings at: #boi) label asInteger]})
-			output: (SBVPGroupPattern patterns: {
-				SBVPBindingPattern bindingIndex: #boi connections: {
-					SBVPEllipsisPattern bindingIndex: #b.
-					SBVPBindingPattern
-						bindingIndex: #a
-						connections: {SBVPEllipsisPattern bindingIndex: #e}.
-					SBVPEllipsisPattern bindingIndex: #d}})
-			strategy: (Dictionary new
-				add: #explicitRootMatching -> false;
-				add: #explicitChildrenMatching -> true;
-				yourself))
-		input: (SBVPVisualizer
-			code: [SBVPDummyNode buildTree: {9 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}]
-			showCode: true)
-]
-
-{ #category : #'as yet unclassified' }
 SBVPExecuter class >> exampleBuildHeap: aTree [
 
 	self
@@ -77,6 +48,110 @@ SBVPExecuter class >> exampleBuildHeap: aTree [
 		args: [
 			{
 				(SBVPDummyNode buildTree: {9 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}) showAsVisualPrimitive}]
+		label: 'example'.
+	^ self exampleBuildHeapCase replaceAllMatches: aTree
+]
+
+{ #category : #'as yet unclassified' }
+SBVPExecuter class >> exampleBuildHeapBrokenBindings: aTree [
+
+	self
+		example: [SBVPExecuter]
+		args: [
+			{
+				(SBVPDummyNode buildTree: {9 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}) showAsVisualPrimitive}]
+		label: 'example'.
+	^ (SBVPCase
+		input: (SBVPGroupPattern patterns: {
+			SBVPBindingPattern bindingDict: {#identity -> #g} connections: {
+				SBVPEllipsisPattern bindingDict: {#identity -> #b}.
+				SBVPBindingPattern
+					bindingDict: {#identity -> #boi}
+					connections: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}.
+				SBVPEllipsisPattern bindingDict: {#identity -> #d}}.
+			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label asInteger < (bindings at: #boi) label asInteger]})
+		output: (SBVPGroupPattern patterns: {
+			SBVPBindingPattern bindingDict: {#identity -> #boi} connections: {
+				SBVPEllipsisPattern bindingDict: {#identity -> #dude}.
+				SBVPBindingPattern
+					bindingDict: {#identity -> #a}
+					connections: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}.
+				SBVPEllipsisPattern bindingDict: {#identity -> #d}}})
+		strategy: (Dictionary new
+			add: #explicitRootMatching -> false;
+			add: #explicitChildrenMatching -> false;
+			yourself)
+		visualizePatternsAs: SBVPDummyNode) replaceAllMatches: aTree
+]
+
+{ #category : #'as yet unclassified' }
+SBVPExecuter class >> exampleBuildHeapCase [
+
+	^ SBVPCase
+		input: (SBVPGroupPattern patterns: {
+			SBVPBindingPattern bindingDict: {#identity -> #a} connections: {
+				SBVPEllipsisPattern bindingDict: {#identity -> #b}.
+				SBVPBindingPattern
+					bindingDict: {#identity -> #boi}
+					connections: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}.
+				SBVPEllipsisPattern bindingDict: {#identity -> #d}}.
+			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label asInteger < (bindings at: #boi) label asInteger]})
+		output: (SBVPGroupPattern patterns: {
+			SBVPBindingPattern bindingDict: {#identity -> #boi} connections: {
+				SBVPEllipsisPattern bindingDict: {#identity -> #b}.
+				SBVPBindingPattern
+					bindingDict: {#identity -> #a}
+					connections: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}.
+				SBVPEllipsisPattern bindingDict: {#identity -> #d}}})
+		strategy: (Dictionary new
+			add: #explicitRootMatching -> false;
+			add: #explicitChildrenMatching -> false;
+			yourself)
+		visualizePatternsAs: SBVPDummyNode
+]
+
+{ #category : #'as yet unclassified' }
+SBVPExecuter class >> exampleBuildHeapChain: aTree [
+
+	| maxHeap |
+	self
+		example: [SBVPExecuter]
+		args: [
+			{
+				(SBVPDummyNode buildTree: {9 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}) showAsVisualPrimitive}]
+		label: 'example'.
+	maxHeap := self exampleBuildHeapCase replaceAllMatches: aTree.
+	^ (SBVPCase
+		input: (SBVPGroupPattern patterns: {
+			SBVPBindingPattern bindingDict: {#identity -> #a} connections: {
+				SBVPEllipsisPattern bindingDict: {#identity -> #b}.
+				SBVPBindingPattern
+					bindingDict: {#identity -> #boi}
+					connections: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}.
+				SBVPEllipsisPattern bindingDict: {#identity -> #d}}.
+			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label asInteger > (bindings at: #boi) label asInteger]})
+		output: (SBVPGroupPattern patterns: {
+			SBVPBindingPattern bindingDict: {#identity -> #boi} connections: {
+				SBVPEllipsisPattern bindingDict: {#identity -> #b}.
+				SBVPBindingPattern
+					bindingDict: {#identity -> #a}
+					connections: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}.
+				SBVPEllipsisPattern bindingDict: {#identity -> #d}}})
+		strategy: (Dictionary new
+			add: #explicitRootMatching -> false;
+			add: #explicitChildrenMatching -> false;
+			yourself)
+		visualizePatternsAs: SBVPDummyNode) replaceAllMatches: maxHeap
+]
+
+{ #category : #'as yet unclassified' }
+SBVPExecuter class >> exampleBuildHeapSpecialShape: aTree [
+
+	self
+		example: [SBVPExecuter]
+		args: [
+			{
+				(SBVPSpecialShapeFixture buildTree: {9 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}) showAsVisualPrimitive}]
 		label: 'example'.
 	^ (SBVPCase
 		input: (SBVPGroupPattern patterns: {
@@ -97,121 +172,8 @@ SBVPExecuter class >> exampleBuildHeap: aTree [
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> false;
 			add: #explicitChildrenMatching -> false;
-			yourself)) replaceAllMatches: aTree
-]
-
-{ #category : #'as yet unclassified' }
-SBVPExecuter class >> exampleBuildHeapBrokenBindings: aTree [
-
-	self
-		example: [SBVPExecuter]
-		args: [
-			{
-				(SBVPDummyNode buildTree: {9 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}) showAsVisualPrimitive}]
-		label: 'example'.
-	^ (SBVPCase
-		input: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern bindingIndex: #g connections: {
-				SBVPEllipsisPattern bindingIndex: #b.
-				SBVPBindingPattern
-					bindingIndex: #boi
-					connections: {SBVPEllipsisPattern bindingIndex: #e}.
-				SBVPEllipsisPattern bindingIndex: #d}.
-			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label asInteger < (bindings at: #boi) label asInteger]})
-		output: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern bindingIndex: #boi connections: {
-				SBVPEllipsisPattern bindingIndex: #dude.
-				SBVPBindingPattern
-					bindingIndex: #a
-					connections: {SBVPEllipsisPattern bindingIndex: #e}.
-				SBVPEllipsisPattern bindingIndex: #d}})
-		strategy: (Dictionary new
-			add: #explicitRootMatching -> false;
-			add: #explicitChildrenMatching -> false;
-			yourself)) replaceAllMatches: aTree
-]
-
-{ #category : #'as yet unclassified' }
-SBVPExecuter class >> exampleBuildHeapChain: aTree [
-
-	| maxHeap |
-	self
-		example: [SBVPExecuter]
-		args: [
-			{
-				(SBVPDummyNode buildTree: {9 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}) showAsVisualPrimitive}]
-		label: 'example'.
-	maxHeap := (SBVPCase
-		input: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern bindingIndex: #a connections: {
-				SBVPEllipsisPattern bindingIndex: #b.
-				SBVPBindingPattern
-					bindingIndex: #boi
-					connections: {SBVPEllipsisPattern bindingIndex: #e}.
-				SBVPEllipsisPattern bindingIndex: #d}.
-			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label asInteger < (bindings at: #boi) label asInteger]})
-		output: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern bindingIndex: #boi connections: {
-				SBVPEllipsisPattern bindingIndex: #b.
-				SBVPBindingPattern
-					bindingIndex: #a
-					connections: {SBVPEllipsisPattern bindingIndex: #e}.
-				SBVPEllipsisPattern bindingIndex: #d}})
-		strategy: (Dictionary new
-			add: #explicitRootMatching -> false;
-			add: #explicitChildrenMatching -> false;
-			yourself)) replaceAllMatches: aTree.
-	^ (SBVPCase
-		input: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern bindingIndex: #a connections: {
-				SBVPEllipsisPattern bindingIndex: #b.
-				SBVPBindingPattern
-					bindingIndex: #boi
-					connections: {SBVPEllipsisPattern bindingIndex: #e}.
-				SBVPEllipsisPattern bindingIndex: #d}.
-			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label asInteger > (bindings at: #boi) label asInteger]})
-		output: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern bindingIndex: #boi connections: {
-				SBVPEllipsisPattern bindingIndex: #b.
-				SBVPBindingPattern
-					bindingIndex: #a
-					connections: {SBVPEllipsisPattern bindingIndex: #e}.
-				SBVPEllipsisPattern bindingIndex: #d}})
-		strategy: (Dictionary new
-			add: #explicitRootMatching -> false;
-			add: #explicitChildrenMatching -> false;
-			yourself)) replaceAllMatches: maxHeap
-]
-
-{ #category : #'as yet unclassified' }
-SBVPExecuter class >> exampleBuildHeapSpecialShape: aTree [
-
-	self
-		example: [SBVPExecuter]
-		args: [
-			{
-				(SBVPSpecialShapeFixture buildTree: {9 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}) showAsVisualPrimitive}]
-		label: 'example'.
-	^ (SBVPCase
-		input: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern bindingIndex: #a connections: {
-				SBVPEllipsisPattern bindingIndex: #b.
-				SBVPBindingPattern
-					bindingIndex: #boi
-					connections: {SBVPEllipsisPattern bindingIndex: #e}.
-				SBVPEllipsisPattern bindingIndex: #d}.
-			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label asInteger < (bindings at: #boi) label asInteger]})
-		output: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern bindingIndex: #boi connections: {
-				SBVPEllipsisPattern bindingIndex: #b.
-				SBVPBindingPattern
-					bindingIndex: #a
-					connections: {SBVPEllipsisPattern bindingIndex: #e}.
-				SBVPEllipsisPattern bindingIndex: #d}})
-		strategy: (Dictionary new
-			add: #explicitRootMatching -> false;
-			add: #explicitChildrenMatching -> false;
-			yourself)) replaceAllMatches: aTree
+			yourself)
+		visualizePatternsAs: SBVPSpecialShapeFixture) replaceAllMatches: aTree
 ]
 
 { #category : #'as yet unclassified' }
@@ -229,24 +191,25 @@ SBVPExecuter class >> exampleBuildHeapStrings: aTree [
 		label: 'example'.
 	^ (SBVPCase
 		input: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern bindingIndex: #a connections: {
-				SBVPEllipsisPattern bindingIndex: #b.
+			SBVPBindingPattern bindingDict: {#identity -> #a} connections: {
+				SBVPEllipsisPattern bindingDict: {#identity -> #b}.
 				SBVPBindingPattern
-					bindingIndex: #boi
-					connections: {SBVPEllipsisPattern bindingIndex: #e}.
-				SBVPEllipsisPattern bindingIndex: #d}.
-			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label < (bindings at: #boi) label]})
+					bindingDict: {#identity -> #boi}
+					connections: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}.
+				SBVPEllipsisPattern bindingDict: {#identity -> #d}}.
+			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label asInteger < (bindings at: #boi) label asInteger]})
 		output: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern bindingIndex: #boi connections: {
-				SBVPEllipsisPattern bindingIndex: #b.
+			SBVPBindingPattern bindingDict: {#identity -> #boi} connections: {
+				SBVPEllipsisPattern bindingDict: {#identity -> #b}.
 				SBVPBindingPattern
-					bindingIndex: #a
-					connections: {SBVPEllipsisPattern bindingIndex: #e}.
-				SBVPEllipsisPattern bindingIndex: #d}})
+					bindingDict: {#identity -> #a}
+					connections: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}.
+				SBVPEllipsisPattern bindingDict: {#identity -> #d}}})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> false;
 			add: #explicitChildrenMatching -> false;
-			yourself)) replaceAllMatches: aTree
+			yourself)
+		visualizePatternsAs: SBVPStringDummyNode) replaceAllMatches: aTree
 ]
 
 { #category : #'as yet unclassified' }
@@ -273,26 +236,6 @@ SBVPExecuter class >> exampleBuildHeapTest: aTree [
 			add: #explicitChildrenMatching -> false;
 			yourself)
 		visualizePatternsAs: SBVPDummyNode) replaceAllMatches: aTree
-]
-
-{ #category : #'as yet unclassified' }
-SBVPExecuter class >> exampleBuildHeapWithImplicitChildren [
-
-	^ SBVPExecuter
-		case: (SBVPCase
-			input: (SBVPGroupPattern patterns: {
-				SBVPBindingPattern
-					bindingIndex: #a
-					connections: {SBVPBindingPattern bindingIndex: #b connections: {}}.
-				SBVPConstraintPattern constraint: [:bindings | (bindings at: #b) label asInteger < (bindings at: #a) label asInteger]})
-			output: (SBVPGroupPattern patterns: {
-				SBVPBindingPattern
-					bindingIndex: #b
-					connections: {SBVPBindingPattern bindingIndex: #a connections: {}}})
-			strategy: {#explicitRootMatching -> false. #explicitChildrenMatching -> false} asDictionary)
-		input: (SBVPVisualizer
-			code: [SBVPDummyNode buildTree: {9 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}]
-			showCode: true)
 ]
 
 { #category : #'as yet unclassified' }
@@ -369,22 +312,23 @@ SBVPExecuter class >> exampleGrammarRuleWeird: aGrammarObject [
 	bio type: 'REPEAT1'.
 	^ (SBVPCase
 		input: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern bindingIndex: #a labelDict: {#topLeftLabel -> 'SEQ'} connections: {
-				SBVPBindingPattern bindingIndex: #b labelBindingDict: (Dictionary new
-					add: #topLeftLabel -> #type;
-					yourself).
-				SBVPBindingPattern
-					bindingIndex: #c
-					labelDict: {#topLeftLabel -> 'REPEAT'}
-					connections: {SBVPBindingPattern bindingIndex: #d labelDict: {#topLeftLabel -> 'SYMBOL'}}}.
+			SBVPBindingPattern
+				bindingDict: {#identity -> #a}
+				expressionDict: {#topLeftLabel -> ['SEQ']}
+				connections: {
+					SBVPBindingPattern bindingDict: {#identity -> #b. #topLeftLabel -> #type}.
+					SBVPBindingPattern
+						bindingDict: {#identity -> #c}
+						expressionDict: {#topLeftLabel -> ['REPEAT']}
+						connections: {
+							SBVPBindingPattern
+								bindingDict: {#identity -> #d}
+								expressionDict: {#topLeftLabel -> ['SYMBOL']}}}.
 			SBVPConstraintPattern constraint: [:bindings | (bindings at: #b) origin objectName = (bindings at: #d) origin objectName]})
 		output: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern
-				bindingIndex: #c
-				labelBindingDict: (Dictionary new
-					add: #topLeftLabel -> #type;
-					yourself)
-				connections: {SBVPBindingPattern bindingIndex: #b}})
+				bindingDict: {#identity -> #c. #topLeftLabel -> #type}
+				connections: {SBVPBindingPattern bindingDict: {#identity -> #b}}})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> false;
 			add: #explicitChildrenMatching -> true;
@@ -422,45 +366,27 @@ SBVPExecuter class >> exampleOrPattern [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPExecuter class >> exampleWithConstants [
+SBVPExecuter class >> exampleWithConstants: aDummyNode [
 
 	| salzstangen |
-	SBVPVisualizer code: [SBVPDummyNode buildTree: {9 -> {10 -> {8}}}] showCode: false.
-	SBVPVisualizer
-		code: [
-			salzstangen := SBVPDummyNode buildTree: {9 -> {10 -> {8}}}.
-			(SBVPCase
-				input: (SBVPGroupPattern patterns: {
-					SBVPBindingPattern constant: salzstangen connections: {
-						SBVPBindingPattern
-							bindingIndex: #a
-							connections: {SBVPEllipsisPattern bindingIndex: #b}}})
-				output: (SBVPGroupPattern patterns: {
-					SBVPBindingPattern bindingIndex: #a connections: {
-						SBVPBindingPattern
-							constant: salzstangen
-							connections: {SBVPEllipsisPattern bindingIndex: #b}}})
-				strategy: {#explicitRootMatching -> false} asDictionary) replaceAllMatches]
-		showCode: true
-]
-
-{ #category : #'as yet unclassified' }
-SBVPExecuter class >> exampleWithConstants: salzstangen [
-
-	| case |
-	case := SBVPCase
+	self
+		example: [SBVPExecuter]
+		args: [{(SBVPDummyNode buildTree: {9 -> {10 -> {8}}}) showAsVisualPrimitive}]
+		label: 'example'.
+	
+	salzstangen := aDummyNode.
+	^ (SBVPCase
 		input: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern constant: salzstangen connections: {
+			SBVPBindingPattern expressionDict: {#identity -> [salzstangen]} connections: {
 				SBVPBindingPattern
-					bindingIndex: #a
-					connections: {SBVPEllipsisPattern bindingIndex: #b}}})
+					bindingDict: {#identity -> #a}
+					connections: {SBVPEllipsisPattern bindingDict: {#identity -> #b}}}})
 		output: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern bindingIndex: #a connections: {
+			SBVPBindingPattern bindingDict: {#identity -> #a} connections: {
 				SBVPBindingPattern
-					constant: salzstangen
-					connections: {SBVPEllipsisPattern bindingIndex: #b}}})
-		strategy: {#explicitRootMatching -> false. #explicitChildrenMatching -> true} asDictionary.
-	^ case replaceAllMatches: salzstangen
+					expressionDict: {#identity -> [salzstangen]}
+					connections: {SBVPEllipsisPattern bindingDict: {#identity -> #b}}}})
+		strategy: {#explicitRootMatching -> false} asDictionary) replaceAllMatches
 ]
 
 { #category : #'as yet unclassified' }

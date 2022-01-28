@@ -203,6 +203,25 @@ SBVPPatternMatcherTest >> examplePatternTwoWildcardList [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPPatternMatcherTest >> exampleWithConstants: salzstangen [
+
+	| case |
+	case := SBVPCase
+		input: (SBVPGroupPattern patterns: {
+			SBVPBindingPattern expressionDict: {#identity -> [salzstangen]} connections: {
+				SBVPBindingPattern
+					bindingDict: {#identity -> #a}
+					connections: {SBVPEllipsisPattern bindingDict: {#identity -> #b}}}})
+		output: (SBVPGroupPattern patterns: {
+			SBVPBindingPattern bindingDict: {#identity -> #a} connections: {
+				SBVPBindingPattern
+					expressionDict: {#identity -> [salzstangen]}
+					connections: {SBVPEllipsisPattern bindingDict: {#identity -> #b}}}})
+		strategy: {#explicitRootMatching -> false} asDictionary.
+	^ case replaceAllMatches: salzstangen
+]
+
+{ #category : #'as yet unclassified' }
 SBVPPatternMatcherTest >> getLabelList: aPrimitive [
 
 	| currentPrimitive list |
@@ -245,7 +264,7 @@ SBVPPatternMatcherTest >> testConstantsWork [
 
 	| tree resultingTree |
 	tree := SBVPDummyNode buildTree: {9 -> {10 -> {8}}}.
-	resultingTree := SBVPExecuter exampleWithConstants: tree.
+	resultingTree := self exampleWithConstants: tree.
 	self assert: {10. 8. 9} equals: (self getLabelList: resultingTree asVisualPrimitive) asArray
 ]
 

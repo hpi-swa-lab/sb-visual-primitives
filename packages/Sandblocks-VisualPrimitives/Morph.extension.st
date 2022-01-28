@@ -3,8 +3,9 @@ Extension { #name : #Morph }
 { #category : #'*Sandblocks-VisualPrimitives' }
 Morph >> addMorphFullBoundsCentered: aMorph [
 
-	aMorph position: bounds center - (aMorph fullBounds extent // 2).
-	self addMorphBack: aMorph.
+	aMorph fullBounds.
+	aMorph position: bounds center - ((aMorph bounds extent / 2)).
+	self addMorphBack: aMorph. 
 
 ]
 
