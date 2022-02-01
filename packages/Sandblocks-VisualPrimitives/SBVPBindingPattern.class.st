@@ -555,14 +555,13 @@ SBVPBindingPattern >> noteNewOwner: newOwner [
 				send: #labelBindingChanged
 				to: self].
 		self constant ifNotNil: [self setLabelAt: self identityLabelPosition to: self constant asSandblock].
-		self bindingIndex
-			ifNotNil: [
-				self
-					setLabelAt: self identityLabelPosition
-					to: (self bindingLabelBlockFrom: self bindingIndex asString)]
-			ifNil: [ | unkown |
-				self setLabelAt: self identityLabelPosition to: (unkown := self newUnknown).
-				unkown startInput]]
+		self bindingIndex ifNotNil: [
+			self
+				setLabelAt: self identityLabelPosition
+				to: (self bindingLabelBlockFrom: self bindingIndex asString)].
+		(self constant isNil and: [self bindingIndex isNil]) ifTrue: [ | unkown |
+			self setLabelAt: self identityLabelPosition to: (unkown := self newUnknown).
+			unkown startInput]]
 ]
 
 { #category : #'as yet unclassified' }

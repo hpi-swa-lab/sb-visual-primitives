@@ -16,7 +16,7 @@ SBVPPropertyMapping class >> constant: anObject vpProperty: aSymbol [
 	^ SBVPPropertyMapping
 		getter: [:ignore | anObject]
 		setter: [:ignore :ignore2 | ]
-		patternValue: aSymbol
+		patternValue: anObject
 		vpProperty: aSymbol
 ]
 

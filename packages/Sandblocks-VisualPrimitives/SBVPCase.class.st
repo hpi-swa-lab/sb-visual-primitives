@@ -323,21 +323,9 @@ SBVPCase >> input: anObject [
 { #category : #'as yet unclassified' }
 SBVPCase >> input: anSBBlock output: anotherSBBlock [
 
-	| row |
 	self
-		addMorph: (SBColumn new
-			cellPositioning: #center;
-			addMorphBack: self informationRow;
-			addMorphBack: (row := SBRow new
-				cellInset: 3;
-				cellPositioning: #center));
 		input: anSBBlock;
 		output: anotherSBBlock.
-	
-	row
-		addMorphBack: anSBBlock;
-		addMorphBack: SBIcon iconArrowRight;
-		addMorphBack: anotherSBBlock.
 	
 	self buildImplicitChildrenMatchingPattern
 	";
@@ -348,6 +336,24 @@ SBVPCase >> input: anSBBlock output: anotherSBBlock [
 SBVPCase >> inputRoot [
 
 	^ self input connections first
+]
+
+{ #category : #'as yet unclassified' }
+SBVPCase >> noteNewOwner: aMorph [
+
+	| row |
+	super noteNewOwner: aMorph.
+	self addMorph: (SBColumn new
+		cellPositioning: #center;
+		addMorphBack: self informationRow;
+		addMorphBack: (row := SBRow new
+			cellInset: 3;
+			cellPositioning: #center)).
+	
+	row
+		addMorphBack: self input;
+		addMorphBack: SBIcon iconArrowRight;
+		addMorphBack: self output
 ]
 
 { #category : #accessing }
