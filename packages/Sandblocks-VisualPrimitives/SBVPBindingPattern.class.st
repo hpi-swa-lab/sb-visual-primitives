@@ -174,10 +174,9 @@ SBVPBindingPattern >> addLabel [
 
 	| index |
 	index := UIManager default chooseFrom: self labelPositions.
-	index > 0 ifTrue: [
-		self
-			setLabelAt: (self labelPositions at: index)
-			to: (SBUnknown new grammarHandler: SBStGrammarHandler new).
+	index > 0 ifTrue: [ | unknown |
+		self setLabelAt: (self labelPositions at: index) to: (unknown := self newUnknown).
+		unknown startInput.
 		self layout]
 ]
 
@@ -529,6 +528,12 @@ SBVPBindingPattern >> matches: aVisualPrimitive withBinding: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPBindingPattern >> newUnknown [
+
+	^ SBUnknown new grammarHandler: SBStGrammarHandler new
+]
+
+{ #category : #'as yet unclassified' }
 SBVPBindingPattern >> noteNewOwner: newOwner [
 
 	super noteNewOwner: newOwner.
@@ -544,10 +549,14 @@ SBVPBindingPattern >> noteNewOwner: newOwner [
 				send: #labelBindingChanged
 				to: self].
 		self constant ifNotNil: [self setLabelAt: self identityLabelPosition to: self constant asSandblock].
-		self bindingIndex ifNotNil: [
-			self
-				setLabelAt: self identityLabelPosition
-				to: (self bindingLabelBlockFrom: self bindingIndex asString)]]
+		self bindingIndex
+			ifNotNil: [
+				self
+					setLabelAt: self identityLabelPosition
+					to: (self bindingLabelBlockFrom: self bindingIndex asString)]
+			ifNil: [ | unkown |
+				self setLabelAt: self identityLabelPosition to: (unkown := self newUnknown).
+				unkown startInput]]
 ]
 
 { #category : #'as yet unclassified' }

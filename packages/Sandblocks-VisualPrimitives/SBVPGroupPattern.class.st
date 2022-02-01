@@ -55,7 +55,7 @@ SBVPGroupPattern >> addImplicitChildren: anArray [
 SBVPGroupPattern >> addNewBindingPattern [
 
 	| newPattern |
-	newPattern := SBVPBindingPattern bindingDict: {#identity -> #a} connections: {}.
+	newPattern := SBVPBindingPattern new.
 	
 	self addConnection: newPattern
 ]
