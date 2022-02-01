@@ -4,69 +4,79 @@ Class {
 	#instVars : [
 		'getter',
 		'setter',
-		'position'
+		'patternValue',
+		'vpProperty'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMapping class >> constant: anObject position: aSymbol [
+SBVPPropertyMapping class >> constant: anObject vpProperty: aSymbol [
 
-	^ SBVPPropertyMapping getter: [anObject] setter: [:ignore | ] position: aSymbol
+	^ SBVPPropertyMapping
+		getter: [:ignore | anObject]
+		setter: [:ignore :ignore2 | ]
+		patternValue: aSymbol
+		vpProperty: aSymbol
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMapping class >> defaultGetterBlockWith: aSymbol on: anObject [
+SBVPPropertyMapping class >> defaultGetterBlockWith: aSymbol [
 
 	^ aSymbol isSymbol
-		ifTrue: [[anObject perform: aSymbol asSimpleGetter]]
-		ifFalse: [[aSymbol]]
+		ifTrue: [[:object | object perform: aSymbol asSimpleGetter]]
+		ifFalse: [[:object | aSymbol]]
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMapping class >> defaultSetterBlockWith: aSymbol for: anotherSymbol on: anObject [
+SBVPPropertyMapping class >> defaultSetterBlockWith: aSymbol for: anotherSymbol [
 
 	^ aSymbol isSymbol
-		ifTrue: [[:vp | anObject perform: aSymbol asSimpleSetter with: (vp propertyAt: anotherSymbol)]]
-		ifFalse: [
-			[:vp | "do nothing, because value should be constant"
-			]]
+		ifTrue: [[:object :vp | object perform: aSymbol asSimpleSetter with: (vp propertyAt: anotherSymbol)]]
+		ifFalse: [[:object :vp | ]]
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMapping class >> fromAssociation: anAssociation for: anObject [
+SBVPPropertyMapping class >> fromAssociation: anAssociation [
 
 	| getterBlock setterBlock |
-	getterBlock := self defaultGetterBlockWith: anAssociation value on: anObject.
-	setterBlock := self defaultSetterBlockWith: anAssociation value for: anAssociation key on: anObject.
+	getterBlock := self defaultGetterBlockWith: anAssociation value.
+	setterBlock := self defaultSetterBlockWith: anAssociation value for: anAssociation key.
 	
-	^ self getter: getterBlock setter: setterBlock position: anAssociation key
+	^ self getter: getterBlock setter: setterBlock vpProperty: anAssociation key
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMapping class >> getter: aBlock setter: anotherBlock position: aSymbol [
+SBVPPropertyMapping class >> getter: aBlock setter: anotherBlock patternValue: anObject vpProperty: aSymbol [
 
 	^ self new
 		getter: aBlock;
 		setter: anotherBlock;
-		position: aSymbol;
+		vpProperty: aSymbol;
+		patternValue: anObject;
 		yourself
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMapping class >> property: aSymbol primitiveProperty: anotherSymbol on: anObject [
+SBVPPropertyMapping class >> getter: aBlock setter: anotherBlock vpProperty: aSymbol [
 
-	| getterBlock setterBlock |
-	getterBlock := self defaultGetterBlockWith: aSymbol on: anObject.
-	setterBlock := self defaultSetterBlockWith: aSymbol for: anotherSymbol on: anObject.
-	
-	^ self getter: getterBlock setter: setterBlock position: anotherSymbol
+	^ self getter: aBlock setter: anotherBlock patternValue: nil vpProperty: aSymbol
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMapping >> getMorph [
+SBVPPropertyMapping class >> property: aSymbol vpProperty: anotherSymbol [
 
-	^ self getter value
+	| getterBlock setterBlock |
+	getterBlock := self defaultGetterBlockWith: aSymbol.
+	setterBlock := self defaultSetterBlockWith: aSymbol for: anotherSymbol.
+	
+	^ self getter: getterBlock setter: setterBlock vpProperty: anotherSymbol
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPropertyMapping >> getMorphFor: anObject [
+
+	^ self value: anObject
 ]
 
 { #category : #accessing }
@@ -90,19 +100,19 @@ SBVPPropertyMapping >> isPropertyMapping [
 { #category : #'as yet unclassified' }
 SBVPPropertyMapping >> key [
 
-	^ self position
+	^ self vpProperty
 ]
 
 { #category : #accessing }
-SBVPPropertyMapping >> position [
+SBVPPropertyMapping >> patternValue [
 
-	^ position
+	^ patternValue
 ]
 
 { #category : #accessing }
-SBVPPropertyMapping >> position: anObject [
+SBVPPropertyMapping >> patternValue: anObject [
 
-	position := anObject
+	patternValue := anObject
 ]
 
 { #category : #accessing }
@@ -118,7 +128,19 @@ SBVPPropertyMapping >> setter: anObject [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMapping >> value [
+SBVPPropertyMapping >> value: anObject [
 
-	^ self getter value
+	^ self getter value: anObject
+]
+
+{ #category : #accessing }
+SBVPPropertyMapping >> vpProperty [
+
+	^ vpProperty
+]
+
+{ #category : #accessing }
+SBVPPropertyMapping >> vpProperty: anObject [
+
+	vpProperty := anObject
 ]

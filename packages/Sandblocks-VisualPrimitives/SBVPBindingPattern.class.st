@@ -389,6 +389,12 @@ SBVPBindingPattern >> couldMatch: aVisualPrimitive [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPBindingPattern >> deleteCommandFor: aBlock [
+
+	self halt
+]
+
+{ #category : #'as yet unclassified' }
 SBVPBindingPattern >> drawOn: aCanvas [
 
 	self writeBackClosure ifNotNil: [aCanvas frameOval: (self bounds outsetBy: 5) width: 2 color: Color black].
@@ -465,7 +471,7 @@ SBVPBindingPattern >> identityLabelPosition [
 
 	^ self staticVisualPrimitiveMapping
 		detect: [:mapping | mapping key = #identityLabelPosition]
-		ifFound: [:mapping | mapping value]
+		ifFound: [:mapping | mapping patternValue]
 		ifNone: [#innerLabel]
 ]
 
@@ -542,7 +548,7 @@ SBVPBindingPattern >> noteNewOwner: newOwner [
 		self addPropertyMappings: (self labelExpressionDict associations collect: [:association |
 			SBVPPropertyMappingExpression
 				expression: association value
-				position: association key]).
+				vpProperty: association key]).
 		self labelBindingDict keysAndValuesDo: [:key :value |
 			(self setLabelAt: key to: (self bindingLabelBlockFrom: value))
 				when: #contentsChanged
@@ -618,9 +624,14 @@ SBVPBindingPattern >> setConnectionBindingFor: aVisualPrimitive in: aDict [
 SBVPBindingPattern >> staticVisualPrimitiveMapping [
 
 	^ self parentCase ifNil: {} ifNotNil: [:case |
-		case defaultPatternVisualizationClass
+		(case defaultPatternVisualizationClass
 			ifNil: {}
-			ifNotNil: #staticVisualPrimitiveMapping]
+			ifNotNil: #visualPrimitiveMapping)
+			collect: [:mappingOrAssoc |
+				mappingOrAssoc isPropertyMapping
+					ifTrue: [mappingOrAssoc]
+					ifFalse: [SBVPPropertyMapping fromAssociation: mappingOrAssoc]]
+			thenSelect: [:mapping | mapping patternValue notNil]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -628,6 +639,12 @@ SBVPBindingPattern >> typeNewLine [
 	<action>
 
 	self halt
+]
+
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern >> valueFromPropertyMapping: aPropertyMapping [
+
+	^ aPropertyMapping patternValue
 ]
 
 { #category : #'as yet unclassified' }

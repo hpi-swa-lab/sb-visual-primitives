@@ -9,32 +9,27 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMappingSelect class >> defaultGetterBlockWith: aSymbol on: anObject [
+SBVPPropertyMappingSelect class >> defaultGetterBlockWith: aSymbol [
 
-	^ [self representations at: (self choices indexOf: (anObject perform: aSymbol asSimpleGetter))]
+	^ [:object | self representations at: (self choices indexOf: (object perform: aSymbol asSimpleGetter))]
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMappingSelect class >> property: aSymbol primitiveProperty: anotherSymbol choices: aCollection on: anObject [
+SBVPPropertyMappingSelect class >> property: aSymbol vpProperty: anotherSymbol choices: aCollection [
 
 	^ self new
-		property: aSymbol
-			primitiveProperty: anotherSymbol
-			choices: aCollection
-			representations: aCollection
-			on: anObject;
+		property: aSymbol vpProperty: anotherSymbol choices: aCollection representations: aCollection;
 		yourself
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMappingSelect class >> property: aSymbol primitiveProperty: anotherSymbol choices: aCollection representations: anotherCollection on: anObject [
+SBVPPropertyMappingSelect class >> property: aSymbol vpProperty: anotherSymbol choices: aCollection representations: anotherCollection [
 
 	^ self new
 		property: aSymbol
-			primitiveProperty: anotherSymbol
+			vpProperty: anotherSymbol
 			choices: aCollection
-			representations: anotherCollection
-			on: anObject;
+			representations: anotherCollection;
 		yourself
 ]
 
@@ -57,48 +52,43 @@ SBVPPropertyMappingSelect >> choices: aCollection [
 ]
 
 { #category : #accessing }
-SBVPPropertyMappingSelect >> defaultGetterBlockWith: aSymbol on: anObject [
+SBVPPropertyMappingSelect >> defaultGetterBlockWith: aSymbol [
 
-	^ [self representations at: (self choices indexOf: (anObject perform: aSymbol asSimpleGetter))]
+	^ [:object | self representations at: (self choices indexOf: (object perform: aSymbol asSimpleGetter))]
 ]
 
 { #category : #accessing }
-SBVPPropertyMappingSelect >> defaultSetterBlockWith: aSymbol for: anotherSymbol on: anObject [
+SBVPPropertyMappingSelect >> defaultSetterBlockWith: aSymbol for: anotherSymbol [
 
-	^ [:vp | anObject perform: aSymbol asSimpleSetter with: (vp propertyAt: anotherSymbol)]
+	^ [:object :vp | object perform: aSymbol asSimpleSetter with: (vp propertyAt: anotherSymbol)]
 ]
 
 { #category : #accessing }
-SBVPPropertyMappingSelect >> getMorph [
+SBVPPropertyMappingSelect >> getMorphFor: anObject [
 
 	^ SBVPSelectProperty
 		choices: self choices
 		representations: self representations
-		initialValue: self getter value
+		initialValue: (self value: anObject)
 ]
 
 { #category : #accessing }
-SBVPPropertyMappingSelect >> property: aSymbol primitiveProperty: anotherSymbol choices: aCollection on: anObject [
+SBVPPropertyMappingSelect >> property: aSymbol vpProperty: anotherSymbol choices: aCollection [
 
-	^ self
-		property: aSymbol
-		primitiveProperty: anotherSymbol
-		choices: aCollection
-		representations: aCollection
-		on: anObject
+	^ self property: aSymbol vpProperty: anotherSymbol choices: aCollection representations: aCollection
 ]
 
 { #category : #accessing }
-SBVPPropertyMappingSelect >> property: aSymbol primitiveProperty: anotherSymbol choices: aCollection representations: anotherCollection on: anObject [
+SBVPPropertyMappingSelect >> property: aSymbol vpProperty: anotherSymbol choices: aCollection representations: anotherCollection [
 
 	| getterBlock setterBlock |
-	getterBlock := self defaultGetterBlockWith: aSymbol on: anObject.
-	setterBlock := self defaultSetterBlockWith: aSymbol for: anotherSymbol on: anObject.
+	getterBlock := self defaultGetterBlockWith: aSymbol.
+	setterBlock := self defaultSetterBlockWith: aSymbol for: anotherSymbol.
 	
 	^ self
 		getter: getterBlock;
 		setter: setterBlock;
-		position: anotherSymbol;
+		vpProperty: anotherSymbol;
 		choices: aCollection;
 		representations: anotherCollection
 ]

@@ -5,20 +5,9 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBVPStringDummyNode >> dynamicVisualPrimitiveMapping [
+SBVPStringDummyNode class >> visualPrimitiveMapping [
 
-	^ {
-		SBVPPropertyMappingString property: #key primitiveProperty: #innerLabel on: self.
-		SBVPPropertyMapping
-			getter: [{self left. self right} reject: [:connection | connection isNil]]
-			setter: [:vp |
-				vp connections size >= 1
-					ifTrue: [self left: vp connections first getObjectFromVisualPrimitive]
-					ifFalse: [self left: nil].
-				vp connections size >= 2
-					ifTrue: [self right: vp connections second getObjectFromVisualPrimitive]
-					ifFalse: [self right: nil]]
-			position: #connections}
+	^ {SBVPPropertyMappingString property: #key vpProperty: #innerLabel. self connectionsMappingEntry}
 ]
 
 { #category : #'as yet unclassified' }

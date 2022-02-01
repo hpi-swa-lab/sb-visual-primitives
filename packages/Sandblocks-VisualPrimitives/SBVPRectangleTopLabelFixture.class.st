@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBVPRectangleTopLabelFixture >> dynamicVisualPrimitiveMapping [
+SBVPRectangleTopLabelFixture class >> visualPrimitiveMapping [
 
-	^ super dynamicVisualPrimitiveMapping, {SBVPPropertyMappingString property: #key primitiveProperty: #innerLabel on: self}
+	^ super visualPrimitiveMapping, {SBVPPropertyMappingString property: #key vpProperty: #innerLabel}
 ]

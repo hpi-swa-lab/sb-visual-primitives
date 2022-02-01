@@ -17,6 +17,21 @@ SBVPDummyNode class >> buildTree: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPDummyNode class >> connectionsMappingEntry [
+
+	^ SBVPPropertyMapping
+		getter: [:object | {object left. object right} reject: [:connection | connection isNil]]
+		setter: [:object :vp |
+			vp connections size >= 1
+				ifTrue: [object left: vp connections first getObjectFromVisualPrimitive]
+				ifFalse: [object left: nil].
+			vp connections size >= 2
+				ifTrue: [object right: vp connections second getObjectFromVisualPrimitive]
+				ifFalse: [object right: nil]]
+		vpProperty: #connections
+]
+
+{ #category : #'as yet unclassified' }
 SBVPDummyNode class >> exampleRootWithTwoChildren [
 
 	| n1 n2 root |
@@ -54,31 +69,15 @@ SBVPDummyNode class >> fromVisualPrimitive: aVisualPrimitive withParent: aDummyN
 ]
 
 { #category : #'as yet unclassified' }
-SBVPDummyNode class >> staticVisualPrimitiveMapping [
+SBVPDummyNode class >> visualPrimitiveMapping [
 
 	^ {
 		#shape -> (RectangleMorph new
-			color: Color seaFoam;
+			color: (Color r: 0.0 g: 1 b: 0.502);
 			yourself).
-		#topLeftLabel -> SBIcon iconBug}
-	"vResizing: #shrinkWrap; hResizing: #shrinkWrap;"
-]
-
-{ #category : #accessing }
-SBVPDummyNode >> dynamicVisualPrimitiveMapping [
-
-	^ {
-		SBVPPropertyMappingNumber property: #key primitiveProperty: #innerLabel on: self.
-		SBVPPropertyMapping
-			getter: [{self left. self right} reject: [:connection | connection isNil]]
-			setter: [:vp |
-				vp connections size >= 1
-					ifTrue: [self left: vp connections first getObjectFromVisualPrimitive]
-					ifFalse: [self left: nil].
-				vp connections size >= 2
-					ifTrue: [self right: vp connections second getObjectFromVisualPrimitive]
-					ifFalse: [self right: nil]]
-			position: #connections}
+		#topLeftLabel -> SBIcon iconBug.
+		SBVPPropertyMappingNumber property: #key vpProperty: #innerLabel.
+		self connectionsMappingEntry}
 ]
 
 { #category : #accessing }

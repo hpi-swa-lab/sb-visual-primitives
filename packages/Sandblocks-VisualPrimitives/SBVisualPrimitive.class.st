@@ -38,7 +38,7 @@ SBVisualPrimitive class >> newFromObject: anObject [
 	| vp |
 	vp := self new.
 	vp origin: anObject.
-	vp addPropertyMappings: anObject visualPrimitiveMapping.
+	vp addPropertyMappings: anObject class visualPrimitiveMapping.
 	^ vp
 ]
 
@@ -49,7 +49,7 @@ SBVisualPrimitive class >> newFromObject: anObject in: aMorph [
 	vp := self new.
 	aMorph addMorphBack: vp.
 	vp origin: anObject.
-	vp addPropertyMappings: anObject visualPrimitiveMapping.
+	vp addPropertyMappings: anObject class visualPrimitiveMapping.
 	^ vp
 ]
 
@@ -89,14 +89,11 @@ SBVisualPrimitive >> addPropertyMapping: anSBVPPropertyMapping [
 
 	| value propertyMapping child |
 	propertyMapping := anSBVPPropertyMapping.
-	anSBVPPropertyMapping isPropertyMapping ifFalse: [
-		propertyMapping := anSBVPPropertyMapping value propertyMappingClass
-			fromAssociation: anSBVPPropertyMapping
-			for: self origin].
-	value := propertyMapping getter value.
-	self labelDict at: propertyMapping position put: value.
+	anSBVPPropertyMapping isPropertyMapping ifFalse: [propertyMapping := anSBVPPropertyMapping value propertyMappingClass fromAssociation: anSBVPPropertyMapping].
+	value := self valueFromPropertyMapping: propertyMapping.
+	self labelDict at: propertyMapping vpProperty put: value.
 	
-	propertyMapping position
+	propertyMapping vpProperty
 		caseOf: {
 			[#shape] -> [self shape: value].
 			[#connections] -> [
@@ -107,10 +104,10 @@ SBVisualPrimitive >> addPropertyMapping: anSBVPPropertyMapping [
 						ifNotNil: [SBVisualPrimitive newFromObject: connection in: self owner].
 					self addConnection: child]]}
 		otherwise: [
-			(self labelPositions includes: propertyMapping position) ifTrue: [
-				(self blockDict at: propertyMapping position)
+			(self labelPositions includes: propertyMapping vpProperty) ifTrue: [
+				(self blockDict at: propertyMapping vpProperty)
 					removeAllMorphs;
-					addMorphBack: propertyMapping getMorph]]
+					addMorphBack: (propertyMapping getMorphFor: self origin)]]
 ]
 
 { #category : #accessing }
@@ -209,10 +206,12 @@ SBVisualPrimitive >> getObjectFromVisualPrimitive [
 
 	| anObject |
 	anObject := self origin copy.
-	anObject visualPrimitiveMapping do: [:propertyMapping |
+	anObject class visualPrimitiveMapping do: [:propertyMapping |
 		(propertyMapping isPropertyMapping
-			ifFalse: [SBVPPropertyMapping fromAssociation: propertyMapping for: anObject]
-			ifTrue: [propertyMapping]) setter value: self].
+			ifFalse: [SBVPPropertyMapping fromAssociation: propertyMapping]
+			ifTrue: [propertyMapping]) setter
+			value: anObject
+			value: self].
 	
 	^ anObject
 ]
@@ -467,6 +466,12 @@ SBVisualPrimitive >> siblingIndex [
 SBVisualPrimitive >> topLabelPositions [
 
 	^ {#topLeftLabel. #topCenterLabel. #topRightLabel}
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> valueFromPropertyMapping: aPropertyMapping [
+
+	^ aPropertyMapping value: self origin
 ]
 
 { #category : #accessing }

@@ -15,7 +15,7 @@ SBVPPropertyMappingNumber class >> defaultSetterBlockWith: aSymbol for: anotherS
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMappingNumber >> getMorph [
+SBVPPropertyMappingNumber >> getMorphFor: anObject [
 
-	^ SBStNumber new contents: self getter value asString
+	^ SBStNumber new contents: (self value: anObject) asString
 ]

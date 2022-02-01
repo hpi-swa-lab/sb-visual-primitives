@@ -5,10 +5,7 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBVPCircleFixture >> dynamicVisualPrimitiveMapping [
+SBVPCircleFixture class >> visualPrimitiveMapping [
 
-	^ {
-		#shape -> CircleMorph new.
-		#innerLabel -> #key.
-		#connections -> ({self left. self right} reject: [:connection | connection isNil])}
+	^ {#shape -> CircleMorph new. #innerLabel -> #key. self connectionsMappingEntry}
 ]

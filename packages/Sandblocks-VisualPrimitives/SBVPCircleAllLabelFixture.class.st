@@ -5,7 +5,7 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBVPCircleAllLabelFixture >> dynamicVisualPrimitiveMapping [
+SBVPCircleAllLabelFixture class >> visualPrimitiveMapping [
 
 	^ {
 		#shape -> CircleMorph new.
@@ -18,5 +18,5 @@ SBVPCircleAllLabelFixture >> dynamicVisualPrimitiveMapping [
 		#bottomCenterLabel -> 'bc'.
 		#bottomLeftLabel -> 'bl'.
 		#leftLabel -> 'l'.
-		#connections -> ({self left. self right} reject: [:connection | connection isNil])}
+		self connectionsMappingEntry}
 ]

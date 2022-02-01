@@ -497,14 +497,12 @@ SBVPExecuter >> initialize [
 				shrinkWrap;
 				cellInset: 3;
 				addMorphBack: (SBTextBubble new contents: 'Input');
-				addMorphBack: (inputBlock := SBRow new
-					shrinkWrap));
+				addMorphBack: (inputBlock := SBRow new shrinkWrap));
 			addMorphBack: (SBColumn new
 				shrinkWrap;
 				cellInset: 3;
 				addMorphBack: (SBTextBubble new contents: 'Transformation');
-				addMorphBack: (caseBlock := SBRow new
-					shrinkWrap));
+				addMorphBack: (caseBlock := SBRow new shrinkWrap));
 			addMorphBack: (SBColumn new
 				shrinkWrap;
 				cellInset: 3;

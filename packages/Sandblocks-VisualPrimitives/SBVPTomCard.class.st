@@ -10,9 +10,18 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBVPTomCard class >> staticVisualPrimitiveMapping [
+SBVPTomCard class >> visualPrimitiveMapping [
 
-	^ {#topLeftLabel -> 'ATK:'. #bottomLeftLabel -> 'DEF'}
+	^ {
+		SBVPPropertyMappingNumber property: #attack vpProperty: #topCenterLabel.
+		SBVPPropertyMappingNumber property: #defense vpProperty: #bottomCenterLabel.
+		SBVPPropertyMappingSelect
+			property: #icon
+			vpProperty: #shape
+			choices: {'fire'. 'bug'. 'water'}
+			representations: {SBIcon iconFire. SBIcon iconBug. SBIcon iconBathtub}.
+		#topLeftLabel -> 'ATK:'.
+		#bottomLeftLabel -> 'DEF'}
 ]
 
 { #category : #accessing }
@@ -37,26 +46,6 @@ SBVPTomCard >> defense [
 SBVPTomCard >> defense: anObject [
 
 	defense := anObject
-]
-
-{ #category : #accessing }
-SBVPTomCard >> dynamicVisualPrimitiveMapping [
-
-	^ {
-		SBVPPropertyMappingNumber
-			property: #attack
-			primitiveProperty: #topCenterLabel
-			on: self.
-		SBVPPropertyMappingNumber
-			property: #defense
-			primitiveProperty: #bottomCenterLabel
-			on: self.
-		SBVPPropertyMappingSelect
-			property: #icon
-			primitiveProperty: #shape
-			choices: {'fire'. 'bug'. 'water'}
-			representations: {SBIcon iconFire. SBIcon iconBug. SBIcon iconBathtub}
-			on: self}
 ]
 
 { #category : #accessing }

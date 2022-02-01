@@ -23,11 +23,20 @@ SBVPTomGrammarObject class >> fromJsonObject: aJsonObject [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPTomGrammarObject class >> staticVisualPrimitiveMapping [
+SBVPTomGrammarObject class >> visualPrimitiveMapping [
 
 	^ {
 		#shape -> CircleMorph new.
-		SBVPPropertyMapping constant: #bottomCenterLabel position: #identityLabelPosition}
+		SBVPPropertyMapping constant: #bottomCenterLabel vpProperty: #identityLabelPosition.
+		SBVPPropertyMappingSelect
+			property: #type
+			vpProperty: #topLeftLabel
+			choices: {'SEQ'. 'REPEAT'. 'REPEAT1'. 'SYMBOL'}.
+		SBVPPropertyMappingString property: #objectName vpProperty: #innerLabel.
+		SBVPPropertyMapping
+			getter: [:object | (object members ifNil: [object content ifNotNil: [{object content}] ifNil: [{}]]) reject: [:entry | entry isNil]]
+			setter: [:object :vp | object members: (vp connections collect: [:connection | connection getObjectFromVisualPrimitive])]
+			vpProperty: #connections}
 ]
 
 { #category : #accessing }
@@ -40,25 +49,6 @@ SBVPTomGrammarObject >> content [
 SBVPTomGrammarObject >> content: anObject [
 
 	content := anObject
-]
-
-{ #category : #'as yet unclassified' }
-SBVPTomGrammarObject >> dynamicVisualPrimitiveMapping [
-
-	^ {
-		SBVPPropertyMappingSelect
-			property: #type
-			primitiveProperty: #topLeftLabel
-			choices: {'SEQ'. 'REPEAT'. 'REPEAT1'. 'SYMBOL'}
-			on: self.
-		SBVPPropertyMappingString
-			property: #objectName
-			primitiveProperty: #innerLabel
-			on: self.
-		SBVPPropertyMapping
-			getter: [(self members ifNil: [self content ifNotNil: [{self content}] ifNil: [{}]]) reject: [:entry | entry isNil]]
-			setter: [:vp | self members: (vp connections collect: [:connection | connection getObjectFromVisualPrimitive])]
-			position: #connections}
 ]
 
 { #category : #'as yet unclassified' }
