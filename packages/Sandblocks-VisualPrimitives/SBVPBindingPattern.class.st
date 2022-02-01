@@ -186,10 +186,12 @@ SBVPBindingPattern >> addNewChild [
 
 	| newChild |
 	newChild := self class bindingDict: {self class identityName -> self root nextIdentifier}.
-	self addConnection: newChild.
-	self owner addMorphBack: newChild.
-	self root attachTreeDecorator.
-	self root layout
+	self sandblockEditor do: (SBVPInsertCommand new
+		index: self owner submorphCount + 1;
+		parent: self;
+		morph: newChild;
+		shouldMergeWithNext: false;
+		yourself)
 ]
 
 { #category : #'as yet unclassified' }

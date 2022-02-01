@@ -81,7 +81,11 @@ SBVisualPrimitive >> addConnection: aVisualPrimitive [
 SBVisualPrimitive >> addConnection: aVisualPrimitive afterIndex: aNumber [
 
 	self connections add: aVisualPrimitive afterIndex: aNumber.
-	aVisualPrimitive parent: self
+	aVisualPrimitive parent: self.
+	self withDecorator: SBTreeDecorator do: [:myDecorator |
+		aVisualPrimitive
+			withDecorator: SBTreeDecorator
+			do: [:childDecorator | myDecorator addChild: childDecorator afterIndex: aNumber]]
 ]
 
 { #category : #accessing }

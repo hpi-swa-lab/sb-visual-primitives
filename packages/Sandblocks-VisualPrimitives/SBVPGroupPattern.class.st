@@ -187,7 +187,6 @@ SBVPGroupPattern >> openPatternAsChild: aPattern [
 SBVPGroupPattern >> removeConnection: aPattern [
 
 	super removeConnection: aPattern.
-	self halt.
 	self resetVisualization
 ]
 
