@@ -68,11 +68,10 @@ SBStDeclarationForVPBinding >> symbolsFor: aColorPolicy [
 
 { #category : #accessing }
 SBStDeclarationForVPBinding >> valid [
-	" check that this name does not already exist in a parent scope "
 
 	self block containingBlock
 		ifNil: [^ false]
-		ifNotNil: [:stuff | stuff parentSandblock ifNil: [^ false]].
+		ifNotNil: [:b | b parentSandblock ifNil: [^ false]].
 	^ (self block containingBlock parentSandblock
 		binding: self contents
 		for: self block

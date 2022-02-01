@@ -9,7 +9,7 @@ SBWatchView >> reportValue: anObject [
 	[
 		applyingChange := true.
 		hadValue ifFalse: [hadValue := true].
-		anObject visualPrimitiveMapping
+		anObject class visualPrimitiveMapping
 			ifNotEmpty: [
 				morph := SBBlock new
 					hResizing: #shrinkWrap;

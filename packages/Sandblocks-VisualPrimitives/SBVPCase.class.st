@@ -355,6 +355,10 @@ SBVPCase >> noteNewOwner: aMorph [
 		addMorphBack: SBIcon iconArrowRight;
 		addMorphBack: self output
 ]
+SBVPCase >> isValidBinding: aString [
+
+	^ (self findAllBindings: self inputRoot) keys includes: aString
+]
 
 { #category : #accessing }
 SBVPCase >> output [

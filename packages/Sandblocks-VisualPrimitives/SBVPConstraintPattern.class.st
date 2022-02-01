@@ -32,14 +32,14 @@ SBVPConstraintPattern class >> newFor: aBlock [
 
 	| constraintBlock |
 	constraintBlock := aBlock arguments first.
-	constraintBlock allBlocksDo: [:britta |
-		((britta isKindOf: SBStMessageSend)
-			and: [britta receiver contents = self constraintInputName]
-			and: [britta selector = 'at:']) ifTrue: [ | variableName |
-			variableName := britta arguments first evaluate.
-			britta replaceBy: ((SBVPConstraintVariable poolDeclaration: variableName) binding: variableName -> SBVisualPrimitive new)]].
+	constraintBlock allBlocksDo: [:block |
+		((block isKindOf: SBStMessageSend)
+			and: [block receiver contents = self constraintInputName]
+			and: [block selector = 'at:']) ifTrue: [ | variableName |
+			variableName := block arguments first evaluate.
+			block replaceBy: ((SBStName poolDeclaration: variableName) binding: variableName -> SBVisualPrimitive new)]].
 	constraintBlock bindings do: [:b | b owner hide].
-	"  :(  "
+	
 	^ self new constraintBlock: constraintBlock
 ]
 
