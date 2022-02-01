@@ -22,7 +22,7 @@ SBVPExecuter class >> anExample: anExampleTree [
 	^ (SBVPCase
 		input: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern bindingDict: {#identity -> #a}.
-			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label = 10]})
+			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) key = 10]})
 		output: (SBVPGroupPattern patterns: {SBVPBindingPattern bindingDict: {#identity -> #a}})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> false;
@@ -69,7 +69,7 @@ SBVPExecuter class >> exampleBuildHeapBrokenBindings: aTree [
 					bindingDict: {#identity -> #boi}
 					connections: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}.
 				SBVPEllipsisPattern bindingDict: {#identity -> #d}}.
-			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label asInteger < (bindings at: #boi) label asInteger]})
+			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) key < (bindings at: #boi) key]})
 		output: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern bindingDict: {#identity -> #boi} connections: {
 				SBVPEllipsisPattern bindingDict: {#identity -> #dude}.
@@ -95,7 +95,7 @@ SBVPExecuter class >> exampleBuildHeapCase [
 					bindingDict: {#identity -> #boi}
 					connections: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}.
 				SBVPEllipsisPattern bindingDict: {#identity -> #d}}.
-			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label asInteger < (bindings at: #boi) label asInteger]})
+			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) key < (bindings at: #boi) key]})
 		output: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern bindingDict: {#identity -> #boi} connections: {
 				SBVPEllipsisPattern bindingDict: {#identity -> #b}.
@@ -129,7 +129,7 @@ SBVPExecuter class >> exampleBuildHeapChain: aTree [
 					bindingDict: {#identity -> #boi}
 					connections: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}.
 				SBVPEllipsisPattern bindingDict: {#identity -> #d}}.
-			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label asInteger > (bindings at: #boi) label asInteger]})
+			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) key > (bindings at: #boi) key]})
 		output: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern bindingDict: {#identity -> #boi} connections: {
 				SBVPEllipsisPattern bindingDict: {#identity -> #b}.
@@ -161,7 +161,7 @@ SBVPExecuter class >> exampleBuildHeapSpecialShape: aTree [
 					bindingDict: {#identity -> #boi}
 					connections: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}.
 				SBVPEllipsisPattern bindingDict: {#identity -> #d}}.
-			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label asInteger < (bindings at: #boi) label asInteger]})
+			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) key < (bindings at: #boi) key]})
 		output: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern bindingDict: {#identity -> #boi} connections: {
 				SBVPEllipsisPattern bindingDict: {#identity -> #b}.
@@ -194,7 +194,7 @@ SBVPExecuter class >> exampleBuildHeapStrings: aTree [
 					bindingDict: {#identity -> #boi}
 					connections: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}.
 				SBVPEllipsisPattern bindingDict: {#identity -> #d}}.
-			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label < (bindings at: #boi) label]})
+			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) key < (bindings at: #boi) key]})
 		output: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern bindingDict: {#identity -> #boi} connections: {
 				SBVPEllipsisPattern bindingDict: {#identity -> #b}.
@@ -281,7 +281,7 @@ SBVPExecuter class >> exampleGrammarRuleMergeRepeat: aGrammarObject [
 							SBVPBindingPattern
 								bindingDict: {#identity -> 'd'}
 								expressionDict: {#topLeftLabel -> ['SYMBOL']}}}.
-			SBVPConstraintPattern constraint: [:bindings | (bindings at: #b) origin objectName = (bindings at: #d) origin objectName]})
+			SBVPConstraintPattern constraint: [:bindings | (bindings at: #b) objectName = (bindings at: #d) objectName]})
 		output: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern
 				expressionDict: {#identity -> [biop]. #innerLabel -> ['bbii']}
@@ -329,7 +329,7 @@ SBVPExecuter class >> exampleGrammarRuleWeird: aGrammarObject [
 							SBVPBindingPattern
 								bindingDict: {#identity -> #d}
 								expressionDict: {#topLeftLabel -> ['SYMBOL']}}}.
-			SBVPConstraintPattern constraint: [:bindings | (bindings at: #b) origin objectName = (bindings at: #d) origin objectName]})
+			SBVPConstraintPattern constraint: [:bindings | (bindings at: #b) objectName = (bindings at: #d) objectName]})
 		output: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern
 				bindingDict: {#identity -> #c. #topLeftLabel -> #type}
@@ -355,7 +355,7 @@ SBVPExecuter class >> exampleOrPattern [
 					SBVPBindingPattern
 						bindingDict: {#identity -> #a}
 						connections: {SBVPEllipsisPattern bindingDict: {#identity -> #c}}.
-					SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label asInteger = 3]}})
+					SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) key = 3]}})
 			output: (SBVPGroupPattern patterns: {
 				SBVPBindingPattern
 					bindingDict: {#identity -> #a}

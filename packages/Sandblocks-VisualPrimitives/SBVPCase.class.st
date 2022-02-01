@@ -339,6 +339,12 @@ SBVPCase >> inputRoot [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPCase >> isValidBinding: aString [
+
+	^ (self findAllBindings: self inputRoot) keys includes: aString
+]
+
+{ #category : #'as yet unclassified' }
 SBVPCase >> noteNewOwner: aMorph [
 
 	| row |
@@ -354,10 +360,6 @@ SBVPCase >> noteNewOwner: aMorph [
 		addMorphBack: self input;
 		addMorphBack: SBIcon iconArrowRight;
 		addMorphBack: self output
-]
-SBVPCase >> isValidBinding: aString [
-
-	^ (self findAllBindings: self inputRoot) keys includes: aString
 ]
 
 { #category : #accessing }

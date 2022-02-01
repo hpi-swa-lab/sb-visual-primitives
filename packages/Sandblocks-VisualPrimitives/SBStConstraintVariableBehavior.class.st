@@ -18,7 +18,14 @@ SBStConstraintVariableBehavior class >> checkCastFor: aBlock parent: aMorph [
 { #category : #'as yet unclassified' }
 SBStConstraintVariableBehavior >> guessedClass [
 
-	^ self block containingArtefact typeFor: self block
+	| someClass |
+	someClass := self block containingArtefact typeFor: self block.
+	^ (name firstOwnerSuchThat: [:owner | owner isKindOf: SBVPConstraintPattern])
+		ifNil: [someClass]
+		ifNotNil: [:constraintPattern |
+			constraintPattern parentCase
+				ifNil: [someClass]
+				ifNotNil: [:case | case defaultPatternVisualizationClass]]
 ]
 
 { #category : #'as yet unclassified' }

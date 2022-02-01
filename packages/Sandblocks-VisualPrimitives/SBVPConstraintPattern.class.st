@@ -109,7 +109,13 @@ SBVPConstraintPattern >> initialize [
 { #category : #'as yet unclassified' }
 SBVPConstraintPattern >> matches: aVisualPrimitive withBinding: aDict [
 
-	^ self constraint value: aDict
+	| originalBindings |
+	originalBindings := aDict collect: [:visualPrimitiveOrCollection |
+		visualPrimitiveOrCollection isCollection
+			ifTrue: [visualPrimitiveOrCollection]
+			ifFalse: [visualPrimitiveOrCollection origin]].
+	
+	^ self constraint value: originalBindings
 ]
 
 { #category : #'as yet unclassified' }
