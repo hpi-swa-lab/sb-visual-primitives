@@ -74,8 +74,7 @@ SBVPQuery >> initialize [
 	
 	self
 		strategy: Dictionary new;
-		hResizing: #shrinkWrap;
-		vResizing: #shrinkWrap;
+		shrinkWrap;
 		changeTableLayout;
 		layoutInset: 6
 ]

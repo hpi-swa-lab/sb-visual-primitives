@@ -110,8 +110,7 @@ SBVisualPrimitive >> addPropertyMapping: anSBVPPropertyMapping [
 			(self labelPositions includes: propertyMapping position) ifTrue: [
 				(self blockDict at: propertyMapping position)
 					removeAllMorphs;
-					addMorphFullBoundsCentered: propertyMapping getMorph
-				"self setLabelAt: propertyMapping position to: value"]]
+					addMorphBack: propertyMapping getMorph]]
 ]
 
 { #category : #accessing }
@@ -236,8 +235,7 @@ SBVisualPrimitive >> initialize [
 			SBRow new addAllMorphs: (self middleBlockPositions collect: [:position | self blockDict at: position]).
 			SBRow new addAllMorphs: (self bottomLabelPositions collect: [:position | self blockDict at: position])};
 		changeTableLayout;
-		vResizing: #shrinkWrap;
-		hResizing: #shrinkWrap;
+		shrinkWrap;
 		connections: OrderedCollection new;
 		color: Color transparent
 ]
@@ -248,8 +246,7 @@ SBVisualPrimitive >> initializeLabelBlocks [
 	self blockPositions do: [:blockPosition |
 		self blockDict at: blockPosition put: (SBColumn new
 			changeTableLayout;
-			vResizing: #shrinkWrap;
-			hResizing: #shrinkWrap;
+			shrinkWrap;
 			yourself)]
 ]
 
@@ -264,7 +261,7 @@ SBVisualPrimitive >> innerLabel: aMorph [
 
 	self shape
 		removeAllMorphs;
-		addMorphFullBoundsCentered: aMorph
+		addMorphBack: aMorph
 ]
 
 { #category : #'as yet unclassified' }
@@ -427,7 +424,6 @@ SBVisualPrimitive >> setLabelAt: aSymbol to: anObject [
 
 	| morphy positionBlock |
 	morphy := self getLabelMorph: anObject.
-	aSymbol = #innerLabel ifTrue: [^ self innerLabel: morphy].
 	positionBlock := self blockDict at: aSymbol.
 	positionBlock
 		removeAllMorphs;
@@ -445,13 +441,20 @@ SBVisualPrimitive >> shape [
 SBVisualPrimitive >> shape: aMorph [
 
 	| innerBlockWrapper innerBlock innerLabel |
+	aMorph layoutPolicy ifNil: [
+		aMorph
+			changeTableLayout;
+			listCentering: #center;
+			wrapCentering: #center;
+			shrinkWrap;
+			layoutInset: 8].
 	innerBlockWrapper := self blockDict at: #shape.
 	innerLabel := self innerLabel.
 	self blockDict at: #innerLabel put: aMorph.
 	innerBlockWrapper removeAllMorphs.
 	innerBlock := aMorph.
 	innerBlockWrapper addMorphBack: innerBlock.
-	innerLabel ifNotNil: [:label | innerBlock addMorphFullBoundsCentered: label]
+	innerLabel ifNotNil: [:label | innerBlock addMorphBack: label]
 ]
 
 { #category : #'as yet unclassified' }

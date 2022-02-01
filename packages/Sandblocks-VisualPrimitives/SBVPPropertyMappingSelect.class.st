@@ -78,12 +78,6 @@ SBVPPropertyMappingSelect >> getMorph [
 ]
 
 { #category : #accessing }
-SBVPPropertyMappingSelect >> initialize [
-
-	
-]
-
-{ #category : #accessing }
 SBVPPropertyMappingSelect >> property: aSymbol primitiveProperty: anotherSymbol choices: aCollection on: anObject [
 
 	^ self

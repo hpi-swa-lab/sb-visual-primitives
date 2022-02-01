@@ -82,12 +82,6 @@ SBVPPropertyMapping >> getter: anObject [
 ]
 
 { #category : #accessing }
-SBVPPropertyMapping >> initialize [
-
-	super initialize
-]
-
-{ #category : #accessing }
 SBVPPropertyMapping >> isPropertyMapping [
 
 	^ true

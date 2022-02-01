@@ -72,9 +72,7 @@ SBVPConstraintPattern >> constraint: aBlockClosure [
 
 	| block |
 	constraint := aBlockClosure.
-	block := aBlockClosure decompile asSandblock
-		hResizing: #shrinkWrap;
-		vResizing: #shrinkWrap.
+	block := aBlockClosure decompile asSandblock shrinkWrap.
 	block bindings do: [:b | b owner hide].
 	self constraintBlockBasic: block
 ]

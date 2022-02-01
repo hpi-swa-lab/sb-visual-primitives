@@ -481,8 +481,7 @@ SBVPExecuter >> initialize [
 	self
 		addKeyboardCaptureFilter: self;
 		addMouseCaptureFilter: self;
-		hResizing: #shrinkWrap;
-		vResizing: #shrinkWrap;
+		shrinkWrap;
 		changeTableLayout;
 		layoutInset: 6;
 		addMorphBack: (SBTextBubble new contents: 'Executer');
@@ -492,33 +491,26 @@ SBVPExecuter >> initialize [
 			addMorphBack: (SBButton new label: 'execute 100 times' shortcut: nil do: [self execute100Times]);
 			addMorphBack: (SBButton new label: 'execute all' shortcut: nil do: [self executeAll]));
 		addMorphBack: (SBRow new
-			hResizing: #shrinkWrap;
-			vResizing: #shrinkWrap;
+			shrinkWrap;
 			cellInset: 3;
 			addMorphBack: (SBColumn new
-				hResizing: #shrinkWrap;
-				vResizing: #shrinkWrap;
+				shrinkWrap;
 				cellInset: 3;
 				addMorphBack: (SBTextBubble new contents: 'Input');
 				addMorphBack: (inputBlock := SBRow new
-					hResizing: #shrinkWrap;
-					vResizing: #shrinkWrap));
+					shrinkWrap));
 			addMorphBack: (SBColumn new
-				hResizing: #shrinkWrap;
-				vResizing: #shrinkWrap;
+				shrinkWrap;
 				cellInset: 3;
 				addMorphBack: (SBTextBubble new contents: 'Transformation');
 				addMorphBack: (caseBlock := SBRow new
-					hResizing: #shrinkWrap;
-					vResizing: #shrinkWrap));
+					shrinkWrap));
 			addMorphBack: (SBColumn new
-				hResizing: #shrinkWrap;
-				vResizing: #shrinkWrap;
+				shrinkWrap;
 				cellInset: 3;
 				addMorphBack: (SBTextBubble new contents: 'Output');
 				addMorphBack: (outputBlock := SBBlock new
-					hResizing: #shrinkWrap;
-					vResizing: #shrinkWrap;
+					shrinkWrap;
 					cellInset: 3)))
 ]
 

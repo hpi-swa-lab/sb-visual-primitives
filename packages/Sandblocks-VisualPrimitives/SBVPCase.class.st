@@ -297,8 +297,7 @@ SBVPCase >> initialize [
 	super initialize.
 	informationRow := SBRow new cellInset: 3.
 	self
-		hResizing: #shrinkWrap;
-		vResizing: #shrinkWrap;
+		shrinkWrap;
 		changeTableLayout;
 		cellInset: 3;
 		strategy: (Dictionary new

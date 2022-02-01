@@ -130,13 +130,11 @@ SBVPGroupPattern >> initialize [
 	self
 		addKeyboardCaptureFilter: self;
 		addMouseCaptureFilter: self;
-		hResizing: #shrinkWrap;
-		vResizing: #shrinkWrap;
+		shrinkWrap;
 		changeTableLayout;
 		layoutInset: 4;
 		addMorphBack: (row := SBRow new
-			hResizing: #shrinkWrap;
-			vResizing: #shrinkWrap;
+			shrinkWrap;
 			cellInset: 3;
 			cellPositioning: #center)
 ]

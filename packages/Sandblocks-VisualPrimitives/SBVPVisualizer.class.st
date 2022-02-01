@@ -212,18 +212,15 @@ SBVPVisualizer >> initialize [
 	self
 		addKeyboardCaptureFilter: self;
 		addMouseCaptureFilter: self;
-		hResizing: #shrinkWrap;
-		vResizing: #shrinkWrap;
+		shrinkWrap;
 		changeTableLayout;
 		cellInset: 6;
 		addMorphBack: (SBRow new
 			addMorphBack: (visual := SBBlock new
-				hResizing: #shrinkWrap;
-				vResizing: #shrinkWrap;
+				shrinkWrap;
 				layoutInset: 6;
 				when: #reportError send: #reportError: to: self);
-			hResizing: #shrinkWrap;
-			vResizing: #shrinkWrap);
+			shrinkWrap);
 		addMorphBack: (code := SBColumn new)
 ]
 
