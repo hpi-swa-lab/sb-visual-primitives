@@ -184,10 +184,7 @@ SBVPExecuter class >> exampleBuildHeapStrings: aTree [
 		args: [
 			{
 				(SBVPStringDummyNode buildTree: {
-					'b' -> {
-						'asda' -> {
-							'asd' -> {'ös' -> {'rt4'. 'bbbbbb'}. 'ghui' -> {'dödö'}}.
-							'alk' -> {'rüdiger' -> {'britta'. 'wante'}. 'onkqel' -> {'baum'}}}}}) showAsVisualPrimitive}]
+					'a' -> {'b' -> {'cre' -> {'dko' -> {'e'. 'f'}. 'ghui' -> {'h'}}. 'alk' -> {'i' -> {'j'. 'k'}. 'l' -> {'m'}}}}}) showAsVisualPrimitive}]
 		label: 'example'.
 	^ (SBVPCase
 		input: (SBVPGroupPattern patterns: {
@@ -197,7 +194,7 @@ SBVPExecuter class >> exampleBuildHeapStrings: aTree [
 					bindingDict: {#identity -> #boi}
 					connections: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}.
 				SBVPEllipsisPattern bindingDict: {#identity -> #d}}.
-			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label asInteger < (bindings at: #boi) label asInteger]})
+			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label < (bindings at: #boi) label]})
 		output: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern bindingDict: {#identity -> #boi} connections: {
 				SBVPEllipsisPattern bindingDict: {#identity -> #b}.

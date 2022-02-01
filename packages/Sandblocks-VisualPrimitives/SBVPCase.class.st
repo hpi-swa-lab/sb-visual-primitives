@@ -350,6 +350,12 @@ SBVPCase >> inputRoot [
 	^ self input connections first
 ]
 
+{ #category : #'as yet unclassified' }
+SBVPCase >> isValidBinding: aString [
+
+	^ (self findAllBindings: self inputRoot) keys includes: aString
+]
+
 { #category : #accessing }
 SBVPCase >> output [
 
