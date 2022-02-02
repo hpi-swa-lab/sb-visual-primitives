@@ -28,7 +28,7 @@ SBVPPattern >> buildImplicitChildren: anArray [
 { #category : #'as yet unclassified' }
 SBVPPattern >> centerChild [
 
-	^ self connections ifNotEmpty: [self connections at: self connections size + 1 / 2]
+	^ self connections ifEmpty: [nil] ifNotEmpty: [self connections at: self connections size + 1 / 2]
 ]
 
 { #category : #'as yet unclassified' }
