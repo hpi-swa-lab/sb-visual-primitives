@@ -41,7 +41,7 @@ SBVPVisualizer class >> newFor: aBlock [
 { #category : #'as yet unclassified' }
 SBVPVisualizer >> artefactSaved: aMethodBlock [
 
-	self code: self code firstSubmorph showCode: self showCode
+	self showCode ifTrue: [self code: self code firstSubmorph showCode: self showCode]
 ]
 
 { #category : #accessing }
@@ -272,8 +272,9 @@ SBVPVisualizer >> writeSourceOn: aStream [
 
 	self isImplicit
 		ifTrue: [
-			self code submorphsDo: [:morph | morph writeSourceOn: aStream].
-			aStream nextPutAll: ' showAsVisualPrimitive']
+			aStream nextPut: $(.
+			(self visual submorphs detect: [:morph | morph isVisualPrimitive]) root getObjectFromVisualPrimitive writeSourceOn: aStream.
+			aStream nextPutAll: ') showAsVisualPrimitive']
 		ifFalse: [
 			aStream nextPutAll: '(SBVPVisualizer code: '.
 			self code submorphsDo: [:morph | morph writeSourceOn: aStream].

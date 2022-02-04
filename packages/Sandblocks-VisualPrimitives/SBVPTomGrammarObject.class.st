@@ -108,3 +108,24 @@ SBVPTomGrammarObject >> type: aString [
 
 	type := aString
 ]
+
+{ #category : #accessing }
+SBVPTomGrammarObject >> writeSourceOn: aStream [
+
+	aStream
+		nextPutAll: self className;
+		nextPutAll: ' new objectName:';
+		store: self objectName;
+		nextPutAll: '; type: ';
+		store: self type.
+	self members ifNotNil: [
+		aStream nextPutAll: '; members: {'.
+		self members
+			do: [:member | member writeSourceOn: aStream]
+			separatedBy: [aStream nextPut: $.].
+		aStream nextPut: $}].
+	self content ifNotNil: [
+		aStream nextPutAll: '; content: ('.
+		self content writeSourceOn: aStream.
+		aStream nextPut: $)]
+]

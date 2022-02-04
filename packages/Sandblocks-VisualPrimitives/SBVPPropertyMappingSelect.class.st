@@ -54,7 +54,10 @@ SBVPPropertyMappingSelect >> choices: aCollection [
 { #category : #accessing }
 SBVPPropertyMappingSelect >> defaultGetterBlockWith: aSymbol [
 
-	^ [:object | self representations at: (self choices indexOf: (object perform: aSymbol asSimpleGetter))]
+	^ [:object |
+		self representations
+			at: (self choices indexOf: (object perform: aSymbol asSimpleGetter))
+			ifAbsent: [self representations first]]
 ]
 
 { #category : #accessing }

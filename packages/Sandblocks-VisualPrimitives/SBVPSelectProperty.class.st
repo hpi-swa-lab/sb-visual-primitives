@@ -71,7 +71,12 @@ SBVPSelectProperty >> doubleClick: anEvent [
 
 	| selectedIndex |
 	selectedIndex := UIManager default chooseFrom: self choices.
-	(selectedIndex <= self choices size and: [selectedIndex > 0]) ifTrue: [self currentValueIndex: selectedIndex]
+	(selectedIndex <= self choices size and: [selectedIndex > 0]) ifTrue: [
+		self sandblockEditor do: (SBMutatePropertyCommand new
+			target: self;
+			selector: #currentValueIndex;
+			mutateSelector: #currentValueIndex:;
+			value: selectedIndex)]
 ]
 
 { #category : #accessing }
