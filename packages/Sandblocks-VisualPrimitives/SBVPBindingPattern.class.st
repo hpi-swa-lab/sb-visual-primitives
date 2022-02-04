@@ -184,13 +184,6 @@ SBVPBindingPattern >> addToWorld: aWorld [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPBindingPattern >> allConnectionsDo: aBlock [
-
-	aBlock value: self.
-	super allConnectionsDo: aBlock
-]
-
-{ #category : #'as yet unclassified' }
 SBVPBindingPattern >> bindingDict: aDict [
 
 	(aDict includesKey: self class identityName) ifTrue: [

@@ -50,6 +50,12 @@ SBVPConstraintPattern >> addToWorld: aWorld [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPConstraintPattern >> allConnectionsDo: aBlock [
+
+	
+]
+
+{ #category : #'as yet unclassified' }
 SBVPConstraintPattern >> artefactSaved: aMethodBlock [
 
 	constraint := self constraintBlock evaluate

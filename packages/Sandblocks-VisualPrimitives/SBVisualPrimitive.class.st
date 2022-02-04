@@ -157,6 +157,7 @@ SBVisualPrimitive >> addToWorld: aWorld [
 { #category : #nil }
 SBVisualPrimitive >> allConnectionsDo: aBlock [
 
+	aBlock value: self.
 	self connections do: [:connection | connection allConnectionsDo: aBlock]
 ]
 

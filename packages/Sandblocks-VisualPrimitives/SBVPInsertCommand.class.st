@@ -24,7 +24,6 @@ SBVPInsertCommand >> children: anObject [
 { #category : #'as yet unclassified' }
 SBVPInsertCommand >> do [
 
-	self halt.
 	self parent addConnection: self morph afterIndex: (self siblingIndex
 		ifNotNil: [self siblingIndex - 1]
 		ifNil: [self parent connections size]).

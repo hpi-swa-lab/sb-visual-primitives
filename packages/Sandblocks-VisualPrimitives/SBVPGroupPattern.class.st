@@ -86,6 +86,12 @@ SBVPGroupPattern >> addToWorld: aWorld [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPGroupPattern >> allConnectionsDo: aBlock [
+
+	self connections do: [:connection | connection allConnectionsDo: aBlock]
+]
+
+{ #category : #'as yet unclassified' }
 SBVPGroupPattern >> attachTreeDecorator [
 
 	self connections do: [:child | child attachTreeDecorator]
