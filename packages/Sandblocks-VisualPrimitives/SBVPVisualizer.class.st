@@ -271,9 +271,10 @@ SBVPVisualizer >> visualPrimitiveFrom: anObject [
 SBVPVisualizer >> writeSourceOn: aStream [
 
 	self isImplicit
-		ifTrue: [
+		ifTrue: [ | object |
 			aStream nextPut: $(.
-			(self visual submorphs detect: [:morph | morph isVisualPrimitive]) root getObjectFromVisualPrimitive writeSourceOn: aStream.
+			object := (self visual submorphs detect: [:morph | morph isVisualPrimitive]) root getObjectFromVisualPrimitive.
+			(object respondsTo:#writeSourceOn:) ifTrue: [object writeSourceOn: aStream] ifFalse: [self code submorphsDo: [:morph | morph writeSourceOn: aStream]].
 			aStream nextPutAll: ') showAsVisualPrimitive']
 		ifFalse: [
 			aStream nextPutAll: '(SBVPVisualizer code: '.
