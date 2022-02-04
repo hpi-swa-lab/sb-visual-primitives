@@ -144,6 +144,14 @@ SBVPGroupPattern >> initialize [
 			cellPositioning: #center)
 ]
 
+{ #category : #'as yet unclassified' }
+SBVPGroupPattern >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
+
+	^ SBVPRelInsertCommand new
+		near: aBlock before: aBoolean in: self morph: aMorph;
+		yourself
+]
+
 { #category : #accessing }
 SBVPGroupPattern >> label [
 
@@ -167,9 +175,10 @@ SBVPGroupPattern >> noteNewOwner: aMorph [
 { #category : #accessing }
 SBVPGroupPattern >> openPatternAsChild: aPattern [
 
-	| isBindingPattern |
+	| isBindingPattern insertPosition |
+	insertPosition := aPattern siblingIndex.
+	
 	isBindingPattern := SBVPBindingPattern withAllSubclasses anySatisfy: [:subclass | subclass = aPattern class].
-	aPattern siblingIndex > 1 ifTrue: [self row addMorphBack: (SBTextBubble new contents: self seperatorString)].
 	isBindingPattern
 		ifTrue: [ | patternContainer |
 			patternContainer := SBBlock new
@@ -177,15 +186,19 @@ SBVPGroupPattern >> openPatternAsChild: aPattern [
 				vResizing: #shrinkWrap;
 				layoutInset: 6;
 				when: #reportError send: #reportError: to: self.
-			self row addMorphBack: (SBRow new
-				addMorphBack: patternContainer;
-				hResizing: #shrinkWrap;
-				vResizing: #shrinkWrap).
+			
+			self row
+				addMorph: (SBRow new
+					addMorphBack: patternContainer;
+					hResizing: #shrinkWrap;
+					vResizing: #shrinkWrap)
+				atIndex: insertPosition.
+			
 			aPattern
 				addToWorld: patternContainer;
 				attachTreeDecorator;
 				layout]
-		ifFalse: [self row addMorphBack: aPattern]
+		ifFalse: [self row addMorph: aPattern atIndex: insertPosition]
 ]
 
 { #category : #'as yet unclassified' }
