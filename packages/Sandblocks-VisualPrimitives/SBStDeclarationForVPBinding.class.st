@@ -7,7 +7,11 @@ Class {
 { #category : #'as yet unclassified' }
 SBStDeclarationForVPBinding class >> checkCastFor: aBlock parent: aMorph [
 
-	^ aMorph isBlockBindings
+	| case |
+	case := (aMorph containingSandblock isKindOf: SBVPBindingPattern)
+		ifTrue: [aMorph containingSandblock parentCase]
+		ifFalse: [^ false].
+	^ case notNil and: [aBlock hasOwner: case input]
 ]
 
 { #category : #accessing }
@@ -50,7 +54,7 @@ SBStDeclarationForVPBinding >> isMethodLocal [
 SBStDeclarationForVPBinding >> printBlockOn: aStream [
 
 	aStream
-		nextPutAll: 'block declaration ';
+		nextPutAll: 'pattern input declaration ';
 		nextPutAll: self contents
 ]
 

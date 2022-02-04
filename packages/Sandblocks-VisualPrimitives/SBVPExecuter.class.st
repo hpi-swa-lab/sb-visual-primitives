@@ -251,16 +251,28 @@ SBVPExecuter class >> exampleGrammarRuleMergeRepeat: aGrammarObject [
 		args: [
 			{
 				(SBVPTomGrammarObject new
+					objectName: '';
 					type: 'SEQ';
 					members: {
 						SBVPTomGrammarObject new
+							objectName: 'aahh';
 							type: 'SYMBOL';
-							objectName: 'aahh'.
+							members: {}.
 						SBVPTomGrammarObject new
-							type: 'REPEAT';
+							objectName: ' ';
+							type: 'SEQ';
+							members: {
+								SBVPTomGrammarObject new
+									objectName: 'aahh';
+									type: 'SYMBOL';
+									members: {}.
+								SBVPTomGrammarObject new
+									objectName: '';
+									type: 'SEQ';
+									members: {}};
 							content: (SBVPTomGrammarObject new
-								type: 'SYMBOL';
-								objectName: 'aahh')}) showAsVisualPrimitive}]
+								objectName: 'aahh';
+								type: 'SYMBOL')}) showAsVisualPrimitive}]
 		label: 'example'.
 	biop := SBVPTomGrammarObject new.
 	biop type: 'REPEAT1'.
@@ -268,23 +280,23 @@ SBVPExecuter class >> exampleGrammarRuleMergeRepeat: aGrammarObject [
 	^ (SBVPCase
 		input: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern
-				bindingDict: {#identity -> 'a'}
+				bindingDict: {#identity -> #a}
 				expressionDict: {#topLeftLabel -> [rüdigerString]}
 				connections: {
 					SBVPBindingPattern
-						bindingDict: {#identity -> 'b'}
+						bindingDict: {#identity -> #b}
 						expressionDict: {#topLeftLabel -> ['SYMBOL']}.
 					SBVPBindingPattern
-						bindingDict: {#identity -> 'c'}
+						bindingDict: {#identity -> #c}
 						expressionDict: {#topLeftLabel -> ['REPEAT']}
 						connections: {
 							SBVPBindingPattern
-								bindingDict: {#identity -> 'd'}
+								bindingDict: {#identity -> #d}
 								expressionDict: {#topLeftLabel -> ['SYMBOL']}}}.
-			SBVPConstraintPattern constraint: [:bindings | (bindings at: #b) objectName = (bindings at: #d) objectName]})
+			SBVPConstraintPattern constraint: [:bindings | b objectName = d objectName]})
 		output: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern
-				expressionDict: {#identity -> [biop]. #innerLabel -> ['bbii']}
+				expressionDict: {#innerLabel -> ['bbii']. #identity -> [biop]}
 				connections: {SBVPBindingPattern bindingDict: {#identity -> #b}}})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> false;
