@@ -273,7 +273,7 @@ SBVPCase >> findAllBindings: aRootPattern [
 	[dfs notEmpty] whileTrue: [ | currentTop |
 		currentTop := dfs first.
 		dfs removeFirst.
-		bindingDict add:( currentTop propertyAt: currentTop identityLabelPosition ) -> currentTop.
+		bindingDict add: (currentTop propertyAt: currentTop identityLabelPosition) -> currentTop.
 		dfs addAll: currentTop connections].
 	
 	^ bindingDict
