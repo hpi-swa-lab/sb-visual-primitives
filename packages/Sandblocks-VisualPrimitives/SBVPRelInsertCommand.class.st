@@ -38,3 +38,11 @@ SBVPRelInsertCommand >> suggestions [
 			morph: (SBVPConstraintPattern constraint: [:bindings | true])
 			previewOnly: true}
 ]
+
+{ #category : #'as yet unclassified' }
+SBVPRelInsertCommand >> undo [
+
+	self container removeConnection: self morph.
+	super undo.
+	^ self morph
+]

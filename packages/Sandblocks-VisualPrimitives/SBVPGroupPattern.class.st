@@ -175,7 +175,7 @@ SBVPGroupPattern >> noteNewOwner: aMorph [
 { #category : #accessing }
 SBVPGroupPattern >> openPatternAsChild: aPattern [
 
-	| isBindingPattern insertPosition |
+	| isBindingPattern insertPosition addedBlock |
 	insertPosition := aPattern siblingIndex.
 	
 	isBindingPattern := SBVPBindingPattern withAllSubclasses anySatisfy: [:subclass | subclass = aPattern class].
@@ -188,7 +188,7 @@ SBVPGroupPattern >> openPatternAsChild: aPattern [
 				when: #reportError send: #reportError: to: self.
 			
 			self row
-				addMorph: (SBRow new
+				addMorph: (addedBlock := SBRow new
 					addMorphBack: patternContainer;
 					hResizing: #shrinkWrap;
 					vResizing: #shrinkWrap)
@@ -198,7 +198,17 @@ SBVPGroupPattern >> openPatternAsChild: aPattern [
 				addToWorld: patternContainer;
 				attachTreeDecorator;
 				layout]
-		ifFalse: [self row addMorph: aPattern atIndex: insertPosition]
+		ifFalse: [
+			self row addMorph: aPattern atIndex: insertPosition.
+			addedBlock := aPattern].
+	
+	insertPosition = 1
+		ifTrue: [(addedBlock submorphAfter isKindOf: SBTextBubble) ifFalse: [self row addMorph: (SBTextBubble new contents: self seperatorString) atIndex: 2]]
+		ifFalse: [
+			insertPosition = self row submorphCount
+				ifTrue: ["self row addMorph: (SBTextBubble new contents: self seperatorString) atIndex: self row submorphCount -1"
+				]
+				ifFalse: [(addedBlock submorphBefore isKindOf: SBTextBubble) ifFalse: [self row addMorph: (SBTextBubble new contents: self seperatorString) atIndex: insertPosition]]]
 ]
 
 { #category : #'as yet unclassified' }
