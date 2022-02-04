@@ -56,7 +56,7 @@ SBStConstraintVariableBehavior >> isMethodLocal [
 SBStConstraintVariableBehavior >> printBlockOn: aStream [
 
 	aStream
-		nextPutAll: 'block declaration ';
+		nextPutAll: 'constraint variable ';
 		nextPutAll: self contents
 ]
 
