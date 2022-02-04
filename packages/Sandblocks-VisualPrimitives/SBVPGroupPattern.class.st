@@ -78,6 +78,15 @@ SBVPGroupPattern >> addNewPattern [
 	self perform: (options at: selectedIndex ifAbsent: [])
 ]
 
+{ #category : #accessing }
+SBVPGroupPattern >> addSeperatorsAround: aPattern [
+	
+	(aPattern submorphAfter ifNil: [false] ifNotNil: [(aPattern submorphAfter isKindOf: SBTextBubble) not]) ifTrue: [self row addMorph: (SBTextBubble new contents: self seperatorString) after: aPattern].
+
+	(aPattern submorphBefore ifNil: [false] ifNotNil: [(aPattern submorphBefore isKindOf: SBTextBubble) not]) ifTrue: [self row addMorph: (SBTextBubble new contents: self seperatorString) inFrontOf: aPattern]
+
+]
+
 { #category : #'as yet unclassified' }
 SBVPGroupPattern >> addToWorld: aWorld [
 
@@ -176,7 +185,7 @@ SBVPGroupPattern >> noteNewOwner: aMorph [
 SBVPGroupPattern >> openPatternAsChild: aPattern [
 
 	| isBindingPattern insertPosition addedBlock |
-	insertPosition := aPattern siblingIndex.
+	insertPosition := aPattern siblingIndex * 2 - 1.
 	
 	isBindingPattern := SBVPBindingPattern withAllSubclasses anySatisfy: [:subclass | subclass = aPattern class].
 	isBindingPattern
@@ -201,14 +210,8 @@ SBVPGroupPattern >> openPatternAsChild: aPattern [
 		ifFalse: [
 			self row addMorph: aPattern atIndex: insertPosition.
 			addedBlock := aPattern].
-	
-	insertPosition = 1
-		ifTrue: [(addedBlock submorphAfter isKindOf: SBTextBubble) ifFalse: [self row addMorph: (SBTextBubble new contents: self seperatorString) atIndex: 2]]
-		ifFalse: [
-			insertPosition = self row submorphCount
-				ifTrue: ["self row addMorph: (SBTextBubble new contents: self seperatorString) atIndex: self row submorphCount -1"
-				]
-				ifFalse: [(addedBlock submorphBefore isKindOf: SBTextBubble) ifFalse: [self row addMorph: (SBTextBubble new contents: self seperatorString) atIndex: insertPosition]]]
+		
+		self addSeperatorsAround: addedBlock.
 ]
 
 { #category : #'as yet unclassified' }

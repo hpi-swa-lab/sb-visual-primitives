@@ -593,6 +593,17 @@ SBVPBindingPattern >> staticVisualPrimitiveMapping [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPBindingPattern >> suggestAlways [
+
+	^true
+]
+
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern >> suggestions [
+^ {SBSuggestionItem selector: 'text' label: 'a'} 
+]
+
+{ #category : #'as yet unclassified' }
 SBVPBindingPattern >> valueFromPropertyMapping: aPropertyMapping [
 
 	^ aPropertyMapping patternValue
