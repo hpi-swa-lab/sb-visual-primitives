@@ -194,7 +194,8 @@ SBVPExecuter class >> exampleBuildHeapStrings: aTree [
 					bindingDict: {#identity -> #boi}
 					connections: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}.
 				SBVPEllipsisPattern bindingDict: {#identity -> #d}}.
-			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) key < (bindings at: #boi) key]})
+			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) key < (bindings at: #boi) key].
+			SBVPConstraintPattern constraint: [:bindings | true]})
 		output: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern bindingDict: {#identity -> #boi} connections: {
 				SBVPEllipsisPattern bindingDict: {#identity -> #b}.
