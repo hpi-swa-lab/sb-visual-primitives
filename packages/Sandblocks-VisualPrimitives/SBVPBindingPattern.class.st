@@ -593,13 +593,6 @@ SBVPBindingPattern >> staticVisualPrimitiveMapping [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPBindingPattern >> typeNewLine [
-	<action>
-
-	self halt
-]
-
-{ #category : #'as yet unclassified' }
 SBVPBindingPattern >> valueFromPropertyMapping: aPropertyMapping [
 
 	^ aPropertyMapping patternValue

@@ -20,28 +20,9 @@ SBVPPattern >> buildImplicitChildren: anArray [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPattern >> centerChild [
-
-	^ self connections
-		ifEmpty: [nil]
-		ifNotEmpty: [self connections at: self connections size + 1 / 2]
-]
-
-{ #category : #'as yet unclassified' }
 SBVPPattern >> collectBindingsInto: aCollection [
 
 	self connections do: [:connection | connection collectBindingsInto: aCollection]
-]
-
-{ #category : #'as yet unclassified' }
-SBVPPattern >> deletePattern [
-	<action>
-
-	| oldParent |
-	oldParent := self parent.
-	self parent ifNotNil: [self parent removeConnection: self].
-	self allConnectionsDo: [:block | block abandon].
-	oldParent ifNotNil: #layout
 ]
 
 { #category : #'as yet unclassified' }
@@ -93,42 +74,6 @@ SBVPPattern >> isImplicitChild: aBoolean [
 SBVPPattern >> matches: aVisualPrimitive withBinding: aCollection [
 
 	^ true
-]
-
-{ #category : #'as yet unclassified' }
-SBVPPattern >> moveCursorDown [
-	<action>
-
-	self floating
-		ifTrue: [self centerChild ifNotNil: #select ifNil: [self selectBottomToplevel]]
-		ifFalse: [self sandblockEditor cursor moveCursorDown]
-]
-
-{ #category : #'as yet unclassified' }
-SBVPPattern >> moveCursorLeft [
-	<action>
-
-	self floating
-		ifTrue: [self leftSibling ifNotNil: #select ifNil: [self selectLeftToplevel]]
-		ifFalse: [self sandblockEditor cursor moveCursorLeft]
-]
-
-{ #category : #'as yet unclassified' }
-SBVPPattern >> moveCursorRight [
-	<action>
-
-	self floating
-		ifTrue: [self rightSibling ifNotNil: #select ifNil: [self selectRightToplevel]]
-		ifFalse: [self sandblockEditor cursor moveCursorRight]
-]
-
-{ #category : #'as yet unclassified' }
-SBVPPattern >> moveCursorUp [
-	<action>
-
-	self floating
-		ifTrue: [self parent ifNotNil: #select ifNil: [self selectTopToplevel]]
-		ifFalse: [self sandblockEditor cursor moveCursorUp]
 ]
 
 { #category : #'as yet unclassified' }

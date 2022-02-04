@@ -215,6 +215,14 @@ SBVisualPrimitive >> buildNewInstance [
 	^ self origin ifNotNil: [self origin class new asVisualPrimitive] ifNil: [self class new]
 ]
 
+{ #category : #nil }
+SBVisualPrimitive >> centerChild [
+
+	^ self connections
+		ifEmpty: [nil]
+		ifNotEmpty: [self connections at: self connections size + 1 / 2]
+]
+
 { #category : #accessing }
 SBVisualPrimitive >> connections [
 
@@ -381,6 +389,42 @@ SBVisualPrimitive >> middleBlockPositions [
 SBVisualPrimitive >> middleLabelPositions [
 
 	^ {#leftLabel. #innerLabel. #rightLabel}
+]
+
+{ #category : #'as yet unclassified' }
+SBVisualPrimitive >> moveCursorDown [
+	<action>
+
+	self floating
+		ifTrue: [self centerChild ifNotNil: #select ifNil: [self selectBottomToplevel]]
+		ifFalse: [self sandblockEditor cursor moveCursorDown]
+]
+
+{ #category : #'as yet unclassified' }
+SBVisualPrimitive >> moveCursorLeft [
+	<action>
+
+	self floating
+		ifTrue: [self leftSibling ifNotNil: #select ifNil: [self selectLeftToplevel]]
+		ifFalse: [self sandblockEditor cursor moveCursorLeft]
+]
+
+{ #category : #'as yet unclassified' }
+SBVisualPrimitive >> moveCursorRight [
+	<action>
+
+	self floating
+		ifTrue: [self rightSibling ifNotNil: #select ifNil: [self selectRightToplevel]]
+		ifFalse: [self sandblockEditor cursor moveCursorRight]
+]
+
+{ #category : #'as yet unclassified' }
+SBVisualPrimitive >> moveCursorUp [
+	<action>
+
+	self floating
+		ifTrue: [self parent ifNotNil: #select ifNil: [self selectTopToplevel]]
+		ifFalse: [self sandblockEditor cursor moveCursorUp]
 ]
 
 { #category : #accessing }
