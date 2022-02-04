@@ -336,17 +336,15 @@ SBVPBindingPattern >> constant: aBlock [
 SBVPBindingPattern >> convertToEllipsisPattern [
 	<action>
 
-	| oldParent newChild |
-	oldParent := self parent.
-	self parent ifNotNil: [
-		newChild := SBVPEllipsisPattern bindingDict: {self class identityName -> self bindingIndex} asDictionary.
-		self parent addConnection: newChild afterIndex: self siblingIndex.
-		
-		self owner addMorphBack: newChild.
-		self parent removeConnection: self].
-	self allConnectionsDo: [:block | block abandon].
-	newChild root attachTreeDecorator.
-	newChild root layout
+	self sandblockEditor do: (SBCombinedCommand newWith: {
+		SBVPDeleteCommand new target: self.
+		SBVPInsertCommand new
+			index: self owner submorphCount + 1;
+			parent: self parent;
+			siblingIndex: self siblingIndex;
+			morph: (SBVPEllipsisPattern bindingDict: {self class identityName -> self bindingIndex} asDictionary);
+			shouldMergeWithNext: false;
+			yourself})
 ]
 
 { #category : #'as yet unclassified' }
