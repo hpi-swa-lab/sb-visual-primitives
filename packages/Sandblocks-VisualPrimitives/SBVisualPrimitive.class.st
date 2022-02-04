@@ -60,6 +60,7 @@ SBVisualPrimitive class >> registerShortcuts: aProvider [
 		registerShortcut: Character backspace do: #removeSelf;
 		registerShortcut: Character delete do: #removeSelf;
 		registerShortcut: Character space do: #addNewConnection;
+		registerShortcut: Character space do: #addNewChild;
 		registerShortcut: Character space shift do: #addNewParent
 ]
 
@@ -80,12 +81,39 @@ SBVisualPrimitive >> addConnection: aVisualPrimitive [
 { #category : #accessing }
 SBVisualPrimitive >> addConnection: aVisualPrimitive afterIndex: aNumber [
 
+	aVisualPrimitive parent ifNotNil: [aVisualPrimitive parent removeConnection: aVisualPrimitive].
 	self connections add: aVisualPrimitive afterIndex: aNumber.
 	aVisualPrimitive parent: self.
 	self withDecorator: SBTreeDecorator do: [:myDecorator |
 		aVisualPrimitive
 			withDecorator: SBTreeDecorator
 			do: [:childDecorator | myDecorator addChild: childDecorator afterIndex: aNumber]]
+]
+
+{ #category : #'as yet unclassified' }
+SBVisualPrimitive >> addNewChild [
+	<action>
+
+	self sandblockEditor do: (SBVPInsertCommand new
+		index: self owner submorphCount + 1;
+		parent: self;
+		morph: self buildNewInstance;
+		shouldMergeWithNext: false;
+		yourself)
+]
+
+{ #category : #'as yet unclassified' }
+SBVisualPrimitive >> addNewParent [
+	<action>
+
+	self sandblockEditor do: (SBVPInsertCommand new
+		index: self owner submorphCount + 1;
+		parent: self parent;
+		siblingIndex: self siblingIndex;
+		children: {self};
+		morph: self buildNewInstance;
+		shouldMergeWithNext: false;
+		yourself)
 ]
 
 { #category : #accessing }
@@ -147,7 +175,11 @@ SBVisualPrimitive >> attachTreeDecorator [
 		self parent ifNotNil: [:parent |
 			parent
 				withDecorator: SBTreeDecorator
-				do: [:parentDecorator | parentDecorator addChild: decorator afterIndex: self siblingIndex - 1]]].
+				do: [:parentDecorator | parentDecorator addChild: decorator afterIndex: self siblingIndex - 1].
+			self connections do: [:child |
+				child
+					withDecorator: SBTreeDecorator
+					do: [:childDecorator | decorator addChild: childDecorator afterIndex: child siblingIndex - 1]]]].
 	
 	self connections do: [:child | child attachTreeDecorator]
 ]
@@ -174,6 +206,12 @@ SBVisualPrimitive >> blockPositions [
 SBVisualPrimitive >> bottomLabelPositions [
 
 	^ {#bottomLeftLabel. #bottomCenterLabel. #bottomRightLabel}
+]
+
+{ #category : #'as yet unclassified' }
+SBVisualPrimitive >> buildNewInstance [
+
+	^ self origin ifNotNil: [self origin class new asVisualPrimitive] ifNil: [self class new]
 ]
 
 { #category : #accessing }
@@ -397,15 +435,19 @@ SBVisualPrimitive >> removeConnection: aVisualPrimitive [
 	aVisualPrimitive parent: nil
 ]
 
+{ #category : #accessing }
+SBVisualPrimitive >> removeLabelAt: aSymbol [
+
+	(self blockDict at: aSymbol) removeAllMorphs
+]
+
 { #category : #'as yet unclassified' }
 SBVisualPrimitive >> removeSelf [
 	<action>
 
-	| oldParent |
-	oldParent := self parent.
-	self parent ifNotNil: [self parent removeConnection: self].
-	self allConnectionsDo: [:block | block abandon].
-	oldParent ifNotNil: #layout
+	self sandblockEditor do: (SBVPDeleteCommand new
+		target: self;
+		yourself)
 ]
 
 { #category : #'as yet unclassified' }

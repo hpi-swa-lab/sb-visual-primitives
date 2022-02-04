@@ -38,11 +38,10 @@ SBVPGroupPattern class >> registerShortcuts: aProvider [
 ]
 
 { #category : #accessing }
-SBVPGroupPattern >> addConnection: aPattern [
+SBVPGroupPattern >> addConnection: aPattern afterIndex: aNumber [
 
-	super addConnection: aPattern.
-	self openPatternAsChild: aPattern.
-	aPattern parent: self
+	super addConnection: aPattern afterIndex: aNumber.
+	self openPatternAsChild: aPattern
 ]
 
 { #category : #'as yet unclassified' }

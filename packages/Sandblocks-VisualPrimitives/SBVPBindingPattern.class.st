@@ -116,15 +116,6 @@ SBVPBindingPattern class >> newFor: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPBindingPattern class >> registerShortcuts: aProvider [
-
-	super registerShortcuts: aProvider.
-	aProvider
-		registerShortcut: Character space do: #addNewChild;
-		registerShortcut: Character space shift do: #addNewParent
-]
-
-{ #category : #'as yet unclassified' }
 SBVPBindingPattern class >> writeBackClosure: aClosure [
 	"should look like [:var | yourVariable := var]"
 
@@ -175,39 +166,14 @@ SBVPBindingPattern >> addLabel [
 	| index |
 	index := UIManager default chooseFrom: self labelPositions.
 	index > 0 ifTrue: [ | unknown |
-		self setLabelAt: (self labelPositions at: index) to: (unknown := self newUnknown).
-		unknown startInput.
-		self layout]
-]
-
-{ #category : #'as yet unclassified' }
-SBVPBindingPattern >> addNewChild [
-	<action>
-
-	| newChild |
-	newChild := self class bindingDict: {self class identityName -> self root nextIdentifier}.
-	self sandblockEditor do: (SBVPInsertCommand new
-		index: self owner submorphCount + 1;
-		parent: self;
-		morph: newChild;
-		shouldMergeWithNext: false;
-		yourself)
-]
-
-{ #category : #'as yet unclassified' }
-SBVPBindingPattern >> addNewParent [
-	<action>
-
-	| newParent |
-	newParent := self class bindingDict: {self class identityName -> self root nextIdentifier}.
-	self parent ifNotNil: [
-		self parent addConnection: newParent afterIndex: self siblingIndex.
-		self parent removeConnection: self].
-	newParent addConnection: self.
-	self owner addMorphBack: newParent.
-	self allConnectionsDo: [:pattern | pattern detachDecorators: SBTreeDecorator].
-	self root attachTreeDecorator.
-	self root layout
+		self sandblockEditor do: (SBDoItCommand new
+			do: [
+				self setLabelAt: (self labelPositions at: index) to: (unknown := self newUnknown).
+				self layout.
+				unknown startInput];
+			undo: [
+				self removeLabelAt: (self labelPositions at: index).
+				self layout])]
 ]
 
 { #category : #'as yet unclassified' }
@@ -326,6 +292,12 @@ SBVPBindingPattern >> buildImplicitChildren: aDict [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPBindingPattern >> buildNewInstance [
+
+	^ self class bindingDict: {self class identityName -> self root nextIdentifier}
+]
+
+{ #category : #'as yet unclassified' }
 SBVPBindingPattern >> canMatchAllChildren [
 
 	^ canMatchAllChildren
@@ -388,12 +360,6 @@ SBVPBindingPattern >> convertToEllipsisPattern [
 SBVPBindingPattern >> couldMatch: aVisualPrimitive [
 
 	^ self childrenInCurrentMatch = aVisualPrimitive connections size and: [self constant isNil or: [self constant value = aVisualPrimitive origin]]
-]
-
-{ #category : #'as yet unclassified' }
-SBVPBindingPattern >> deleteCommandFor: aBlock [
-
-	self halt
 ]
 
 { #category : #'as yet unclassified' }

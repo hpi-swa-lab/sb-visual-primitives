@@ -358,7 +358,7 @@ SBTreeDecorator >> reset [
 SBTreeDecorator >> resetAll [
 
 	self reset.
-	self children do: [:child | child reset]
+	self children do: [:child | child resetAll]
 ]
 
 { #category : #'as yet unclassified' }
