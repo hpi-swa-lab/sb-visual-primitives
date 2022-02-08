@@ -33,10 +33,10 @@ SBVPRelInsertCommand >> suggestions [
 	^ {
 		(SBInsertSuggestionItem selector: 'addNewBindingPattern' label: 'choice')
 			morph: SBVPBindingPattern new
-			previewOnly: true.
+			previewOnly: false.
 		(SBInsertSuggestionItem selector: 'addNewConstraintPattern' label: 'choice')
 			morph: (SBVPConstraintPattern constraint: [:bindings | true])
-			previewOnly: true}
+			previewOnly: false}
 ]
 
 { #category : #'as yet unclassified' }
