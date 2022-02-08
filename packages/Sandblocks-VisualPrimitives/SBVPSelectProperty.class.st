@@ -83,7 +83,9 @@ SBVPSelectProperty >> doubleClick: anEvent [
 SBVPSelectProperty >> getRepresentationMorphAt: anIndex [
 
 	| representation |
-	representation := self representations at: anIndex.
+	representation := self representations
+		at: anIndex
+		ifAbsent: (SBIcon iconWarning color: Color orange).
 	
 	(representation isNumber or: [representation isString]) ifTrue: [^ SBStringMorph new contents: representation asString].
 	representation isMorph ifTrue: [^ representation].
@@ -111,4 +113,10 @@ SBVPSelectProperty >> representations [
 SBVPSelectProperty >> representations: anObject [
 
 	representations := anObject
+]
+
+{ #category : #accessing }
+SBVPSelectProperty >> writeSourceOn: aStream [
+
+	aStream store: self contents
 ]

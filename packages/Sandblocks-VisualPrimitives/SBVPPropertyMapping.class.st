@@ -74,9 +74,21 @@ SBVPPropertyMapping class >> property: aSymbol vpProperty: anotherSymbol [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPPropertyMapping >> asPropertyMapping [
+
+	^ self
+]
+
+{ #category : #'as yet unclassified' }
 SBVPPropertyMapping >> getMorphFor: anObject [
 
-	^ self value: anObject
+	^ self getMorphForValue: (self value: anObject)
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPropertyMapping >> getMorphForValue: anObject [
+
+	^ anObject
 ]
 
 { #category : #accessing }
@@ -128,6 +140,12 @@ SBVPPropertyMapping >> setter: anObject [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPPropertyMapping >> suggestionConstant [
+
+	^ #a
+]
+
+{ #category : #'as yet unclassified' }
 SBVPPropertyMapping >> value: anObject [
 
 	^ self getter value: anObject
@@ -143,4 +161,12 @@ SBVPPropertyMapping >> vpProperty [
 SBVPPropertyMapping >> vpProperty: anObject [
 
 	vpProperty := anObject
+]
+
+{ #category : #accessing }
+SBVPPropertyMapping >> writeValue: value on: aStream [
+
+	aStream nextPut: $[.
+	value contents storeOn: aStream.
+	aStream nextPut: $]
 ]

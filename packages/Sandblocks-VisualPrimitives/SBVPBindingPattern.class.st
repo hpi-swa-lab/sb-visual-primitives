@@ -170,7 +170,8 @@ SBVPBindingPattern >> addLabel [
 			do: [
 				self setLabelAt: (self labelPositions at: index) to: (unknown := self newUnknown).
 				self layout.
-				unknown startInput];
+				unknown startInput.
+				unknown queueUpdateSuggestionsFocused: true];
 			undo: [
 				self removeLabelAt: (self labelPositions at: index).
 				self layout])]
@@ -479,6 +480,13 @@ SBVPBindingPattern >> labelExpressionDict: anObject [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPBindingPattern >> labelPositionOf: aMorph [
+
+	self blockDict keysAndValuesDo: [:position :block | (aMorph hasOwner: block) ifTrue: [^ position]].
+	^ nil
+]
+
+{ #category : #'as yet unclassified' }
 SBVPBindingPattern >> matches: aVisualPrimitive withBinding: aCollection [
 
 	| offset |
@@ -513,7 +521,8 @@ SBVPBindingPattern >> noteNewOwner: newOwner [
 		self addPropertyMappings: (self labelExpressionDict associations collect: [:association |
 			SBVPPropertyMappingExpression
 				expression: association value
-				vpProperty: association key]).
+				vpProperty: association key
+				originalMapping: (self originalPropertyMappingAt: association key)]).
 		self labelBindingDict keysAndValuesDo: [:key :value |
 			(self setLabelAt: key to: (self bindingLabelBlockFrom: value))
 				when: #contentsChanged
@@ -527,6 +536,15 @@ SBVPBindingPattern >> noteNewOwner: newOwner [
 		(self constant isNil and: [self bindingIndex isNil]) ifTrue: [ | unkown |
 			self setLabelAt: self identityLabelPosition to: (unkown := self newUnknown).
 			unkown startInput]]
+]
+
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern >> originalPropertyMappingAt: aVPProperty [
+
+	^ self visualPrimitiveMapping
+		detect: [:mapping | mapping key = aVPProperty]
+		ifFound: [:mapping | mapping asPropertyMapping]
+		ifNone: [nil]
 ]
 
 { #category : #'as yet unclassified' }
@@ -587,33 +605,27 @@ SBVPBindingPattern >> setConnectionBindingFor: aVisualPrimitive in: aDict [
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> staticVisualPrimitiveMapping [
 
-	^ self parentCase ifNil: {} ifNotNil: [:case |
-		(case defaultPatternVisualizationClass
-			ifNil: {}
-			ifNotNil: #visualPrimitiveMapping)
-			collect: [:mappingOrAssoc |
-				mappingOrAssoc isPropertyMapping
-					ifTrue: [mappingOrAssoc]
-					ifFalse: [SBVPPropertyMapping fromAssociation: mappingOrAssoc]]
-			thenSelect: [:mapping | mapping patternValue notNil]]
-]
-
-{ #category : #'as yet unclassified' }
-SBVPBindingPattern >> suggestAlways [
-
-	^ true
-]
-
-{ #category : #'as yet unclassified' }
-SBVPBindingPattern >> suggestions [
-
-	^ {SBSuggestionItem selector: 'text' label: 'a'}
+	^ self visualPrimitiveMapping
+		collect: [:mappingOrAssoc |
+			mappingOrAssoc isPropertyMapping
+				ifTrue: [mappingOrAssoc]
+				ifFalse: [SBVPPropertyMapping fromAssociation: mappingOrAssoc]]
+		thenSelect: [:mapping | mapping patternValue notNil]
 ]
 
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> valueFromPropertyMapping: aPropertyMapping [
 
 	^ aPropertyMapping patternValue
+]
+
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern >> visualPrimitiveMapping [
+
+	^ self parentCase ifNil: {} ifNotNil: [:case |
+		case defaultPatternVisualizationClass
+			ifNil: {}
+			ifNotNil: #visualPrimitiveMapping]
 ]
 
 { #category : #'as yet unclassified' }
@@ -648,6 +660,20 @@ SBVPBindingPattern >> writeBackClosureString: aString [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPBindingPattern >> writeDict: aDict on: aStream using: aBlock [
+
+	aStream nextPut: ${.
+	aDict keysAndValuesDo: [:key :value |
+		key = self identityLabelPosition
+			ifTrue: [self class identityName storeOn: aStream]
+			ifFalse: [key storeOn: aStream].
+		aStream nextPutAll: ' -> ('.
+		aBlock value: key value: value.
+		aStream nextPutAll: ').'].
+	aStream nextPut: $}
+]
+
+{ #category : #'as yet unclassified' }
 SBVPBindingPattern >> writeSourceOn: aStream [
 
 	| bindings expressions staticMapping |
@@ -664,9 +690,9 @@ SBVPBindingPattern >> writeSourceOn: aStream [
 		(value hasSubmorphs
 			and: [(staticMapping anySatisfy: [:association | association key = position]) not]
 			and: [self labelPositions includes: position]) ifTrue: [
-			value firstSubmorph isBlockBody
-				ifTrue: [expressions at: position put: value firstSubmorph]
-				ifFalse: [bindings at: position put: value firstSubmorph]]].
+			value firstSubmorph isName
+				ifTrue: [bindings at: position put: value firstSubmorph]
+				ifFalse: [expressions at: position put: value firstSubmorph]]].
 	
 	self writeBackClosure ifNotNil: [
 		aStream
@@ -674,26 +700,15 @@ SBVPBindingPattern >> writeSourceOn: aStream [
 			nextPutAll: self writeBackClosureString].
 	
 	bindings ifNotEmpty: [
-		aStream nextPutAll: ' bindingDict: {'.
-		bindings keysAndValuesDo: [:key :value |
-			key = self identityLabelPosition
-				ifTrue: [self class identityName storeOn: aStream]
-				ifFalse: [key storeOn: aStream].
-			aStream nextPutAll: ' -> ('.
-			value contents asSymbol storeOn: aStream.
-			aStream nextPutAll: ').'].
-		aStream nextPut: $}].
+		aStream nextPutAll: ' bindingDict: '.
+		self writeDict: bindings on: aStream using: [:key :value | value contents asSymbol storeOn: aStream]].
 	
 	expressions ifNotEmpty: [
-		aStream nextPutAll: ' expressionDict: {'.
-		expressions keysAndValuesDo: [:key :value |
-			key = self identityLabelPosition
-				ifTrue: [self class identityName storeOn: aStream]
-				ifFalse: [key storeOn: aStream].
-			aStream nextPutAll: ' -> ('.
-			value writeSourceOn: aStream.
-			aStream nextPutAll: ').'].
-		aStream nextPut: $}].
+		aStream nextPutAll: ' expressionDict: '.
+		self writeDict: expressions on: aStream using: [:key :value |
+			value isBlockBody
+				ifTrue: [value writeSourceOn: aStream]
+				ifFalse: [(self originalPropertyMappingAt: key) writeValue: value on: aStream]]].
 	
 	self connections ifNotEmpty: [
 		aStream nextPutAll: ' connections: {'.

@@ -15,7 +15,13 @@ SBVPPropertyMappingString class >> defaultSetterBlockWith: aSymbol for: anotherS
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMappingString >> getMorphFor: anObject [
+SBVPPropertyMappingString >> getMorphForValue: anObject [
 
-	^ SBTextBubble new contents: (self value: anObject) asString
+	^ SBTextBubble new contents: anObject asString
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPropertyMappingString >> suggestionConstant [
+
+	^ 'CONSTANT'
 ]

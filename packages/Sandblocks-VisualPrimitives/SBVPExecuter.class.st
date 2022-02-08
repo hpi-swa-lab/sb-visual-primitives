@@ -404,7 +404,10 @@ SBVPExecuter class >> exampleWithConstants: aDummyNode [
 				SBVPBindingPattern
 					expressionDict: {#identity -> [salzstangen]}
 					connections: {SBVPEllipsisPattern bindingDict: {#identity -> #b}}}})
-		strategy: {#explicitRootMatching -> false} asDictionary) replaceAllMatches
+		strategy: (Dictionary new
+			add: #explicitRootMatching -> false;
+			add: #explicitChildrenMatching -> true;
+			yourself)) replaceAllMatches
 ]
 
 { #category : #'as yet unclassified' }

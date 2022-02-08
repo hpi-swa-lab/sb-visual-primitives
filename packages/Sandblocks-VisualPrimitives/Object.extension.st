@@ -31,7 +31,7 @@ Object >> showAsVisualPrimitive [
 ]
 
 { #category : #'*Sandblocks-VisualPrimitives' }
-Object class >> visualPrimitiveMapping [ 
-	
+Object class >> visualPrimitiveMapping [
+
 	^ {}
 ]
