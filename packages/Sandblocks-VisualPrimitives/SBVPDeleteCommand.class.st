@@ -11,6 +11,7 @@ Class {
 { #category : #'as yet unclassified' }
 SBVPDeleteCommand >> do [
 
+	oldOwner := target owner.
 	super do.
 	
 	self oldParent: target parent.
@@ -49,7 +50,10 @@ SBVPDeleteCommand >> oldSiblingIndex: anObject [
 SBVPDeleteCommand >> undo [
 
 	self oldParent ifNotNil: [self oldParent addConnection: target afterIndex: self oldSiblingIndex - 1].
-	target allConnectionsDo: [:block | target owner addMorphBack: block].
+	
+	(self oldParent isKindOf: SBVPGroupPattern) ifFalse: [
+		target allConnectionsDo: [:block | oldOwner addMorphBack: block].
+		super undo].
 	target
 		layout;
 		layout;
