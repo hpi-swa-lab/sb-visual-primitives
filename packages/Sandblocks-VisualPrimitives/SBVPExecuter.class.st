@@ -265,10 +265,6 @@ SBVPExecuter class >> exampleGrammarRuleMergeRepeat: aGrammarObject [
 								SBVPTomGrammarObject new
 									objectName: 'aahh';
 									type: 'SYMBOL';
-									members: {}.
-								SBVPTomGrammarObject new
-									objectName: '';
-									type: 'SEQ';
 									members: {}};
 							content: (SBVPTomGrammarObject new
 								objectName: 'aahh';
@@ -288,7 +284,7 @@ SBVPExecuter class >> exampleGrammarRuleMergeRepeat: aGrammarObject [
 						expressionDict: {#topLeftLabel -> ['SYMBOL']}.
 					SBVPBindingPattern
 						bindingDict: {#identity -> #c}
-						expressionDict: {#topLeftLabel -> ['REPEAT']}
+						expressionDict: {#topLeftLabel -> ['SEQ']}
 						connections: {
 							SBVPBindingPattern
 								bindingDict: {#identity -> #d}

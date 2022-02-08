@@ -535,7 +535,7 @@ SBVPBindingPattern >> noteNewOwner: newOwner [
 				to: (self bindingLabelBlockFrom: self bindingIndex asString)].
 		(self constant isNil and: [self bindingIndex isNil]) ifTrue: [ | unkown |
 			self setLabelAt: self identityLabelPosition to: (unkown := self newUnknown).
-			unkown startInput]]
+			self sandblockEditor ifNotNil: [unkown startInput]]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -706,9 +706,10 @@ SBVPBindingPattern >> writeSourceOn: aStream [
 	expressions ifNotEmpty: [
 		aStream nextPutAll: ' expressionDict: '.
 		self writeDict: expressions on: aStream using: [:key :value |
-			value isBlockBody
-				ifTrue: [value writeSourceOn: aStream]
-				ifFalse: [(self originalPropertyMappingAt: key) writeValue: value on: aStream]]].
+			value isBlockBody ifTrue: [value writeSourceOn: aStream] ifFalse: [
+				(self originalPropertyMappingAt: key)
+					ifNil: [aStream nextPutAll: '[]']
+					ifNotNil: [:mapping | mapping writeValue: value on: aStream]]]].
 	
 	self connections ifNotEmpty: [
 		aStream nextPutAll: ' connections: {'.

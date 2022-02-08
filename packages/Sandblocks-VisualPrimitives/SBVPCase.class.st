@@ -6,7 +6,8 @@ Class {
 		'output',
 		'strategy',
 		'informationRow',
-		'defaultPatternVisualizationClass'
+		'defaultPatternVisualizationClass',
+		'classNameInput'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
@@ -128,6 +129,12 @@ SBVPCase >> addToggleButtonFor: aSymbol [
 	(self strategyButtonFor: aSymbol)
 		ifNil: [self informationRow addMorphBack: button]
 		ifNotNil: [:existingButton | existingButton replaceBy: button]
+]
+
+{ #category : #'as yet unclassified' }
+SBVPCase >> artefactChanged: aMethodBlock [
+
+	classNameInput selectedClass ~= self defaultPatternVisualizationClass ifTrue: [self defaultPatternVisualizationClass: classNameInput selectedClass]
 ]
 
 { #category : #'as yet unclassified' }
@@ -291,8 +298,8 @@ SBVPCase >> initialize [
 	super initialize.
 	informationRow := SBRow new cellInset: 3.
 	self
-		shrinkWrap;
 		changeTableLayout;
+		shrinkWrap;
 		cellInset: 3;
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> true;
@@ -335,7 +342,7 @@ SBVPCase >> inputRoot [
 { #category : #'as yet unclassified' }
 SBVPCase >> isValidBinding: aString [
 
-	^ (self findAllBindings: self input) includes: aString
+	^ (self findAllBindings: self input) contains: [:binding | binding contents = aString]
 ]
 
 { #category : #'as yet unclassified' }
@@ -343,8 +350,12 @@ SBVPCase >> noteNewOwner: aMorph [
 
 	| row |
 	super noteNewOwner: aMorph.
+	classNameInput := SBStClassNameInput new
+		object: self defaultPatternVisualizationClass;
+		prefix: 'Class: '.
 	self addMorph: (SBColumn new
 		cellPositioning: #center;
+		addMorphBack: classNameInput;
 		addMorphBack: self informationRow;
 		addMorphBack: (row := SBRow new
 			cellInset: 3;

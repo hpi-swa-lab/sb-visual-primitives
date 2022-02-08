@@ -88,7 +88,7 @@ SBVPPropertyMapping >> getMorphFor: anObject [
 { #category : #'as yet unclassified' }
 SBVPPropertyMapping >> getMorphForValue: anObject [
 
-	^ anObject
+	^ anObject isMorph ifTrue: [anObject] ifFalse: [SBTextBubble new contents: anObject]
 ]
 
 { #category : #accessing }
