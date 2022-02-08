@@ -317,7 +317,7 @@ SBVPBindingPattern >> collectBindingsInto: aCollection [
 
 	super collectBindingsInto: aCollection.
 	
-	self blockDict keysAndValuesDo: [:position :value | (value firstSubmorphOrNil satisfies: #(#notNil #isSandblock #isName #isBlockBinding)) ifTrue: [aCollection add: value firstSubmorph]]
+	aCollection add: (self propertyAt: self identityLabelPosition)
 ]
 
 { #category : #'as yet unclassified' }

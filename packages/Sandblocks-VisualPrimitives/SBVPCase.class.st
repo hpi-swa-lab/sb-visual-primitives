@@ -263,20 +263,14 @@ SBVPCase >> explicitRootMatching [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPCase >> findAllBindings: aRootPattern [
+SBVPCase >> findAllBindings: aPattern [
 
-	| bindingDict dfs |
-	dfs := LinkedList new.
-	bindingDict := Dictionary new.
+	| bindings |
+	bindings := Set new.
 	
-	dfs add: aRootPattern.
-	[dfs notEmpty] whileTrue: [ | currentTop |
-		currentTop := dfs first.
-		dfs removeFirst.
-		bindingDict add: (currentTop propertyAt: currentTop identityLabelPosition) -> currentTop.
-		dfs addAll: currentTop connections].
+	aPattern collectBindingsInto: bindings.
 	
-	^ bindingDict
+	^ bindings
 ]
 
 { #category : #accessing }
@@ -341,7 +335,7 @@ SBVPCase >> inputRoot [
 { #category : #'as yet unclassified' }
 SBVPCase >> isValidBinding: aString [
 
-	^ (self findAllBindings: self inputRoot) keys includes: aString
+	^ (self findAllBindings: self input) includes: aString
 ]
 
 { #category : #'as yet unclassified' }

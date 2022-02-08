@@ -122,6 +122,23 @@ SBVPGroupPattern >> buildImplicitChildren: anArray [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPGroupPattern >> canDeleteChild: aBlock [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBVPGroupPattern >> deleteCommandFor: aBlock [
+
+	| primitive |
+	primitive := aBlock isVisualPrimitive
+		ifTrue: [aBlock]
+		ifFalse: [aBlock submorphThat: [:morph | morph parent = self] ifNone: [nil]].
+	
+	^ SBVPDeleteCommand new target: primitive
+]
+
+{ #category : #'as yet unclassified' }
 SBVPGroupPattern >> findConstant [
 
 	self connections do: [:child | child findConstant ifNotNil: [:constant | ^ constant]].

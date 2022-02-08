@@ -57,8 +57,6 @@ SBVisualPrimitive class >> newFromObject: anObject in: aMorph [
 SBVisualPrimitive class >> registerShortcuts: aProvider [
 
 	aProvider
-		registerShortcut: Character backspace do: #removeSelf;
-		registerShortcut: Character delete do: #removeSelf;
 		registerShortcut: Character space do: #addNewConnection;
 		registerShortcut: Character space do: #addNewChild;
 		registerShortcut: Character space shift do: #addNewParent
@@ -236,6 +234,16 @@ SBVisualPrimitive >> connections: aCollection [
 	connections do: [:child | child parent: self]
 ]
 
+{ #category : #'as yet unclassified' }
+SBVisualPrimitive >> deleteBlock [
+	"super deleteBlock"
+
+	self sandblockEditor do: (SBVPDeleteCommand new
+		target: self;
+		yourself)
+	""
+]
+
 { #category : #accessing }
 SBVisualPrimitive >> getLabelContents: anObject [
 
@@ -282,7 +290,10 @@ SBVisualPrimitive >> initialize [
 	self
 		addAllMorphs: {
 			SBRow new addAllMorphs: (self topLabelPositions collect: [:position | self blockDict at: position]).
-			SBRow new addAllMorphs: (self middleBlockPositions collect: [:position | self blockDict at: position]).
+			SBRow new
+				addAllMorphs: (self middleBlockPositions collect: [:position | self blockDict at: position]);
+				cellPositioning: #center;
+				yourself.
 			SBRow new addAllMorphs: (self bottomLabelPositions collect: [:position | self blockDict at: position])};
 		changeTableLayout;
 		shrinkWrap;
@@ -484,15 +495,6 @@ SBVisualPrimitive >> removeConnection: aVisualPrimitive [
 SBVisualPrimitive >> removeLabelAt: aSymbol [
 
 	(self blockDict at: aSymbol) removeAllMorphs
-]
-
-{ #category : #'as yet unclassified' }
-SBVisualPrimitive >> removeSelf [
-	<action>
-
-	self sandblockEditor do: (SBVPDeleteCommand new
-		target: self;
-		yourself)
 ]
 
 { #category : #'as yet unclassified' }

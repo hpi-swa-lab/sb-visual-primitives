@@ -68,6 +68,13 @@ SBVPConstraintPattern >> attachTreeDecorator [
 ]
 
 { #category : #accessing }
+SBVPConstraintPattern >> collectBindingsInto: aCollection [
+	"we do not define bindings"
+
+	
+]
+
+{ #category : #accessing }
 SBVPConstraintPattern >> constraint [
 
 	^ constraint

@@ -20,10 +20,24 @@ SBStDeclarationForVPBinding >> asSuggestionItem [
 	^ SBSuggestionItem selector: self contents label: 'block var'
 ]
 
+{ #category : #accessing }
+SBStDeclarationForVPBinding >> attached: aName [
+
+	super attached: aName.
+	self refreshBindingIndex
+]
+
 { #category : #'as yet unclassified' }
 SBStDeclarationForVPBinding >> castToUnknownWhenEmpty [
 
 	^ true
+]
+
+{ #category : #accessing }
+SBStDeclarationForVPBinding >> contentsChanged [
+
+	super contentsChanged.
+	self refreshBindingIndex
 ]
 
 { #category : #accessing }
@@ -62,6 +76,14 @@ SBStDeclarationForVPBinding >> printBlockOn: aStream [
 	aStream
 		nextPutAll: 'pattern input declaration ';
 		nextPutAll: self contents
+]
+
+{ #category : #accessing }
+SBStDeclarationForVPBinding >> refreshBindingIndex [
+
+	| bindingPattern |
+	bindingPattern := name firstOwnerSuchThat: [:owner | owner isVisualPrimitive].
+	bindingPattern bindingIndex: name contents
 ]
 
 { #category : #accessing }
