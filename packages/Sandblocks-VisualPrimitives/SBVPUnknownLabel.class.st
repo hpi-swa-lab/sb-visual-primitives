@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBVPUnknownLabel >> deleteBeforeCursor [
+	
+	self sandblockEditor do: (SBDeleteCommand new target: self)
+]
+
+{ #category : #'as yet unclassified' }
 SBVPUnknownLabel >> nextIdentifier [
 
 	^ self parentSandblock root nextIdentifier

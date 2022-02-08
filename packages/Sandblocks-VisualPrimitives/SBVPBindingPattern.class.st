@@ -46,12 +46,6 @@ SBVPBindingPattern class >> bindingDict: aDict expressionDict: anotherDict conne
 ]
 
 { #category : #'as yet unclassified' }
-SBVPBindingPattern class >> canDeleteChild: aBlock [
-
-	^ true
-]
-
-{ #category : #'as yet unclassified' }
 SBVPBindingPattern class >> expressionDict: aDict [
 
 	^ self new expressionDict: aDict asDictionary
@@ -289,6 +283,12 @@ SBVPBindingPattern >> buildImplicitChildren: aDict [
 SBVPBindingPattern >> buildNewInstance [
 
 	^ self class bindingDict: {self class identityName -> self root nextIdentifier}
+]
+
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern >> canDeleteChild: aBlock [
+
+	^ true
 ]
 
 { #category : #'as yet unclassified' }

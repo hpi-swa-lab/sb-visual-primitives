@@ -8,12 +8,6 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBVPGroupPattern class >> canDeleteChild: aBlock [
-
-	^ true
-]
-
-{ #category : #'as yet unclassified' }
 SBVPGroupPattern class >> matches: aBlock [
 
 	^ self selector: #patterns: receiverMatches: aBlock
