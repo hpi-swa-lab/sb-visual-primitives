@@ -32,12 +32,10 @@ SBVPInsertCommand >> do [
 		ifNil: [self parent connections size]).
 	(self parent isKindOf: SBVPGroupPattern) ifFalse: [super do].
 	
+	self morph parentCase buildImplicitChildrenMatchingPattern.
 	self morph root
 		attachTreeDecorator;
-		layout;
-		layout;
-		flag: #TODO.
-	"Layout twice is required for some reason"
+		layout.
 	^ self morph
 ]
 
@@ -86,7 +84,12 @@ SBVPInsertCommand >> undo [
 
 	self parent removeConnection: self morph.
 	self children reverseDo: [:child | self parent addConnection: child afterIndex: self insertSiblingIndex].
+	self morph connections do: [:connection |
+		connection abandon.
+		
+		].
 	super undo.
+	self parent parentCase buildImplicitChildrenMatchingPattern.
 	self parent root layout.
 	^ self morph
 ]

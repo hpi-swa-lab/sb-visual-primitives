@@ -18,6 +18,7 @@ SBVPDeleteCommand >> do [
 	self oldSiblingIndex: target siblingIndex.
 	self oldParent ifNotNil: [self oldParent removeConnection: target].
 	target allConnectionsDo: [:block | block abandon].
+	self oldParent parentCase buildImplicitChildrenMatchingPattern.
 	self oldParent ifNotNil: #layout.
 	^ self oldParent
 ]
@@ -54,10 +55,7 @@ SBVPDeleteCommand >> undo [
 	(self oldParent isKindOf: SBVPGroupPattern) ifFalse: [
 		target allConnectionsDo: [:block | oldOwner addMorphBack: block].
 		super undo].
-	target
-		layout;
-		layout;
-		flag: #TODO.
-	"Layout twice is required for some reason"
+	self oldParent parentCase buildImplicitChildrenMatchingPattern.
+	target layout.
 	^ target
 ]
