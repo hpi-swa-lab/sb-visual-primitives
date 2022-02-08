@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBVPUnknownLabel >> printOn: aStream [
+
+	aStream nextPutAll: 'unknown label'
+]
+
+{ #category : #'as yet unclassified' }
 SBVPUnknownLabel >> suggestAlways [
 
 	^ true

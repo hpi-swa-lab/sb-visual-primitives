@@ -20,6 +20,12 @@ SBStDeclarationForVPBinding >> asSuggestionItem [
 	^ SBSuggestionItem selector: self contents label: 'block var'
 ]
 
+{ #category : #'as yet unclassified' }
+SBStDeclarationForVPBinding >> castToUnknownWhenEmpty [
+
+	^ true
+]
+
 { #category : #accessing }
 SBStDeclarationForVPBinding >> guessedClass [
 

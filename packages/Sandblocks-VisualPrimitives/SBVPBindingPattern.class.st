@@ -493,6 +493,12 @@ SBVPBindingPattern >> matches: aVisualPrimitive withBinding: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPBindingPattern >> newEmptyChildNear: aBlock before: aBoolean [
+
+	^ self newUnknown
+]
+
+{ #category : #'as yet unclassified' }
 SBVPBindingPattern >> newUnknown [
 
 	^ SBVPUnknownLabel new grammarHandler: SBStGrammarHandler new
