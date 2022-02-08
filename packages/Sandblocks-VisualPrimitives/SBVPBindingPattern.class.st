@@ -282,7 +282,7 @@ SBVPBindingPattern >> buildImplicitChildren: aDict [
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> buildNewInstance [
 
-	^ self class bindingDict: {self class identityName -> self root nextIdentifier}
+	^ SBVPBindingPattern new
 ]
 
 { #category : #'as yet unclassified' }

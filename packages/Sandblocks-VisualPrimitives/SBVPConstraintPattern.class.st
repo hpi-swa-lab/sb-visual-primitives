@@ -132,6 +132,24 @@ SBVPConstraintPattern >> matches: aVisualPrimitive withBinding: aDict [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPConstraintPattern >> newUnknown [
+
+	^ SBUnknown new grammarHandler: SBStGrammarHandler new
+]
+
+{ #category : #'as yet unclassified' }
+SBVPConstraintPattern >> noteNewOwner: newOwner [
+
+	| unkown |
+	super noteNewOwner: newOwner.
+	unkown := self newUnknown.
+	
+	self constraintBlock statements isEmpty ifTrue: [
+		self constraintBlock addMorphBack: unkown.
+		unkown startInput]
+]
+
+{ #category : #'as yet unclassified' }
 SBVPConstraintPattern >> wantsMethodBody [
 
 	^ false
