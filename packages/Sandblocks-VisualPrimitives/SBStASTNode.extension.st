@@ -5,7 +5,7 @@ SBStASTNode >> visualize [
 	<action>
 
 	| visualizer objectClass |
-	visualizer := ["self halt. "(SBVPVisualizer code: self copy showCode: false) isImplicit: true]
+	visualizer := [(SBVPVisualizer code: self copy showCode: false) isImplicit: true]
 		on: Error
 		do: [^ false].
 	

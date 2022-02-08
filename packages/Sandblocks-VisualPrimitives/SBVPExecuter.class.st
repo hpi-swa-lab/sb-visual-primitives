@@ -260,7 +260,7 @@ SBVPExecuter class >> exampleGrammarRuleMergeRepeat: aGrammarObject [
 							type: 'SYMBOL';
 							members: {}.
 						SBVPTomGrammarObject new
-							objectName: ' ';
+							objectName: 'bbbb ';
 							type: 'SEQ';
 							members: {
 								SBVPTomGrammarObject new
@@ -294,7 +294,7 @@ SBVPExecuter class >> exampleGrammarRuleMergeRepeat: aGrammarObject [
 							SBVPBindingPattern
 								bindingDict: {#identity -> #d}
 								expressionDict: {#topLeftLabel -> ['SYMBOL']}}}.
-			SBVPConstraintPattern constraint: [:bindings | b objectName = d objectName]})
+			SBVPConstraintPattern constraint: [:bindings | (bindings at: #b) objectName = (bindings at: #d) objectName]})
 		output: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern
 				expressionDict: {#innerLabel -> ['bbii']. #identity -> [biop]}

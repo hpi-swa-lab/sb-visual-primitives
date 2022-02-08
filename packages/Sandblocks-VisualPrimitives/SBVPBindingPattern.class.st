@@ -595,12 +595,13 @@ SBVPBindingPattern >> staticVisualPrimitiveMapping [
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> suggestAlways [
 
-	^true
+	^ true
 ]
 
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> suggestions [
-^ {SBSuggestionItem selector: 'text' label: 'a'} 
+
+	^ {SBSuggestionItem selector: 'text' label: 'a'}
 ]
 
 { #category : #'as yet unclassified' }

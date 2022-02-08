@@ -80,11 +80,14 @@ SBVPGroupPattern >> addNewPattern [
 
 { #category : #accessing }
 SBVPGroupPattern >> addSeperatorsAround: aPattern [
+
+	(aPattern submorphAfter
+		ifNil: [false]
+		ifNotNil: [(aPattern submorphAfter isKindOf: SBTextBubble) not]) ifTrue: [self row addMorph: (SBTextBubble new contents: self seperatorString) after: aPattern].
 	
-	(aPattern submorphAfter ifNil: [false] ifNotNil: [(aPattern submorphAfter isKindOf: SBTextBubble) not]) ifTrue: [self row addMorph: (SBTextBubble new contents: self seperatorString) after: aPattern].
-
-	(aPattern submorphBefore ifNil: [false] ifNotNil: [(aPattern submorphBefore isKindOf: SBTextBubble) not]) ifTrue: [self row addMorph: (SBTextBubble new contents: self seperatorString) inFrontOf: aPattern]
-
+	(aPattern submorphBefore
+		ifNil: [false]
+		ifNotNil: [(aPattern submorphBefore isKindOf: SBTextBubble) not]) ifTrue: [self row addMorph: (SBTextBubble new contents: self seperatorString) inFrontOf: aPattern]
 ]
 
 { #category : #'as yet unclassified' }
@@ -210,8 +213,8 @@ SBVPGroupPattern >> openPatternAsChild: aPattern [
 		ifFalse: [
 			self row addMorph: aPattern atIndex: insertPosition.
 			addedBlock := aPattern].
-		
-		self addSeperatorsAround: addedBlock.
+	
+	self addSeperatorsAround: addedBlock
 ]
 
 { #category : #'as yet unclassified' }

@@ -43,7 +43,10 @@ SBVPVisualizer >> artefactSaved: aMethodBlock [
 
 	self showCode
 		ifTrue: [self code: self code firstSubmorph showCode: self showCode]
-		ifFalse: [self reloadArtefact]
+		ifFalse: [
+			self
+				code: (String streamContents: [:stream | self writeCodeOn: stream]) parseAsSandblock
+				showCode: self showCode]
 ]
 
 { #category : #accessing }
@@ -71,6 +74,24 @@ SBVPVisualizer >> code: aCodeBlock showCode: aBoolean [
 	vp := SBVisualPrimitive newFromObject: aSandblock evaluate value in: self visual.
 	vp attachTreeDecorator.
 	vp layout
+]
+
+{ #category : #'as yet unclassified' }
+SBVPVisualizer >> devisualize [
+	<action>
+	<actionValidIf: #isImplicit>
+
+	| replacer |
+	replacer := self code firstSubmorph.
+	
+	self sandblockEditor do: (SBCombinedCommand newWith: {
+		SBReplaceCommand new
+			target: self;
+			replacer: replacer;
+			yourself.
+		SBDoItCommand new
+			do: [replacer show];
+			undo: [replacer hide]})
 ]
 
 { #category : #accessing }
@@ -155,21 +176,26 @@ SBVPVisualizer >> exampleSimpleRectangle [
 SBVPVisualizer >> exampleSimpleTomGrammar [
 
 	SBVPVisualizer
-		code: [ | tom |
-			tom := SBVPTomGrammarObject new.
-			tom
-				type: 'SEQ';
-				members: {
-					SBVPTomGrammarObject new
-						type: 'SYMBOL';
-						objectName: 'aahh'.
-					SBVPTomGrammarObject new
-						type: 'REPEAT';
-						content: (SBVPTomGrammarObject new
+		code: (SBVPTomGrammarObject new
+			objectName: '';
+			type: 'SEQ';
+			members: {
+				SBVPTomGrammarObject new
+					objectName: 'aahh';
+					type: 'SYMBOL';
+					members: {}.
+				SBVPTomGrammarObject new
+					objectName: 'bbb';
+					type: 'REPEAT';
+					members: {
+						SBVPTomGrammarObject new
+							objectName: 'aahh';
 							type: 'SYMBOL';
-							objectName: 'aahh')}.
-			tom]
-		showCode: true
+							members: {}};
+					content: (SBVPTomGrammarObject new
+						objectName: 'aahh';
+						type: 'SYMBOL')})
+		showCode: false
 ]
 
 { #category : #accessing }
@@ -270,19 +296,28 @@ SBVPVisualizer >> visualPrimitiveFrom: anObject [
 ]
 
 { #category : #accessing }
+SBVPVisualizer >> writeCodeOn: aStream [
+
+	| object |
+	aStream nextPut: $(.
+	object := (self visual submorphs detect: [:morph | morph isVisualPrimitive]) root getObjectFromVisualPrimitive.
+	((object respondsTo: #writeSourceOn:) and: [self showCode not])
+		ifTrue: [object writeSourceOn: aStream]
+		ifFalse: [self code submorphsDo: [:morph | morph writeSourceOn: aStream]].
+	aStream nextPut: $)
+]
+
+{ #category : #accessing }
 SBVPVisualizer >> writeSourceOn: aStream [
 
 	self isImplicit
-		ifTrue: [ | object |
+		ifTrue: [
 			aStream nextPut: $(.
-			object := (self visual submorphs detect: [:morph | morph isVisualPrimitive]) root getObjectFromVisualPrimitive.
-			(object respondsTo: #writeSourceOn:)
-				ifTrue: [object writeSourceOn: aStream]
-				ifFalse: [self code submorphsDo: [:morph | morph writeSourceOn: aStream]].
+			self writeCodeOn: aStream.
 			aStream nextPutAll: ') showAsVisualPrimitive']
 		ifFalse: [
 			aStream nextPutAll: '(SBVPVisualizer code: '.
-			self code submorphsDo: [:morph | morph writeSourceOn: aStream].
+			self writeCodeOn: aStream.
 			aStream nextPutAll: ' showCode: '.
 			self showCode storeOn: aStream.
 			aStream nextPut: $)]
