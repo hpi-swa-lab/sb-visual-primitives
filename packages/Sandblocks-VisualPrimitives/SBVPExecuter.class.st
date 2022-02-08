@@ -194,7 +194,7 @@ SBVPExecuter class >> exampleBuildHeapStrings: aTree [
 					bindingDict: {#identity -> #boi}
 					connections: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}.
 				SBVPEllipsisPattern bindingDict: {#identity -> #d}}.
-			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) key < (bindings at: #boi) key]})
+			SBVPConstraintPattern constraint: [:bindings | a key < boi key]})
 		output: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern bindingDict: {#identity -> #boi} connections: {
 				SBVPEllipsisPattern bindingDict: {#identity -> #b}.
@@ -204,7 +204,7 @@ SBVPExecuter class >> exampleBuildHeapStrings: aTree [
 				SBVPEllipsisPattern bindingDict: {#identity -> #d}}})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> false;
-			add: #explicitChildrenMatching -> false;
+			add: #explicitChildrenMatching -> true;
 			yourself)
 		visualizePatternsAs: SBVPStringDummyNode) replaceAllMatches: aTree
 ]

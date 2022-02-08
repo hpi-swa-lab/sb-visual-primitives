@@ -236,12 +236,10 @@ SBVisualPrimitive >> connections: aCollection [
 
 { #category : #'as yet unclassified' }
 SBVisualPrimitive >> deleteBlock [
-	"super deleteBlock"
 
 	self sandblockEditor do: (SBVPDeleteCommand new
 		target: self;
 		yourself)
-	""
 ]
 
 { #category : #accessing }
