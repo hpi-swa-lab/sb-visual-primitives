@@ -340,6 +340,7 @@ SBVPBindingPattern >> convertToEllipsisPattern [
 		SBVPInsertCommand new
 			index: self owner submorphCount + 1;
 			parent: self parent;
+			container: self owner;
 			siblingIndex: self siblingIndex;
 			morph: (SBVPEllipsisPattern bindingDict: {self class identityName -> self bindingIndex} asDictionary);
 			shouldMergeWithNext: false;

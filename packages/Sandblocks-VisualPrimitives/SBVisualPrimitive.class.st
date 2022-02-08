@@ -57,7 +57,6 @@ SBVisualPrimitive class >> newFromObject: anObject in: aMorph [
 SBVisualPrimitive class >> registerShortcuts: aProvider [
 
 	aProvider
-		registerShortcut: Character space do: #addNewConnection;
 		registerShortcut: Character space do: #addNewChild;
 		registerShortcut: Character space shift do: #addNewParent
 ]
@@ -95,6 +94,7 @@ SBVisualPrimitive >> addNewChild [
 	self sandblockEditor do: (SBVPInsertCommand new
 		index: self owner submorphCount + 1;
 		parent: self;
+		container: self owner;
 		morph: self buildNewInstance;
 		shouldMergeWithNext: false;
 		yourself)
@@ -107,6 +107,7 @@ SBVisualPrimitive >> addNewParent [
 	self sandblockEditor do: (SBVPInsertCommand new
 		index: self owner submorphCount + 1;
 		parent: self parent;
+		container: self owner;
 		siblingIndex: self siblingIndex;
 		children: {self};
 		morph: self buildNewInstance;

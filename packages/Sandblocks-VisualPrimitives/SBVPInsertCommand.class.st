@@ -24,11 +24,14 @@ SBVPInsertCommand >> children: anObject [
 { #category : #'as yet unclassified' }
 SBVPInsertCommand >> do [
 
+	(self parent isKindOf: SBVPGroupPattern) ifTrue: [self parent removeConnection: self children first].
+	
+	self children do: [:child | self morph addConnection: child].
 	self parent addConnection: self morph afterIndex: (self siblingIndex
 		ifNotNil: [self siblingIndex - 1]
 		ifNil: [self parent connections size]).
-	self children do: [:child | self morph addConnection: child].
-	super do.
+	(self parent isKindOf: SBVPGroupPattern) ifFalse: [super do].
+	
 	self morph root
 		attachTreeDecorator;
 		layout;
