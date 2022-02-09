@@ -102,7 +102,9 @@ SBVPEllipsisPattern >> initialize [
 
 	super initialize.
 	self currentSize: 0.
-	self firstSubmorph addMorph: (SBIcon iconEllipsisH scale: 1.5)
+	self
+		addMorph: SBIcon iconEllipsisH large;
+		cellPositioning: #center
 ]
 
 { #category : #'as yet unclassified' }
@@ -116,7 +118,7 @@ SBVPEllipsisPattern >> isImplicitChild: aBoolean [
 	self bindingIndex: (self bindingIndexWithImplicitPrefix: aBoolean).
 	setColor := [:color |
 		self childSandblocksDo: [:block | block color: color].
-		self firstSubmorph firstSubmorph class = SBColumn ifFalse: [self firstSubmorph firstSubmorph color: color]].
+		self firstSubmorph class = SBRow ifFalse: [self firstSubmorph color: color]].
 	self isImplicitChild
 		ifTrue: [setColor value: Color gray]
 		ifFalse: [setColor value: Color black].

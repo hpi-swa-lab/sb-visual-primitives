@@ -287,12 +287,17 @@ SBVisualPrimitive >> initialize [
 	
 	self
 		addAllMorphs: {
-			SBRow new addAllMorphs: (self topLabelPositions collect: [:position | self blockDict at: position]).
+			SBRow new
+				addAllMorphs: (self topLabelPositions collect: [:position | self blockDict at: position]);
+				hResizing: #spaceFill.
 			SBRow new
 				addAllMorphs: (self middleBlockPositions collect: [:position | self blockDict at: position]);
 				cellPositioning: #center;
+				hResizing: #spaceFill;
 				yourself.
-			SBRow new addAllMorphs: (self bottomLabelPositions collect: [:position | self blockDict at: position])};
+			SBRow new
+				addAllMorphs: (self bottomLabelPositions collect: [:position | self blockDict at: position]);
+				hResizing: #spaceFill};
 		changeTableLayout;
 		shrinkWrap;
 		connections: OrderedCollection new;
@@ -305,7 +310,9 @@ SBVisualPrimitive >> initializeLabelBlocks [
 	self blockPositions do: [:blockPosition |
 		self blockDict at: blockPosition put: (SBColumn new
 			changeTableLayout;
-			shrinkWrap;
+			vResizing: #shrinkWrap;
+			hResizing: #spaceFill;
+			wrapCentering: #center;
 			yourself)]
 ]
 
