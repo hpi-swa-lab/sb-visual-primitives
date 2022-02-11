@@ -135,8 +135,8 @@ SBVPBindingPattern >> addImplicitChildren: aDict [
 	addImplicitChild := [:index | | implicitChild |
 		implicitChildrenCount >= implicitChildrenIndices size ifTrue: [^ self].
 		implicitChild := SBVPEllipsisPattern bindingDict: {self class identityName -> (implicitChildrenIndices at: implicitChildrenCount + 1)}.
-		implicitChild isImplicitChild: true.
 		self addConnection: implicitChild afterIndex: index + implicitChildrenCount.
+		implicitChild isImplicitChild: true.
 		self owner addMorphBack: implicitChild.
 		implicitChildrenCount := implicitChildrenCount + 1].
 	
@@ -203,7 +203,6 @@ SBVPBindingPattern >> bindingIndex [
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> bindingIndex: anObject [
 
-	anObject = #b ifTrue: [self halt].
 	bindingIndex := anObject isSandblock
 		ifTrue: [[anObject evaluate] on: Error do: [anObject sourceString]]
 		ifFalse: [anObject]
@@ -261,8 +260,8 @@ SBVPBindingPattern >> buildImplicitChildren: aDict [
 	addImplicitChild := [:index | | implicitChild identifier |
 		identifier := self root nextIdentifier.
 		implicitChild := SBVPEllipsisPattern bindingDict: {self class identityName -> identifier}.
-		implicitChild isImplicitChild: true.
 		self addConnection: implicitChild afterIndex: index + implicitChildren size.
+		implicitChild isImplicitChild: true.
 		self owner addMorphBack: implicitChild.
 		implicitChildren add: identifier.
 		nextIndex := nextIndex + 1].

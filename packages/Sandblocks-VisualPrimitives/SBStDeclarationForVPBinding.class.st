@@ -83,7 +83,7 @@ SBStDeclarationForVPBinding >> refreshBindingIndex [
 
 	| bindingPattern |
 	bindingPattern := name firstOwnerSuchThat: [:owner | owner isVisualPrimitive].
-	bindingPattern bindingIndex: name contents
+	(bindingPattern labelPositionOf: name) = bindingPattern identityLabelPosition ifTrue: [bindingPattern bindingIndex: name contents]
 ]
 
 { #category : #accessing }

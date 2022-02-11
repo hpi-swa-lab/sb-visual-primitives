@@ -55,7 +55,7 @@ SBVPPattern >> identifierForIndex: aNumber [
 SBVPPattern >> initialize [
 
 	super initialize.
-	self isImplicitChild: false
+	isImplicitChild := false
 ]
 
 { #category : #accessing }
