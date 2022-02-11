@@ -203,6 +203,7 @@ SBVPBindingPattern >> bindingIndex [
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> bindingIndex: anObject [
 
+	anObject = #b ifTrue: [self halt].
 	bindingIndex := anObject isSandblock
 		ifTrue: [[anObject evaluate] on: Error do: [anObject sourceString]]
 		ifFalse: [anObject]

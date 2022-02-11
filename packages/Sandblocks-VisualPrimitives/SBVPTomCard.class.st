@@ -19,7 +19,7 @@ SBVPTomCard class >> visualPrimitiveMapping [
 			property: #icon
 			vpProperty: #shape
 			choices: {'fire'. 'bug'. 'water'}
-			representations: {SBIcon iconFire. SBIcon iconBug. SBIcon iconBathtub}.
+			representations: {SBIcon iconFire. SBIcon iconBug. SBIcon iconTint}.
 		#topLeftLabel -> 'ATK:'.
 		#bottomLeftLabel -> 'DEF'}
 ]

@@ -146,6 +146,12 @@ SBVPGroupPattern >> findConstant [
 	^ nil
 ]
 
+{ #category : #accessing }
+SBVPGroupPattern >> fixedNumberOfChildren [
+
+	^ false
+]
+
 { #category : #'as yet unclassified' }
 SBVPGroupPattern >> getNext: aVisualPrimitive [
 

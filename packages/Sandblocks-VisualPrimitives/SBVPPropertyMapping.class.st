@@ -66,11 +66,17 @@ SBVPPropertyMapping class >> getter: aBlock setter: anotherBlock vpProperty: aSy
 { #category : #'as yet unclassified' }
 SBVPPropertyMapping class >> property: aSymbol vpProperty: anotherSymbol [
 
+	^ self property: aSymbol vpProperty: anotherSymbol patternValue: nil
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPropertyMapping class >> property: aSymbol vpProperty: anotherSymbol patternValue: anObject [
+
 	| getterBlock setterBlock |
 	getterBlock := self defaultGetterBlockWith: aSymbol.
 	setterBlock := self defaultSetterBlockWith: aSymbol for: anotherSymbol.
 	
-	^ self getter: getterBlock setter: setterBlock vpProperty: anotherSymbol
+	^ self getter: getterBlock setter: setterBlock patternValue: anObject vpProperty: anotherSymbol
 ]
 
 { #category : #'as yet unclassified' }

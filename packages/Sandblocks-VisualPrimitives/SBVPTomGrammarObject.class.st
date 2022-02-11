@@ -26,16 +26,19 @@ SBVPTomGrammarObject class >> fromJsonObject: aJsonObject [
 SBVPTomGrammarObject class >> visualPrimitiveMapping [
 
 	^ {
-		#shape -> CircleMorph new.
-		SBVPPropertyMapping constant: #bottomCenterLabel vpProperty: #identityLabelPosition.
-		SBVPPropertyMappingSelect
-			property: #type
-			vpProperty: #topLeftLabel
-			choices: {'SEQ'. 'REPEAT'. 'REPEAT1'. 'SYMBOL'}.
-		SBVPPropertyMappingString property: #objectName vpProperty: #innerLabel.
-		SBVPPropertyMapping
-			getter: [:object | (object members ifNil: [object content ifNotNil: [{object content}] ifNil: [{}]]) reject: [:entry | entry isNil]]
-			setter: [:object :vp | object members: (vp connections collect: [:connection | connection getObjectFromVisualPrimitive])]
+		#shape vpConstant: CircleMorph new.
+		#identityLabelPosition vpConstant: #bottomCenterLabel.
+		
+		#topLeftLabel vpSelectFrom: {'SEQ'. 'REPEAT'. 'REPEAT1'. 'SYMBOL'} for: #type.
+		
+		#innerLabel vpStringFor: #objectName.
+		
+		SBVPPropertyMappingConnections
+			getter: [:object | object members ifNil: [{object content} asOrderedCollection]]
+			setter: [:object :connections |
+				connections size > 1
+					ifTrue: [object members: connections]
+					ifFalse: [object content: connections first]]
 			vpProperty: #connections}
 ]
 
