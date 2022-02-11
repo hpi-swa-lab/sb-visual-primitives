@@ -25,12 +25,6 @@ SBVPGroupPattern class >> patterns: aCollection [
 	^ self new connections: aCollection
 ]
 
-{ #category : #'as yet unclassified' }
-SBVPGroupPattern class >> registerShortcuts: aProvider [
-
-	aProvider registerShortcut: Character space do: #addNewPattern
-]
-
 { #category : #accessing }
 SBVPGroupPattern >> addConnection: aPattern afterIndex: aNumber [
 
@@ -54,22 +48,35 @@ SBVPGroupPattern >> addNewBindingPattern [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPGroupPattern >> addNewConstraintPattern [
-
-	| newPattern |
-	newPattern := SBVPConstraintPattern constraint: [:bindings | true].
-	
-	self addConnection: newPattern
-]
-
-{ #category : #'as yet unclassified' }
-SBVPGroupPattern >> addNewPattern [
+SBVPGroupPattern >> addNewChild [
 	<action>
 
 	| selectedIndex options |
 	options := {#addNewBindingPattern. #addNewConstraintPattern}.
 	selectedIndex := UIManager default chooseFrom: options.
 	self perform: (options at: selectedIndex ifAbsent: [])
+]
+
+{ #category : #'as yet unclassified' }
+SBVPGroupPattern >> addNewConstraintPattern [
+
+	| newPattern |
+	newPattern := SBVPConstraintPattern constraint: [:bindings | true].
+	
+	self sandblockEditor do: (SBVPInsertCommand new
+		index: self owner submorphCount + 1;
+		parent: self;
+		container: self owner;
+		morph: newPattern;
+		shouldMergeWithNext: false;
+		yourself)
+]
+
+{ #category : #'as yet unclassified' }
+SBVPGroupPattern >> addNewParent [
+	"Do nothing yet"
+
+	
 ]
 
 { #category : #accessing }

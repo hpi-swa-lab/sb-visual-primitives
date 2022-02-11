@@ -334,11 +334,20 @@ SBTreeDecorator >> parent: anObject [
 ]
 
 { #category : #accessing }
+SBTreeDecorator >> printOn: aStream [
+
+	super printOn: aStream.
+	aStream nextPutAll: ' for '.
+	self morph printOn: aStream
+]
+
+{ #category : #accessing }
 SBTreeDecorator >> removeChild: aSandblock [
 
 	aSandblock withDecorator: SBTreeDecorator do: [:childDecorator |
 		self children remove: childDecorator.
 		childDecorator connectorToParent abandon.
+		childDecorator connectorToParent: nil.
 		childDecorator parent: nil]
 ]
 

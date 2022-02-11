@@ -24,12 +24,17 @@ SBVPInsertCommand >> children: anObject [
 { #category : #'as yet unclassified' }
 SBVPInsertCommand >> do [
 
-	(self parent isKindOf: SBVPGroupPattern) ifTrue: [self parent removeConnection: self children first].
-	
+	((self parent isKindOf: SBVPGroupPattern) and: [self children notEmpty]) ifTrue: [self parent removeConnection: self children first].
 	self children do: [:child | self morph addConnection: child].
 	self parent addConnection: self morph afterIndex: (self siblingIndex
 		ifNotNil: [self siblingIndex - 1]
 		ifNil: [self parent connections size]).
+	
+	" When adding a new root binding pattern, the row gets deleted and a new one is used.
+	That is why we have to reset the container and index. "
+	container := self parent owner.
+	index := self container submorphCount.
+	
 	(self parent isKindOf: SBVPGroupPattern) ifFalse: [super do].
 	
 	self morph parentCase buildImplicitChildrenMatchingPattern.
@@ -84,10 +89,11 @@ SBVPInsertCommand >> undo [
 
 	self parent removeConnection: self morph.
 	self children reverseDo: [:child | self parent addConnection: child afterIndex: self insertSiblingIndex].
-	self morph connections do: [:connection |
-		connection abandon.
-		
-		].
+	self morph connections do: [:connection | connection abandon].
+	
+	" When adding a new root binding pattern, the row gets deleted and a new one is used.
+	That is why we have to reset the container. "
+	container := self parent owner.
 	super undo.
 	self parent parentCase buildImplicitChildrenMatchingPattern.
 	self parent root layout.
