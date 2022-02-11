@@ -88,6 +88,12 @@ SBVPWildcardPattern >> initialize [
 ]
 
 { #category : #accessing }
+SBVPWildcardPattern >> isBindingPattern [
+
+	^ false
+]
+
+{ #category : #accessing }
 SBVPWildcardPattern >> pushToStack: aVisualPrimitive [
 
 	self dfsStack addFirst: aVisualPrimitive.

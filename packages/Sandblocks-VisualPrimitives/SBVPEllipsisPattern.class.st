@@ -48,6 +48,22 @@ SBVPEllipsisPattern >> connections: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPEllipsisPattern >> convertToBindingPattern [
+	<action>
+
+	self sandblockEditor do: (SBCombinedCommand newWith: {
+		SBVPDeleteCommand new target: self.
+		SBVPInsertCommand new
+			index: self owner submorphCount + 1;
+			parent: self parent;
+			container: self owner;
+			siblingIndex: self siblingIndex;
+			morph: (SBVPBindingPattern bindingDict: {self class identityName -> self bindingIndex} asDictionary);
+			shouldMergeWithNext: false;
+			yourself})
+]
+
+{ #category : #'as yet unclassified' }
 SBVPEllipsisPattern >> convertToEllipsisPattern [
 	"we done here"
 
@@ -105,6 +121,12 @@ SBVPEllipsisPattern >> initialize [
 	self
 		addMorph: SBIcon iconEllipsisH large;
 		cellPositioning: #center
+]
+
+{ #category : #'as yet unclassified' }
+SBVPEllipsisPattern >> isBindingPattern [
+
+	^ false
 ]
 
 { #category : #'as yet unclassified' }

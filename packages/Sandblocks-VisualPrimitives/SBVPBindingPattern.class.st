@@ -156,6 +156,7 @@ SBVPBindingPattern >> addImplicitChildren: aDict [
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> addLabel [
 	<action>
+	<actionValidIf: #isBindingPattern>
 
 	| index |
 	index := UIManager default chooseFrom: self labelPositions.
@@ -447,6 +448,12 @@ SBVPBindingPattern >> initialize [
 	super initialize.
 	self labelBindingDict: Dictionary new.
 	self labelExpressionDict: Dictionary new
+]
+
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern >> isBindingPattern [
+
+	^ true
 ]
 
 { #category : #'as yet unclassified' }
