@@ -132,12 +132,16 @@ SBVPEllipsisPattern >> isBindingPattern [
 { #category : #'as yet unclassified' }
 SBVPEllipsisPattern >> isImplicitChild: aBoolean [
 
-	| setColor previousImplicit prevBindingIndex |
+	| setColor previousImplicit prevBindingIndex bindingInputBlock |
 	previousImplicit := self isImplicitChild.
 	super isImplicitChild: aBoolean.
 	previousImplicit = self isImplicitChild ifTrue: [^ self].
 	prevBindingIndex := self bindingIndex.
 	self bindingIndex: (self bindingIndexWithImplicitPrefix: aBoolean).
+	bindingInputBlock := self bindingIndex
+		ifNil: [self newUnknown]
+		ifNotNil: [self bindingLabelBlockFrom: self bindingIndex].
+	self setLabelAt: self identityLabelPosition to: bindingInputBlock.
 	setColor := [:color |
 		self childSandblocksDo: [:block | block color: color].
 		self firstSubmorph class = SBRow ifFalse: [self firstSubmorph color: color]].
