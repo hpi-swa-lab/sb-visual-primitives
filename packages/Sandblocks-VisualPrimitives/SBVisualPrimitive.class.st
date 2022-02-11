@@ -125,7 +125,7 @@ SBVisualPrimitive >> addPropertyMapping: anSBVPPropertyMapping [
 	
 	propertyMapping vpProperty
 		caseOf: {
-			[#shape] -> [self shape: value].
+			[#shape] -> [self shape: (propertyMapping getMorphForValue: value)].
 			[#connections] -> [
 				self connections: OrderedCollection new.
 				value do: [:connection |

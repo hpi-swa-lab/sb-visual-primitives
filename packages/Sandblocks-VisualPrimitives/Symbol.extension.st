@@ -59,7 +59,7 @@ Symbol >> vpSelectFrom: anOrderedCollection displayAs: anotherOrderedCollection 
 
 	self assert: anOrderedCollection size = anotherOrderedCollection size.
 	
-	^ SBVPSelectProperty
+	^ SBVPPropertyMappingSelect
 		property: aSymbol
 		vpProperty: self
 		choices: anOrderedCollection
