@@ -230,6 +230,31 @@ SBVPVisualizer >> exampleTomCard [
 ]
 
 { #category : #accessing }
+SBVPVisualizer >> exampleTomCardHand [
+
+	| c1 c2 c3 |
+	SBVPVisualizer
+		code: [
+			c1 := SBVPTomCard new
+				attack: 5;
+				defense: 6;
+				type: 'fire';
+				yourself.
+			c2 := SBVPTomCard new
+				attack: 3;
+				defense: 10;
+				type: 'water';
+				yourself.
+			c3 := SBVPTomCard new
+				attack: 300;
+				defense: 1;
+				type: 'bug';
+				yourself.
+			SBVPTomCardHand new cards: {c1. c2. c3}]
+		showCode: true
+]
+
+{ #category : #accessing }
 SBVPVisualizer >> initialize [
 
 	super initialize.

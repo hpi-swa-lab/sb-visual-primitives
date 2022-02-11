@@ -4,7 +4,7 @@ Class {
 	#instVars : [
 		'attack',
 		'defense',
-		'icon'
+		'type'
 	],
 	#category : #'Sandblocks-VisualPrimitives-Fixtures'
 }
@@ -13,15 +13,14 @@ Class {
 SBVPTomCard class >> visualPrimitiveMapping [
 
 	^ {
-		SBVPPropertyMappingNumber property: #attack vpProperty: #topCenterLabel.
-		SBVPPropertyMappingNumber property: #defense vpProperty: #bottomCenterLabel.
-		SBVPPropertyMappingSelect
-			property: #icon
-			vpProperty: #shape
-			choices: {'fire'. 'bug'. 'water'}
-			representations: {SBIcon iconFire. SBIcon iconBug. SBIcon iconTint}.
-		#topLeftLabel -> 'ATK:'.
-		#bottomLeftLabel -> 'DEF'}
+		#topCenterLabel vpNumberFor: #attack.
+		#bottomCenterLabel vpNumberFor: #defense.
+		#shape
+			vpSelectFrom: {'fire'. 'bug'. 'water'}
+			displayAs: {SBIcon iconFire color: Color red. SBIcon iconBug color: Color brown. SBIcon iconTint color: Color blue}
+			for: #type.
+		#topLeftLabel vpConstant: 'ATK:'.
+		#bottomLeftLabel vpConstant: 'DEF'}
 ]
 
 { #category : #accessing }
@@ -49,13 +48,11 @@ SBVPTomCard >> defense: anObject [
 ]
 
 { #category : #accessing }
-SBVPTomCard >> icon [
-
-	^ icon
+SBVPTomCard >> type [
+	^ type
 ]
 
 { #category : #accessing }
-SBVPTomCard >> icon: anObject [
-
-	icon := anObject
+SBVPTomCard >> type: anObject [
+	type := anObject
 ]
