@@ -1,3 +1,26 @@
+"
+A SBConnectDecorator allows for connecting two morphs. When the mouse is nearby, the 4 connectors appear to indicate the morphs ability to be connected. They also act as start and endpoints for connections. A connection can be made by clicking on a connectionPoint and dragging to the other morph.
+
+Instance Variables
+	connectionPoints:		Array of 4 CircleMorphs
+	connectors:				Set of SBNodeConnectors 
+	isConnecting:			boolean
+	isMouseClose:			boolean
+
+connectionPoints
+	- connection endpoints on top, bottom, left and right side of the morph
+	- only shown when isMouseClose
+
+connectors
+	- SBNodeConnectors that connect the morph with others
+
+isConnecting
+	- indicates whether a connection is made at the moment
+
+isMouseClose
+	- indicates whether the mouse is nearby
+
+"
 Class {
 	#name : #SBConnectDecorator,
 	#superclass : #SBBlockDecorator,
@@ -10,6 +33,18 @@ Class {
 	#category : #'Sandblocks-VisualPrimitives'
 }
 
+{ #category : #examples }
+SBConnectDecorator class >> example [
+
+	SBMorphExample
+		setUp: [SBStPlayground new attachDecorator: self new]
+		cases: {
+			SBMorphExampleCase name: 'example 1' caseBlock: [:m |
+				m.
+				m owner addMorph: m copy]}
+		extent: 300 @ 300
+]
+
 { #category : #connecting }
 SBConnectDecorator >> addConnectorFrom: aSourceMorph to: aDestinationMorph [
 
@@ -20,7 +55,7 @@ SBConnectDecorator >> addConnectorFrom: aSourceMorph to: aDestinationMorph [
 		self morph containingFloat owner addMorphBack: connector]
 ]
 
-{ #category : #mouse }
+{ #category : #checks }
 SBConnectDecorator >> checkIsMouseNearby [
 
 	^ (self morph boundsInWorld vectorToPoint: ActiveHand position) r < 10
@@ -70,18 +105,6 @@ SBConnectDecorator >> endConnecting: anEvent [
 	target := self morphAtPoint: anEvent position satisfying: [:m | m isSandblock].
 	target ifNotNil: [self addConnectorFrom: self morph to: target].
 	self isConnecting: false
-]
-
-{ #category : #'as yet unclassified' }
-SBConnectDecorator >> example [
-
-	SBMorphExample
-		setUp: [SBStPlayground new attachDecorator: self class new]
-		cases: {
-			SBMorphExampleCase name: 'example 1' caseBlock: [:m |
-				m.
-				m owner addMorph: m copy]}
-		extent: 300 @ 300
 ]
 
 { #category : #'initialize-release' }
@@ -139,13 +162,13 @@ SBConnectDecorator >> isConnecting: anObject [
 	isConnecting := anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBConnectDecorator >> isMouseClose [
 
 	^ isMouseClose
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBConnectDecorator >> isMouseClose: aBoolean [
 
 	isMouseClose := aBoolean
@@ -170,7 +193,7 @@ SBConnectDecorator >> morphAtPoint: aPoint satisfying: aBlock [
 	^ best
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'initialize-release' }
 SBConnectDecorator >> positionConnectionPoints [
 
 	self connectionPoints first center: self morph bounds topCenter.

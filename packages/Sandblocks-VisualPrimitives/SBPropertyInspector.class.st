@@ -1,3 +1,6 @@
+"
+A SBPropertyInspector shows the properties of an SBBlock. It can be opened via the inspectProperties action on an SBBlock. It opens in a PopUp connected to the inspected SBBlock.
+"
 Class {
 	#name : #SBPropertyInspector,
 	#superclass : #SBBlock,

@@ -1,4 +1,6 @@
 "
+A SBTreeDecorator allows to layout a group of decorated SBBlocks to be arranged in a tree like manner.
+
 Algorithm modified from https://llimllib.github.io/pymag-trees/
 "
 Class {
@@ -19,7 +21,7 @@ Class {
 	#category : #'Sandblocks-VisualPrimitives'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #examples }
 SBTreeDecorator class >> createExampleIn: aContainer [
 
 	| child1 child2 root child3 |
@@ -39,13 +41,25 @@ SBTreeDecorator class >> createExampleIn: aContainer [
 	root layout
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #examples }
+SBTreeDecorator class >> example [
+
+	SBMorphExample
+		setUp: [SBBlock new]
+		cases: {
+			SBMorphExampleCase
+				name: 'example 1'
+				caseBlock: [:container | SBTreeDecorator createExampleIn: container]}
+		extent: 1000 @ 1000
+]
+
+{ #category : #children }
 SBTreeDecorator >> addChild: aDecorator [
 
 	self addChild: aDecorator afterIndex: self children size
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #children }
 SBTreeDecorator >> addChild: aDecorator afterIndex: anIndex [
 
 	| newConnector |
@@ -60,7 +74,7 @@ SBTreeDecorator >> addChild: aDecorator afterIndex: anIndex [
 	aDecorator connectorToParent: newConnector
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #children }
 SBTreeDecorator >> addConnectorLineToWorld [
 
 	self connectorToParent ifNotNil: [:connector |
@@ -68,7 +82,7 @@ SBTreeDecorator >> addConnectorLineToWorld [
 		(self morph containingFloat owner ifNil: [self morph containingFloat]) addMorphBack: self connectorToParent]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #children }
 SBTreeDecorator >> addExampleChildIn: aContainer [
 
 	| child |
@@ -93,7 +107,7 @@ SBTreeDecorator >> ancestor: anObject [
 	ancestor := anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #layouting }
 SBTreeDecorator >> apportion: aDefaultAncestor [
 
 	| left shift sil sir sol sor vil vir vol vor newDefaultAncestor |
@@ -182,31 +196,19 @@ SBTreeDecorator >> depth [
 	^ depth
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBTreeDecorator >> depth: aValue [
 
 	depth := aValue
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #layouting }
 SBTreeDecorator >> distance [
 
 	^ self morph fullBounds width + 10
 ]
 
-{ #category : #'as yet unclassified' }
-SBTreeDecorator >> example [
-
-	SBMorphExample
-		setUp: [SBBlock new]
-		cases: {
-			SBMorphExampleCase
-				name: 'example 1'
-				caseBlock: [:container | SBTreeDecorator createExampleIn: container]}
-		extent: 1000 @ 1000
-]
-
-{ #category : #'as yet unclassified' }
+{ #category : #layouting }
 SBTreeDecorator >> executeShifts [
 
 	| shift change |
@@ -219,7 +221,7 @@ SBTreeDecorator >> executeShifts [
 		shift := shift + child shift + change]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #layouting }
 SBTreeDecorator >> firstWalk [
 
 	| left |
@@ -240,7 +242,7 @@ SBTreeDecorator >> firstWalk [
 				self mod: self x - midpoint - (self distance / 2)]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'initialize-release' }
 SBTreeDecorator >> initialize [
 
 	super initialize.
@@ -249,7 +251,7 @@ SBTreeDecorator >> initialize [
 	self reset
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #layouting }
 SBTreeDecorator >> layout [
 
 	self parent ifNotNil: [:parent | parent layout] ifNil: [
@@ -260,7 +262,7 @@ SBTreeDecorator >> layout [
 			secondWalk: 0 layerHeights: self maximumHeight]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #layouting }
 SBTreeDecorator >> leftMostSibling [
 
 	^ self parent ifNotNil: [ | left |
@@ -268,7 +270,7 @@ SBTreeDecorator >> leftMostSibling [
 		left = self ifFalse: [left]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #children }
 SBTreeDecorator >> leftSibling [
 
 	^ self parent ifNotNil: [:parent | | index |
@@ -276,7 +278,7 @@ SBTreeDecorator >> leftSibling [
 		index > 1 ifTrue: [parent children at: index - 1]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #layouting }
 SBTreeDecorator >> maximumHeight [
 
 	| h |
@@ -297,7 +299,7 @@ SBTreeDecorator >> mod: anObject [
 	mod := anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #layouting }
 SBTreeDecorator >> moveSubtree: aNode by: aShiftValue [
 
 	| numberOfSubtrees |
@@ -309,13 +311,13 @@ SBTreeDecorator >> moveSubtree: aNode by: aShiftValue [
 	self change: self change + aShiftValue / numberOfSubtrees
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #layouting }
 SBTreeDecorator >> nextLeft [
 
 	^ self children ifEmpty: [self thread] ifNotEmpty: [self children first]
 ]
 
-{ #category : #nil }
+{ #category : #layouting }
 SBTreeDecorator >> nextRight [
 
 	^ self children ifEmpty: [self thread] ifNotEmpty: [self children last]
@@ -341,7 +343,7 @@ SBTreeDecorator >> printOn: aStream [
 	self morph printOn: aStream
 ]
 
-{ #category : #accessing }
+{ #category : #children }
 SBTreeDecorator >> removeChild: aSandblock [
 
 	aSandblock withDecorator: SBTreeDecorator do: [:childDecorator |
@@ -351,7 +353,7 @@ SBTreeDecorator >> removeChild: aSandblock [
 		childDecorator parent: nil]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'initialize-release' }
 SBTreeDecorator >> reset [
 
 	depth := 1.
@@ -363,14 +365,14 @@ SBTreeDecorator >> reset [
 	x := -1000
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'initialize-release' }
 SBTreeDecorator >> resetAll [
 
 	self reset.
 	self children do: [:child | child resetAll]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #layouting }
 SBTreeDecorator >> secondWalk: aValue layerHeights: height [
 
 	self x: self x + aValue.
@@ -393,7 +395,7 @@ SBTreeDecorator >> shift: anObject [
 	shift := anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #children }
 SBTreeDecorator >> siblingIndex [
 
 	^ self parent ifNotNil: [self parent children indexOf: self] ifNil: [1]
@@ -417,7 +419,7 @@ SBTreeDecorator >> x [
 	^ x
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBTreeDecorator >> x: aValue [
 
 	x := aValue
