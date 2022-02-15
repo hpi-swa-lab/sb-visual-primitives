@@ -13,7 +13,16 @@ Class {
 { #category : #'as yet unclassified' }
 SBVPDummyNode class >> buildTree: aCollection [
 
-	^ self fromVisualPrimitive: (SBVisualPrimitive buildTree: aCollection) first
+	^ (self buildTreePrivate: aCollection) first
+]
+
+{ #category : #'as yet unclassified' }
+SBVPDummyNode class >> buildTreePrivate: aCollection [
+
+	^ aCollection collect: [:element |
+		element isVariableBinding
+			ifTrue: [(self key: element key) children: (self buildTreePrivate: element value)]
+			ifFalse: [self key: element]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -48,24 +57,9 @@ SBVPDummyNode class >> exampleRootWithTwoChildren [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPDummyNode class >> fromVisualPrimitive: aVisualPrimitive [
+SBVPDummyNode class >> key: anObject [
 
-	^ self fromVisualPrimitive: aVisualPrimitive withParent: nil
-]
-
-{ #category : #'as yet unclassified' }
-SBVPDummyNode class >> fromVisualPrimitive: aVisualPrimitive withParent: aDummyNode [
-
-	| node |
-	aVisualPrimitive ifNil: [^ nil].
-	
-	node := self new.
-	node
-		left: (self fromVisualPrimitive: (aVisualPrimitive connections at: 1 ifAbsent: [nil]) withParent: node);
-		right: (self fromVisualPrimitive: (aVisualPrimitive connections at: 2 ifAbsent: [nil]) withParent: node);
-		parent: aDummyNode;
-		key: aVisualPrimitive label.
-	^ node
+	^ self new key: anObject
 ]
 
 { #category : #'as yet unclassified' }
@@ -83,6 +77,13 @@ SBVPDummyNode class >> visualPrimitiveMapping [
 		#topLeftLabel -> SBIcon iconBug.
 		SBVPPropertyMappingNumber property: #key vpProperty: #innerLabel.
 		self connectionsMappingEntry}
+]
+
+{ #category : #'as yet unclassified' }
+SBVPDummyNode >> children: aCollection [
+
+	self left: (aCollection size >= 1 ifTrue: [aCollection first]).
+	self right: (aCollection size >= 2 ifTrue: [aCollection second])
 ]
 
 { #category : #accessing }

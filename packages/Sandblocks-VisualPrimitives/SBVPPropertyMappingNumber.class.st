@@ -5,12 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMappingNumber class >> defaultSetterBlockWith: aSymbol for: anotherSymbol on: anObject [
+SBVPPropertyMappingNumber class >> defaultSetterBlockWith: aSymbol for: anotherSymbol [
 
 	^ aSymbol isSymbol
-		ifTrue: [[:vp | anObject perform: aSymbol asSimpleSetter with: (vp propertyAt: anotherSymbol) asNumber]]
+		ifTrue: [[:object :vp | object perform: aSymbol asSimpleSetter with: (vp propertyAt: anotherSymbol) asNumber]]
 		ifFalse: [
-			[:vp | "do nothing, because value should be constant"
+			[:object :vp | "do nothing, because value should be constant"
 			]]
 ]
 
