@@ -304,7 +304,9 @@ SBVPCase >> initialize [
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> true;
 			add: #explicitChildrenMatching -> true;
-			yourself)
+			yourself).
+	
+	informationRow addMorphBack: (SBButton new label: 'show as list' shortcut: nil do: [self visualizeAs: #list])
 ]
 
 { #category : #accessing }
@@ -329,8 +331,6 @@ SBVPCase >> input: anSBBlock output: anotherSBBlock [
 		output: anotherSBBlock.
 	
 	self buildImplicitChildrenMatchingPattern
-	";
-		colorDifferences"
 ]
 
 { #category : #'as yet unclassified' }
@@ -473,6 +473,29 @@ SBVPCase >> value: anObject [
 	^ match
 		ifNil: [anObject]
 		ifNotNil: [(matcher build: self output fromBinding: match) getObjectFromVisualPrimitive]
+]
+
+{ #category : #accessing }
+SBVPCase >> visualizeAs: aSymbol [
+
+	aSymbol = #list
+		ifTrue: [ | blocks |
+			self halt.
+			blocks := self submorphsDo: [:submorph | submorph isKindOf: SBBlock].
+			blocks do: [:block |
+				block
+					changeTableLayout;
+					listDirection: #leftToRight;
+					cellPositioning: #center]]
+		ifFalse: [
+			self input
+				changeTableLayout;
+				listDirection: #leftToRight;
+				cellPositioning: #center.
+			self output
+				changeTableLayout;
+				listDirection: #leftToRight;
+				cellPositioning: #center]
 ]
 
 { #category : #'as yet unclassified' }

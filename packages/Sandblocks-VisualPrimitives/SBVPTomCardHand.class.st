@@ -23,9 +23,7 @@ SBVPTomCardHand class >> playCardFrom: aHand toBeat: aCard [
 { #category : #'as yet unclassified' }
 SBVPTomCardHand class >> visualPrimitiveMapping [
 
-	^ {
-	#shape vpConstant: SBIcon iconHandOUp.
-	#connections vpConnectionFor: #cards}
+	^ {#shape vpConstant: SBIcon iconHandOUp. #connections vpConnectionFor: #cards}
 ]
 
 { #category : #accessing }

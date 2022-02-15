@@ -49,10 +49,12 @@ SBVPTomCard >> defense: anObject [
 
 { #category : #accessing }
 SBVPTomCard >> type [
+
 	^ type
 ]
 
 { #category : #accessing }
 SBVPTomCard >> type: anObject [
+
 	type := anObject
 ]

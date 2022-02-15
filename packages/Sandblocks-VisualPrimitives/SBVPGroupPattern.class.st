@@ -168,7 +168,6 @@ SBVPGroupPattern >> initialize [
 	super initialize.
 	self removeAllMorphs.
 	
-	self halt.
 	self
 		addKeyboardCaptureFilter: self;
 		addMouseCaptureFilter: self;

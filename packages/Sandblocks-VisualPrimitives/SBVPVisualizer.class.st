@@ -263,6 +263,7 @@ SBVPVisualizer >> initialize [
 	self showCode: true.
 	
 	self
+		addMorphBack: (SBButton new label: 'show as list' shortcut: nil do: [self visualizeAs: #list]);
 		addKeyboardCaptureFilter: self;
 		addMouseCaptureFilter: self;
 		shrinkWrap;
@@ -318,6 +319,16 @@ SBVPVisualizer >> visual: anObject [
 SBVPVisualizer >> visualPrimitiveFrom: anObject [
 
 	^ SBVisualPrimitive newFromObject: anObject in: self visual
+]
+
+{ #category : #accessing }
+SBVPVisualizer >> visualizeAs: aSymbol [
+
+	aSymbol = #list ifTrue: [
+		visual
+			changeTableLayout;
+			listDirection: #leftToRight;
+			cellPositioning: #center]
 ]
 
 { #category : #accessing }
