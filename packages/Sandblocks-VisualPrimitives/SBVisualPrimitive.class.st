@@ -174,11 +174,11 @@ SBVisualPrimitive >> attachTreeDecorator [
 		self parent ifNotNil: [:parent |
 			parent
 				withDecorator: SBTreeDecorator
-				do: [:parentDecorator | parentDecorator addChild: decorator afterIndex: self siblingIndex - 1].
-			self connections do: [:child |
-				child
-					withDecorator: SBTreeDecorator
-					do: [:childDecorator | decorator addChild: childDecorator afterIndex: child siblingIndex - 1]]]].
+				do: [:parentDecorator | parentDecorator addChild: decorator afterIndex: self siblingIndex - 1]].
+		self connections do: [:child |
+			child
+				withDecorator: SBTreeDecorator
+				do: [:childDecorator | decorator addChild: childDecorator afterIndex: child siblingIndex - 1]]].
 	
 	self connections do: [:child | child attachTreeDecorator]
 ]
@@ -473,6 +473,12 @@ SBVisualPrimitive >> parent: anObject [
 	parent := anObject
 ]
 
+{ #category : #accessing }
+SBVisualPrimitive >> parentCase [
+
+	^ nil
+]
+
 { #category : #'as yet unclassified' }
 SBVisualPrimitive >> printOn: aStream [
 
@@ -563,7 +569,7 @@ SBVisualPrimitive >> shape: aMorph [
 { #category : #'as yet unclassified' }
 SBVisualPrimitive >> siblingIndex [
 
-	^ self parent connections indexOf: self
+	^ self parent ifNil: [0] ifNotNil: [self parent connections indexOf: self]
 ]
 
 { #category : #'as yet unclassified' }

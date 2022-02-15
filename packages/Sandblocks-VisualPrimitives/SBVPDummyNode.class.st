@@ -133,3 +133,25 @@ SBVPDummyNode >> right: aNode [
 
 	right := aNode
 ]
+
+{ #category : #accessing }
+SBVPDummyNode >> writeSourceOn: aStream [
+
+	aStream
+		nextPutAll: '((';
+		nextPutAll: self className;
+		nextPutAll: ' key: ';
+		store: self key;
+		nextPut: $).
+	
+	self left ifNotNil: [
+		aStream nextPutAll: ' left: '.
+		self left writeSourceOn: aStream].
+	
+	self right ifNotNil: [
+		self left ifNotNil: [aStream nextPut: $;].
+		aStream nextPutAll: ' right: '.
+		self right writeSourceOn: aStream].
+	
+	aStream nextPut: $)
+]
