@@ -16,7 +16,6 @@ SBVPRelInsertCommand >> do [
 { #category : #'as yet unclassified' }
 SBVPRelInsertCommand >> morphIndexInConnections [
 
-	self halt.
 	^ self adjacent
 		ifNil: [self before ifTrue: [1] ifFalse: [self container connections size]]
 		ifNotNil: [ | indexInRow actualAdjacent |

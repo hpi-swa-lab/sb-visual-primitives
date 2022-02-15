@@ -29,6 +29,14 @@ SBVPPropertyMapping class >> defaultGetterBlockWith: aSymbol [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPPropertyMapping class >> defaultPatternValueFor: aSymbol [
+
+	^ aSymbol isSymbol
+		ifTrue: [nil]
+		ifFalse: [aSymbol]
+]
+
+{ #category : #'as yet unclassified' }
 SBVPPropertyMapping class >> defaultSetterBlockWith: aSymbol for: anotherSymbol [
 
 	^ aSymbol isSymbol
@@ -39,11 +47,12 @@ SBVPPropertyMapping class >> defaultSetterBlockWith: aSymbol for: anotherSymbol 
 { #category : #'as yet unclassified' }
 SBVPPropertyMapping class >> fromAssociation: anAssociation [
 
-	| getterBlock setterBlock |
+	| getterBlock setterBlock patternValue |
 	getterBlock := self defaultGetterBlockWith: anAssociation value.
 	setterBlock := self defaultSetterBlockWith: anAssociation value for: anAssociation key.
+	patternValue := self defaultPatternValueFor: anAssociation value.
 	
-	^ self getter: getterBlock setter: setterBlock vpProperty: anAssociation key
+	^ self getter: getterBlock setter: setterBlock patternValue: patternValue vpProperty: anAssociation key
 ]
 
 { #category : #'as yet unclassified' }
