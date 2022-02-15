@@ -224,7 +224,7 @@ SBVPVisualizer >> exampleTomCard [
 			SBVPTomCard new
 				attack: 5;
 				defense: 6;
-				icon: 'fire';
+				type: 'fire';
 				yourself]
 		showCode: true
 ]

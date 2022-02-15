@@ -8,6 +8,19 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBVPTomCardHand class >> playCardFrom: aHand toBeat: aCard [
+
+	SBVPCase
+		input: (SBVPGroupPattern patterns: {})
+		output: (SBVPGroupPattern patterns: {})
+		strategy: (Dictionary new
+			add: #explicitRootMatching -> true;
+			add: #explicitChildrenMatching -> true;
+			yourself)
+		visualizePatternsAs: SBVPTomCardHand
+]
+
+{ #category : #'as yet unclassified' }
 SBVPTomCardHand class >> visualPrimitiveMapping [
 
 	^ {

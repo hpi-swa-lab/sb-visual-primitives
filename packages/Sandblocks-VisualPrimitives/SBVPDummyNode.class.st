@@ -74,6 +74,11 @@ SBVPDummyNode class >> visualPrimitiveMapping [
 	^ {
 		#shape -> (RectangleMorph new
 			color: (Color r: 0.0 g: 1 b: 0.502);
+			changeTableLayout;
+			listCentering: #center;
+			wrapCentering: #center;
+			shrinkWrap;
+			layoutInset: 8;
 			yourself).
 		#topLeftLabel -> SBIcon iconBug.
 		SBVPPropertyMappingNumber property: #key vpProperty: #innerLabel.

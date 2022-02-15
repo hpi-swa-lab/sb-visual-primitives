@@ -135,8 +135,8 @@ SBVPBindingPattern >> addImplicitChildren: aDict [
 	addImplicitChild := [:index | | implicitChild |
 		implicitChildrenCount >= implicitChildrenIndices size ifTrue: [^ self].
 		implicitChild := SBVPEllipsisPattern bindingDict: {self class identityName -> (implicitChildrenIndices at: implicitChildrenCount + 1)}.
-		self addConnection: implicitChild afterIndex: index + implicitChildrenCount.
 		implicitChild isImplicitChild: true.
+		self addConnection: implicitChild afterIndex: index + implicitChildrenCount.
 		self owner addMorphBack: implicitChild.
 		implicitChildrenCount := implicitChildrenCount + 1].
 	
@@ -260,8 +260,8 @@ SBVPBindingPattern >> buildImplicitChildren: aDict [
 	addImplicitChild := [:index | | implicitChild identifier |
 		identifier := self root nextIdentifier.
 		implicitChild := SBVPEllipsisPattern bindingDict: {self class identityName -> identifier}.
-		self addConnection: implicitChild afterIndex: index + implicitChildren size.
 		implicitChild isImplicitChild: true.
+		self addConnection: implicitChild afterIndex: index + implicitChildren size.
 		self owner addMorphBack: implicitChild.
 		implicitChildren add: identifier.
 		nextIndex := nextIndex + 1].
