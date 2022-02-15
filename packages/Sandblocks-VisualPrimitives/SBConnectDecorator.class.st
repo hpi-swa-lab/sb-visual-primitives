@@ -20,7 +20,7 @@ SBConnectDecorator >> addConnectorFrom: aSourceMorph to: aDestinationMorph [
 		self morph containingFloat owner addMorphBack: connector]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #mouse }
 SBConnectDecorator >> checkIsMouseNearby [
 
 	^ (self morph boundsInWorld vectorToPoint: ActiveHand position) r < 10
