@@ -1,3 +1,33 @@
+"
+An SBVisualPrimitive is the visuall representation of an Object. It can also be used to display various patterns. When originating from an object, this object's class's visualPrimitiveMapping will be used as a directive on how to map from object properties to properties of the visual primitive (vpProperty). 
+See SBVPPropertyMappings for the different ways of mapping.
+
+Instance Variables
+	blockDict:		Dictionary
+	connections:	OrderedCollection of SBVisualPrimitives
+	labelDict:		Dictionary
+	origin:			Object
+	parent:			SBVisualPrimitive
+
+blockDict
+	-  (#blockPosition -> SBBlock)
+	- stores the blocks that the labels or shape blocks are inserted into
+
+connections
+	- the connected SBVisualPrimitives
+
+labelDict
+	- (#labelPosition -> SBBlock)
+
+origin
+	- the object the primitive is buid for
+	- may be nil if the SBPrimitive is a pattern
+
+parent
+	- the parent primitive
+	- also indicates the hirachy of patterns 
+
+"
 Class {
 	#name : #SBVisualPrimitive,
 	#superclass : #SBStSubstitution,

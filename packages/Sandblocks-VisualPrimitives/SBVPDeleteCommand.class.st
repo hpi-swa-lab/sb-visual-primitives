@@ -1,3 +1,6 @@
+"
+An SBVPDeleteCommand is a Command to remove a SBVisualPrimitive. It's removed from its world and hirachy. The Morphs in the primitive's connections will be abandoned, too.
+"
 Class {
 	#name : #SBVPDeleteCommand,
 	#superclass : #SBDeleteCommand,
@@ -8,7 +11,7 @@ Class {
 	#category : #'Sandblocks-VisualPrimitives'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'do-undo' }
 SBVPDeleteCommand >> do [
 
 	oldOwner := target owner.
@@ -47,7 +50,7 @@ SBVPDeleteCommand >> oldSiblingIndex: anObject [
 	oldSiblingIndex := anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'do-undo' }
 SBVPDeleteCommand >> undo [
 
 	self oldParent ifNotNil: [self oldParent addConnection: target afterIndex: self oldSiblingIndex - 1].

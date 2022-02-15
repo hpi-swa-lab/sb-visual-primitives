@@ -1,3 +1,7 @@
+"
+An SBVPRelInsertCommand is used to insert new patterns into an SBVPGroupPattern.
+
+"
 Class {
 	#name : #SBVPRelInsertCommand,
 	#superclass : #SBRelInsertCommand,

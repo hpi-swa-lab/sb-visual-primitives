@@ -1,3 +1,6 @@
+"
+An SBVPPropertyMappingConnections is used to map to and from the connections of a SBVisualPrimitive.
+"
 Class {
 	#name : #SBVPPropertyMappingConnections,
 	#superclass : #SBVPPropertyMapping,

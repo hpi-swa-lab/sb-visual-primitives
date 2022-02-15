@@ -1,5 +1,5 @@
 "
-A SBTreeDecorator allows to layout a group of decorated SBBlocks to be arranged in a tree like manner.
+An SBTreeDecorator allows to layout a group of decorated SBBlocks to be arranged in a tree like manner.
 
 Algorithm modified from https://llimllib.github.io/pymag-trees/
 "

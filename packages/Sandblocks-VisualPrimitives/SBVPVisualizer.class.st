@@ -1,5 +1,5 @@
 "
-Visualizes the return value of the code block.
+An SBVPVisualizer displayes the block's value as an SBVisualPrimitive. The code can be shown or not. If it's shown, changing the visuals will always be overwritten with the code. Otherwise changes made to the visual primitives will be saved and written back.
 "
 Class {
 	#name : #SBVPVisualizer,

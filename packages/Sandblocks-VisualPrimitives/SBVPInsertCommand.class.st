@@ -1,3 +1,21 @@
+"
+A SBVPInsertCommand is used to Insert a SBVisualPrimitive into the current hirachy.
+
+Instance Variables
+	children:		OrderedCollection of SBVisualPrimitives
+	parent:			SBVisualPrimitive
+	siblingIndex:	Number
+
+children
+	- SBVisualPrimitives that will be connections of the inserted primitive
+
+parent
+	- parent primitive of the inserted one
+
+siblingIndex
+	- position index of the inserted primitive in the parent's connections 
+
+"
 Class {
 	#name : #SBVPInsertCommand,
 	#superclass : #SBInsertCommand,
