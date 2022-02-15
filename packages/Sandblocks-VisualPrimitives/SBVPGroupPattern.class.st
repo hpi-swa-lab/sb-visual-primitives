@@ -134,7 +134,7 @@ SBVPGroupPattern >> deleteCommandFor: aBlock [
 	| primitive |
 	primitive := aBlock isVisualPrimitive
 		ifTrue: [aBlock]
-		ifFalse: [aBlock submorphThat: [:morph | morph parent = self] ifNone: [nil]].
+		ifFalse: [aBlock submorphThat: [:morph | morph isVisualPrimitive and: [morph parent = self]] ifNone: [nil]].
 	
 	^ SBVPDeleteCommand new target: primitive
 ]

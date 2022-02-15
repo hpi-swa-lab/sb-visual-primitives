@@ -2,8 +2,7 @@ Class {
 	#name : #SBVPConstraintPattern,
 	#superclass : #SBVPPattern,
 	#instVars : [
-		'constraint',
-		'constraintBlock'
+		'constraint'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
@@ -40,7 +39,7 @@ SBVPConstraintPattern class >> newFor: aBlock [
 			block replaceBy: ((SBStName poolDeclaration: variableName) binding: variableName -> SBVisualPrimitive new)]].
 	constraintBlock bindings do: [:b | b owner hide].
 	
-	^ self new constraintBlock: constraintBlock
+	^ self new constraint: constraintBlock evaluate
 ]
 
 { #category : #accessing }
@@ -53,12 +52,6 @@ SBVPConstraintPattern >> addToWorld: aWorld [
 SBVPConstraintPattern >> allConnectionsDo: aBlock [
 
 	
-]
-
-{ #category : #'as yet unclassified' }
-SBVPConstraintPattern >> artefactSaved: aMethodBlock [
-
-	constraint := self constraintBlock evaluate
 ]
 
 { #category : #'as yet unclassified' }
@@ -83,32 +76,13 @@ SBVPConstraintPattern >> constraint [
 { #category : #accessing }
 SBVPConstraintPattern >> constraint: aBlockClosure [
 
-	| block |
 	constraint := aBlockClosure.
-	block := aBlockClosure decompile asSandblock shrinkWrap.
-	block bindings do: [:b | b owner hide].
-	self constraintBlockBasic: block
-]
-
-{ #category : #accessing }
-SBVPConstraintPattern >> constraintBlock [
-
-	^ constraintBlock
-]
-
-{ #category : #accessing }
-SBVPConstraintPattern >> constraintBlock: aBlock [
-
-	constraint := aBlock evaluate.
-	self constraintBlockBasic: aBlock
-]
-
-{ #category : #accessing }
-SBVPConstraintPattern >> constraintBlockBasic: aBlock [
-
-	constraintBlock := aBlock.
 	self removeAllMorphs.
-	self addAllMorphs: aBlock statements
+	self addAllMorphs: aBlockClosure asSandblock statements.
+	self submorphs ifEmpty: [ | unknown |
+		unknown := self newUnknown.
+		self addMorphBack: unknown.
+		unknown label: 'expr']
 ]
 
 { #category : #'as yet unclassified' }
@@ -135,9 +109,10 @@ SBVPConstraintPattern >> grammarHandler [
 SBVPConstraintPattern >> initialize [
 
 	super initialize.
-	self removeAllMorphs.
-	self layoutPolicy: SBAlgebraLayout new.
-	self layoutInset: 4
+	
+	self
+		layoutPolicy: SBAlgebraLayout new;
+		layoutInset: 4
 ]
 
 { #category : #'as yet unclassified' }
@@ -166,7 +141,7 @@ SBVPConstraintPattern >> matches: aVisualPrimitive withBinding: aDict [
 	| originalBindings |
 	originalBindings := aDict collect: [:visualPrimitiveOrCollection |
 		visualPrimitiveOrCollection isCollection
-			ifTrue: [visualPrimitiveOrCollection]
+			ifTrue: [visualPrimitiveOrCollection collect: #origin]
 			ifFalse: [visualPrimitiveOrCollection origin]].
 	
 	^ self constraint value: originalBindings
@@ -178,16 +153,10 @@ SBVPConstraintPattern >> newUnknown [
 	^ SBUnknown new grammarHandler: SBStGrammarHandler new
 ]
 
-{ #category : #'as yet unclassified' }
-SBVPConstraintPattern >> noteNewOwner: newOwner [
+{ #category : #accessing }
+SBVPConstraintPattern >> statements [
 
-	| unkown |
-	super noteNewOwner: newOwner.
-	unkown := self newUnknown.
-	
-	self submorphs isEmpty ifTrue: [
-		self addMorphBack: unkown.
-		unkown startInput]
+	^ self submorphs
 ]
 
 { #category : #'as yet unclassified' }
