@@ -31,9 +31,7 @@ SBVPPropertyMapping class >> defaultGetterBlockWith: aSymbol [
 { #category : #'as yet unclassified' }
 SBVPPropertyMapping class >> defaultPatternValueFor: aSymbol [
 
-	^ aSymbol isSymbol
-		ifTrue: [nil]
-		ifFalse: [aSymbol]
+	^ aSymbol isSymbol ifTrue: [nil] ifFalse: [aSymbol]
 ]
 
 { #category : #'as yet unclassified' }

@@ -16,7 +16,7 @@ SBVPGroupPattern class >> matches: aBlock [
 { #category : #'as yet unclassified' }
 SBVPGroupPattern class >> newFor: aBlock [
 
-	^ self new connections: aBlock arguments first childSandblocks
+	^ self new connections: aBlock arguments first submorphs
 ]
 
 { #category : #'as yet unclassified' }

@@ -99,16 +99,36 @@ SBVPConstraintPattern >> constraintBlock [
 { #category : #accessing }
 SBVPConstraintPattern >> constraintBlock: aBlock [
 
-	constraintBlock := aBlock.
 	constraint := aBlock evaluate.
-	self addMorphBack: aBlock
+	self constraintBlockBasic: aBlock
 ]
 
 { #category : #accessing }
 SBVPConstraintPattern >> constraintBlockBasic: aBlock [
 
 	constraintBlock := aBlock.
-	self addMorphBack: aBlock
+	self removeAllMorphs.
+	self addAllMorphs: aBlock statements
+]
+
+{ #category : #'as yet unclassified' }
+SBVPConstraintPattern >> deleteCommandFor: aBlock [
+
+	^ self submorphCount = 1
+		ifTrue: [self parentSandblock deleteCommandFor: self]
+		ifFalse: [super deleteCommandFor: aBlock]
+]
+
+{ #category : #'as yet unclassified' }
+SBVPConstraintPattern >> fixedNumberOfChildren [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
+SBVPConstraintPattern >> grammarHandler [
+
+	^ SBStGrammarHandler new
 ]
 
 { #category : #'as yet unclassified' }
@@ -116,7 +136,28 @@ SBVPConstraintPattern >> initialize [
 
 	super initialize.
 	self removeAllMorphs.
-	self constraintBlockBasic: (SBColumn new layoutInset: 0)
+	self layoutPolicy: SBAlgebraLayout new.
+	self layoutInset: 4
+]
+
+{ #category : #'as yet unclassified' }
+SBVPConstraintPattern >> isBlockBody [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBVPConstraintPattern >> isSelectable [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
+SBVPConstraintPattern >> layoutCommands [
+
+	^ SBAlgebraCommand container
+		morph: self;
+		data: (self submorphs collect: [:s | s layoutCommands] separatedBy: [SBAlgebraCommand hardLine])
 ]
 
 { #category : #'as yet unclassified' }
@@ -144,8 +185,8 @@ SBVPConstraintPattern >> noteNewOwner: newOwner [
 	super noteNewOwner: newOwner.
 	unkown := self newUnknown.
 	
-	self constraintBlock statements isEmpty ifTrue: [
-		self constraintBlock addMorphBack: unkown.
+	self submorphs isEmpty ifTrue: [
+		self addMorphBack: unkown.
 		unkown startInput]
 ]
 
@@ -158,7 +199,14 @@ SBVPConstraintPattern >> wantsMethodBody [
 { #category : #'as yet unclassified' }
 SBVPConstraintPattern >> writeSourceOn: aStream [
 
-	aStream nextPutAll: '(SBVPConstraintPattern constraint: '.
-	self constraintBlock writeSourceOn: aStream.
-	aStream nextPut: $)
+	aStream
+		nextPutAll: '(SBVPConstraintPattern constraint: [:bindings | ';
+		cr.
+	
+	self submorphs do: [:m |
+		m writeSourceOn: aStream.
+		m isPragma ifFalse: [aStream nextPut: $.].
+		aStream cr].
+	
+	aStream nextPutAll: '])'
 ]
