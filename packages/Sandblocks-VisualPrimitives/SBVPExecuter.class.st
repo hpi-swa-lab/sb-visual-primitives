@@ -123,12 +123,15 @@ SBVPExecuter class >> exampleBuildHeapChain: aTree [
 	maxHeap := self exampleBuildHeapCase replaceAllMatches: aTree.
 	^ (SBVPCase
 		input: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern bindingDict: {#identity -> #a} connections: {
-				SBVPEllipsisPattern bindingDict: {#identity -> #b}.
-				SBVPBindingPattern
-					bindingDict: {#identity -> #boi}
-					connections: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}.
-				SBVPEllipsisPattern bindingDict: {#identity -> #d}}.
+			SBVPBindingPattern
+				bindingDict: {#identity -> #a}
+				connections: {
+					SBVPEllipsisPattern bindingDict: {#identity -> #b}.
+					SBVPBindingPattern
+						bindingDict: {#identity -> #boi}
+						connections: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}.
+					SBVPEllipsisPattern bindingDict: {#identity -> #d}}
+				visualizingClass: SBVPDummyNode.
 			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) key > (bindings at: #boi) key]})
 		output: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern bindingDict: {#identity -> #boi} connections: {
@@ -194,7 +197,7 @@ SBVPExecuter class >> exampleBuildHeapStrings: aTree [
 					bindingDict: {#identity -> #boi}
 					connections: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}.
 				SBVPEllipsisPattern bindingDict: {#identity -> #d}}.
-			SBVPConstraintPattern constraint: [:bindings | a key < boi key]})
+			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) key < (bindings at: #boi) key]})
 		output: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern bindingDict: {#identity -> #boi} connections: {
 				SBVPEllipsisPattern bindingDict: {#identity -> #b}.

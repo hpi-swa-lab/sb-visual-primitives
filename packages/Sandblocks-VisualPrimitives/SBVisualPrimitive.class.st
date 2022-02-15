@@ -235,6 +235,12 @@ SBVisualPrimitive >> connections: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
+SBVisualPrimitive >> defaultShape [
+
+	^ CircleMorph new
+]
+
+{ #category : #'as yet unclassified' }
 SBVisualPrimitive >> deleteBlock [
 
 	self sandblockEditor do: (SBVPDeleteCommand new
@@ -282,7 +288,7 @@ SBVisualPrimitive >> initialize [
 		blockDict: Dictionary new;
 		labelDict: Dictionary new;
 		initializeLabelBlocks;
-		shape: CircleMorph new.
+		shape: self defaultShape.
 	self blockDict at: #innerLabel put: self shape.
 	
 	self
@@ -543,7 +549,8 @@ SBVisualPrimitive >> shape: aMorph [
 			changeTableLayout;
 			listCentering: #center;
 			wrapCentering: #center;
-			shrinkWrap].
+			shrinkWrap;
+			layoutInset: 8].
 	innerBlockWrapper := self blockDict at: #shape.
 	innerLabel := self innerLabel.
 	self blockDict at: #innerLabel put: aMorph.

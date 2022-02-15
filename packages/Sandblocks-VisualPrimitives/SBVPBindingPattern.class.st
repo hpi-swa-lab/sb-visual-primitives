@@ -9,7 +9,8 @@ Class {
 		'writeBackClosure',
 		'writeBackClosureString',
 		'labelBindingDict',
-		'labelExpressionDict'
+		'labelExpressionDict',
+		'visualizingClass'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
@@ -26,6 +27,15 @@ SBVPBindingPattern class >> bindingDict: aDict connections: aCollection [
 	^ self new
 		bindingDict: aDict asDictionary;
 		connections: aCollection
+]
+
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern class >> bindingDict: aDict connections: aCollection visualizingClass: aClass [
+
+	^ self new
+		bindingDict: aDict asDictionary;
+		connections: aCollection;
+		visualizingClass: aClass
 ]
 
 { #category : #'as yet unclassified' }
@@ -46,6 +56,33 @@ SBVPBindingPattern class >> bindingDict: aDict expressionDict: anotherDict conne
 ]
 
 { #category : #'as yet unclassified' }
+SBVPBindingPattern class >> bindingDict: aDict expressionDict: anotherDict connections: aCollection visualizingClass: aClass [
+
+	^ self new
+		bindingDict: aDict asDictionary;
+		expressionDict: anotherDict asDictionary;
+		connections: aCollection;
+		visualizingClass: aClass
+]
+
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern class >> bindingDict: aDict expressionDict: anotherDict visualizingClass: aClass [
+
+	^ self new
+		bindingDict: aDict asDictionary;
+		expressionDict: anotherDict asDictionary;
+		visualizingClass: aClass
+]
+
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern class >> bindingDict: aDict visualizingClass: aClass [
+
+	^ self new
+		bindingDict: aDict asDictionary;
+		visualizingClass: aClass
+]
+
+{ #category : #'as yet unclassified' }
 SBVPBindingPattern class >> expressionDict: aDict [
 
 	^ self new expressionDict: aDict asDictionary
@@ -60,11 +97,37 @@ SBVPBindingPattern class >> expressionDict: aDict bindingDict: anotherDict [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPBindingPattern class >> expressionDict: aDict bindingDict: anotherDict visualizingClass: aClass [
+
+	^ self new
+		expressionDict: aDict asDictionary;
+		bindingDict: anotherDict asDictionary;
+		visualizingClass: aClass
+]
+
+{ #category : #'as yet unclassified' }
 SBVPBindingPattern class >> expressionDict: aDict connections: aCollection [
 
 	^ self new
 		expressionDict: aDict asDictionary;
 		connections: aCollection
+]
+
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern class >> expressionDict: aDict connections: aCollection visualizingClass: aClass [
+
+	^ self new
+		expressionDict: aDict asDictionary;
+		connections: aCollection;
+		visualizingClass: aClass
+]
+
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern class >> expressionDict: aDict visualizingClass: aClass [
+
+	^ self new
+		expressionDict: aDict asDictionary;
+		visualizingClass: aClass
 ]
 
 { #category : #'as yet unclassified' }
@@ -75,38 +138,22 @@ SBVPBindingPattern class >> identityName [
 
 { #category : #'as yet unclassified' }
 SBVPBindingPattern class >> matches: aBlock [
+	"match any resonable combination of constructor arguments"
 
-	^ {#bindingDict:. #expressionDict:. #bindingDict:expressionDict:} anySatisfy: [:methodName | (self selector: methodName receiverMatches: aBlock) or: [self selector: methodName, #connections: receiverMatches: aBlock]]
+	^ (({#bindingDict:. #expressionDict:. #bindingDict:expressionDict:} gather: [:symbol | {symbol. symbol, #connections:}]) gather: [:symbol | {symbol. symbol, #visualizingClass:}]) anySatisfy: [:methodName | self selector: methodName receiverMatches: aBlock]
 ]
 
 { #category : #'as yet unclassified' }
 SBVPBindingPattern class >> newFor: aBlock [
 
-	^ aBlock arguments size > 2
-		ifTrue: [
-			self
-				perform: aBlock selector asSymbol
-				with: aBlock arguments first evaluate
-				with: aBlock arguments second evaluate
-				with: aBlock arguments third childSandblocks]
-		ifFalse: [
-			aBlock arguments size > 1
-				ifTrue: [
-					(aBlock selector endsWith: 'connections:')
-						ifTrue: [
-							self
-								perform: aBlock selector asSymbol
-								with: aBlock arguments first evaluate
-								with: aBlock arguments second childSandblocks]
-						ifFalse: [
-							self
-								perform: aBlock selector asSymbol
-								with: aBlock arguments first evaluate
-								with: aBlock arguments second evaluate]]
-				ifFalse: [
-					self perform: aBlock selector asSymbol with: ([aBlock arguments first evaluate]
-						on: Error
-						do: [{#identity -> aBlock sourceString}])]]
+	| selectors arguments |
+	selectors := aBlock selector findTokens: ':'.
+	arguments := aBlock arguments with: selectors collect: [:argument :selector |
+		selector = 'connections'
+			ifTrue: [argument childSandblocks]
+			ifFalse: [[argument evaluate] on: Error do: [{self identityName -> aBlock sourceString}]]].
+	
+	^ self perform: aBlock selector asSymbol withArguments: arguments
 ]
 
 { #category : #'as yet unclassified' }
@@ -302,6 +349,18 @@ SBVPBindingPattern >> canMatchAllChildren [
 SBVPBindingPattern >> canMatchAllChildren: anObject [
 
 	canMatchAllChildren := anObject
+]
+
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern >> changeVisualizingClass [
+	<action>
+
+	UIManager default chooseClassOrTrait ifNotNil: [:class |
+		self sandblockEditor do: (SBMutatePropertyCommand new
+			target: self;
+			selector: #visualizingClass;
+			mutateSelector: #visualizingClass:;
+			value: class)]
 ]
 
 { #category : #'as yet unclassified' }
@@ -523,26 +582,7 @@ SBVPBindingPattern >> newUnknown [
 SBVPBindingPattern >> noteNewOwner: newOwner [
 
 	super noteNewOwner: newOwner.
-	self parentCase ifNotNil: [:case |
-		self addPropertyMappings: self staticVisualPrimitiveMapping.
-		self addPropertyMappings: (self labelExpressionDict associations collect: [:association |
-			SBVPPropertyMappingExpression
-				expression: association value
-				vpProperty: association key
-				originalMapping: (self originalPropertyMappingAt: association key)]).
-		self labelBindingDict keysAndValuesDo: [:key :value |
-			(self setLabelAt: key to: (self bindingLabelBlockFrom: value))
-				when: #contentsChanged
-				send: #labelBindingChanged
-				to: self].
-		self constant ifNotNil: [self setLabelAt: self identityLabelPosition to: self constant asSandblock].
-		self bindingIndex ifNotNil: [
-			self
-				setLabelAt: self identityLabelPosition
-				to: (self bindingLabelBlockFrom: self bindingIndex asString)].
-		(self constant isNil and: [self bindingIndex isNil]) ifTrue: [ | unkown |
-			self setLabelAt: self identityLabelPosition to: (unkown := self newUnknown).
-			self sandblockEditor ifNotNil: [unkown startInput]]]
+	self parentCase ifNotNil: [self rebuild]
 ]
 
 { #category : #'as yet unclassified' }
@@ -555,9 +595,41 @@ SBVPBindingPattern >> originalPropertyMappingAt: aVPProperty [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPBindingPattern >> patternVisualizationClass [
+
+	^ self visualizingClass ifNil: [self parentCase ifNotNil: #defaultPatternVisualizationClass]
+]
+
+{ #category : #'as yet unclassified' }
 SBVPBindingPattern >> preferredColor [
 
 	^ self color
+]
+
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern >> rebuild [
+
+	self blockPositions do: [:position | (self blockDict at: position) removeAllMorphs].
+	self shape: self defaultShape.
+	self addPropertyMappings: self staticVisualPrimitiveMapping.
+	self addPropertyMappings: (self labelExpressionDict associations collect: [:association |
+		SBVPPropertyMappingExpression
+			expression: association value
+			vpProperty: association key
+			originalMapping: (self originalPropertyMappingAt: association key)]).
+	self labelBindingDict keysAndValuesDo: [:key :value |
+		(self setLabelAt: key to: (self bindingLabelBlockFrom: value))
+			when: #contentsChanged
+			send: #labelBindingChanged
+			to: self].
+	self constant ifNotNil: [self setLabelAt: self identityLabelPosition to: self constant asSandblock].
+	self bindingIndex ifNotNil: [
+		self
+			setLabelAt: self identityLabelPosition
+			to: (self bindingLabelBlockFrom: self bindingIndex asString)].
+	(self constant isNil and: [self bindingIndex isNil]) ifTrue: [ | unknown |
+		self setLabelAt: self identityLabelPosition to: (unknown := self newUnknown).
+		self sandblockEditor ifNotNil: [unknown startInput]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -629,10 +701,22 @@ SBVPBindingPattern >> valueFromPropertyMapping: aPropertyMapping [
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> visualPrimitiveMapping [
 
-	^ self parentCase ifNil: {} ifNotNil: [:case |
-		case defaultPatternVisualizationClass
-			ifNil: {}
-			ifNotNil: #visualPrimitiveMapping]
+	^ self patternVisualizationClass
+		ifNil: {}
+		ifNotNil: #visualPrimitiveMapping
+]
+
+{ #category : #accessing }
+SBVPBindingPattern >> visualizingClass [
+
+	^ visualizingClass
+]
+
+{ #category : #accessing }
+SBVPBindingPattern >> visualizingClass: anObject [
+
+	visualizingClass := anObject.
+	self owner ifNotNil: [self rebuild]
 ]
 
 { #category : #'as yet unclassified' }
@@ -724,5 +808,10 @@ SBVPBindingPattern >> writeSourceOn: aStream [
 			connection writeSourceOn: aStream.
 			aStream nextPut: $.].
 		aStream nextPut: $}].
+	
+	self visualizingClass ifNotNil: [
+		aStream
+			nextPutAll: ' visualizingClass: ';
+			store: self visualizingClass].
 	aStream nextPut: $)
 ]
