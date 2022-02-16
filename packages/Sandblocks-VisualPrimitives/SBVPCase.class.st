@@ -410,6 +410,12 @@ SBVPCase >> noteNewOwner: aMorph [
 		addMorphBack: self output
 ]
 
+{ #category : #'as yet unclassified' }
+SBVPCase >> objectInterfaceNear: aBlock at: aSymbol [
+
+	^ {[:o | o isKindOf: SBVisualPrimitive]}
+]
+
 { #category : #accessing }
 SBVPCase >> output [
 
