@@ -121,7 +121,7 @@ SBVPExecuter class >> exampleBuildHeapChain: aTree [
 		example: [SBVPExecuter]
 		args: [
 			{
-				((SBVPDummyNode key: 2) left: ((SBVPDummyNode key: 1) left: ((SBVPDummyNode key: 9) left: ((SBVPDummyNode key: 10)
+				((SBVPDummyNode key: 9) left: ((SBVPDummyNode key: 10)
 					left: ((SBVPDummyNode key: 3)
 						left: ((SBVPDummyNode key: 1)
 							left: (SBVPDummyNode key: 0);
@@ -131,7 +131,7 @@ SBVPExecuter class >> exampleBuildHeapChain: aTree [
 						left: ((SBVPDummyNode key: 5)
 							left: (SBVPDummyNode key: 5);
 							right: (SBVPDummyNode key: 5));
-						right: ((SBVPDummyNode key: 2) left: (SBVPDummyNode key: 8))))))) showAsVisualPrimitive}]
+						right: ((SBVPDummyNode key: 2) left: (SBVPDummyNode key: 8))))) showAsVisualPrimitive}]
 		label: 'example'.
 	maxHeap := self exampleBuildHeapCase replaceAllMatches: aTree.
 	^ (SBVPCase
