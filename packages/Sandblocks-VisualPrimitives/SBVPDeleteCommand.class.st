@@ -1,3 +1,6 @@
+"
+An SBVPDeleteCommand is a Command to remove a SBVisualPrimitive. It's removed from its world and hirachy. The Morphs in the primitive's connections will be abandoned, too.
+"
 Class {
 	#name : #SBVPDeleteCommand,
 	#superclass : #SBDeleteCommand,
@@ -8,7 +11,7 @@ Class {
 	#category : #'Sandblocks-VisualPrimitives'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'do-undo' }
 SBVPDeleteCommand >> do [
 
 	oldOwner := target owner.
@@ -18,7 +21,7 @@ SBVPDeleteCommand >> do [
 	self oldSiblingIndex: target siblingIndex.
 	self oldParent ifNotNil: [self oldParent removeConnection: target].
 	target allConnectionsDo: [:block | block abandon].
-	self oldParent parentCase ifNotNil: #buildImplicitChildrenMatchingPattern.
+	self oldParent parentCase buildImplicitChildrenMatchingPattern.
 	self oldParent ifNotNil: #layout.
 	^ self oldParent
 ]
@@ -47,7 +50,7 @@ SBVPDeleteCommand >> oldSiblingIndex: anObject [
 	oldSiblingIndex := anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'do-undo' }
 SBVPDeleteCommand >> undo [
 
 	self oldParent ifNotNil: [self oldParent addConnection: target afterIndex: self oldSiblingIndex - 1].
@@ -55,7 +58,7 @@ SBVPDeleteCommand >> undo [
 	(self oldParent isKindOf: SBVPGroupPattern) ifFalse: [
 		target allConnectionsDo: [:block | oldOwner addMorphBack: block].
 		super undo].
-	self oldParent parentCase ifNotNil: #buildImplicitChildrenMatchingPattern.
+	self oldParent parentCase buildImplicitChildrenMatchingPattern.
 	target layout.
 	^ target
 ]

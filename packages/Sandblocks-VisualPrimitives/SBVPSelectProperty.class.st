@@ -1,3 +1,8 @@
+"
+An SBVPSelectProperty displays the currently selected value of a number of choices as their corresponding representation. On double click a pop up allows to select a new value.
+
+SBVPSelectProperties are created through SBVPPropertyMappingSelects.
+"
 Class {
 	#name : #SBVPSelectProperty,
 	#superclass : #SBBlock,

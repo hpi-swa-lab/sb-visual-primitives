@@ -1,3 +1,21 @@
+"
+A SBVPInsertCommand is used to Insert a SBVisualPrimitive into the current hirachy.
+
+Instance Variables
+	children:		OrderedCollection of SBVisualPrimitives
+	parent:			SBVisualPrimitive
+	siblingIndex:	Number
+
+children
+	- SBVisualPrimitives that will be connections of the inserted primitive
+
+parent
+	- parent primitive of the inserted one
+
+siblingIndex
+	- position index of the inserted primitive in the parent's connections 
+
+"
 Class {
 	#name : #SBVPInsertCommand,
 	#superclass : #SBInsertCommand,
@@ -32,7 +50,7 @@ SBVPInsertCommand >> do [
 			ifNil: [self parent connections size]).
 		
 		" When adding a new root binding pattern, the row gets deleted and a new one is used.
-	That is why we have to reset the container and index. "
+		That is why we have to reset the container and index. "
 		container := self parent owner.
 		index := self container submorphCount].
 	
@@ -95,7 +113,7 @@ SBVPInsertCommand >> undo [
 			self parent removeConnection: self morph.
 			
 			" When adding a new root binding pattern, the row gets deleted and a new one is used.
-	That is why we have to reset the container. "
+			That is why we have to reset the container. "
 			container := self parent owner.
 			self children reverseDo: [:child | self parent addConnection: child afterIndex: self insertSiblingIndex]]
 		ifNil: [self children do: [:child | self morph removeConnection: child]].

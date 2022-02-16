@@ -1,3 +1,6 @@
+"
+An SBVPExecuter is used to wrap a single SBVPCase with input to easily execute the case on the input.
+"
 Class {
 	#name : #SBVPExecuter,
 	#superclass : #SBStSubstitution,

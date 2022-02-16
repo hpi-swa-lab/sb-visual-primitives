@@ -1,3 +1,28 @@
+"
+An SBVPPropertyMapping hold information on how the properties of an object are to be displayed in a SBVisualPrimitive and how changes on the primitive affect the origin object.
+
+Instance Variables
+	getter:			BlockClosure
+	patternValue:	Object
+	setter:			BlockClosure
+	vpProperty:		Symbol
+
+getter
+	- should look like this: [:object | ... ]
+	- the result from evaluating the getter should be a String, Number or Morph
+	- the result is what will be displayed in the SBVisualPrimitive
+
+patternValue
+	- this value will be displayed if there is no origin object, because the primitive is a pattern
+
+setter
+	- should look like this: [:object :vp | ... ]
+
+vpProperty
+	- specifies where the mapping will be applied in the visual primitive
+	- can be #shape #connections or a labelPosition, e.g. #innerLabel or #topLeftLabel (see SBVisualPrimitive >> labelPositions) 
+
+"
 Class {
 	#name : #SBVPPropertyMapping,
 	#superclass : #Object,
@@ -21,11 +46,11 @@ SBVPPropertyMapping class >> constant: anObject vpProperty: aSymbol [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMapping class >> defaultGetterBlockWith: aSymbol [
+SBVPPropertyMapping class >> defaultGetterBlockWith: anObject [
 
-	^ aSymbol isSymbol
-		ifTrue: [[:object | object perform: aSymbol asSimpleGetter]]
-		ifFalse: [[:object | aSymbol]]
+	^ anObject isSymbol
+		ifTrue: [[:object | object perform: anObject asSimpleGetter]]
+		ifFalse: [[:object | anObject]]
 ]
 
 { #category : #'as yet unclassified' }

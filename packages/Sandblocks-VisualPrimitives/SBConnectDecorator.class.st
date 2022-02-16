@@ -1,5 +1,5 @@
 "
-A SBConnectDecorator allows for connecting two morphs. When the mouse is nearby, the 4 connectors appear to indicate the morphs ability to be connected. They also act as start and endpoints for connections. A connection can be made by clicking on a connectionPoint and dragging to the other morph.
+An SBConnectDecorator allows for connecting two morphs. When the mouse is nearby, the 4 connectors appear to indicate the morphs ability to be connected. They also act as start and endpoints for connections. A connection can be made by clicking on a connectionPoint and dragging to the other morph.
 
 Instance Variables
 	connectionPoints:		Array of 4 CircleMorphs

@@ -1,3 +1,9 @@
+"
+An SBStDeclarationForVPBinding is xxxxxxxxx.
+
+Instance Variables
+
+"
 Class {
 	#name : #SBStDeclarationForVPBinding,
 	#superclass : #SBStDeclarationBehavior,

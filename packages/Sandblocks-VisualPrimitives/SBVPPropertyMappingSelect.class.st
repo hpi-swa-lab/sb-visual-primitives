@@ -1,3 +1,6 @@
+"
+An SBVPPropertyMappingSelect is used to map from a specific set of choices to corresponding representations for a vpProperty. To be able to change the selection the returned Morph is an SBVPSelectProperty.
+"
 Class {
 	#name : #SBVPPropertyMappingSelect,
 	#superclass : #SBVPPropertyMapping,
