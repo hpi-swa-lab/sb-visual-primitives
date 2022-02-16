@@ -208,6 +208,12 @@ SBVPGroupPattern >> noteNewOwner: aMorph [
 	self resetVisualization
 ]
 
+{ #category : #'as yet unclassified' }
+SBVPGroupPattern >> objectInterfaceNear: aBlock at: aSymbol [
+
+	^ {[:o | o isKindOf: SBVisualPrimitive]}
+]
+
 { #category : #accessing }
 SBVPGroupPattern >> openPatternAsChild: aPattern [
 
