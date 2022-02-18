@@ -27,6 +27,12 @@ SBVPSelectProperty class >> choices: aCollection representations: anotherCollect
 ]
 
 { #category : #accessing }
+SBVPSelectProperty >> balloonText [
+
+	^ 'Double click to change value.'
+]
+
+{ #category : #accessing }
 SBVPSelectProperty >> choices [
 
 	^ choices
@@ -118,6 +124,12 @@ SBVPSelectProperty >> representations [
 SBVPSelectProperty >> representations: anObject [
 
 	representations := anObject
+]
+
+{ #category : #accessing }
+SBVPSelectProperty >> wantsBalloon [
+
+	^ true
 ]
 
 { #category : #accessing }
