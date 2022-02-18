@@ -1,3 +1,13 @@
+"
+An SBVPPattern is used to define a combination of SBVisualPrimitives and constraints that can later be used to perform pattern matching with.
+
+Instance Variables
+	isImplicitChild:		bool
+
+isImplicitChild
+	- indicates whether the pattern was implicitly added to it's parent
+
+"
 Class {
 	#name : #SBVPPattern,
 	#superclass : #SBVisualPrimitive,
@@ -48,7 +58,7 @@ SBVPPattern >> getNext: aVisualPrimitive [
 { #category : #'as yet unclassified' }
 SBVPPattern >> identifierForIndex: aNumber [
 
-	^ ('i_', (Character alphabet at: aNumber - 1 // 26 + 1), (Character alphabet at: aNumber - 1 \\ 26 + 1)) asSymbol
+	^ ('', (Character alphabet at: aNumber - 1 // 26 + 1), (Character alphabet at: aNumber - 1 \\ 26 + 1)) asSymbol
 ]
 
 { #category : #accessing }

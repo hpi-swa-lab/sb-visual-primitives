@@ -284,7 +284,8 @@ SBVPExecuter class >> exampleGrammarRuleMergeRepeat: aGrammarObject [
 									members: {}};
 							content: (SBVPTomGrammarObject new
 								objectName: 'aahh';
-								type: 'SYMBOL')}) showAsVisualPrimitive}]
+								type: 'SYMBOL';
+								members: {})}) showAsVisualPrimitive}]
 		label: 'example'.
 	biop := SBVPTomGrammarObject new.
 	biop type: 'REPEAT1'.
