@@ -14,7 +14,8 @@ SBStASTNode >> visualize [
 		replacer: visualizer;
 		shouldMergeWithNext: false;
 		yourself).
-	objectClass := self evaluate value class.
+		
+	objectClass := (self evaluate isBlock ifTrue: [self evaluate value] ifFalse: [self evaluate]) class. 
 	(objectClass class canUnderstandBeforeObject: #visualPrimitiveMapping) ifFalse: [
 		SBPopup new
 			  addMorphBack: (SBStMethod new
