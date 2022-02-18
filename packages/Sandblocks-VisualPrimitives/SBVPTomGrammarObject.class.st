@@ -36,9 +36,10 @@ SBVPTomGrammarObject class >> visualPrimitiveMapping [
 		SBVPPropertyMappingConnections
 			getter: [:object | object members ifNil: [{object content} asOrderedCollection]]
 			setter: [:object :connections |
-				connections size > 1
-					ifTrue: [object members: connections]
-					ifFalse: [object content: connections first]]
+				connections size < 1 ifTrue: [] ifFalse: [
+					connections size > 1
+						ifTrue: [object members: connections]
+						ifFalse: [object content: connections first]]]
 			vpProperty: #connections}
 ]
 

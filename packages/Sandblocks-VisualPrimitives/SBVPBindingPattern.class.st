@@ -1,9 +1,47 @@
+"
+A SBVPBindingPattern is used to represent a single object. It's connections are visualized as well recursively.
+
+Instance Variables
+	bindingIndex:				Object
+	constant:					Block
+	firstChildOffset:				Number
+	labelBindingDict:			Dictionary
+	labelExpressionDict:		Dictionary
+	visualizingClass:			Class
+	writeBackClosure:			BlockClosure
+	writeBackClosureString:	String
+
+bindingIndex
+	- the primitive's binding 
+	
+constant
+	- stores value of origin if that's a constant
+	- can be nil if there is no underlying origin object
+
+firstChildOffset
+	- xxxxx
+
+labelBindingDict
+	- xxxxx
+
+labelExpressionDict
+	- xxxxx
+
+visualizingClass
+	- xxxxx
+
+writeBackClosure
+	- xxxxx
+
+writeBackClosureString
+	- xxxxx
+
+"
 Class {
 	#name : #SBVPBindingPattern,
 	#superclass : #SBVPPattern,
 	#instVars : [
 		'firstChildOffset',
-		'canMatchAllChildren',
 		'constant',
 		'bindingIndex',
 		'writeBackClosure',
@@ -337,18 +375,6 @@ SBVPBindingPattern >> buildNewInstance [
 SBVPBindingPattern >> canDeleteChild: aBlock [
 
 	^ true
-]
-
-{ #category : #'as yet unclassified' }
-SBVPBindingPattern >> canMatchAllChildren [
-
-	^ canMatchAllChildren
-]
-
-{ #category : #'as yet unclassified' }
-SBVPBindingPattern >> canMatchAllChildren: anObject [
-
-	canMatchAllChildren := anObject
 ]
 
 { #category : #'as yet unclassified' }

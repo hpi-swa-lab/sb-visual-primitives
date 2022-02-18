@@ -44,6 +44,19 @@ SBVPUnknownLabel >> suggestionConstant [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPUnknownLabel >> suggestionConstantBlock [
+
+	| position |
+	position := self parentSandblock labelPositionOf: self.
+	^ self parentSandblock visualPrimitiveMapping
+		detect: [:mapping | mapping key = position]
+		ifFound: [:mapping | | propertyMapping |
+			propertyMapping := mapping asPropertyMapping.
+			propertyMapping getMorphForValue: propertyMapping suggestionConstant]
+		ifNone: [#a]
+]
+
+{ #category : #'as yet unclassified' }
 SBVPUnknownLabel >> suggestions [
 
 	| constantString |
@@ -55,5 +68,5 @@ SBVPUnknownLabel >> suggestions [
 	^ {
 		SBSuggestionItem selector: self nextIdentifier label: 'binding'.
 		(SBBlockSuggestionItem selector: '[myVar]' label: 'variable') builder: ['[myVar]' parseAsSandblock].
-		(SBBlockSuggestionItem selector: constantString label: 'constant') builder: [constantString parseAsSandblock]}
+		(SBBlockSuggestionItem selector: constantString label: 'constant') builder: [self suggestionConstantBlock]}
 ]

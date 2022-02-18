@@ -1,3 +1,13 @@
+"
+An SBVPPattern is used to define a combination of SBVisualPrimitives and constraints that can later be used to perform pattern matching with.
+
+Instance Variables
+	isImplicitChild:		bool
+
+isImplicitChild
+	- indicates whether the pattern was implicitly added to it's parent
+
+"
 Class {
 	#name : #SBVPPattern,
 	#superclass : #SBVisualPrimitive,
