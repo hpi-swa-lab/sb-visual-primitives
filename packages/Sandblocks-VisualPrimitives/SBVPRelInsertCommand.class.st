@@ -21,7 +21,7 @@ SBVPRelInsertCommand >> do [
 SBVPRelInsertCommand >> morphIndexInConnections [
 
 	^ self adjacent
-		ifNil: [self before ifTrue: [1] ifFalse: [self container connections size]]
+		ifNil: [self before ifTrue: [0] ifFalse: [self container connections size]]
 		ifNotNil: [ | indexInRow actualAdjacent |
 			actualAdjacent := self container row
 				submorphThat: [:submorph | (self adjacent hasOwner: submorph) or: [submorph = self adjacent]]

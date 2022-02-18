@@ -71,7 +71,8 @@ SBVPVisualizer >> code: aCodeBlock showCode: aBoolean [
 	self code addMorphBack: aSandblock.
 	self showCode: aBoolean.
 	aBoolean ifFalse: [aSandblock hide].
-	vp := SBVisualPrimitive newFromObject: aSandblock evaluate value in: self visual.
+
+	vp := SBVisualPrimitive newFromObject: (aSandblock evaluate isBlock ifTrue: [aSandblock evaluate value] ifFalse: [aSandblock evaluate]) in: self visual.
 	vp attachTreeDecorator.
 	vp layout
 ]
