@@ -139,10 +139,13 @@ SBVPConstraintPattern >> layoutCommands [
 SBVPConstraintPattern >> matches: aVisualPrimitive withBinding: aDict [
 
 	| originalBindings |
-	originalBindings := aDict collect: [:visualPrimitiveOrCollection |		
+	originalBindings := aDict collect: [:visualPrimitiveOrCollection |
 		visualPrimitiveOrCollection isCollection
 			ifTrue: [visualPrimitiveOrCollection collect: [:element | element isVisualPrimitive ifTrue: [element origin] ifFalse: [element]]]
-			ifFalse: [visualPrimitiveOrCollection isVisualPrimitive ifTrue: [visualPrimitiveOrCollection origin] ifFalse: [visualPrimitiveOrCollection]]].
+			ifFalse: [
+				visualPrimitiveOrCollection isVisualPrimitive
+					ifTrue: [visualPrimitiveOrCollection origin]
+					ifFalse: [visualPrimitiveOrCollection]]].
 	
 	^ self constraint value: originalBindings
 ]

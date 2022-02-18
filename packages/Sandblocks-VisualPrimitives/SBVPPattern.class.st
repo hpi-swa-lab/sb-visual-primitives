@@ -58,7 +58,7 @@ SBVPPattern >> getNext: aVisualPrimitive [
 { #category : #'as yet unclassified' }
 SBVPPattern >> identifierForIndex: aNumber [
 
-	^ ('i_', (Character alphabet at: aNumber - 1 // 26 + 1), (Character alphabet at: aNumber - 1 \\ 26 + 1)) asSymbol
+	^ ('', (Character alphabet at: aNumber - 1 // 26 + 1), (Character alphabet at: aNumber - 1 \\ 26 + 1)) asSymbol
 ]
 
 { #category : #accessing }
