@@ -13,7 +13,11 @@ Class {
 { #category : #'as yet unclassified' }
 SBVPPropertyMappingExpression class >> expression: aBlock vpProperty: aSymbol originalMapping: aPropertyMapping [
 
-	^ (self getter: aBlock setter: [:ignore | ] vpProperty: aSymbol) originalMapping: aPropertyMapping
+	^ (self
+		getter: aBlock
+		setter: [:ignore | ]
+		vpProperty: aSymbol
+		name: (self mappingName: aBlock evaluate withDefault: aBlock asSymbol)) originalMapping: aPropertyMapping
 ]
 
 { #category : #'as yet unclassified' }

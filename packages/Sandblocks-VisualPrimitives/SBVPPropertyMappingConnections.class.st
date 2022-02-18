@@ -42,7 +42,7 @@ SBVPPropertyMappingConnections class >> getter: aBlock setter: anotherBlock [
 		anotherBlock
 			value: object
 			value: ((vp propertyAt: #connections) collect: [:connection | connection getObjectFromVisualPrimitive])].
-	^ super getter: wrappedGetter setter: wrappedSetter vpProperty: #connections
+	^ super getter: wrappedGetter setter: wrappedSetter vpProperty: #connections name: 'connections'
 ]
 
 { #category : #'as yet unclassified' }
@@ -50,7 +50,13 @@ SBVPPropertyMappingConnections class >> getter: aBlock setter: anotherBlock patt
 
 	anObject
 		ifNotNil: [Error signal: 'SBVPPropertyMappingConnections does not support patternValue as this would lead to patterns recusively having children. This will result in an infinite number of children.']
-		ifNil: [^ super getter: aBlock setter: anotherBlock patternValue: anObject vpProperty: aSymbol]
+		ifNil: [
+			^ super
+				getter: aBlock
+				setter: anotherBlock
+				patternValue: anObject
+				vpProperty: aSymbol
+				name: 'connections']
 ]
 
 { #category : #'as yet unclassified' }
@@ -71,4 +77,11 @@ SBVPPropertyMappingConnections class >> property: aSymbol vpProperty: anotherSym
 
 	self assert: anotherSymbol = #connections.
 	^ self property: aSymbol
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPropertyMappingConnections >> initialize [
+
+	super initialize.
+	name := 'connections'
 ]

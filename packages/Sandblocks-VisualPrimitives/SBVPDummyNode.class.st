@@ -38,6 +38,7 @@ SBVPDummyNode class >> connectionsMappingEntry [
 				ifTrue: [object right: vp connections second getObjectFromVisualPrimitive]
 				ifFalse: [object right: nil]]
 		vpProperty: #connections
+		name: 'connections'
 ]
 
 { #category : #'as yet unclassified' }

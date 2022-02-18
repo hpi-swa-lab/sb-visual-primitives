@@ -150,8 +150,7 @@ SBVPCase class >> suggestion [
 			target: block;
 			replacer: case;
 			yourself).
-		case classNameInput promptClassForVPCase
-		]
+		case classNameInput promptClassForVPCase]
 ]
 
 { #category : #'as yet unclassified' }

@@ -243,12 +243,13 @@ SBVPBindingPattern >> addLabel [
 	<action>
 	<actionValidIf: #isBindingPattern>
 
-	| index |
-	index := UIManager default chooseFrom: self labelPositions.
+	| index notSetProperties |
+	notSetProperties := self missingProperties.
+	index := UIManager default chooseFrom: (notSetProperties collect: [:propertyMapping | propertyMapping name]).
 	index > 0 ifTrue: [ | unknown |
 		self sandblockEditor do: (SBDoItCommand new
 			do: [
-				self setLabelAt: (self labelPositions at: index) to: (unknown := self newUnknown).
+				self setLabelAt: (notSetProperties at: index) vpProperty to: (unknown := self newUnknown).
 				self layout.
 				unknown startInput.
 				unknown queueUpdateSuggestionsFocused: true];
@@ -593,6 +594,19 @@ SBVPBindingPattern >> matches: aVisualPrimitive withBinding: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPBindingPattern >> missingProperties [
+
+	^ self visualPrimitiveMappings select: [:mapping |
+		(self labelPositions includes: mapping vpProperty)
+			ifTrue: [
+				(self blockDict
+					at: mapping vpProperty
+					ifPresent: [:block | block firstSubmorphOrNil]
+					ifAbsent: [nil]) isNil]
+			ifFalse: [false]]
+]
+
+{ #category : #'as yet unclassified' }
 SBVPBindingPattern >> newEmptyChildNear: aBlock before: aBoolean [
 
 	^ self newUnknown
@@ -710,12 +724,7 @@ SBVPBindingPattern >> setConnectionBindingFor: aVisualPrimitive in: aDict [
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> staticVisualPrimitiveMapping [
 
-	^ self visualPrimitiveMapping
-		collect: [:mappingOrAssoc |
-			mappingOrAssoc isPropertyMapping
-				ifTrue: [mappingOrAssoc]
-				ifFalse: [SBVPPropertyMapping fromAssociation: mappingOrAssoc]]
-		thenSelect: [:mapping | mapping patternValue notNil]
+	^ self visualPrimitiveMappings select: [:mapping | mapping patternValue notNil]
 ]
 
 { #category : #'as yet unclassified' }
@@ -730,6 +739,15 @@ SBVPBindingPattern >> visualPrimitiveMapping [
 	^ self patternVisualizationClass
 		ifNil: {}
 		ifNotNil: #visualPrimitiveMapping
+]
+
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern >> visualPrimitiveMappings [
+
+	^ self visualPrimitiveMapping collect: [:mappingOrAssoc |
+		mappingOrAssoc isPropertyMapping
+			ifTrue: [mappingOrAssoc]
+			ifFalse: [SBVPPropertyMapping fromAssociation: mappingOrAssoc]]
 ]
 
 { #category : #accessing }

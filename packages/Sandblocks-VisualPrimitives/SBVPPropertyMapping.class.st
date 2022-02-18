@@ -30,7 +30,8 @@ Class {
 		'getter',
 		'setter',
 		'patternValue',
-		'vpProperty'
+		'vpProperty',
+		'name'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
@@ -38,11 +39,12 @@ Class {
 { #category : #'as yet unclassified' }
 SBVPPropertyMapping class >> constant: anObject vpProperty: aSymbol [
 
-	^ SBVPPropertyMapping
+	^ self
 		getter: [:ignore | anObject]
 		setter: [:ignore :ignore2 | ]
 		patternValue: anObject
 		vpProperty: aSymbol
+		name: aSymbol asString
 ]
 
 { #category : #'as yet unclassified' }
@@ -70,29 +72,42 @@ SBVPPropertyMapping class >> defaultSetterBlockWith: aSymbol for: anotherSymbol 
 { #category : #'as yet unclassified' }
 SBVPPropertyMapping class >> fromAssociation: anAssociation [
 
-	| getterBlock setterBlock patternValue |
+	| getterBlock setterBlock patternValue name |
 	getterBlock := self defaultGetterBlockWith: anAssociation value.
 	setterBlock := self defaultSetterBlockWith: anAssociation value for: anAssociation key.
 	patternValue := self defaultPatternValueFor: anAssociation value.
+	name := self mappingName: anAssociation value withDefault: anAssociation key asString.
 	
-	^ self getter: getterBlock setter: setterBlock patternValue: patternValue vpProperty: anAssociation key
+	^ self
+		getter: getterBlock
+		setter: setterBlock
+		patternValue: patternValue
+		vpProperty: anAssociation key
+		name: name
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMapping class >> getter: aBlock setter: anotherBlock patternValue: anObject vpProperty: aSymbol [
+SBVPPropertyMapping class >> getter: aBlock setter: anotherBlock patternValue: anObject vpProperty: aSymbol name: aString [
 
 	^ self new
 		getter: aBlock;
 		setter: anotherBlock;
 		vpProperty: aSymbol;
 		patternValue: anObject;
+		name: aString;
 		yourself
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMapping class >> getter: aBlock setter: anotherBlock vpProperty: aSymbol [
+SBVPPropertyMapping class >> getter: aBlock setter: anotherBlock vpProperty: aSymbol name: aString [
 
-	^ self getter: aBlock setter: anotherBlock patternValue: nil vpProperty: aSymbol
+	^ self getter: aBlock setter: anotherBlock patternValue: nil vpProperty: aSymbol name: aString
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPropertyMapping class >> mappingName: anObject withDefault: aString [
+
+	^ anObject isSymbol ifTrue: [anObject asString] ifFalse: [aString]
 ]
 
 { #category : #'as yet unclassified' }
@@ -108,7 +123,12 @@ SBVPPropertyMapping class >> property: aSymbol vpProperty: anotherSymbol pattern
 	getterBlock := self defaultGetterBlockWith: aSymbol.
 	setterBlock := self defaultSetterBlockWith: aSymbol for: anotherSymbol.
 	
-	^ self getter: getterBlock setter: setterBlock patternValue: anObject vpProperty: anotherSymbol
+	^ self
+		getter: getterBlock
+		setter: setterBlock
+		patternValue: anObject
+		vpProperty: anotherSymbol
+		name: aSymbol asString
 ]
 
 { #category : #'as yet unclassified' }
@@ -151,6 +171,18 @@ SBVPPropertyMapping >> isPropertyMapping [
 SBVPPropertyMapping >> key [
 
 	^ self vpProperty
+]
+
+{ #category : #accessing }
+SBVPPropertyMapping >> name [
+
+	^ name
+]
+
+{ #category : #accessing }
+SBVPPropertyMapping >> name: anObject [
+
+	name := anObject
 ]
 
 { #category : #accessing }

@@ -113,7 +113,7 @@ SBVPTomGrammarObject >> type: aString [
 	type := aString
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBVPTomGrammarObject >> writeSourceOn: aStream [
 
 	aStream

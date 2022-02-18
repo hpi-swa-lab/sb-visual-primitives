@@ -239,15 +239,14 @@ SBVPVisualizer >> exampleTomCardHand [
 
 	| c1 c2 c3 |
 	SBVPVisualizer
-		code: [ | var |
+		code: [
 			c1 := SBVPTomCard new
 				attack: 5;
 				defense: 6;
 				type: 'fire';
 				yourself.
-			var := 3.
 			c2 := SBVPTomCard new
-				attack: var;
+				attack: 3;
 				defense: 10;
 				type: 'water';
 				yourself.

@@ -15,7 +15,8 @@ SBVPSpecialShapeFixture class >> visualPrimitiveMapping [
 					yourself]
 			setter: [:object :vp | object key: ((vp propertyAt: #shape) color blue * 255) rounded]
 			patternValue: (CircleMorph new color: (Color r: 0.5 g: 0.5 b: 0.1))
-			vpProperty: #shape.
+			vpProperty: #shape
+			name: 'shape'.
 		SBVPPropertyMappingNumber property: #key vpProperty: #innerLabel.
 		self connectionsMappingEntry.
 		#topLeftLabel -> SBIcon iconBug}
