@@ -144,11 +144,14 @@ SBVPCase class >> rootStrategy [
 { #category : #'as yet unclassified' }
 SBVPCase class >> suggestion [
 
-	^ [:block |
+	^ [:block | | case |
+		case := self input: SBVPGroupPattern new output: SBVPGroupPattern new.
 		block sandblockEditor do: (SBReplaceCommand new
 			target: block;
-			replacer: (self input: SBVPGroupPattern new output: SBVPGroupPattern new);
-			yourself)]
+			replacer: case;
+			yourself).
+		case classNameInput promptClassForVPCase
+		]
 ]
 
 { #category : #'as yet unclassified' }
@@ -209,6 +212,18 @@ SBVPCase >> buildImplicitChildrenMatchingPattern [
 				attachTreeDecorator].
 		self input layout.
 		self output layout]
+]
+
+{ #category : #accessing }
+SBVPCase >> classNameInput [
+
+	^ classNameInput
+]
+
+{ #category : #accessing }
+SBVPCase >> classNameInput: anObject [
+
+	classNameInput := anObject
 ]
 
 { #category : #'as yet unclassified' }

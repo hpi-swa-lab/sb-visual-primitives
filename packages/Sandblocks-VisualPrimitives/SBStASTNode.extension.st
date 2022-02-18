@@ -14,7 +14,7 @@ SBStASTNode >> visualize [
 		replacer: visualizer;
 		shouldMergeWithNext: false;
 		yourself).
-		
+	
 	objectClass := (self evaluate isBlock ifTrue: [self evaluate value] ifFalse: [self evaluate]) class. 
 	(objectClass class canUnderstandBeforeObject: #visualPrimitiveMapping) ifFalse: [
 		SBPopup new
@@ -23,5 +23,6 @@ SBStASTNode >> visualize [
 			arguments: #()
 			class: objectClass class;
 		body: SBStBlockBody new);
-			  showBelow: visualizer closeOnDeselect: true]
+			  showBelow: visualizer closeOnDeselect: true.
+		self inform: 'The class ', objectClass name asString, ' does not implement visualPrimitiveMapping which is required to visualize its instance. Please do so'.]
 ]
