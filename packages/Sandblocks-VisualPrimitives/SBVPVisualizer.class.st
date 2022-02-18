@@ -309,6 +309,14 @@ SBVPVisualizer >> showCode: aBoolean [
 ]
 
 { #category : #accessing }
+SBVPVisualizer >> tryWriteSourceOrStore: anObject on: aStream [
+
+	(anObject respondsTo: #writeSourceOn:)
+		ifTrue: [anObject writeSourceOn: aStream]
+		ifFalse: [anObject storeOn: aStream]
+]
+
+{ #category : #accessing }
 SBVPVisualizer >> visual [
 
 	^ visual
@@ -332,9 +340,9 @@ SBVPVisualizer >> writeCodeOn: aStream [
 	| object |
 	aStream nextPut: $(.
 	object := (self visual submorphs detect: [:morph | morph isVisualPrimitive]) root getObjectFromVisualPrimitive.
-	((object respondsTo: #writeSourceOn:) and: [self showCode not])
-		ifTrue: [object writeSourceOn: aStream]
-		ifFalse: [self code submorphsDo: [:morph | morph writeSourceOn: aStream]].
+	self showCode not
+		ifTrue: [self tryWriteSourceOrStore: object on: aStream]
+		ifFalse: [self code submorphsDo: [:morph | self tryWriteSourceOrStore: morph on: aStream]].
 	aStream nextPut: $)
 ]
 
