@@ -1,5 +1,5 @@
 Class {
-	#name : #SBVPTomCardHand,
+	#name : #SBVPGameCardHand,
 	#superclass : #Object,
 	#instVars : [
 		'cards'
@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBVPTomCardHand class >> playCardFrom: aHand toBeat: aCard [
+SBVPGameCardHand class >> playCardFrom: aHand toBeat: aCard [
 
 	SBVPCase
 		input: (SBVPGroupPattern patterns: {})
@@ -17,23 +17,23 @@ SBVPTomCardHand class >> playCardFrom: aHand toBeat: aCard [
 			add: #explicitRootMatching -> true;
 			add: #explicitChildrenMatching -> true;
 			yourself)
-		visualizePatternsAs: SBVPTomCardHand
+		visualizePatternsAs: SBVPGameCardHand
 ]
 
 { #category : #'as yet unclassified' }
-SBVPTomCardHand class >> visualPrimitiveMapping [
+SBVPGameCardHand class >> visualPrimitiveMapping [
 
 	^ {#shape vpConstant: SBIcon iconHandOUp. #connections vpConnectionFor: #cards}
 ]
 
 { #category : #accessing }
-SBVPTomCardHand >> cards [
+SBVPGameCardHand >> cards [
 
 	^ cards
 ]
 
 { #category : #accessing }
-SBVPTomCardHand >> cards: anObject [
+SBVPGameCardHand >> cards: anObject [
 
 	cards := anObject
 ]

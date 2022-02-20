@@ -1,5 +1,5 @@
 Class {
-	#name : #SBVPTomCard,
+	#name : #SBVPGameCard,
 	#superclass : #Object,
 	#instVars : [
 		'attack',
@@ -10,51 +10,54 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBVPTomCard class >> visualPrimitiveMapping [
+SBVPGameCard class >> visualPrimitiveMapping [
 
 	^ {
+		#topLeftLabel vpConstant: 'ATK:'.
 		#topCenterLabel vpNumberFor: #attack.
-		#bottomCenterLabel vpNumberFor: #defense.
 		#shape
 			vpSelectFrom: {'fire'. 'bug'. 'water'}
-			displayAs: {SBIcon iconFire color: Color red. SBIcon iconBug color: Color brown. SBIcon iconTint color: Color blue}
+			displayAs: {
+				SBIcon iconFire color: (Color r: 1 g: 0.0 b: 0.0).
+				SBIcon iconBug color: (Color r: 0.6 g: 0.2 b: 0.0).
+				SBIcon iconTint color: (Color r: 0.0 g: 0.0 b: 1)}
 			for: #type.
-		#topLeftLabel vpConstant: 'ATK:'.
-		#bottomLeftLabel vpConstant: 'DEF'}
+		#bottomLeftLabel vpConstant: 'DEF:'.
+		#bottomCenterLabel vpNumberFor: #defense}
 ]
 
 { #category : #accessing }
-SBVPTomCard >> attack [
+SBVPGameCard >> attack [
 
 	^ attack
 ]
 
 { #category : #accessing }
-SBVPTomCard >> attack: anObject [
+SBVPGameCard >> attack: anObject [
 
 	attack := anObject
 ]
 
 { #category : #accessing }
-SBVPTomCard >> defense [
+SBVPGameCard >> defense [
 
 	^ defense
 ]
 
 { #category : #accessing }
-SBVPTomCard >> defense: anObject [
+SBVPGameCard >> defense: anObject [
 
 	defense := anObject
 ]
 
 { #category : #accessing }
-SBVPTomCard >> type [
+SBVPGameCard >> type [
 
 	^ type
 ]
 
 { #category : #accessing }
-SBVPTomCard >> type: anObject [
+SBVPGameCard >> type: anObject [
 
 	type := anObject
 ]

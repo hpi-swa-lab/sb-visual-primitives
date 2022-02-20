@@ -226,7 +226,7 @@ SBVPVisualizer >> exampleTomCard [
 
 	SBVPVisualizer
 		code: [
-			SBVPTomCard new
+			SBVPGameCard new
 				attack: 5;
 				defense: 6;
 				type: 'fire';
@@ -240,22 +240,22 @@ SBVPVisualizer >> exampleTomCardHand [
 	| c1 c2 c3 |
 	SBVPVisualizer
 		code: [
-			c1 := SBVPTomCard new
+			c1 := SBVPGameCard new
 				attack: 5;
 				defense: 6;
 				type: 'fire';
 				yourself.
-			c2 := SBVPTomCard new
+			c2 := SBVPGameCard new
 				attack: 3;
 				defense: 10;
 				type: 'water';
 				yourself.
-			c3 := SBVPTomCard new
+			c3 := SBVPGameCard new
 				attack: 300;
 				defense: 1;
 				type: 'bug';
 				yourself.
-			SBVPTomCardHand new cards: {c1. c2. c3}]
+			SBVPGameCardHand new cards: {c1. c2. c3}]
 		showCode: true
 ]
 
