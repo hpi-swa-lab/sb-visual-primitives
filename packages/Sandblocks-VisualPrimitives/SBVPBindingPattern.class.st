@@ -329,6 +329,12 @@ SBVPBindingPattern >> buildFromBinding: aDict [
 	output connections: (self buildChildrenFromBinding: aDict).
 	self dynamicLabelDict associationsDo: [:assoc | output addPropertyMapping: assoc].
 	self labelBindingDict keysAndValuesDo: [:labelPosition :bindingName | output addPropertyMapping: labelPosition -> (aDict at: bindingName)].
+	self labelExpressionDict associationsDo: [:association |
+		self visualizingClass: (aDict at: self bindingIndex) origin class.
+		output addPropertyMapping: (SBVPPropertyMappingExpression
+			expression: association value
+			vpProperty: association key
+			originalMapping: (self originalPropertyMappingAt: association key))].
 	^ {output}
 ]
 

@@ -38,6 +38,12 @@ SBVPPropertyMappingExpression >> originalMapping: anObject [
 ]
 
 { #category : #accessing }
+SBVPPropertyMappingExpression >> value: ignored [
+
+	^ self getter value
+]
+
+{ #category : #accessing }
 SBVPPropertyMappingExpression >> writeValue: value on: aStream [
 
 	aStream writeSourceOn: value.

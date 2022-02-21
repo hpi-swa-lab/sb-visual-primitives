@@ -468,6 +468,7 @@ SBVPCase >> replaceAllMatches: anObject [
 
 	| matcher currentPrimitive match |
 	currentPrimitive := anObject asVisualPrimitive.
+	
 	matcher := (SBVPPatternMatcher input: currentPrimitive pattern: self input) strategy: self strategy.
 	[match := matcher getNextMatch] whileNotNil: [
 		currentPrimitive := matcher build: self output fromBinding: match.

@@ -113,6 +113,8 @@ SBVPGroupPattern >> attachTreeDecorator [
 { #category : #'as yet unclassified' }
 SBVPGroupPattern >> buildFromBinding: anArray [
 
+	self flag: #TODO.
+	"Support multiple connections"
 	^ self connections first buildFromBinding: anArray
 ]
 
@@ -245,6 +247,12 @@ SBVPGroupPattern >> openPatternAsChild: aPattern [
 			addedBlock := aPattern].
 	
 	self addSeperatorsAround: addedBlock
+]
+
+{ #category : #'as yet unclassified' }
+SBVPGroupPattern >> rebuild [
+
+	self allConnectionsDo: [:connection | connection rebuild]
 ]
 
 { #category : #'as yet unclassified' }
