@@ -333,6 +333,22 @@ SBVPBindingPattern >> buildFromBinding: aDict [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPBindingPattern >> buildFromBinding: aDict currentPrimitive: aVisualPrimitive [
+
+	| output |
+	output := self constant
+		ifNotNil: [ | temp |
+			temp := self constant value asVisualPrimitive.
+			
+			]
+		ifNil: [(aDict at: self bindingIndex) copy].
+	output connections: (self buildChildrenFromBinding: aDict).
+	self dynamicLabelDict associationsDo: [:assoc | output addPropertyMapping: assoc].
+	self labelBindingDict keysAndValuesDo: [:labelPosition :bindingName | output addPropertyMapping: labelPosition -> (aDict at: bindingName)].
+	^ {output}
+]
+
+{ #category : #'as yet unclassified' }
 SBVPBindingPattern >> buildImplicitChildren: aDict [
 
 	| implicitChildren nextIndex oldConnections addImplicitChild |

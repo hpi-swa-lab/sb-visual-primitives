@@ -76,6 +76,50 @@ SBVPCase class >> childrenStrategy [
 	^ #explicitChildrenMatching
 ]
 
+{ #category : #examples }
+SBVPCase class >> exampleWithEllipsisAndWildcardPattern [
+
+	SBVPCase
+		input: (SBVPGroupPattern patterns: {
+			SBVPBindingPattern bindingIndex: 1 connections: {
+				SBVPEllipsisPattern bindingIndex: 2 connections: {}.
+				SBVPWildcardPattern bindingIndex: 3 connections: {}}.
+			SBVPConstraintPattern constraint: [:b | b label = 20]})
+		output: (SBVPBindingPattern bindingIndex: 1 connections: {
+			SBVPEllipsisPattern bindingIndex: 2 connections: {}.
+			SBVPWildcardPattern bindingIndex: 3 connections: {}})
+]
+
+{ #category : #examples }
+SBVPCase class >> exampleWithPatterns [
+
+	^ SBVPCase
+		input: (SBVPGroupPattern patterns: {
+			SBVPBindingPattern
+				bindingIndex: 1
+				connections: {SBVPBindingPattern bindingIndex: 2 connections: {}. SBVPBindingPattern bindingIndex: 3 connections: {}}.
+			SBVPConstraintPattern constraint: [:c :b :a | true]})
+		output: (SBVPGroupPattern patterns: {
+			SBVPBindingPattern
+				bindingIndex: 1
+				connections: {SBVPBindingPattern bindingIndex: 3 connections: {}. SBVPBindingPattern bindingIndex: 2 connections: {}}})
+]
+
+{ #category : #examples }
+SBVPCase class >> exampleWithPatterns: aDummyNode [
+
+	^ (SBVPCase
+		input: (SBVPGroupPattern patterns: {
+			SBVPBindingPattern
+				bindingIndex: 1
+				connections: {SBVPBindingPattern bindingIndex: 2 connections: {}. SBVPBindingPattern bindingIndex: 3 connections: {}}.
+			SBVPConstraintPattern constraint: [:a :b :c | true]})
+		output: (SBVPGroupPattern patterns: {
+			SBVPBindingPattern
+				bindingIndex: 1
+				connections: {SBVPBindingPattern bindingIndex: 3 connections: {}. SBVPBindingPattern bindingIndex: 2 connections: {}}})) value: aDummyNode
+]
+
 { #category : #'as yet unclassified' }
 SBVPCase class >> input: anInputVisualizer output: anOutputVisualizer [
 	" marker "
@@ -268,50 +312,6 @@ SBVPCase >> defaultPatternVisualizationClass [
 SBVPCase >> defaultPatternVisualizationClass: anObject [
 
 	defaultPatternVisualizationClass := anObject
-]
-
-{ #category : #'as yet unclassified' }
-SBVPCase >> exampleWithEllipsisAndWildcardPattern [
-
-	SBVPCase
-		input: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern bindingIndex: 1 connections: {
-				SBVPEllipsisPattern bindingIndex: 2 connections: {}.
-				SBVPWildcardPattern bindingIndex: 3 connections: {}}.
-			SBVPConstraintPattern constraint: [:b | b label = 20]})
-		output: (SBVPBindingPattern bindingIndex: 1 connections: {
-			SBVPEllipsisPattern bindingIndex: 2 connections: {}.
-			SBVPWildcardPattern bindingIndex: 3 connections: {}})
-]
-
-{ #category : #'as yet unclassified' }
-SBVPCase >> exampleWithPatterns [
-
-	^ SBVPCase
-		input: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern
-				bindingIndex: 1
-				connections: {SBVPBindingPattern bindingIndex: 2 connections: {}. SBVPBindingPattern bindingIndex: 3 connections: {}}.
-			SBVPConstraintPattern constraint: [:c :b :a | true]})
-		output: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern
-				bindingIndex: 1
-				connections: {SBVPBindingPattern bindingIndex: 3 connections: {}. SBVPBindingPattern bindingIndex: 2 connections: {}}})
-]
-
-{ #category : #'as yet unclassified' }
-SBVPCase >> exampleWithPatterns: aDummyNode [
-
-	^ (SBVPCase
-		input: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern
-				bindingIndex: 1
-				connections: {SBVPBindingPattern bindingIndex: 2 connections: {}. SBVPBindingPattern bindingIndex: 3 connections: {}}.
-			SBVPConstraintPattern constraint: [:a :b :c | true]})
-		output: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern
-				bindingIndex: 1
-				connections: {SBVPBindingPattern bindingIndex: 3 connections: {}. SBVPBindingPattern bindingIndex: 2 connections: {}}})) value: aDummyNode
 ]
 
 { #category : #'as yet unclassified' }
