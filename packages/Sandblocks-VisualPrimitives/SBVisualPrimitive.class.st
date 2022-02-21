@@ -163,11 +163,7 @@ SBVisualPrimitive >> addPropertyMapping: anSBVPPropertyMapping [
 						ifNil: [connection asVisualPrimitive]
 						ifNotNil: [SBVisualPrimitive newFromObject: connection in: self owner].
 					self addConnection: child]]}
-		otherwise: [
-			(self labelPositions includes: propertyMapping vpProperty) ifTrue: [
-				(self blockDict at: propertyMapping vpProperty)
-					removeAllMorphs;
-					addMorphBack: (propertyMapping getMorphFor: self origin)]]
+		otherwise: [(self labelPositions includes: propertyMapping vpProperty) ifTrue: [(self blockDict at: propertyMapping vpProperty) addVPLabel: (propertyMapping getMorphFor: self origin)]]
 ]
 
 { #category : #accessing }
@@ -446,10 +442,7 @@ SBVisualPrimitive >> middleLabelPositions [
 { #category : #accessing }
 SBVisualPrimitive >> morphAt: aSymbol [
 
-	(self labelPositions includes: aSymbol) ifTrue: [
-		^ self blockDict
-			at: aSymbol
-			ifAbsent: [nil]].
+	(self labelPositions includes: aSymbol) ifTrue: [^ self blockDict at: aSymbol ifPresent: [:block | block firstSubmorph] ifAbsent: [nil]].
 	aSymbol = #connections ifTrue: [^ self connections].
 	aSymbol = #shape ifTrue: [^ self shape]
 ]
@@ -603,7 +596,7 @@ SBVisualPrimitive >> shape: aMorph [
 	innerBlockWrapper removeAllMorphs.
 	innerBlock := aMorph.
 	innerBlockWrapper addMorphBack: innerBlock.
-	innerLabel ifNotNil: [:label | innerBlock addMorphBack: label]
+	innerLabel ifNotNil: [:label | innerBlock addVPLabel: label]
 ]
 
 { #category : #'as yet unclassified' }

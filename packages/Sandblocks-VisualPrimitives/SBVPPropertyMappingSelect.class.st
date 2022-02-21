@@ -15,8 +15,7 @@ Class {
 SBVPPropertyMappingSelect class >> defaultSetterBlockWith: aSymbol for: anotherSymbol [
 
 	^ aSymbol isSymbol
-		ifTrue: [[:object :vp |
-				object perform: aSymbol asSimpleSetter with: (vp morphAt: anotherSymbol) currentChoice]]
+		ifTrue: [[:object :vp | object perform: aSymbol asSimpleSetter with: (vp morphAt: anotherSymbol) currentChoice]]
 		ifFalse: [[:object :vp | ]]
 ]
 

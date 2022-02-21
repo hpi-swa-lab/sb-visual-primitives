@@ -29,6 +29,23 @@ SBVPSelectProperty class >> choices: aCollection representations: anotherCollect
 ]
 
 { #category : #accessing }
+SBVPSelectProperty >> addVPLabel: aMorph [
+
+	| temp |
+	^ self hasSubmorphs
+		ifTrue: [
+			temp := self submorphs first.
+			temp layoutPolicy ifNil: [
+				temp
+					changeTableLayout;
+					listCentering: #center;
+					wrapCentering: #center;
+					shrinkWrap].
+			temp addVPLabel: aMorph]
+		ifFalse: [super addVPLabel: aMorph]
+]
+
+{ #category : #accessing }
 SBVPSelectProperty >> balloonText [
 
 	^ 'Double click to change value.'
@@ -137,7 +154,7 @@ SBVPSelectProperty >> title [
 { #category : #accessing }
 SBVPSelectProperty >> title: aString [
 
-	title := aString.
+	title := aString
 ]
 
 { #category : #accessing }

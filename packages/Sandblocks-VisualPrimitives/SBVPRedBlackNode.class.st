@@ -46,14 +46,12 @@ SBVPRedBlackNode class >> exampleRootWithTwoChildren [
 
 	| n1 n2 root |
 	root := SBVPRedBlackNode new.
-	root key: 'Carl-Friedrich'.
+	root key: 4.
 	n1 := SBVPRedBlackNode new.
-	n1 key: 'peter'.
+	n1 key: 1.
 	n2 := SBVPRedBlackNode new.
-	n2 key: 'n2'.
-	root
-		left: n1;
-		right: n2.
+	n2 key: 2.
+	root children: {n1. n2}.
 	^ root
 ]
 
@@ -67,11 +65,13 @@ SBVPRedBlackNode class >> key: anObject [
 SBVPRedBlackNode class >> visualPrimitiveMapping [
 
 	^ {
-		SBVPPropertyMappingSelect
-			property: #isRed
-			vpProperty: #shape
-			choices: {true. false}
-			representations: {CircleMorph new color: Color red. CircleMorph new color: Color black}}
+		#shape
+			vpSelectFrom: {true. false}
+			displayAs: {CircleMorph new color: Color red. CircleMorph new color: Color black}
+			for: #isRed.
+		#connections vpConnectionFor: #children.
+		#innerLabel vpNumberFor: #key.
+		#identityLabelPosition vpConstant: #leftLabel}
 ]
 
 { #category : #nil }
@@ -95,7 +95,7 @@ SBVPRedBlackNode >> children [
 { #category : #accessing }
 SBVPRedBlackNode >> children: aCollection [
 
-	children := aCollection.
+	children := aCollection
 ]
 
 { #category : #nil }
@@ -115,7 +115,7 @@ SBVPRedBlackNode >> isRed [
 { #category : #accessing }
 SBVPRedBlackNode >> isRed: aBoolean [
 
-	isRed := aBoolean.
+	isRed := aBoolean
 ]
 
 { #category : #accessing }
@@ -127,7 +127,7 @@ SBVPRedBlackNode >> key [
 { #category : #accessing }
 SBVPRedBlackNode >> key: anObject [
 
-	key := anObject.
+	key := anObject
 ]
 
 { #category : #accessing }
@@ -138,7 +138,8 @@ SBVPRedBlackNode >> parent [
 
 { #category : #accessing }
 SBVPRedBlackNode >> parent: aNode [
-	parent := aNode.
+
+	parent := aNode
 ]
 
 { #category : #accessing }
@@ -153,7 +154,8 @@ SBVPRedBlackNode >> writeSourceOn: aStream [
 		nextPutAll: ' children: {'.
 	
 	self children do: [:child | child writeSourceOn: aStream].
-	aStream nextPutAll:  '}; isRed: ';
+	aStream
+		nextPutAll: '}; isRed: ';
 		store: self isRed.
 	
 	aStream nextPut: $)
