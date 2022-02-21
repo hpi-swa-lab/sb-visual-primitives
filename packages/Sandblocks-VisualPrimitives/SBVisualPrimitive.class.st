@@ -443,6 +443,17 @@ SBVisualPrimitive >> middleLabelPositions [
 	^ {#leftLabel. #innerLabel. #rightLabel}
 ]
 
+{ #category : #accessing }
+SBVisualPrimitive >> morphAt: aSymbol [
+
+	(self labelPositions includes: aSymbol) ifTrue: [
+		^ self blockDict
+			at: aSymbol
+			ifAbsent: [nil]].
+	aSymbol = #connections ifTrue: [^ self connections].
+	aSymbol = #shape ifTrue: [^ self shape]
+]
+
 { #category : #'as yet unclassified' }
 SBVisualPrimitive >> moveCursorDown [
 	<action>

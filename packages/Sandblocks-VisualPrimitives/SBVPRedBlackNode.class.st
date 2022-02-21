@@ -1,0 +1,160 @@
+Class {
+	#name : #SBVPRedBlackNode,
+	#superclass : #Object,
+	#instVars : [
+		'children',
+		'parent',
+		'key',
+		'isRed'
+	],
+	#category : #'Sandblocks-VisualPrimitives-Fixtures'
+}
+
+{ #category : #'as yet unclassified' }
+SBVPRedBlackNode class >> buildTree: aCollection [
+
+	^ (self buildTreePrivate: aCollection) first
+]
+
+{ #category : #'as yet unclassified' }
+SBVPRedBlackNode class >> buildTreePrivate: aCollection [
+
+	^ aCollection collect: [:element |
+		element isVariableBinding
+			ifTrue: [(self key: element key) children: (self buildTreePrivate: element value)]
+			ifFalse: [self key: element]]
+]
+
+{ #category : #'as yet unclassified' }
+SBVPRedBlackNode class >> connectionsMappingEntry [
+
+	^ SBVPPropertyMapping
+		getter: [:object | {object left. object right} reject: [:connection | connection isNil]]
+		setter: [:object :vp |
+			vp connections size >= 1
+				ifTrue: [object left: vp connections first getObjectFromVisualPrimitive]
+				ifFalse: [object left: nil].
+			vp connections size >= 2
+				ifTrue: [object right: vp connections second getObjectFromVisualPrimitive]
+				ifFalse: [object right: nil]]
+		vpProperty: #connections
+		name: 'connections'
+]
+
+{ #category : #'as yet unclassified' }
+SBVPRedBlackNode class >> exampleRootWithTwoChildren [
+
+	| n1 n2 root |
+	root := SBVPRedBlackNode new.
+	root key: 'Carl-Friedrich'.
+	n1 := SBVPRedBlackNode new.
+	n1 key: 'peter'.
+	n2 := SBVPRedBlackNode new.
+	n2 key: 'n2'.
+	root
+		left: n1;
+		right: n2.
+	^ root
+]
+
+{ #category : #'as yet unclassified' }
+SBVPRedBlackNode class >> key: anObject [
+
+	^ self new key: anObject
+]
+
+{ #category : #nil }
+SBVPRedBlackNode class >> visualPrimitiveMapping [
+
+	^ {
+		SBVPPropertyMappingSelect
+			property: #isRed
+			vpProperty: #shape
+			choices: {true. false}
+			representations: {CircleMorph new color: Color red. CircleMorph new color: Color black}}
+]
+
+{ #category : #nil }
+SBVPRedBlackNode >> add: aNode [
+
+	self
+		example: [
+			((SBVPRedBlackNode key: nil)
+				children: {};
+				isRed: true) showAsVisualPrimitive]
+		args: [{'Hallo'}]
+		label: 'example'
+]
+
+{ #category : #accessing }
+SBVPRedBlackNode >> children [
+
+	^ children
+]
+
+{ #category : #accessing }
+SBVPRedBlackNode >> children: aCollection [
+
+	children := aCollection.
+]
+
+{ #category : #nil }
+SBVPRedBlackNode >> initialize [
+
+	super initialize.
+	self isRed: true.
+	self children: OrderedCollection new
+]
+
+{ #category : #accessing }
+SBVPRedBlackNode >> isRed [
+
+	^ isRed
+]
+
+{ #category : #accessing }
+SBVPRedBlackNode >> isRed: aBoolean [
+
+	isRed := aBoolean.
+]
+
+{ #category : #accessing }
+SBVPRedBlackNode >> key [
+
+	^ key
+]
+
+{ #category : #accessing }
+SBVPRedBlackNode >> key: anObject [
+
+	key := anObject.
+]
+
+{ #category : #accessing }
+SBVPRedBlackNode >> parent [
+
+	^ parent
+]
+
+{ #category : #accessing }
+SBVPRedBlackNode >> parent: aNode [
+	parent := aNode.
+]
+
+{ #category : #accessing }
+SBVPRedBlackNode >> writeSourceOn: aStream [
+
+	aStream
+		nextPutAll: '((';
+		nextPutAll: self className;
+		nextPutAll: ' key: ';
+		store: self key;
+		nextPut: $);
+		nextPutAll: ' children: {'.
+	
+	self children do: [:child | child writeSourceOn: aStream].
+	aStream nextPutAll:  '}; isRed: ';
+		store: self isRed.
+	
+	aStream nextPut: $)
+]

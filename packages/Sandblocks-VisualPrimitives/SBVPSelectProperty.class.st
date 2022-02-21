@@ -9,13 +9,14 @@ Class {
 	#instVars : [
 		'currentValueIndex',
 		'choices',
-		'representations'
+		'representations',
+		'title'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
 
 { #category : #'as yet unclassified' }
-SBVPSelectProperty class >> choices: aCollection representations: anotherCollection initialValue: anObject [
+SBVPSelectProperty class >> choices: aCollection representations: anotherCollection initialValue: anObject title: aString [
 
 	| index |
 	index := aCollection indexOf: anObject.
@@ -23,7 +24,8 @@ SBVPSelectProperty class >> choices: aCollection representations: anotherCollect
 	^ SBVPSelectProperty new
 		choices: aCollection;
 		representations: anotherCollection;
-		currentValueIndex: index
+		currentValueIndex: index;
+		title: aString
 ]
 
 { #category : #accessing }
@@ -81,7 +83,7 @@ SBVPSelectProperty >> currentValueIndex: anObject [
 SBVPSelectProperty >> doubleClick: anEvent [
 
 	| selectedIndex |
-	selectedIndex := UIManager default chooseFrom: self choices.
+	selectedIndex := UIManager default chooseFrom: self choices title: self title.
 	(selectedIndex <= self choices size and: [selectedIndex > 0]) ifTrue: [
 		self sandblockEditor do: (SBMutatePropertyCommand new
 			target: self;
@@ -124,6 +126,18 @@ SBVPSelectProperty >> representations [
 SBVPSelectProperty >> representations: anObject [
 
 	representations := anObject
+]
+
+{ #category : #accessing }
+SBVPSelectProperty >> title [
+
+	^ title
+]
+
+{ #category : #accessing }
+SBVPSelectProperty >> title: aString [
+
+	title := aString.
 ]
 
 { #category : #accessing }

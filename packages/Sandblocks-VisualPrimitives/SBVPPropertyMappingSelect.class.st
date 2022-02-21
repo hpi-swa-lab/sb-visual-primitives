@@ -12,6 +12,15 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBVPPropertyMappingSelect class >> defaultSetterBlockWith: aSymbol for: anotherSymbol [
+
+	^ aSymbol isSymbol
+		ifTrue: [[:object :vp |
+				object perform: aSymbol asSimpleSetter with: (vp morphAt: anotherSymbol) currentChoice]]
+		ifFalse: [[:object :vp | ]]
+]
+
+{ #category : #'as yet unclassified' }
 SBVPPropertyMappingSelect class >> property: aSymbol vpProperty: anotherSymbol choices: aCollection [
 
 	^ self property: aSymbol vpProperty: anotherSymbol choices: aCollection representations: aCollection
@@ -51,6 +60,7 @@ SBVPPropertyMappingSelect >> getMorphForValue: anObject [
 		choices: self choices
 		representations: self representations
 		initialValue: anObject
+		title: self name
 ]
 
 { #category : #accessing }
