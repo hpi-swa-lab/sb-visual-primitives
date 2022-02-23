@@ -160,9 +160,9 @@ SBTreeDecorator >> change [
 ]
 
 { #category : #accessing }
-SBTreeDecorator >> change: anObject [
+SBTreeDecorator >> change: aNumber [
 
-	change := anObject
+	change := aNumber
 ]
 
 { #category : #accessing }
@@ -172,9 +172,9 @@ SBTreeDecorator >> children [
 ]
 
 { #category : #accessing }
-SBTreeDecorator >> children: anObject [
+SBTreeDecorator >> children: aCollection [
 
-	children := anObject
+	children := aCollection
 ]
 
 { #category : #accessing }
@@ -197,9 +197,9 @@ SBTreeDecorator >> depth [
 ]
 
 { #category : #accessing }
-SBTreeDecorator >> depth: aValue [
+SBTreeDecorator >> depth: aNumber [
 
-	depth := aValue
+	depth := aNumber
 ]
 
 { #category : #layouting }
@@ -294,9 +294,9 @@ SBTreeDecorator >> mod [
 ]
 
 { #category : #accessing }
-SBTreeDecorator >> mod: anObject [
+SBTreeDecorator >> mod: aNumber [
 
-	mod := anObject
+	mod := aNumber
 ]
 
 { #category : #layouting }
@@ -390,9 +390,9 @@ SBTreeDecorator >> shift [
 ]
 
 { #category : #accessing }
-SBTreeDecorator >> shift: anObject [
+SBTreeDecorator >> shift: aNumber [
 
-	shift := anObject
+	shift := aNumber
 ]
 
 { #category : #children }
@@ -420,7 +420,7 @@ SBTreeDecorator >> x [
 ]
 
 { #category : #accessing }
-SBTreeDecorator >> x: aValue [
+SBTreeDecorator >> x: aNumber [
 
-	x := aValue
+	x := aNumber
 ]

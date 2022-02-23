@@ -81,9 +81,9 @@ SBConnectDecorator >> connectors [
 ]
 
 { #category : #accessing }
-SBConnectDecorator >> connectors: anObject [
+SBConnectDecorator >> connectors: aSet [
 
-	connectors := anObject
+	connectors := aSet
 ]
 
 { #category : #'initialize-release' }
@@ -157,9 +157,9 @@ SBConnectDecorator >> isConnecting [
 ]
 
 { #category : #accessing }
-SBConnectDecorator >> isConnecting: anObject [
+SBConnectDecorator >> isConnecting: aBoolean [
 
-	isConnecting := anObject
+	isConnecting := aBoolean
 ]
 
 { #category : #accessing }

@@ -45,18 +45,18 @@ SBVPQuery class >> exampleExtractLeafOf: salzstangen [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPQuery class >> input: anInputVisualizer [
+SBVPQuery class >> input: anSBVPVisualizer [
 	" marker "
 
-	^ (self new input: anInputVisualizer) query
+	^ (self new input: anSBVPVisualizer) query
 ]
 
 { #category : #'as yet unclassified' }
-SBVPQuery class >> input: anInputVisualizer strategy: aDict [
+SBVPQuery class >> input: anSBVPVisualizer strategy: aDict [
 	" marker "
 
 	^ (self new
-		input: anInputVisualizer;
+		input: anSBVPVisualizer;
 		strategy: aDict) query
 ]
 
@@ -100,10 +100,10 @@ SBVPQuery >> input [
 ]
 
 { #category : #accessing }
-SBVPQuery >> input: anSBBlock [
+SBVPQuery >> input: anSBVPVisualizer [
 
-	self addMorph: anSBBlock.
-	input := anSBBlock
+	self addMorph: anSBVPVisualizer.
+	input := anSBVPVisualizer
 ]
 
 { #category : #'as yet unclassified' }
@@ -113,11 +113,11 @@ SBVPQuery >> query [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPQuery >> query: aDummyNode [
+SBVPQuery >> query: anSBVPDummyNode [
 
 	| matcher match |
 	matcher := (SBVPPatternMatcher
-		input: aDummyNode asVisualPrimitive
+		input: anSBVPDummyNode asVisualPrimitive
 		pattern: self input) strategy: self strategy.
 	match := matcher getNextMatch.
 	^ match ifNil: [nil]
@@ -130,9 +130,9 @@ SBVPQuery >> strategy [
 ]
 
 { #category : #accessing }
-SBVPQuery >> strategy: anObject [
+SBVPQuery >> strategy: aDict [
 
-	strategy := anObject
+	strategy := aDict
 ]
 
 { #category : #'as yet unclassified' }

@@ -45,9 +45,9 @@ SBVPDeleteCommand >> oldSiblingIndex [
 ]
 
 { #category : #accessing }
-SBVPDeleteCommand >> oldSiblingIndex: anObject [
+SBVPDeleteCommand >> oldSiblingIndex: aNumber [
 
-	oldSiblingIndex := anObject
+	oldSiblingIndex := aNumber
 ]
 
 { #category : #'do-undo' }

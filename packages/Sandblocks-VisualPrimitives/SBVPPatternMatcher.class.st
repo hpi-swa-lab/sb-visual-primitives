@@ -4,7 +4,6 @@ Class {
 	#instVars : [
 		'pattern',
 		'searchStack',
-		'variableCount',
 		'performedMatch',
 		'strategy',
 		'visitedPrimitives'
@@ -41,12 +40,12 @@ SBVPPatternMatcher >> currentPrimitive [
 ]
 
 { #category : #accessing }
-SBVPPatternMatcher >> currentPrimitive: aPrimitive [
+SBVPPatternMatcher >> currentPrimitive: aVisualPrimitive [
 
 	self searchStack: LinkedList new.
-	self searchStack addLast: aPrimitive.
+	self searchStack addLast: aVisualPrimitive.
 	self visitedPrimitives: Set new.
-	self visitedPrimitives add: aPrimitive
+	self visitedPrimitives add: aVisualPrimitive
 ]
 
 { #category : #accessing }
@@ -132,9 +131,9 @@ SBVPPatternMatcher >> pattern [
 ]
 
 { #category : #accessing }
-SBVPPatternMatcher >> pattern: anObject [
+SBVPPatternMatcher >> pattern: aPattern [
 
-	pattern := anObject
+	pattern := aPattern
 ]
 
 { #category : #accessing }
@@ -144,9 +143,9 @@ SBVPPatternMatcher >> performedMatch [
 ]
 
 { #category : #accessing }
-SBVPPatternMatcher >> performedMatch: anObject [
+SBVPPatternMatcher >> performedMatch: aBoolean [
 
-	performedMatch := anObject
+	performedMatch := aBoolean
 ]
 
 { #category : #accessing }
@@ -156,9 +155,9 @@ SBVPPatternMatcher >> searchStack [
 ]
 
 { #category : #accessing }
-SBVPPatternMatcher >> searchStack: anObject [
+SBVPPatternMatcher >> searchStack: aLinkedList [
 
-	searchStack := anObject
+	searchStack := aLinkedList
 ]
 
 { #category : #accessing }
@@ -174,25 +173,13 @@ SBVPPatternMatcher >> strategy: aDict [
 ]
 
 { #category : #accessing }
-SBVPPatternMatcher >> variableCount [
-
-	^ variableCount
-]
-
-{ #category : #accessing }
-SBVPPatternMatcher >> variableCount: anObject [
-
-	variableCount := anObject
-]
-
-{ #category : #accessing }
 SBVPPatternMatcher >> visitedPrimitives [
 
 	^ visitedPrimitives
 ]
 
 { #category : #accessing }
-SBVPPatternMatcher >> visitedPrimitives: anObject [
+SBVPPatternMatcher >> visitedPrimitives: aSet [
 
-	visitedPrimitives := anObject
+	visitedPrimitives := aSet
 ]

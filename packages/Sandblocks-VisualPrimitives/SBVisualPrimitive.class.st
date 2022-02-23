@@ -589,7 +589,8 @@ SBVisualPrimitive >> shape: aMorph [
 			changeTableLayout;
 			listCentering: #center;
 			wrapCentering: #center;
-			shrinkWrap].
+			shrinkWrap;
+			layoutInset: 8].
 	innerBlockWrapper := self blockDict at: #shape.
 	innerLabel := self innerLabel.
 	self blockDict at: #innerLabel put: aMorph.

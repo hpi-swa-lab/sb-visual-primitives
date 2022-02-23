@@ -198,12 +198,6 @@ SBVPCase class >> suggestion [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPCase >> addSubPattern: aBlock [
-
-	
-]
-
-{ #category : #'as yet unclassified' }
 SBVPCase >> addToggleButtonFor: aSymbol [
 
 	| correctIcon correctText button isExplicit |
@@ -371,9 +365,9 @@ SBVPCase >> input [
 ]
 
 { #category : #accessing }
-SBVPCase >> input: anObject [
+SBVPCase >> input: anSBBlock [
 
-	input := anObject.
+	input := anSBBlock.
 	"maybe buildImplicitChildren here"
 	self flag: #TODO
 ]
@@ -437,9 +431,9 @@ SBVPCase >> output [
 ]
 
 { #category : #accessing }
-SBVPCase >> output: anObject [
+SBVPCase >> output: anSBBlock [
 
-	output := anObject.
+	output := anSBBlock.
 	"maybe buildImplicitChildren here"
 	self flag: #TODO
 ]
