@@ -14,7 +14,7 @@ SBVPPropertyMappingConnections class >> defaultGetterBlockWith: aSymbol [
 		ifTrue: [
 			[:object | | connections |
 				connections := object perform: aSymbol asSimpleGetter.
-				connections ifNil: [{}] ifNotNil: [connections reject: [:entry | entry isNil]]]]
+				connections ifNil: [nil] ifNotNil: [connections reject: [:entry | entry isNil]]]]
 		ifFalse: [[:object | aSymbol]]
 ]
 
@@ -23,10 +23,9 @@ SBVPPropertyMappingConnections class >> defaultSetterBlockWith: aSymbol for: ign
 
 	^ aSymbol isSymbol
 		ifTrue: [
-			[:object :vp |
-				object
-					perform: aSymbol asSimpleSetter
-					with: ((vp propertyAt: #connections) collect: [:connection | connection getObjectFromVisualPrimitive])]]
+			[:object :vp | | connections |
+				connections := (vp propertyAt: #connections) collect: [:connection | connection getObjectFromVisualPrimitive].
+				(connections notNil and: [connections notEmpty]) ifTrue: [object perform: aSymbol asSimpleSetter with: connections]]]
 		ifFalse: [[:object :vp | ]]
 ]
 

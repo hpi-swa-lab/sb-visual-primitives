@@ -8,6 +8,7 @@ SBStASTNode >> visualize [
 	visualizer := [(SBVPVisualizer code: self copy showCode: false) isImplicit: true]
 		on: Error
 		do: [^ false].
+	
 	self sandblockEditor do: (SBReplaceCommand new
 		target: self;
 		replacer: visualizer;

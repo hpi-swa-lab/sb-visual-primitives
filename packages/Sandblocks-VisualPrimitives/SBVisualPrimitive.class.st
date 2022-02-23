@@ -151,6 +151,7 @@ SBVisualPrimitive >> addPropertyMapping: anSBVPPropertyMapping [
 	| value propertyMapping child |
 	propertyMapping := anSBVPPropertyMapping asPropertyMapping.
 	value := self valueFromPropertyMapping: propertyMapping.
+	
 	self labelDict at: propertyMapping vpProperty put: value.
 	
 	propertyMapping vpProperty

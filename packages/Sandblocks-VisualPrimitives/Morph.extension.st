@@ -3,6 +3,7 @@ Extension { #name : #Morph }
 { #category : #'*Sandblocks-VisualPrimitives' }
 Morph >> addVPLabel: aMorph [
 
+	aMorph ifNil: [^nil].
 	self removeAllMorphs.
 	^ self addMorphBack: aMorph
 

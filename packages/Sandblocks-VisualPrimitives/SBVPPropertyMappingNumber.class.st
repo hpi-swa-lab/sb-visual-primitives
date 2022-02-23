@@ -12,7 +12,7 @@ Class {
 SBVPPropertyMappingNumber class >> defaultSetterBlockWith: aSymbol for: anotherSymbol [
 
 	^ aSymbol isSymbol
-		ifTrue: [[:object :vp | object perform: aSymbol asSimpleSetter with: (vp propertyAt: anotherSymbol) asNumber]]
+		ifTrue: [[:object :vp | (vp propertyAt: anotherSymbol) ifNotNil: [object perform: aSymbol asSimpleSetter with: (vp propertyAt: anotherSymbol) asNumber]]]
 		ifFalse: [
 			[:object :vp | "do nothing, because value should be constant"
 			]]
