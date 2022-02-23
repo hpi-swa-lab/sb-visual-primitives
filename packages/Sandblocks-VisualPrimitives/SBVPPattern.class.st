@@ -105,7 +105,9 @@ SBVPPattern >> parentCase [
 
 	| case |
 	case := self root parentSandblock.
-	^ (case isKindOf: SBVPCase) ifTrue: [case] ifFalse: [nil]
+	^ ((case isKindOf: SBVPCase) or: [case isKindOf: SBVPQuery])
+		ifTrue: [case]
+		ifFalse: [nil]
 ]
 
 { #category : #'as yet unclassified' }

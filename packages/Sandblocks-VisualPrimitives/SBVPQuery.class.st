@@ -34,10 +34,32 @@ SBVPQuery class >> exampleExtractLeafOf: salzstangen [
 	[
 		SBVPQuery
 			input: (SBVPGroupPattern patterns: {
-				SBVPBindingPattern constant: currentSnack connections: {
+				SBVPBindingPattern bindingDict: {#innerLabel -> #a} connections: {
 					SBVPBindingPattern
 						writeBackClosure: [:var | gerhard := var]
-						connections: {SBVPEllipsisPattern bindingIndex: #a}}})
+						connections: {SBVPEllipsisPattern expressionDict: {#identity -> [currentSnack]}}}})
+			strategy: {#explicitRootMatching -> true} asDictionary] whileNotNil: [
+		Transcript showln: gerhard key.
+		currentSnack := gerhard].
+	^ gerhard
+]
+
+{ #category : #'as yet unclassified' }
+SBVPQuery class >> exampleTwo: salzstangen [
+
+	| gerhard currentSnack |
+	SBExample
+		self: [SBVPQuery]
+		args: [{SBVPDummyNode buildTree: {9 -> {10 -> {7}}}}]
+		label: 'example'.
+	currentSnack := salzstangen.
+	[
+		SBVPQuery
+			input: (SBVPGroupPattern patterns: {
+				SBVPBindingPattern
+					bindingDict: {#identity -> #c}
+					expressionDict: {#topLeftLabel -> ['REPEAT1']}
+					connections: {SBVPBindingPattern bindingDict: {#identity -> #b}}})
 			strategy: {#explicitRootMatching -> true} asDictionary] whileNotNil: [
 		Transcript showln: gerhard key.
 		currentSnack := gerhard].
@@ -73,12 +95,21 @@ SBVPQuery class >> matches: aBlock [
 { #category : #'as yet unclassified' }
 SBVPQuery class >> newFor: aBlock [
 
+	| input |
+	input := aBlock arguments first.
+	input isVisualPrimitive ifFalse: [input := input evaluate].
 	^ aBlock arguments size > 1
 		ifTrue: [
 			self new
 				strategy: aBlock arguments second evaluate;
-				input: aBlock arguments first]
-		ifFalse: [self new input: aBlock arguments first]
+				input: input]
+		ifFalse: [self new input: input]
+]
+
+{ #category : #'as yet unclassified' }
+SBVPQuery >> defaultPatternVisualizationClass [
+
+	^ SBVPDummyNode
 ]
 
 { #category : #'as yet unclassified' }
@@ -100,15 +131,26 @@ SBVPQuery >> input [
 ]
 
 { #category : #accessing }
-SBVPQuery >> input: anSBVPVisualizer [
+SBVPQuery >> input: anSBVPGroupPattern [
 
-	self addMorph: anSBVPVisualizer.
-	input := anSBVPVisualizer
+	input := anSBVPGroupPattern
+]
+
+{ #category : #accessing }
+SBVPQuery >> noteNewOwner: aMorph [
+
+	| row |
+	self addMorphBack: (row := SBRow new
+		cellInset: 3;
+		cellPositioning: #center).
+	
+	row addMorphBack: self input
 ]
 
 { #category : #'as yet unclassified' }
 SBVPQuery >> query [
 
+	self halt.
 	^ self query: self input findOriginRoot
 ]
 

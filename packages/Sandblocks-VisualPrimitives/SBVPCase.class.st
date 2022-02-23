@@ -170,6 +170,7 @@ SBVPCase class >> newFor: aBlock [
 			strategy := aBlock arguments third evaluate.
 			aBlock arguments size > 3
 				ifTrue: [
+					self halt.
 					self
 						input: input
 						output: output
@@ -411,7 +412,7 @@ SBVPCase >> noteNewOwner: aMorph [
 		addMorphBack: (row := SBRow new
 			cellInset: 3;
 			cellPositioning: #center)).
-	
+	self halt.
 	row
 		addMorphBack: self input;
 		addMorphBack: SBIcon iconArrowRight;

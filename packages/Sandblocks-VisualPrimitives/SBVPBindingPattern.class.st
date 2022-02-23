@@ -178,7 +178,7 @@ SBVPBindingPattern class >> identityName [
 SBVPBindingPattern class >> matches: aBlock [
 	"match any resonable combination of constructor arguments"
 
-	^ (({#bindingDict:. #expressionDict:. #bindingDict:expressionDict:} gather: [:symbol | {symbol. symbol, #connections:}]) gather: [:symbol | {symbol. symbol, #visualizingClass:}]) anySatisfy: [:methodName | self selector: methodName receiverMatches: aBlock]
+	^ (({#bindingDict:. #expressionDict:. #bindingDict:expressionDict:} gather: [:symbol | {symbol. symbol, #connections:}]) gather: [:symbol | {symbol. symbol, #visualizingClass:}]), {#writeBackClosure:. #writeBackClosure:connections:} anySatisfy: [:methodName | self selector: methodName receiverMatches: aBlock]
 ]
 
 { #category : #'as yet unclassified' }
