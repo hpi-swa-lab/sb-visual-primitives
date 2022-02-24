@@ -1,5 +1,5 @@
 Class {
-	#name : #SBVPTomGrammarObject,
+	#name : #SBVPGrammarObject,
 	#superclass : #Object,
 	#instVars : [
 		'type',
@@ -12,18 +12,18 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBVPTomGrammarObject class >> fromJsonObject: aJsonObject [
+SBVPGrammarObject class >> fromJsonObject: aJsonObject [
 
-	SBVPTomGrammarObject new
+	SBVPGrammarObject new
 		type: (aJsonObject at: 'type');
-		members: ((aJsonObject at: 'members') do: [:member | SBVPTomGrammarObject fromJsonObject: member]);
-		content: (SBVPTomGrammarObject fromJsonObject: (aJsonObject at: 'content'));
+		members: ((aJsonObject at: 'members') do: [:member | SBVPGrammarObject fromJsonObject: member]);
+		content: (SBVPGrammarObject fromJsonObject: (aJsonObject at: 'content'));
 		objectName: (aJsonObject at: 'name');
 		objectValue: (aJsonObject at: 'value')
 ]
 
 { #category : #'as yet unclassified' }
-SBVPTomGrammarObject class >> visualPrimitiveMapping [
+SBVPGrammarObject class >> visualPrimitiveMapping [
 
 	^ {
 		#shape vpConstant: CircleMorph new.
@@ -44,19 +44,19 @@ SBVPTomGrammarObject class >> visualPrimitiveMapping [
 ]
 
 { #category : #accessing }
-SBVPTomGrammarObject >> content [
+SBVPGrammarObject >> content [
 
 	^ content
 ]
 
 { #category : #accessing }
-SBVPTomGrammarObject >> content: anObject [
+SBVPGrammarObject >> content: anObject [
 
 	content := anObject
 ]
 
 { #category : #'as yet unclassified' }
-SBVPTomGrammarObject >> initialize [
+SBVPGrammarObject >> initialize [
 
 	members := nil.
 	content := nil.
@@ -66,55 +66,55 @@ SBVPTomGrammarObject >> initialize [
 ]
 
 { #category : #accessing }
-SBVPTomGrammarObject >> members [
+SBVPGrammarObject >> members [
 
 	^ members
 ]
 
 { #category : #accessing }
-SBVPTomGrammarObject >> members: anArray [
+SBVPGrammarObject >> members: anArray [
 
 	members := anArray
 ]
 
 { #category : #accessing }
-SBVPTomGrammarObject >> objectName [
+SBVPGrammarObject >> objectName [
 
 	^ objectName
 ]
 
 { #category : #accessing }
-SBVPTomGrammarObject >> objectName: aString [
+SBVPGrammarObject >> objectName: aString [
 
 	objectName := aString
 ]
 
 { #category : #accessing }
-SBVPTomGrammarObject >> objectValue [
+SBVPGrammarObject >> objectValue [
 
 	^ objectValue
 ]
 
 { #category : #accessing }
-SBVPTomGrammarObject >> objectValue: aString [
+SBVPGrammarObject >> objectValue: aString [
 
 	objectValue := aString
 ]
 
 { #category : #accessing }
-SBVPTomGrammarObject >> type [
+SBVPGrammarObject >> type [
 
 	^ type
 ]
 
 { #category : #accessing }
-SBVPTomGrammarObject >> type: aString [
+SBVPGrammarObject >> type: aString [
 
 	type := aString
 ]
 
 { #category : #accessing }
-SBVPTomGrammarObject >> writeSourceOn: aStream [
+SBVPGrammarObject >> writeSourceOn: aStream [
 
 	aStream
 		nextPutAll: self className;

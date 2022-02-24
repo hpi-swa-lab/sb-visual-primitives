@@ -150,7 +150,6 @@ SBVPQuery >> noteNewOwner: aMorph [
 { #category : #'as yet unclassified' }
 SBVPQuery >> query [
 
-	self halt.
 	^ self query: self input findOriginRoot
 ]
 

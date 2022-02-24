@@ -219,23 +219,23 @@ SBVPVisualizer >> exampleSimpleRectangle [
 SBVPVisualizer >> exampleSimpleTomGrammar [
 
 	SBVPVisualizer
-		code: (SBVPTomGrammarObject new
+		code: (SBVPGrammarObject new
 			objectName: '';
 			type: 'SEQ';
 			members: {
-				SBVPTomGrammarObject new
+				SBVPGrammarObject new
 					objectName: 'aahh';
 					type: 'SYMBOL';
 					members: {}.
-				SBVPTomGrammarObject new
+				SBVPGrammarObject new
 					objectName: 'bbb';
 					type: 'REPEAT';
 					members: {
-						SBVPTomGrammarObject new
+						SBVPGrammarObject new
 							objectName: 'aahh';
 							type: 'SYMBOL';
 							members: {}};
-					content: (SBVPTomGrammarObject new
+					content: (SBVPGrammarObject new
 						objectName: 'aahh';
 						type: 'SYMBOL')})
 		showCode: false

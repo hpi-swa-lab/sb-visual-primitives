@@ -266,28 +266,28 @@ SBVPExecuter class >> exampleGrammarRuleMergeRepeat: aGrammarObject [
 		example: [SBVPExecuter]
 		args: [
 			{
-				(SBVPTomGrammarObject new
+				(SBVPGrammarObject new
 					objectName: '';
 					type: 'SEQ';
 					members: {
-						SBVPTomGrammarObject new
+						SBVPGrammarObject new
 							objectName: 'aahh';
 							type: 'SYMBOL';
 							members: {}.
-						SBVPTomGrammarObject new
+						SBVPGrammarObject new
 							objectName: 'bbbb ';
 							type: 'REPEAT';
 							members: {
-								SBVPTomGrammarObject new
+								SBVPGrammarObject new
 									objectName: 'aahh';
 									type: 'SYMBOL';
 									members: {}};
-							content: (SBVPTomGrammarObject new
+							content: (SBVPGrammarObject new
 								objectName: 'aahh';
 								type: 'SYMBOL';
 								members: {})}) showAsVisualPrimitive}]
 		label: 'example'.
-	biop := SBVPTomGrammarObject new.
+	biop := SBVPGrammarObject new.
 	biop type: 'REPEAT1'.
 	rüdigerString := 'SEQ'.
 	^ (SBVPCase
@@ -316,7 +316,7 @@ SBVPExecuter class >> exampleGrammarRuleMergeRepeat: aGrammarObject [
 			add: #explicitRootMatching -> false;
 			add: #explicitChildrenMatching -> true;
 			yourself)
-		visualizePatternsAs: SBVPTomGrammarObject) replaceAllMatches: aGrammarObject
+		visualizePatternsAs: SBVPGrammarObject) replaceAllMatches: aGrammarObject
 ]
 
 { #category : #'as yet unclassified' }
@@ -327,19 +327,19 @@ SBVPExecuter class >> exampleGrammarRuleWeird: aGrammarObject [
 		example: [SBVPExecuter]
 		args: [
 			{
-				(SBVPTomGrammarObject new
+				(SBVPGrammarObject new
 					type: 'SEQ';
 					members: {
-						SBVPTomGrammarObject new
+						SBVPGrammarObject new
 							type: 'SYMBOL';
 							objectName: 'aahh'.
-						SBVPTomGrammarObject new
+						SBVPGrammarObject new
 							type: 'REPEAT';
-							content: (SBVPTomGrammarObject new
+							content: (SBVPGrammarObject new
 								type: 'SYMBOL';
 								objectName: 'aahh')}) showAsVisualPrimitive}]
 		label: 'example'.
-	bio := SBVPTomGrammarObject new.
+	bio := SBVPGrammarObject new.
 	bio type: 'REPEAT1'.
 	^ (SBVPCase
 		input: (SBVPGroupPattern patterns: {
@@ -364,7 +364,7 @@ SBVPExecuter class >> exampleGrammarRuleWeird: aGrammarObject [
 			add: #explicitRootMatching -> false;
 			add: #explicitChildrenMatching -> true;
 			yourself)
-		visualizePatternsAs: SBVPTomGrammarObject) replaceAllMatches: aGrammarObject
+		visualizePatternsAs: SBVPGrammarObject) replaceAllMatches: aGrammarObject
 ]
 
 { #category : #'as yet unclassified' }
