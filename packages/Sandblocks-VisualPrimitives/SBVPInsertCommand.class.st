@@ -106,7 +106,7 @@ SBVPInsertCommand >> siblingIndex: anObject [
 SBVPInsertCommand >> undo [
 
 	| case root |
-	case := self morph parentCase.
+	case := self morph parentCaseOrQuery.
 	root := self morph root.
 	self parent
 		ifNotNil: [

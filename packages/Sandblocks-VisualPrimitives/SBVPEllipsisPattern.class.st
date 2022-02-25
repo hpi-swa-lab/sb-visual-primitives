@@ -149,7 +149,7 @@ SBVPEllipsisPattern >> isImplicitChild: aBoolean [
 		ifTrue: [setColor value: Color gray]
 		ifFalse: [setColor value: Color black].
 	"If called with isImplicitChild not changing, this leads to an infinite loop."
-	self parentCase ifNotNil: [:parentCase | parentCase toggleImplicitChildTo: self isImplicitChild withBinding: prevBindingIndex]
+	self parentCaseOrQuery ifNotNil: [:parentCase | parentCase toggleImplicitChildTo: self isImplicitChild withBinding: prevBindingIndex]
 ]
 
 { #category : #'as yet unclassified' }

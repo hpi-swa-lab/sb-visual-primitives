@@ -401,6 +401,7 @@ SBVPCase >> noteNewOwner: aMorph [
 
 	| row |
 	super noteNewOwner: aMorph.
+	classNameInput ifNil: [
 	classNameInput := SBStClassNameInput new
 		object: self defaultPatternVisualizationClass;
 		prefix: 'Class: '.
@@ -414,7 +415,7 @@ SBVPCase >> noteNewOwner: aMorph [
 	row
 		addMorphBack: self input;
 		addMorphBack: SBIcon iconArrowRight;
-		addMorphBack: self output
+		addMorphBack: self output]
 ]
 
 { #category : #'as yet unclassified' }

@@ -15,7 +15,7 @@ SBStDeclarationForVPBinding class >> checkCastFor: aBlock parent: aMorph [
 
 	| case |
 	case := (aMorph containingSandblock isKindOf: SBVPBindingPattern)
-		ifTrue: [aMorph containingSandblock parentCase]
+		ifTrue: [aMorph containingSandblock parentCaseOrQuery]
 		ifFalse: [^ false].
 	^ case notNil and: [aBlock hasOwner: case input]
 ]

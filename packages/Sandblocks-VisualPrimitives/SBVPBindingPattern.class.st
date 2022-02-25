@@ -298,7 +298,7 @@ SBVPBindingPattern >> bindingIndex: anObject [
 SBVPBindingPattern >> bindingIndexAutoCast [
 
 	^ [:name :owner | | case |
-		case := self parentCase.
+		case := self parentCaseOrQuery.
 		(case notNil and: [name hasOwner: case input])
 			ifTrue: [name behaviorClass: SBStDeclarationForVPBinding]
 			ifFalse: [name behaviorClass: SBStBinding]]
@@ -644,7 +644,7 @@ SBVPBindingPattern >> newUnknown [
 SBVPBindingPattern >> noteNewOwner: newOwner [
 
 	super noteNewOwner: newOwner.
-	self parentCase ifNotNil: [self rebuild]
+	self parentCaseOrQuery ifNotNil: [self rebuild]
 ]
 
 { #category : #'as yet unclassified' }
@@ -659,7 +659,7 @@ SBVPBindingPattern >> originalPropertyMappingAt: aVPProperty [
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> patternVisualizationClass [
 
-	^ self visualizingClass ifNil: [self parentCase ifNotNil: #defaultPatternVisualizationClass]
+	^ self visualizingClass ifNil: [self parentCaseOrQuery ifNotNil: #defaultPatternVisualizationClass]
 ]
 
 { #category : #'as yet unclassified' }

@@ -111,6 +111,22 @@ SBVPPattern >> parentCase [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPPattern >> parentCaseOrQuery [
+
+	| case |
+	case := self root parentSandblock.
+	^ self parentCase ifNotNil: [self parentCase] ifNil: [self parentQuery]
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPattern >> parentQuery [
+
+	| case |
+	case := self root parentSandblock.
+	^ (case isKindOf: SBVPQuery) ifTrue: [case] ifFalse: [nil]
+]
+
+{ #category : #'as yet unclassified' }
 SBVPPattern >> removeImplicitChildren [
 
 	self connections select: [:child | child isImplicitChild] thenDo: [:implicitChild |

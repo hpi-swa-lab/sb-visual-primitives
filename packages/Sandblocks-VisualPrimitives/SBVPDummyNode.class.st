@@ -67,7 +67,7 @@ SBVPDummyNode class >> key: anObject [
 SBVPDummyNode class >> visualPrimitiveMapping [
 
 	^ {
-		#shape -> (RectangleMorph new
+		#shape vpConstant: (RectangleMorph new
 			color: (Color r: 0.0 g: 1 b: 0.502);
 			changeTableLayout;
 			listCentering: #center;
@@ -75,8 +75,9 @@ SBVPDummyNode class >> visualPrimitiveMapping [
 			shrinkWrap;
 			layoutInset: 8;
 			yourself).
-		#topLeftLabel -> SBIcon iconBug.
-		SBVPPropertyMappingNumber property: #key vpProperty: #innerLabel.
+		#identityLabelPosition vpConstant: #bottomCenterLabel.
+		#topLeftLabel vpConstant: SBIcon iconBug.
+		#innerLabel vpNumberFor: #key.
 		self connectionsMappingEntry}
 ]
 

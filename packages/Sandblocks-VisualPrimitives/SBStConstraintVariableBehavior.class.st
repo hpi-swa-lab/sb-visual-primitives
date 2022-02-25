@@ -16,7 +16,7 @@ SBStConstraintVariableBehavior class >> checkCastFor: aBlock parent: aMorph [
 	^ (aBlock firstOwnerSuchThat: [:owner | owner isKindOf: SBVPConstraintPattern])
 		ifNil: [false]
 		ifNotNil: [:constraintPattern |
-			constraintPattern parentCase
+			constraintPattern parentCaseOrQuery
 				ifNil: [false]
 				ifNotNil: [:case | case isValidBinding: aBlock contents]]
 ]
@@ -29,7 +29,7 @@ SBStConstraintVariableBehavior >> guessedClass [
 	^ (name firstOwnerSuchThat: [:owner | owner isKindOf: SBVPConstraintPattern])
 		ifNil: [someClass]
 		ifNotNil: [:constraintPattern |
-			constraintPattern parentCase
+			constraintPattern parentCaseOrQuery
 				ifNil: [someClass]
 				ifNotNil: [:case | case defaultPatternVisualizationClass]]
 ]

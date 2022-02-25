@@ -443,7 +443,7 @@ SBVisualPrimitive >> middleLabelPositions [
 { #category : #accessing }
 SBVisualPrimitive >> morphAt: aSymbol [
 
-	(self labelPositions includes: aSymbol) ifTrue: [^ self blockDict at: aSymbol ifPresent: [:block | block firstSubmorph] ifAbsent: [nil]].
+	(self labelPositions includes: aSymbol) ifTrue: [^ self blockDict at: aSymbol ifPresent: [:block | block firstSubmorphOrNil] ifAbsent: [nil]].
 	aSymbol = #connections ifTrue: [^ self connections].
 	aSymbol = #shape ifTrue: [^ self shape]
 ]
@@ -510,6 +510,18 @@ SBVisualPrimitive >> parent: anObject [
 
 { #category : #accessing }
 SBVisualPrimitive >> parentCase [
+
+	^ nil
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> parentCaseOrQuery [
+
+	^ nil
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> parentQuery [
 
 	^ nil
 ]
