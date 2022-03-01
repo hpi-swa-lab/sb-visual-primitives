@@ -225,7 +225,7 @@ SBVPCase >> binding: aString for: block class: aClass ifPresent: aBlock [
 
 	| bindingsSet |
 	bindingsSet := Set new.
-	self inputRoot collectBindingsInto: bindingsSet.
+	self inputRoot ifNotNil: [self inputRoot collectBindingsInto: bindingsSet].
 	bindingsSet
 		detect: [:b | b notNil and: [b contents = aString]]
 		ifFound: [:b | ^ aBlock value: b].
@@ -387,7 +387,7 @@ SBVPCase >> input: anSBBlock output: anotherSBBlock [
 { #category : #'as yet unclassified' }
 SBVPCase >> inputRoot [
 
-	^ self input connections first
+	^ self input connections isEmpty ifTrue: [nil] ifFalse: [self input connections first]
 ]
 
 { #category : #'as yet unclassified' }
