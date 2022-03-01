@@ -41,7 +41,6 @@ Class {
 	#name : #SBVPBindingPattern,
 	#superclass : #SBVPPattern,
 	#instVars : [
-		'firstChildOffset',
 		'constant',
 		'bindingIndex',
 		'writeBackClosure',
@@ -501,18 +500,6 @@ SBVPBindingPattern >> findConstant [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPBindingPattern >> firstChildOffset [
-
-	^ firstChildOffset
-]
-
-{ #category : #'as yet unclassified' }
-SBVPBindingPattern >> firstChildOffset: anObject [
-
-	firstChildOffset := anObject
-]
-
-{ #category : #'as yet unclassified' }
 SBVPBindingPattern >> getCurrentPrimitive: aVisualPrimitive [
 
 	^ aVisualPrimitive
@@ -656,12 +643,6 @@ SBVPBindingPattern >> originalPropertyMappingAt: aVPProperty [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPBindingPattern >> patternVisualizationClass [
-
-	^ self visualizingClass ifNil: [self parentCaseOrQuery ifNotNil: #defaultPatternVisualizationClass]
-]
-
-{ #category : #'as yet unclassified' }
 SBVPBindingPattern >> preferredColor [
 
 	^ self color
@@ -757,9 +738,7 @@ SBVPBindingPattern >> valueFromPropertyMapping: aPropertyMapping [
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> visualPrimitiveMapping [
 
-	^ self patternVisualizationClass
-		ifNil: {}
-		ifNotNil: #visualPrimitiveMapping
+	^ self visualizingClass ifNil: {} ifNotNil: #visualPrimitiveMapping
 ]
 
 { #category : #'as yet unclassified' }
@@ -774,7 +753,7 @@ SBVPBindingPattern >> visualPrimitiveMappings [
 { #category : #accessing }
 SBVPBindingPattern >> visualizingClass [
 
-	^ visualizingClass
+	^ visualizingClass ifNil: [self parentCaseOrQuery ifNotNil: #defaultVisualizationClass]
 ]
 
 { #category : #accessing }

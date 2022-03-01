@@ -3,7 +3,7 @@ Class {
 	#superclass : #SBVPBindingPattern,
 	#instVars : [
 		'visitedPrimitives',
-		'dfsStack'
+		'searchStack'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
@@ -11,7 +11,7 @@ Class {
 { #category : #accessing }
 SBVPWildcardPattern >> bindingFor: aVisualPrimitive [
 
-	^ {#root -> self dfsStack last. #leaf -> self currentTop} asDictionary
+	^ {#root -> self searchStack last. #leaf -> self currentTop} asDictionary
 ]
 
 { #category : #'as yet unclassified' }
@@ -39,41 +39,29 @@ SBVPWildcardPattern >> buildFromBinding: anArray currentPrimitive: aVisualPrimit
 { #category : #accessing }
 SBVPWildcardPattern >> currentTop [
 
-	^ self dfsStack first
-]
-
-{ #category : #accessing }
-SBVPWildcardPattern >> dfsStack [
-
-	^ dfsStack
-]
-
-{ #category : #accessing }
-SBVPWildcardPattern >> dfsStack: anObject [
-
-	dfsStack := anObject
+	^ self searchStack first
 ]
 
 { #category : #'as yet unclassified' }
 SBVPWildcardPattern >> getCurrentPrimitive: aVisualPrimitive [
 
-	^ self dfsStack ifEmpty: [aVisualPrimitive] ifNotEmpty: [self currentTop]
+	^ self searchStack ifEmpty: [aVisualPrimitive] ifNotEmpty: [self currentTop]
 ]
 
 { #category : #accessing }
 SBVPWildcardPattern >> getNext: aVisualPrimitive [
 
 	(super getNext: aVisualPrimitive) ifTrue: [^ true].
-	self dfsStack isEmpty ifTrue: [
+	self searchStack isEmpty ifTrue: [
 		self pushToStack: aVisualPrimitive.
 		^ true].
-	[self dfsStack notEmpty] whileTrue: [
+	[self searchStack notEmpty] whileTrue: [
 		self currentTop children do: [:child |
 			(self visitedPrimitives includes: child) ifFalse: [
 				self pushToStack: child.
 				self resetChildren.
 				^ true]].
-		self dfsStack removeFirst].
+		self searchStack removeFirst].
 	^ false
 ]
 
@@ -82,7 +70,7 @@ SBVPWildcardPattern >> initialize [
 
 	super initialize.
 	self
-		dfsStack: LinkedList new;
+		searchStack: LinkedList new;
 		visitedPrimitives: Set new.
 	self firstSubmorph addMorph: (SBIcon iconAsterisk scale: 1.5)
 ]
@@ -96,7 +84,7 @@ SBVPWildcardPattern >> isBindingPattern [
 { #category : #accessing }
 SBVPWildcardPattern >> pushToStack: aVisualPrimitive [
 
-	self dfsStack addFirst: aVisualPrimitive.
+	self searchStack addFirst: aVisualPrimitive.
 	self visitedPrimitives add: aVisualPrimitive
 ]
 
@@ -104,15 +92,27 @@ SBVPWildcardPattern >> pushToStack: aVisualPrimitive [
 SBVPWildcardPattern >> reset [
 
 	super reset.
-	self dfsStack: LinkedList new
+	self searchStack: LinkedList new
+]
+
+{ #category : #accessing }
+SBVPWildcardPattern >> searchStack [
+
+	^ searchStack
+]
+
+{ #category : #accessing }
+SBVPWildcardPattern >> searchStack: anObject [
+
+	searchStack := anObject
 ]
 
 { #category : #accessing }
 SBVPWildcardPattern >> setBindingFor: aVisualPrimitive in: aCollection [
 
-	self assert: (self dfsStack isEmpty or: [self dfsStack last = aVisualPrimitive]).
+	self assert: (self searchStack isEmpty or: [self searchStack last = aVisualPrimitive]).
 	
-	self dfsStack isEmpty ifTrue: [self pushToStack: aVisualPrimitive].
+	self searchStack isEmpty ifTrue: [self pushToStack: aVisualPrimitive].
 	^ super setBindingFor: self currentTop in: aCollection
 ]
 

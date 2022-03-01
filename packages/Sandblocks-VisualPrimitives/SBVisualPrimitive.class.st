@@ -243,6 +243,21 @@ SBVisualPrimitive >> buildNewInstance [
 		ifNil: [self class new]
 ]
 
+{ #category : #'as yet unclassified' }
+SBVisualPrimitive >> buildObject [
+
+	| anObject |
+	anObject := self sourceObject copy.
+	anObject class visualPrimitiveMapping do: [:propertyMapping |
+		(propertyMapping isPropertyMapping
+			ifFalse: [SBVPPropertyMapping fromAssociation: propertyMapping]
+			ifTrue: [propertyMapping]) setter
+			value: anObject
+			value: self].
+	
+	^ anObject
+]
+
 { #category : #nil }
 SBVisualPrimitive >> centerChild [
 
@@ -290,21 +305,6 @@ SBVisualPrimitive >> getLabelMorph: anObject [
 	^ (anObject isString or: [anObject isNumber])
 		ifTrue: [SBTextBubble new contents: anObject asString]
 		ifFalse: [anObject]
-]
-
-{ #category : #'as yet unclassified' }
-SBVisualPrimitive >> getObjectFromVisualPrimitive [
-
-	| anObject |
-	anObject := self sourceObject copy.
-	anObject class visualPrimitiveMapping do: [:propertyMapping |
-		(propertyMapping isPropertyMapping
-			ifFalse: [SBVPPropertyMapping fromAssociation: propertyMapping]
-			ifTrue: [propertyMapping]) setter
-			value: anObject
-			value: self].
-	
-	^ anObject
 ]
 
 { #category : #'as yet unclassified' }

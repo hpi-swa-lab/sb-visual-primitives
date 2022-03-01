@@ -108,7 +108,7 @@ SBVPQuery class >> input: anSBVPVisualizer output: aBlock strategy: aDict visual
 		input: anSBVPVisualizer;
 		output: aBlock;
 		strategy: aDict;
-		defaultPatternVisualizationClass: aClass;
+		defaultVisualizationClass: aClass;
 		yourself
 ]
 
@@ -187,7 +187,7 @@ SBVPQuery >> query: anSBVPDummyNode [
 		input: anSBVPDummyNode asVisualPrimitive
 		pattern: self input) strategy: self strategy.
 	match := matcher getNextMatch.
-	^ match ifNil: [nil] ifNotNil: [(match at: #a) getObjectFromVisualPrimitive]
+	^ match ifNil: [nil] ifNotNil: [(match at: #a) buildObject]
 ]
 
 { #category : #'as yet unclassified' }
@@ -202,9 +202,9 @@ SBVPQuery >> writeSourceOn: aStream [
 		aStream nextPutAll: ' strategy: '.
 		self strategy storeOn: aStream].
 	
-	self defaultPatternVisualizationClass ifNotNil: [
+	self defaultVisualizationClass ifNotNil: [
 		aStream nextPutAll: ' visualizePatternsAs: '.
-		self defaultPatternVisualizationClass storeOn: aStream].
+		self defaultVisualizationClass storeOn: aStream].
 	
 	aStream nextPut: $)
 ]

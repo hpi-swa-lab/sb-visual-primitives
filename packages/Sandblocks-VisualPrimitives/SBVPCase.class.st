@@ -49,8 +49,8 @@ Class {
 		'output',
 		'strategy',
 		'informationRow',
-		'defaultPatternVisualizationClass',
-		'classNameInput'
+		'classNameInput',
+		'defaultVisualizationClass'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
@@ -121,28 +121,28 @@ SBVPCase class >> exampleWithPatterns: aDummyNode [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPCase class >> input: anInputVisualizer output: anOutputVisualizer [
+SBVPCase class >> input: anSBVPPattern output: anotherSBVPPattern [
 	" marker "
 
-	^ self new input: anInputVisualizer output: anOutputVisualizer
+	^ self new input: anSBVPPattern output: anotherSBVPPattern
 ]
 
 { #category : #'as yet unclassified' }
-SBVPCase class >> input: anInputVisualizer output: anOutputVisualizer strategy: aDict [
+SBVPCase class >> input: anSBVPPattern output: anotherSBVPPattern strategy: aDict [
 	" marker "
 
 	^ self new
-		input: anInputVisualizer output: anOutputVisualizer;
+		input: anSBVPPattern output: anotherSBVPPattern;
 		strategy: aDict
 ]
 
 { #category : #'as yet unclassified' }
-SBVPCase class >> input: anInputVisualizer output: anOutputVisualizer strategy: aDict visualizePatternsAs: aClass [
+SBVPCase class >> input: anSBVPPattern output: anotherSBVPPattern strategy: aDict visualizePatternsAs: aClass [
 	" marker "
 
 	^ self new
-		defaultPatternVisualizationClass: aClass;
-		input: anInputVisualizer output: anOutputVisualizer;
+		defaultVisualizationClass: aClass;
+		input: anSBVPPattern output: anotherSBVPPattern;
 		strategy: aDict
 ]
 
@@ -217,7 +217,7 @@ SBVPCase >> addToggleButtonFor: aSymbol [
 { #category : #'as yet unclassified' }
 SBVPCase >> artefactChanged: aMethodBlock [
 
-	classNameInput selectedClass ~= self defaultPatternVisualizationClass ifTrue: [self defaultPatternVisualizationClass: classNameInput selectedClass]
+	classNameInput selectedClass ~= self defaultVisualizationClass ifTrue: [self defaultVisualizationClass: classNameInput selectedClass]
 ]
 
 { #category : #'as yet unclassified' }
@@ -297,15 +297,15 @@ SBVPCase >> colorDifferences [
 ]
 
 { #category : #accessing }
-SBVPCase >> defaultPatternVisualizationClass [
+SBVPCase >> defaultVisualizationClass [
 
-	^ defaultPatternVisualizationClass
+	^ defaultVisualizationClass
 ]
 
 { #category : #accessing }
-SBVPCase >> defaultPatternVisualizationClass: anObject [
+SBVPCase >> defaultVisualizationClass: aClass [
 
-	defaultPatternVisualizationClass := anObject
+	defaultVisualizationClass := aClass
 ]
 
 { #category : #'as yet unclassified' }
@@ -365,23 +365,21 @@ SBVPCase >> input [
 ]
 
 { #category : #accessing }
-SBVPCase >> input: anSBBlock [
+SBVPCase >> input: anSBVPPattern [
 
-	input := anSBBlock.
+	input := anSBVPPattern.
 	"maybe buildImplicitChildren here"
 	self flag: #TODO
 ]
 
 { #category : #'as yet unclassified' }
-SBVPCase >> input: anSBBlock output: anotherSBBlock [
+SBVPCase >> input: anSBVPPattern output: anotherSBVPPattern [
 
 	self
-		input: anSBBlock;
-		output: anotherSBBlock.
+		input: anSBVPPattern;
+		output: anotherSBVPPattern.
 	
 	self buildImplicitChildrenMatchingPattern
-	";
-		colorDifferences"
 ]
 
 { #category : #'as yet unclassified' }
@@ -405,7 +403,7 @@ SBVPCase >> noteNewOwner: aMorph [
 	super noteNewOwner: aMorph.
 	classNameInput ifNil: [
 		classNameInput := SBStClassNameInput new
-			object: self defaultPatternVisualizationClass;
+			object: self defaultVisualizationClass;
 			prefix: 'Class: '.
 		self addMorph: (SBColumn new
 			cellPositioning: #center;
@@ -433,9 +431,9 @@ SBVPCase >> output [
 ]
 
 { #category : #accessing }
-SBVPCase >> output: anSBBlock [
+SBVPCase >> output: anSBVPPattern [
 
-	output := anSBBlock.
+	output := anSBVPPattern.
 	"maybe buildImplicitChildren here"
 	self flag: #TODO
 ]
@@ -450,7 +448,7 @@ SBVPCase >> replace: aNumber matches: anObject [
 	[(match := matcher getNextMatch) notNil and: [(iteration := iteration + 1) < aNumber]] whileTrue: [
 		currentPrimitive := matcher build: self output fromBinding: match.
 		matcher input: currentPrimitive].
-	^ currentPrimitive getObjectFromVisualPrimitive
+	^ currentPrimitive buildObject
 ]
 
 { #category : #'as yet unclassified' }
@@ -469,7 +467,7 @@ SBVPCase >> replaceAllMatches: anObject [
 	[match := matcher getNextMatch] whileNotNil: [
 		currentPrimitive := matcher build: self output fromBinding: match.
 		matcher input: currentPrimitive].
-	^ currentPrimitive getObjectFromVisualPrimitive
+	^ currentPrimitive buildObject
 ]
 
 { #category : #accessing }
@@ -530,9 +528,7 @@ SBVPCase >> value: anObject [
 	| matcher match |
 	matcher := (SBVPPatternMatcher input: anObject asVisualPrimitive pattern: self input) strategy: self strategy.
 	match := matcher getNextMatch.
-	^ match
-		ifNil: [anObject]
-		ifNotNil: [(matcher build: self output fromBinding: match) getObjectFromVisualPrimitive]
+	^ match ifNil: [anObject] ifNotNil: [(matcher build: self output fromBinding: match) buildObject]
 ]
 
 { #category : #'as yet unclassified' }
@@ -547,9 +543,9 @@ SBVPCase >> writeSourceOn: aStream [
 		aStream nextPutAll: ' strategy: '.
 		self strategy storeOn: aStream].
 	
-	self defaultPatternVisualizationClass ifNotNil: [
+	self defaultVisualizationClass ifNotNil: [
 		aStream nextPutAll: ' visualizePatternsAs: '.
-		self defaultPatternVisualizationClass storeOn: aStream].
+		self defaultVisualizationClass storeOn: aStream].
 	
 	aStream nextPut: $)
 ]

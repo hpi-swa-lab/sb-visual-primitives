@@ -338,7 +338,7 @@ SBVPVisualizer >> writeCodeOn: aStream [
 
 	| object |
 	aStream nextPut: $(.
-	object := (self visual submorphs detect: [:morph | morph isVisualPrimitive]) root getObjectFromVisualPrimitive.
+	object := (self visual submorphs detect: [:morph | morph isVisualPrimitive]) root buildObject.
 	self showCode not
 		ifTrue: [self tryWriteSourceOrStore: object on: aStream]
 		ifFalse: [self code submorphsDo: [:morph | self tryWriteSourceOrStore: morph on: aStream]].

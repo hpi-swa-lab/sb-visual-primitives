@@ -32,10 +32,10 @@ SBVPDummyNode class >> childrenMappingEntry [
 		getter: [:object | {object left. object right} reject: [:child | child isNil]]
 		setter: [:object :vp |
 			vp children size >= 1
-				ifTrue: [object left: vp children first getObjectFromVisualPrimitive]
+				ifTrue: [object left: vp children first buildObject]
 				ifFalse: [object left: nil].
 			vp children size >= 2
-				ifTrue: [object right: vp children second getObjectFromVisualPrimitive]
+				ifTrue: [object right: vp children second buildObject]
 				ifFalse: [object right: nil]]
 		vpProperty: #children
 		name: 'children'

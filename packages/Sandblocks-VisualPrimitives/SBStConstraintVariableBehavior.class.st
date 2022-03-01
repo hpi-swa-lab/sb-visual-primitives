@@ -31,7 +31,7 @@ SBStConstraintVariableBehavior >> guessedClass [
 		ifNotNil: [:constraintPattern |
 			constraintPattern parentCaseOrQuery
 				ifNil: [someClass]
-				ifNotNil: [:case | case defaultPatternVisualizationClass]]
+				ifNotNil: [:case | case defaultVisualizationClass]]
 ]
 
 { #category : #'as yet unclassified' }
