@@ -133,6 +133,12 @@ SBVPPatternContainer >> buildImplicitChildrenMatchingPattern [
 		self pattern layout]
 ]
 
+{ #category : #'as yet unclassified' }
+SBVPPatternContainer >> cellInset [
+
+	^3
+]
+
 { #category : #accessing }
 SBVPPatternContainer >> classNameInput [
 
@@ -158,9 +164,9 @@ SBVPPatternContainer >> defaultVisualizationClass [
 ]
 
 { #category : #accessing }
-SBVPPatternContainer >> defaultVisualizationClass: anObject [
+SBVPPatternContainer >> defaultVisualizationClass: aClass [
 
-	defaultVisualizationClass := anObject.
+	defaultVisualizationClass := aClass
 ]
 
 { #category : #'as yet unclassified' }
@@ -202,11 +208,11 @@ SBVPPatternContainer >> informationRow: aBlock [
 SBVPPatternContainer >> initialize [
 
 	super initialize.
-	informationRow := SBRow new cellInset: 3.
+	informationRow := SBRow new cellInset: self cellInset.
 	self
 		changeTableLayout;
 		shrinkWrap;
-		cellInset: 3;
+		cellInset: self cellInset;
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> true;
 			add: #explicitChildrenMatching -> true;
@@ -232,7 +238,7 @@ SBVPPatternContainer >> noteNewOwner: aMorph [
 			addMorphBack: classNameInput;
 			addMorphBack: self informationRow;
 			addMorphBack: (row := SBRow new
-				cellInset: 3;
+				cellInset: self cellInset;
 				cellPositioning: #center)).
 		row addMorphBack: self pattern]
 ]

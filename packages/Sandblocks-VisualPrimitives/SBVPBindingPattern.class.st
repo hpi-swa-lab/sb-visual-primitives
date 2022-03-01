@@ -563,9 +563,9 @@ SBVPBindingPattern >> labelExpressionDict [
 ]
 
 { #category : #accessing }
-SBVPBindingPattern >> labelExpressionDict: anObject [
+SBVPBindingPattern >> labelExpressionDict: aDict [
 
-	labelExpressionDict := anObject
+	labelExpressionDict := aDict
 ]
 
 { #category : #'as yet unclassified' }
@@ -742,9 +742,9 @@ SBVPBindingPattern >> visualizingClass [
 ]
 
 { #category : #accessing }
-SBVPBindingPattern >> visualizingClass: anObject [
+SBVPBindingPattern >> visualizingClass: aClass [
 
-	visualizingClass := anObject.
+	visualizingClass := aClass.
 	self owner ifNotNil: [self rebuild]
 ]
 

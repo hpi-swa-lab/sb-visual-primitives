@@ -56,9 +56,9 @@ SBVPVisualizer >> code [
 ]
 
 { #category : #accessing }
-SBVPVisualizer >> code: anObject [
+SBVPVisualizer >> code: aCodeBlock [
 
-	code := anObject
+	code := aCodeBlock
 ]
 
 { #category : #accessing }
@@ -319,12 +319,6 @@ SBVPVisualizer >> tryWriteSourceOrStore: anObject on: aStream [
 SBVPVisualizer >> visual [
 
 	^ visual
-]
-
-{ #category : #accessing }
-SBVPVisualizer >> visual: anObject [
-
-	visual := anObject
 ]
 
 { #category : #accessing }

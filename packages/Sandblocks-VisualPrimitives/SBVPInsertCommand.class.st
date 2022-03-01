@@ -34,9 +34,9 @@ SBVPInsertCommand >> children [
 ]
 
 { #category : #accessing }
-SBVPInsertCommand >> children: anObject [
+SBVPInsertCommand >> children: anOrderedCollection [
 
-	children := anObject
+	children := anOrderedCollection
 ]
 
 { #category : #'as yet unclassified' }
@@ -85,9 +85,9 @@ SBVPInsertCommand >> parent [
 ]
 
 { #category : #accessing }
-SBVPInsertCommand >> parent: anObject [
+SBVPInsertCommand >> parent: anSBBlock [
 
-	parent := anObject
+	parent := anSBBlock
 ]
 
 { #category : #accessing }
@@ -97,9 +97,9 @@ SBVPInsertCommand >> siblingIndex [
 ]
 
 { #category : #accessing }
-SBVPInsertCommand >> siblingIndex: anObject [
+SBVPInsertCommand >> siblingIndex: aNumber [
 
-	siblingIndex := anObject
+	siblingIndex := aNumber
 ]
 
 { #category : #'as yet unclassified' }

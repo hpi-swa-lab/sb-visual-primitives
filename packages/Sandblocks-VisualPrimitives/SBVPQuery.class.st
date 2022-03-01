@@ -141,27 +141,17 @@ SBVPQuery >> buildImplicitChildrenMatchingPattern [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPQuery >> input: anSBBlock output: anotherSBBlock [
-
-	self
-		input: anSBBlock;
-		output: anotherSBBlock.
-	
-	self buildImplicitChildrenMatchingPattern
-]
-
-{ #category : #'as yet unclassified' }
 SBVPQuery >> query [
 
 	^ self query: self pattern findOriginRoot
 ]
 
 { #category : #'as yet unclassified' }
-SBVPQuery >> query: anSBVPDummyNode [
+SBVPQuery >> query: anObject [
 
 	| matcher match |
 	matcher := (SBVPPatternMatcher
-		input: anSBVPDummyNode asVisualPrimitive
+		input: anObject asVisualPrimitive
 		pattern: self pattern) strategy: self strategy.
 	match := matcher getNextMatch.
 	^ match

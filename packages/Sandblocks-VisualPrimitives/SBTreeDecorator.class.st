@@ -54,24 +54,24 @@ SBTreeDecorator class >> example [
 ]
 
 { #category : #children }
-SBTreeDecorator >> addChild: aDecorator [
+SBTreeDecorator >> addChild: anSBTreeDecorator [
 
-	self addChild: aDecorator afterIndex: self children size
+	self addChild: anSBTreeDecorator afterIndex: self children size
 ]
 
 { #category : #children }
-SBTreeDecorator >> addChild: aDecorator afterIndex: anIndex [
+SBTreeDecorator >> addChild: anSBTreeDecorator afterIndex: anIndex [
 
 	| newConnector |
-	self children add: aDecorator afterIndex: anIndex.
-	aDecorator parent: self.
+	self children add: anSBTreeDecorator afterIndex: anIndex.
+	anSBTreeDecorator parent: self.
 	
-	newConnector := (SBConnectorLine connect: self morph to: aDecorator morph)
+	newConnector := (SBConnectorLine connect: self morph to: anSBTreeDecorator morph)
 		connectorType: #line;
 		lineWidth: 1;
 		color: Color black.
 	
-	aDecorator connectorToParent: newConnector
+	anSBTreeDecorator connectorToParent: newConnector
 ]
 
 { #category : #children }
@@ -102,9 +102,9 @@ SBTreeDecorator >> ancestor [
 ]
 
 { #category : #accessing }
-SBTreeDecorator >> ancestor: anObject [
+SBTreeDecorator >> ancestor: anSBTreeDecorator [
 
-	ancestor := anObject
+	ancestor := anSBTreeDecorator
 ]
 
 { #category : #layouting }
@@ -172,9 +172,9 @@ SBTreeDecorator >> children [
 ]
 
 { #category : #accessing }
-SBTreeDecorator >> children: aCollection [
+SBTreeDecorator >> children: anOrderedCollection [
 
-	children := aCollection
+	children := anOrderedCollection
 ]
 
 { #category : #accessing }
@@ -281,10 +281,10 @@ SBTreeDecorator >> leftSibling [
 { #category : #layouting }
 SBTreeDecorator >> maximumHeight [
 
-	| h |
-	h := self morph fullBounds height.
-	self children do: [:child | h := h max: child maximumHeight].
-	^ h
+	| height |
+	height := self morph fullBounds height.
+	self children do: [:child | height := height max: child maximumHeight].
+	^ height
 ]
 
 { #category : #accessing }
@@ -330,9 +330,9 @@ SBTreeDecorator >> parent [
 ]
 
 { #category : #accessing }
-SBTreeDecorator >> parent: anObject [
+SBTreeDecorator >> parent: anSBTreeDecorator [
 
-	parent := anObject
+	parent := anSBTreeDecorator
 ]
 
 { #category : #accessing }

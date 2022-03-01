@@ -83,9 +83,9 @@ SBVPEllipsisPattern >> currentSize [
 ]
 
 { #category : #accessing }
-SBVPEllipsisPattern >> currentSize: anObject [
+SBVPEllipsisPattern >> currentSize: aNumber [
 
-	currentSize := anObject
+	currentSize := aNumber
 ]
 
 { #category : #'as yet unclassified' }

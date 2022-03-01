@@ -156,9 +156,9 @@ SBVPPropertyMapping >> getter [
 ]
 
 { #category : #accessing }
-SBVPPropertyMapping >> getter: anObject [
+SBVPPropertyMapping >> getter: aBlockClosure [
 
-	getter := anObject
+	getter := aBlockClosure
 ]
 
 { #category : #accessing }
@@ -204,9 +204,9 @@ SBVPPropertyMapping >> setter [
 ]
 
 { #category : #accessing }
-SBVPPropertyMapping >> setter: anObject [
+SBVPPropertyMapping >> setter: aBlockClosure [
 
-	setter := anObject
+	setter := aBlockClosure
 ]
 
 { #category : #'as yet unclassified' }
@@ -228,9 +228,9 @@ SBVPPropertyMapping >> vpProperty [
 ]
 
 { #category : #accessing }
-SBVPPropertyMapping >> vpProperty: anObject [
+SBVPPropertyMapping >> vpProperty: aSymbol [
 
-	vpProperty := anObject
+	vpProperty := aSymbol
 ]
 
 { #category : #accessing }

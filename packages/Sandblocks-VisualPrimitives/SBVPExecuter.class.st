@@ -7,7 +7,6 @@ Class {
 	#instVars : [
 		'input',
 		'case',
-		'output',
 		'inputBlock',
 		'caseBlock',
 		'outputBlock'
@@ -447,11 +446,11 @@ SBVPExecuter >> case [
 ]
 
 { #category : #accessing }
-SBVPExecuter >> case: aMorph [
+SBVPExecuter >> case: snSBVPCase [
 
-	case := aMorph.
+	case := snSBVPCase.
 	self caseBlock removeAllMorphs.
-	self caseBlock addMorphBack: aMorph
+	self caseBlock addMorphBack: snSBVPCase
 ]
 
 { #category : #accessing }
@@ -461,9 +460,9 @@ SBVPExecuter >> caseBlock [
 ]
 
 { #category : #accessing }
-SBVPExecuter >> caseBlock: anObject [
+SBVPExecuter >> caseBlock: anSBBlock [
 
-	^ caseBlock := anObject
+	^ caseBlock := anSBBlock
 ]
 
 { #category : #'as yet unclassified' }
@@ -482,28 +481,29 @@ SBVPExecuter >> evaluationReceiver [
 SBVPExecuter >> execute [
 	<action>
 
-	self showOutput: (self case value: self input code firstSubmorph evaluate value)
+	self showOutput: (self case value: self inputCodeValue)
 ]
 
 { #category : #accessing }
 SBVPExecuter >> execute100Times [
 	<action>
 
-	self showOutput: (self case replace: 100 matches: self input code firstSubmorph evaluate value)
+	self showOutput: (self case replace: 100 matches: self inputCodeValue)
 ]
 
 { #category : #accessing }
 SBVPExecuter >> executeAll [
 	<action>
 
-	self showOutput: (self case replaceAllMatches: self input code firstSubmorph evaluate value)
+	self showOutput: (self case replaceAllMatches: self inputCodeValue)
 ]
 
 { #category : #accessing }
 SBVPExecuter >> initialize [
 
+	| cellInset |
 	super initialize.
-	
+	cellInset := 3.
 	self
 		addKeyboardCaptureFilter: self;
 		addMouseCaptureFilter: self;
@@ -512,30 +512,30 @@ SBVPExecuter >> initialize [
 		layoutInset: 6;
 		addMorphBack: (SBTextBubble new contents: 'Executer');
 		addMorphBack: (SBRow new
-			cellInset: 3;
+			cellInset: cellInset;
 			addMorphBack: (SBButton new label: 'execute once' shortcut: nil do: [self execute]);
 			addMorphBack: (SBButton new label: 'execute 100 times' shortcut: nil do: [self execute100Times]);
 			addMorphBack: (SBButton new label: 'execute all' shortcut: nil do: [self executeAll]));
 		addMorphBack: (SBRow new
 			shrinkWrap;
-			cellInset: 3;
+			cellInset: cellInset;
 			addMorphBack: (SBColumn new
 				shrinkWrap;
-				cellInset: 3;
+				cellInset: cellInset;
 				addMorphBack: (SBTextBubble new contents: 'Input');
 				addMorphBack: (inputBlock := SBRow new shrinkWrap));
 			addMorphBack: (SBColumn new
 				shrinkWrap;
-				cellInset: 3;
+				cellInset: cellInset;
 				addMorphBack: (SBTextBubble new contents: 'Transformation');
 				addMorphBack: (caseBlock := SBRow new shrinkWrap));
 			addMorphBack: (SBColumn new
 				shrinkWrap;
-				cellInset: 3;
+				cellInset: cellInset;
 				addMorphBack: (SBTextBubble new contents: 'Output');
 				addMorphBack: (outputBlock := SBBlock new
 					shrinkWrap;
-					cellInset: 3)))
+					cellInset: cellInset)))
 ]
 
 { #category : #accessing }
@@ -545,11 +545,11 @@ SBVPExecuter >> input [
 ]
 
 { #category : #accessing }
-SBVPExecuter >> input: aMorph [
+SBVPExecuter >> input: anSBVPVisualizer [
 
-	input := aMorph.
+	input := anSBVPVisualizer.
 	self inputBlock removeAllMorphs.
-	self inputBlock addMorphBack: aMorph
+	self inputBlock addMorphBack: anSBVPVisualizer
 ]
 
 { #category : #accessing }
@@ -559,23 +559,15 @@ SBVPExecuter >> inputBlock [
 ]
 
 { #category : #accessing }
-SBVPExecuter >> inputBlock: anObject [
+SBVPExecuter >> inputBlock: anSBBlock [
 
-	^ inputBlock := anObject
+	^ inputBlock := anSBBlock
 ]
 
 { #category : #accessing }
-SBVPExecuter >> output [
+SBVPExecuter >> inputCodeValue [
 
-	^ output
-]
-
-{ #category : #accessing }
-SBVPExecuter >> output: aMorph [
-
-	output := aMorph.
-	self outputBlock removeAllMorphs.
-	self outputBlock addMorphBack: aMorph
+	^ self input code firstSubmorph evaluate value
 ]
 
 { #category : #accessing }
@@ -585,9 +577,9 @@ SBVPExecuter >> outputBlock [
 ]
 
 { #category : #accessing }
-SBVPExecuter >> outputBlock: anObject [
+SBVPExecuter >> outputBlock: anSBBlock [
 
-	^ outputBlock := anObject
+	^ outputBlock := anSBBlock
 ]
 
 { #category : #accessing }

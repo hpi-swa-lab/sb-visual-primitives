@@ -250,9 +250,9 @@ SBVisualPrimitive >> blockDict [
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> blockDict: anObject [
+SBVisualPrimitive >> blockDict: aDict [
 
-	blockDict := anObject
+	blockDict := aDict
 ]
 
 { #category : #'as yet unclassified' }
@@ -577,9 +577,9 @@ SBVisualPrimitive >> parent [
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> parent: anObject [
+SBVisualPrimitive >> parent: aVisualPrimitive [
 
-	parent := anObject
+	parent := aVisualPrimitive
 ]
 
 { #category : #accessing }

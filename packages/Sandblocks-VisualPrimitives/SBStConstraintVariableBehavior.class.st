@@ -88,9 +88,9 @@ SBStConstraintVariableBehavior >> valid [
 SBStConstraintVariableBehavior >> writeSourceOn: aStream [
 
 	aStream
-		nextPutAll: '(';
+		nextPut: $(;
 		nextPutAll: SBVPConstraintPattern constraintInputName;
 		nextPutAll: ' at: #';
 		nextPutAll: name contents;
-		nextPutAll: ')'
+		nextPut: $)
 ]

@@ -58,9 +58,9 @@ SBVPSelectProperty >> choices [
 ]
 
 { #category : #accessing }
-SBVPSelectProperty >> choices: anObject [
+SBVPSelectProperty >> choices: aCollection [
 
-	choices := anObject
+	choices := aCollection
 ]
 
 { #category : #accessing }
@@ -88,9 +88,9 @@ SBVPSelectProperty >> currentValueIndex [
 ]
 
 { #category : #accessing }
-SBVPSelectProperty >> currentValueIndex: anObject [
+SBVPSelectProperty >> currentValueIndex: aNumber [
 
-	currentValueIndex := anObject.
+	currentValueIndex := aNumber.
 	self
 		removeAllMorphs;
 		addMorphBack: (self getRepresentationMorphAt: currentValueIndex)
@@ -121,7 +121,6 @@ SBVPSelectProperty >> getRepresentationMorphAt: anIndex [
 	representation isMorph ifTrue: [^ representation].
 	
 	^ nil
-	"maybe throw error, because we don't support this right noẁ"
 ]
 
 { #category : #accessing }
@@ -140,9 +139,9 @@ SBVPSelectProperty >> representations [
 ]
 
 { #category : #accessing }
-SBVPSelectProperty >> representations: anObject [
+SBVPSelectProperty >> representations: aCollection [
 
-	representations := anObject
+	representations := aCollection
 ]
 
 { #category : #accessing }

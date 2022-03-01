@@ -102,9 +102,9 @@ SBVPWildcardPattern >> searchStack [
 ]
 
 { #category : #accessing }
-SBVPWildcardPattern >> searchStack: anObject [
+SBVPWildcardPattern >> searchStack: aLinkedList [
 
-	searchStack := anObject
+	searchStack := aLinkedList
 ]
 
 { #category : #accessing }
@@ -123,7 +123,7 @@ SBVPWildcardPattern >> visitedPrimitives [
 ]
 
 { #category : #accessing }
-SBVPWildcardPattern >> visitedPrimitives: anObject [
+SBVPWildcardPattern >> visitedPrimitives: aSet [
 
-	visitedPrimitives := anObject
+	visitedPrimitives := aSet
 ]

@@ -32,9 +32,9 @@ SBVPPropertyMappingExpression >> originalMapping [
 ]
 
 { #category : #accessing }
-SBVPPropertyMappingExpression >> originalMapping: anObject [
+SBVPPropertyMappingExpression >> originalMapping: aPropertyMapping [
 
-	originalMapping := anObject
+	originalMapping := aPropertyMapping
 ]
 
 { #category : #accessing }

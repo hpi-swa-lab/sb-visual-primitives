@@ -108,9 +108,9 @@ SBVPPatternMatcher >> initialize [
 ]
 
 { #category : #accessing }
-SBVPPatternMatcher >> input: anObject [
+SBVPPatternMatcher >> input: aVisualPrimitive [
 
-	self currentPrimitive: anObject.
+	self currentPrimitive: aVisualPrimitive.
 	self pattern reset.
 	self performedMatch: false
 ]

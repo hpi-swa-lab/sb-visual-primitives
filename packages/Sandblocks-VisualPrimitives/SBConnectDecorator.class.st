@@ -69,9 +69,9 @@ SBConnectDecorator >> connectionPoints [
 ]
 
 { #category : #accessing }
-SBConnectDecorator >> connectionPoints: anObject [
+SBConnectDecorator >> connectionPoints: anArray [
 
-	connectionPoints := anObject
+	connectionPoints := anArray
 ]
 
 { #category : #accessing }
