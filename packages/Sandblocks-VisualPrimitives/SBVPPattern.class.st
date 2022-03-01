@@ -155,6 +155,12 @@ SBVPPattern >> setBindingFor: aVisualPrimitive in: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPPattern >> supportsLabels [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBVPPattern >> wantsImplicitNeighbors [
 
 	^ true

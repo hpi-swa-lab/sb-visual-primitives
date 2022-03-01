@@ -239,30 +239,18 @@ SBVPBindingPattern >> addImplicitChildren: aDict [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPBindingPattern >> addLabel [
-	<action>
-	<actionValidIf: #isBindingPattern>
-
-	| index notSetProperties |
-	notSetProperties := self missingProperties.
-	index := UIManager default chooseFrom: (notSetProperties collect: [:propertyMapping | propertyMapping name]).
-	index > 0 ifTrue: [ | unknown |
-		self sandblockEditor do: (SBDoItCommand new
-			do: [
-				self setLabelAt: (notSetProperties at: index) vpProperty to: (unknown := self newUnknown).
-				self layout.
-				unknown startInput.
-				unknown queueUpdateSuggestionsFocused: true];
-			undo: [
-				self removeLabelAt: (self labelPositions at: index).
-				self layout])]
-]
-
-{ #category : #'as yet unclassified' }
 SBVPBindingPattern >> addToWorld: aWorld [
 
 	aWorld addMorphBack: self.
 	self children do: [:child | child addToWorld: aWorld]
+]
+
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern >> afterAddLabel: aBlock [
+
+	aBlock
+		startInput;
+		queueUpdateSuggestionsFocused: true
 ]
 
 { #category : #'as yet unclassified' }
@@ -551,12 +539,6 @@ SBVPBindingPattern >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPBindingPattern >> isBindingPattern [
-
-	^ true
-]
-
-{ #category : #'as yet unclassified' }
 SBVPBindingPattern >> labelBindingChanged [
 
 	self labelBindingDict copy keysAndValuesDo: [:key :value | self labelBindingDict at: key put: ((self labelContentAt: key) as: value class)]
@@ -587,10 +569,13 @@ SBVPBindingPattern >> labelExpressionDict: anObject [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPBindingPattern >> labelPositionOf: aMorph [
+SBVPBindingPattern >> labelSuggestionsFor: aSBVPUnknownLabel [
 
-	self blockDict keysAndValuesDo: [:position :block | (aMorph hasOwner: block) ifTrue: [^ position]].
-	^ nil
+	^ {
+		SBSuggestionItem selector: self root nextIdentifier label: 'binding'.
+		
+		(SBBlockSuggestionItem selector: '[myVar]' label: 'variable') builder: ['[myVar]' parseAsSandblock].
+		self constantSuggestionsFor: aSBVPUnknownLabel}
 ]
 
 { #category : #'as yet unclassified' }
@@ -609,28 +594,15 @@ SBVPBindingPattern >> matches: aVisualPrimitive withBinding: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPBindingPattern >> missingProperties [
-
-	^ self visualPrimitiveMappings select: [:mapping |
-		(self labelPositions includes: mapping vpProperty)
-			ifTrue: [
-				(self blockDict
-					at: mapping vpProperty
-					ifPresent: [:block | block firstSubmorphOrNil]
-					ifAbsent: [nil]) isNil]
-			ifFalse: [false]]
-]
-
-{ #category : #'as yet unclassified' }
 SBVPBindingPattern >> newEmptyChildNear: aBlock before: aBoolean [
 
 	^ self newUnknown
 ]
 
 { #category : #'as yet unclassified' }
-SBVPBindingPattern >> newUnknown [
+SBVPBindingPattern >> newLabelBlockAt: aVPProperty [
 
-	^ SBVPUnknownLabel new grammarHandler: SBStGrammarHandler new
+	^ self newUnknown
 ]
 
 { #category : #'as yet unclassified' }
@@ -734,6 +706,12 @@ SBVPBindingPattern >> setChildBindingFor: aVisualPrimitive in: aDict [
 SBVPBindingPattern >> staticVisualPrimitiveMapping [
 
 	^ self visualPrimitiveMappings select: [:mapping | mapping patternValue notNil]
+]
+
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern >> supportsLabels [
+
+	^ true
 ]
 
 { #category : #'as yet unclassified' }

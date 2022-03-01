@@ -58,7 +58,7 @@ SBVPGrammarObject >> initialize [
 
 	members := nil.
 	content := nil.
-	objectName := ''.
+	objectName := nil.
 	objectValue := ''.
 	type := ''
 ]

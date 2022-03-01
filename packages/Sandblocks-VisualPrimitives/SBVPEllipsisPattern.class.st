@@ -166,6 +166,12 @@ SBVPEllipsisPattern >> searchRootFor: aVisualPrimitive at: anIndex [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPEllipsisPattern >> supportsLabels [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBVPEllipsisPattern >> wantsImplicitNeighbors [
 
 	^ false

@@ -36,7 +36,6 @@ Class {
 		'blockDict',
 		'children',
 		'parent',
-		'origin',
 		'sourceObject'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
@@ -119,6 +118,27 @@ SBVisualPrimitive >> addChild: aVisualPrimitive afterIndex: aNumber [
 ]
 
 { #category : #'as yet unclassified' }
+SBVisualPrimitive >> addLabel [
+	<action>
+	<actionValidIf: #supportsLabels>
+
+	| index notSetProperties |
+	notSetProperties := self missingProperties.
+	index := UIManager default chooseFrom: (notSetProperties collect: [:propertyMapping | propertyMapping name]).
+	index > 0 ifTrue: [ | vpProperty newBlock |
+		vpProperty := (notSetProperties at: index) vpProperty.
+		self sandblockEditor do: (SBDoItCommand new
+			do: [
+				self setLabelAt: vpProperty to: (newBlock := self newLabelBlockAt: vpProperty).
+				self layout.
+				self afterAddLabel: newBlock.
+				newBlock];
+			undo: [
+				self removeLabelAt: vpProperty.
+				self layout])]
+]
+
+{ #category : #'as yet unclassified' }
 SBVisualPrimitive >> addNewChild [
 	<action>
 
@@ -178,6 +198,18 @@ SBVisualPrimitive >> addPropertyMappings: aCollection [
 SBVisualPrimitive >> addToWorld: aWorld [
 
 	^ self subclassResponsibility
+]
+
+{ #category : #'as yet unclassified' }
+SBVisualPrimitive >> afterAddLabel: aBlock [
+
+	
+]
+
+{ #category : #'as yet unclassified' }
+SBVisualPrimitive >> afterAddingLabel: aBlock [
+
+	
 ]
 
 { #category : #nil }
@@ -275,6 +307,21 @@ SBVisualPrimitive >> children: aCollection [
 
 	children := aCollection asOrderedCollection.
 	children do: [:child | child parent: self]
+]
+
+{ #category : #'as yet unclassified' }
+SBVisualPrimitive >> constantSuggestionsFor: aSBVPUnknownLabel [
+
+	| aVPProperty suggestionConstant constantString suggestionConstantBlock |
+	aVPProperty := self labelPositionOf: aSBVPUnknownLabel.
+	suggestionConstant := self suggestionConstantAt: aVPProperty.
+	suggestionConstantBlock := self suggestionConstantBlockAt: aVPProperty.
+	constantString := String streamContents: [:stream |
+		stream
+			nextPut: $[;
+			store: suggestionConstant;
+			nextPut: $]].
+	^ (SBBlockSuggestionItem selector: constantString label: 'constant') builder: [suggestionConstantBlock]
 ]
 
 { #category : #'as yet unclassified' }
@@ -407,9 +454,22 @@ SBVisualPrimitive >> labelDict: anObject [
 ]
 
 { #category : #'as yet unclassified' }
+SBVisualPrimitive >> labelPositionOf: aMorph [
+
+	self blockDict keysAndValuesDo: [:position :block | (aMorph hasOwner: block) ifTrue: [^ position]].
+	^ nil
+]
+
+{ #category : #'as yet unclassified' }
 SBVisualPrimitive >> labelPositions [
 
 	^ self topLabelPositions, self middleLabelPositions, self bottomLabelPositions
+]
+
+{ #category : #'as yet unclassified' }
+SBVisualPrimitive >> labelSuggestionsFor: aSBVPUnknownLabel [
+
+	^ {self constantSuggestionsFor: aSBVPUnknownLabel}
 ]
 
 { #category : #'as yet unclassified' }
@@ -439,6 +499,19 @@ SBVisualPrimitive >> middleBlockPositions [
 SBVisualPrimitive >> middleLabelPositions [
 
 	^ {#leftLabel. #innerLabel. #rightLabel}
+]
+
+{ #category : #'as yet unclassified' }
+SBVisualPrimitive >> missingProperties [
+
+	^ self visualPrimitiveMappings select: [:mapping |
+		(self labelPositions includes: mapping vpProperty)
+			ifTrue: [
+				(self blockDict
+					at: mapping vpProperty
+					ifPresent: [:block | block firstSubmorphOrNil]
+					ifAbsent: [nil]) isNil]
+			ifFalse: [false]]
 ]
 
 { #category : #accessing }
@@ -483,6 +556,18 @@ SBVisualPrimitive >> moveCursorUp [
 	self floating
 		ifTrue: [self parent ifNotNil: #select ifNil: [self selectTopToplevel]]
 		ifFalse: [self sandblockEditor cursor moveCursorUp]
+]
+
+{ #category : #'as yet unclassified' }
+SBVisualPrimitive >> newLabelBlockAt: aVPProperty [
+
+	^ self suggestionConstantBlockAt: aVPProperty
+]
+
+{ #category : #'as yet unclassified' }
+SBVisualPrimitive >> newUnknown [
+
+	^ SBVPUnknownLabel new grammarHandler: SBStGrammarHandler new
 ]
 
 { #category : #accessing }
@@ -621,6 +706,31 @@ SBVisualPrimitive >> sourceObject: anObject [
 ]
 
 { #category : #'as yet unclassified' }
+SBVisualPrimitive >> suggestionConstantAt: aVPProperty [
+
+	| aSBVPPropertyMapping |
+	aSBVPPropertyMapping := self vpMappingAt: aVPProperty.
+	^ aSBVPPropertyMapping ifNotNil: #suggestionConstant ifNil: [#a]
+]
+
+{ #category : #'as yet unclassified' }
+SBVisualPrimitive >> suggestionConstantBlockAt: aVPProperty [
+
+	| suggestionConstant aSBVPPropertyMapping |
+	aSBVPPropertyMapping := self vpMappingAt: aVPProperty.
+	suggestionConstant := self suggestionConstantAt: aVPProperty.
+	^ aSBVPPropertyMapping
+		ifNotNil: [aSBVPPropertyMapping getMorphForValue: suggestionConstant]
+		ifNil: [#a]
+]
+
+{ #category : #'as yet unclassified' }
+SBVisualPrimitive >> supportsLabels [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBVisualPrimitive >> topLabelPositions [
 
 	^ {#topLeftLabel. #topCenterLabel. #topRightLabel}
@@ -630,6 +740,30 @@ SBVisualPrimitive >> topLabelPositions [
 SBVisualPrimitive >> valueFromPropertyMapping: aPropertyMapping [
 
 	^ aPropertyMapping value: self sourceObject
+]
+
+{ #category : #'as yet unclassified' }
+SBVisualPrimitive >> visualPrimitiveMappings [
+
+	^ self sourceObject class visualPrimitiveMapping collect: [:mappingOrAssoc |
+		mappingOrAssoc isPropertyMapping
+			ifTrue: [mappingOrAssoc]
+			ifFalse: [SBVPPropertyMapping fromAssociation: mappingOrAssoc]]
+]
+
+{ #category : #'as yet unclassified' }
+SBVisualPrimitive >> vpMappingAt: aVPProperty [
+
+	^ self visualPrimitiveMappings
+		detect: [:mapping | mapping key = aVPProperty]
+		ifFound: [:mapping | mapping asPropertyMapping]
+		ifNone: [nil]
+]
+
+{ #category : #'as yet unclassified' }
+SBVisualPrimitive >> vpMappingOf: aBlock [
+
+	^ self vpMappingAt: (self labelPositionOf: aBlock)
 ]
 
 { #category : #'as yet unclassified' }
