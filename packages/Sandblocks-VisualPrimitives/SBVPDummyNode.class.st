@@ -76,7 +76,6 @@ SBVPDummyNode class >> visualPrimitiveMapping [
 			layoutInset: 8;
 			yourself).
 		#identityLabelPosition vpConstant: #bottomCenterLabel.
-		#topLeftLabel vpConstant: SBIcon iconBug.
 		#innerLabel vpNumberFor: #key.
 		self connectionsMappingEntry}
 ]

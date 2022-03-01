@@ -26,13 +26,10 @@ SBVPGrammarObject class >> fromJsonObject: aJsonObject [
 SBVPGrammarObject class >> visualPrimitiveMapping [
 
 	^ {
-		#shape vpConstant: CircleMorph new.
+		#shape vpConstant: (CircleMorph new color: Color white).
 		#identityLabelPosition vpConstant: #bottomCenterLabel.
-		
 		#topLeftLabel vpSelectFrom: {'SEQ'. 'REPEAT'. 'REPEAT1'. 'SYMBOL'} for: #type.
-		
 		#innerLabel vpStringFor: #objectName.
-		
 		SBVPPropertyMappingConnections
 			getter: [:object | object members ifNil: [{object content} asOrderedCollection]]
 			setter: [:object :connections |

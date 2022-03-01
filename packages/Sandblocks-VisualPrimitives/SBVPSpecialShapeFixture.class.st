@@ -18,6 +18,5 @@ SBVPSpecialShapeFixture class >> visualPrimitiveMapping [
 			vpProperty: #shape
 			name: 'shape'.
 		SBVPPropertyMappingNumber property: #key vpProperty: #innerLabel.
-		self connectionsMappingEntry.
-		#topLeftLabel -> SBIcon iconBug}
+		self connectionsMappingEntry}
 ]

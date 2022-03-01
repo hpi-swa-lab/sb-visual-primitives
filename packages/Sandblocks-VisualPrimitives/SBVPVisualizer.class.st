@@ -148,14 +148,14 @@ SBVPVisualizer >> exampleGameCardHand [
 				type: 'fire';
 				yourself.
 			c2 := SBVPGameCard new
-				attack: 3;
-				defense: 10;
-				type: 'water';
-				yourself.
-			c3 := SBVPGameCard new
 				attack: 300;
 				defense: 1;
 				type: 'bug';
+				yourself.
+			c3 := SBVPGameCard new
+				attack: 3;
+				defense: 10;
+				type: 'water';
 				yourself.
 			SBVPGameCardHand new cards: {c1. c2. c3}]
 		showCode: true
