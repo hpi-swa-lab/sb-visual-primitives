@@ -204,7 +204,7 @@ SBVPTransformation >> replace: aNumber matches: anObject [
 	[(match := matcher getNextMatch) notNil and: [(iteration := iteration + 1) < aNumber]] whileTrue: [
 		currentPrimitive := matcher build: self outputPattern fromBinding: match.
 		matcher input: currentPrimitive].
-	^ currentPrimitive getObjectFromVisualPrimitive
+	^ currentPrimitive buildObject
 ]
 
 { #category : #'as yet unclassified' }
@@ -223,7 +223,7 @@ SBVPTransformation >> replaceAllMatches: anObject [
 	[match := matcher getNextMatch] whileNotNil: [
 		currentPrimitive := matcher build: self outputPattern fromBinding: match.
 		matcher input: currentPrimitive].
-	^ currentPrimitive getObjectFromVisualPrimitive
+	^ currentPrimitive buildObject
 ]
 
 { #category : #'as yet unclassified' }
@@ -249,7 +249,7 @@ SBVPTransformation >> value: anObject [
 	match := matcher getNextMatch.
 	^ match
 		ifNil: [anObject]
-		ifNotNil: [(matcher build: self outputPattern fromBinding: match) getObjectFromVisualPrimitive]
+		ifNotNil: [(matcher build: self outputPattern fromBinding: match) buildObject]
 ]
 
 { #category : #'as yet unclassified' }
