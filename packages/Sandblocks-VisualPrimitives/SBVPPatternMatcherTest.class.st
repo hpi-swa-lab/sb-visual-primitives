@@ -186,7 +186,7 @@ SBVPPatternMatcherTest >> examplePatternTwoWildcardList [
 SBVPPatternMatcherTest >> exampleWithConstants: salzstangen [
 
 	| case |
-	case := SBVPCase
+	case := SBVPTransformation
 		input: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern expressionDict: {#identity -> [salzstangen]} children: {
 				SBVPBindingPattern
@@ -335,7 +335,7 @@ SBVPPatternMatcherTest >> testSortTreeOutput [
 
 	| root output |
 	root := SBVPDummyNode buildTree: {0 -> {1 -> {3 -> {5. 4}. 2 -> {6. 7}}}}.
-	output := (SBVPCase
+	output := (SBVPTransformation
 		input: SBVPPatternMatcherTest new examplePatternSortTree
 		output: SBVPPatternMatcherTest new examplePatternSortTreeOutput) replaceAllMatches: root.
 	self

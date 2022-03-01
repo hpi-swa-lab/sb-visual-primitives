@@ -277,7 +277,7 @@ SBVPGroupPattern >> reset [
 { #category : #'as yet unclassified' }
 SBVPGroupPattern >> resetVisualization [
 
-	self parentCaseOrQuery ifNotNil: [
+	self patternContainer ifNotNil: [
 		self row removeAllMorphs.
 		self children do: [:aPattern | self openPatternAsChild: aPattern]]
 ]

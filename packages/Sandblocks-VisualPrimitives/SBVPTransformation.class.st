@@ -1,0 +1,272 @@
+"
+An SBVPTransformation is the visual representation of a pattern matching rule with SBVisualPrimitives. It consists of an input and an output pattern (see SBVPPattern). For the pattern matching see SBVPPatternMatcher. You can choose a default class that determines the visualPrimitiveMapping for the SBVPBindingPatterns.
+
+By applying the case on an input object, the input pattern gets matched on this object and the matched part gets transformed to match the output pattern.
+
+Instance Variables
+	classNameInput:				SBStClassNameInput
+	defaultVisualizationClass:	Class
+	informationRow:				SBRow
+	pattern:							SBBlock (SBVPPattern)
+	outputPattern:					SBBlock (SBVPPattern)
+	strategy:							Dictionary
+
+classNameInput
+	- allows to select the defaultPatternVisualizationClass
+
+defaultVisualizationClass
+	- SBVPBindingPatterns use this class's visualPrimitiveMapping to determine how to display themselves per default
+
+informationRow
+	- container for all other components
+
+pattern
+	- the input pattern that is matched on
+	- can be every kind of SBVPPattern
+
+outputPattern
+	- this is the result of the transformation
+	if true, the root of every SBVPBindingPattern only matches the root of the input
+	if false, the pattern can also match somewhere else in the input without further specification
+
+strategy
+	- a dict to specify the matching strategy
+	- current specifiers with their defaults:
+		- #explicitRootMatching -> true
+			- if true, the root of every SBVPBindingPattern only matches the root of the input
+			- if false, the pattern can also match somewhere else in the input without further specification
+		- #explicitChildrenMatching -> true
+			- if true, every child has to be specified explicitly
+			- if false, the pattern can also match if the specified children have more siblings than the pattern has. 
+			  If there are no children specified in the pattern, an SBVPEllipsisPattern is implicitely added.
+"
+Class {
+	#name : #SBVPTransformation,
+	#superclass : #SBVPPatternContainer,
+	#instVars : [
+		'outputPattern'
+	],
+	#category : #'Sandblocks-VisualPrimitives'
+}
+
+{ #category : #'as yet unclassified' }
+SBVPTransformation class >> input: anInputVisualizer output: anOutputVisualizer [
+	" marker "
+
+	^ self new input: anInputVisualizer output: anOutputVisualizer
+]
+
+{ #category : #'as yet unclassified' }
+SBVPTransformation class >> input: anInputVisualizer output: anOutputVisualizer strategy: aDict [
+	" marker "
+
+	^ self new
+		input: anInputVisualizer output: anOutputVisualizer;
+		strategy: aDict
+]
+
+{ #category : #'as yet unclassified' }
+SBVPTransformation class >> input: anInputVisualizer output: anOutputVisualizer strategy: aDict visualizePatternsAs: aClass [
+	" marker "
+
+	^ self new
+		defaultVisualizationClass: aClass;
+		input: anInputVisualizer output: anOutputVisualizer;
+		strategy: aDict
+]
+
+{ #category : #'as yet unclassified' }
+SBVPTransformation class >> matches: aBlock [
+
+	^ (aBlock receiver satisfies: #(#notNil #isBinding))
+		and: [aBlock receiver contents = self name]
+		and: [{#input:output:. #input:output:strategy:. #input:output:strategy:visualizePatternsAs:} anySatisfy: [:selector | self selector: selector receiverMatches: aBlock]]
+]
+
+{ #category : #'as yet unclassified' }
+SBVPTransformation class >> newFor: aBlock [
+
+	| input output |
+	input := aBlock arguments first.
+	input isVisualPrimitive ifFalse: [input := input evaluate].
+	output := aBlock arguments second.
+	output isVisualPrimitive ifFalse: [output := output evaluate].
+	
+	^ aBlock arguments size > 2
+		ifTrue: [ | strategy |
+			strategy := aBlock arguments third evaluate.
+			aBlock arguments size > 3
+				ifTrue: [
+					self
+						input: input
+						output: output
+						strategy: strategy
+						visualizePatternsAs: aBlock arguments fourth evaluate]
+				ifFalse: [self input: input output: output strategy: strategy]]
+		ifFalse: [self input: input output: output]
+]
+
+{ #category : #'as yet unclassified' }
+SBVPTransformation class >> suggestion [
+
+	^ [:block | | case |
+		case := self input: SBVPGroupPattern new output: SBVPGroupPattern new.
+		block sandblockEditor do: (SBReplaceCommand new
+			target: block;
+			replacer: case;
+			yourself).
+		case classNameInput promptClassForVPCase]
+]
+
+{ #category : #'as yet unclassified' }
+SBVPTransformation >> buildImplicitChildrenMatchingPattern [
+
+	(self pattern notNil and: [self outputPattern notNil]) ifTrue: [
+		self pattern removeImplicitChildren.
+		self outputPattern removeImplicitChildren.
+		
+		self explicitChildrenMatching ifFalse: [ | additionalNodes |
+			additionalNodes := Dictionary new.
+			self pattern
+				buildImplicitChildren: additionalNodes;
+				attachTreeDecorator.
+			self outputPattern
+				addImplicitChildren: additionalNodes;
+				attachTreeDecorator].
+		self pattern layout.
+		self outputPattern layout]
+]
+
+{ #category : #'as yet unclassified' }
+SBVPTransformation >> colorDifferences [
+
+	| inputRoot outputRoot inputBindingDict outputBindingDict colors |
+	inputRoot := self pattern connections first.
+	outputRoot := self outputPattern connections first.
+	
+	inputBindingDict := self findAllBindings: inputRoot.
+	outputBindingDict := self findAllBindings: outputRoot.
+	
+	colors := Color wheel: inputBindingDict size saturation: 1.0 brightness: 1.0.
+	
+	inputBindingDict keysDo: [:bindingKey | | inputNode outputNode |
+		inputNode := inputBindingDict at: bindingKey.
+		outputNode := outputBindingDict at: bindingKey ifAbsent: [nil].
+		outputNode isNil ifTrue: [] ifFalse: [
+			inputNode connections withIndexDo: [:connection :index | | outputConnection c |
+				outputConnection := outputNode connections at: index ifAbsent: [nil].
+				c := colors at: connection label.
+				connection label = (outputConnection ifNotNil: #label) ifFalse: [
+					connection color: c.
+					(outputBindingDict at: connection label ifAbsent: [nil]) ifNotNil: [:o | o color: c]]]]]
+]
+
+{ #category : #'as yet unclassified' }
+SBVPTransformation >> input: aPattern output: anotherPattern [
+
+	self
+		pattern: aPattern;
+		outputPattern: anotherPattern.
+	self buildImplicitChildrenMatchingPattern
+]
+
+{ #category : #'as yet unclassified' }
+SBVPTransformation >> noteNewOwner: aMorph [
+
+	| wasBuilt |
+	wasBuilt := self classNameInput notNil.
+	super noteNewOwner: aMorph.
+	(wasBuilt not and: [self classNameInput notNil]) ifTrue: [
+		self pattern owner
+			addMorphBack: SBIcon iconArrowRight;
+			addMorphBack: self outputPattern]
+]
+
+{ #category : #'as yet unclassified' }
+SBVPTransformation >> outputPattern [
+
+	^ outputPattern
+]
+
+{ #category : #'as yet unclassified' }
+SBVPTransformation >> outputPattern: aPattern [
+
+	outputPattern := aPattern
+]
+
+{ #category : #'as yet unclassified' }
+SBVPTransformation >> replace: aNumber matches: anObject [
+
+	| matcher currentPrimitive match iteration |
+	currentPrimitive := anObject asVisualPrimitive.
+	matcher := (SBVPPatternMatcher input: currentPrimitive pattern: self pattern) strategy: self strategy.
+	iteration := 0.
+	[(match := matcher getNextMatch) notNil and: [(iteration := iteration + 1) < aNumber]] whileTrue: [
+		currentPrimitive := matcher build: self outputPattern fromBinding: match.
+		matcher input: currentPrimitive].
+	^ currentPrimitive getObjectFromVisualPrimitive
+]
+
+{ #category : #'as yet unclassified' }
+SBVPTransformation >> replaceAllMatches [
+
+	^ self replaceAllMatches: self pattern findOriginRoot
+]
+
+{ #category : #'as yet unclassified' }
+SBVPTransformation >> replaceAllMatches: anObject [
+
+	| matcher currentPrimitive match |
+	currentPrimitive := anObject asVisualPrimitive.
+	
+	matcher := (SBVPPatternMatcher input: currentPrimitive pattern: self pattern) strategy: self strategy.
+	[match := matcher getNextMatch] whileNotNil: [
+		currentPrimitive := matcher build: self outputPattern fromBinding: match.
+		matcher input: currentPrimitive].
+	^ currentPrimitive getObjectFromVisualPrimitive
+]
+
+{ #category : #'as yet unclassified' }
+SBVPTransformation >> toggleImplicitChildTo: aBoolean withBinding: aString [
+
+	super toggleImplicitChildTo: aBoolean withBinding: aString.
+	self toggleImplicitChildTo: aBoolean withBinding: aString on: self outputPattern
+]
+
+{ #category : #'as yet unclassified' }
+SBVPTransformation >> value [
+
+	^ self value: self pattern findOriginRoot
+]
+
+{ #category : #'as yet unclassified' }
+SBVPTransformation >> value: anObject [
+
+	| matcher match |
+	matcher := (SBVPPatternMatcher
+		input: anObject asVisualPrimitive
+		pattern: self pattern) strategy: self strategy.
+	match := matcher getNextMatch.
+	^ match
+		ifNil: [anObject]
+		ifNotNil: [(matcher build: self outputPattern fromBinding: match) getObjectFromVisualPrimitive]
+]
+
+{ #category : #'as yet unclassified' }
+SBVPTransformation >> writeSourceOn: aStream [
+
+	aStream nextPutAll: '(SBVPCase input: '.
+	self pattern writeSourceOn: aStream.
+	aStream nextPutAll: ' output: '.
+	self outputPattern writeSourceOn: aStream.
+	
+	self strategy ifNotNil: [
+		aStream nextPutAll: ' strategy: '.
+		self strategy storeOn: aStream].
+	
+	self defaultVisualizationClass ifNotNil: [
+		aStream nextPutAll: ' visualizePatternsAs: '.
+		self defaultPatternVisualizationClass storeOn: aStream].
+	
+	aStream nextPut: $)
+]

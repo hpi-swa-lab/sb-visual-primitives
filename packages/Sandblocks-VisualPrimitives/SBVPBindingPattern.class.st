@@ -186,9 +186,10 @@ SBVPBindingPattern class >> newFor: aBlock [
 	| selectors arguments |
 	selectors := aBlock selector findTokens: ':'.
 	arguments := aBlock arguments with: selectors collect: [:argument :selector |
-		selector = 'children'
-			ifTrue: [argument childSandblocks]
-			ifFalse: [[argument evaluate] on: Error do: [{self identityName -> aBlock sourceString}]]].
+		selector = 'children' ifTrue: [argument childSandblocks] ifFalse: [
+			selector = 'writeBackClosure'
+				ifTrue: [argument]
+				ifFalse: [[argument evaluate] on: Error do: [{self identityName -> aBlock sourceString}]]]].
 	
 	^ self perform: aBlock selector asSymbol withArguments: arguments
 ]
@@ -297,10 +298,16 @@ SBVPBindingPattern >> bindingIndex: anObject [
 SBVPBindingPattern >> bindingIndexAutoCast [
 
 	^ [:name :owner | | case |
-		case := self parentCaseOrQuery.
-		(case notNil and: [name hasOwner: case input])
+		case := self patternContainer.
+		(case notNil and: [name hasOwner: case pattern])
 			ifTrue: [name behaviorClass: SBStDeclarationForVPBinding]
 			ifFalse: [name behaviorClass: SBStBinding]]
+]
+
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern >> bindingIndexWithImplicitPrefix: aBoolean [
+
+	^ self bindingIndex
 ]
 
 { #category : #'as yet unclassified' }
@@ -369,7 +376,7 @@ SBVPBindingPattern >> buildImplicitChildren: aDict [
 		implicitChild := SBVPEllipsisPattern bindingDict: {self class identityName -> identifier}.
 		self addChild: implicitChild afterIndex: index + implicitChildren size.
 		implicitChild isImplicitChild: true.
-		self owner addMorphBack: implicitChild.
+		self owner ifNotNil: [:owner | owner addMorphBack: implicitChild].
 		implicitChildren add: identifier.
 		nextIndex := nextIndex + 1].
 	
@@ -630,7 +637,7 @@ SBVPBindingPattern >> newUnknown [
 SBVPBindingPattern >> noteNewOwner: newOwner [
 
 	super noteNewOwner: newOwner.
-	self parentCaseOrQuery ifNotNil: [self rebuild]
+	self patternContainer ifNotNil: [self rebuild]
 ]
 
 { #category : #'as yet unclassified' }
@@ -753,7 +760,7 @@ SBVPBindingPattern >> visualPrimitiveMappings [
 { #category : #accessing }
 SBVPBindingPattern >> visualizingClass [
 
-	^ visualizingClass ifNil: [self parentCaseOrQuery ifNotNil: #defaultVisualizationClass]
+	^ visualizingClass ifNil: [self patternContainer ifNotNil: #defaultVisualizationClass]
 ]
 
 { #category : #accessing }
@@ -776,7 +783,6 @@ SBVPBindingPattern >> writeBackClosure: anObject [
 		ifTrue: [ | variableBlock |
 			variableBlock := anObject statements first receiver copy.
 			self innerLabel: variableBlock.
-			self labelDict removeKey: #innerLabel.
 			self writeBackClosureString: anObject sourceString.
 			anObject evaluate]
 		ifFalse: [anObject]

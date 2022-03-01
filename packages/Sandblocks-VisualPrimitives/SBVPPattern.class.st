@@ -112,17 +112,9 @@ SBVPPattern >> parentCase [
 
 	| case |
 	case := self root parentSandblock.
-	^ ((case isKindOf: SBVPCase) or: [case isKindOf: SBVPQuery])
+	^ ((case isKindOf: SBVPTransformation) or: [case isKindOf: SBVPQuery])
 		ifTrue: [case]
 		ifFalse: [nil]
-]
-
-{ #category : #'as yet unclassified' }
-SBVPPattern >> parentCaseOrQuery [
-
-	| case |
-	case := self root parentSandblock.
-	^ self parentCase ifNotNil: [self parentCase] ifNil: [self parentQuery]
 ]
 
 { #category : #'as yet unclassified' }
@@ -131,6 +123,12 @@ SBVPPattern >> parentQuery [
 	| case |
 	case := self root parentSandblock.
 	^ (case isKindOf: SBVPQuery) ifTrue: [case] ifFalse: [nil]
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPattern >> patternContainer [
+
+	^ self parentCase ifNotNil: [self parentCase] ifNil: [self parentQuery]
 ]
 
 { #category : #'as yet unclassified' }

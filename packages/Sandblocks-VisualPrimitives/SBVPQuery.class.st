@@ -14,11 +14,7 @@ strategy
 "
 Class {
 	#name : #SBVPQuery,
-	#superclass : #SBStSubstitution,
-	#instVars : [
-		'input',
-		'strategy'
-	],
+	#superclass : #SBVPPatternContainer,
 	#category : #'Sandblocks-VisualPrimitives'
 }
 
@@ -34,17 +30,16 @@ SBVPQuery class >> exampleExtractLeafOf: salzstangen [
 		label: 'example'.
 	currentNode := salzstangen.
 	[
-		SBVPQuery
-			input: (SBVPGroupPattern patterns: {
+		(SBVPQuery
+			pattern: (SBVPGroupPattern patterns: {
 				SBVPBindingPattern
 					expressionDict: {#identity -> [currentNode]}
-					children: {SBVPBindingPattern bindingDict: {#identity -> #newChild}}})
-			output: []
+					children: {SBVPBindingPattern writeBackClosure: [:var | newMaybeLeaf := var]}})
 			strategy: (Dictionary new
-				add: #explicitRootMatching -> true;
-				add: #explicitChildrenMatching -> true;
+				add: #explicitRootMatching -> false;
+				add: #explicitChildrenMatching -> false;
 				yourself)
-			visualizePatternsAs: SBVPDummyNode] whileNotNil: [
+			visualizePatternsAs: SBVPDummyNode) query] whileNotNil: [
 		currentNode := newMaybeLeaf.
 		Transcript showln: 'HI'].
 	^ currentNode
@@ -61,55 +56,15 @@ SBVPQuery class >> exampleTwo: salzstangen [
 	currentSnack := salzstangen.
 	[
 		SBVPQuery
-			input: (SBVPGroupPattern patterns: {
+			pattern: (SBVPGroupPattern patterns: {
 				SBVPBindingPattern
 					bindingDict: {#identity -> #c}
 					expressionDict: {#topLeftLabel -> ['REPEAT1']}
-					children: {SBVPBindingPattern bindingDict: {#identity -> #b}}})
+					connections: {SBVPBindingPattern bindingDict: {#identity -> #b}}})
 			strategy: {#explicitRootMatching -> true} asDictionary] whileNotNil: [
 		Transcript showln: gerhard key.
 		currentSnack := gerhard].
 	^ gerhard
-]
-
-{ #category : #'as yet unclassified' }
-SBVPQuery class >> input: anSBVPVisualizer [
-	" marker "
-
-	^ self new
-		input: anSBVPVisualizer;
-		output: []
-]
-
-{ #category : #'as yet unclassified' }
-SBVPQuery class >> input: anSBVPVisualizer output: aBlock [
-	" marker "
-
-	^ self new
-		input: anSBVPVisualizer;
-		output: aBlock
-]
-
-{ #category : #'as yet unclassified' }
-SBVPQuery class >> input: anSBVPVisualizer output: aBlock strategy: aDict [
-	" marker "
-
-	^ self new
-		input: anSBVPVisualizer;
-		output: aBlock;
-		strategy: aDict
-]
-
-{ #category : #'as yet unclassified' }
-SBVPQuery class >> input: anSBVPVisualizer output: aBlock strategy: aDict visualizePatternsAs: aClass [
-	" marker "
-
-	^ self new
-		input: anSBVPVisualizer;
-		output: aBlock;
-		strategy: aDict;
-		defaultVisualizationClass: aClass;
-		yourself
 ]
 
 { #category : #'as yet unclassified' }
@@ -124,43 +79,65 @@ SBVPQuery class >> input: anSBVPVisualizer strategy: aDict [
 { #category : #'as yet unclassified' }
 SBVPQuery class >> matches: aBlock [
 
-	(super matches: aBlock) ifFalse: [^ false].
 	^ (aBlock receiver satisfies: #(#notNil #isBinding))
 		and: [aBlock receiver contents = self name]
-		and: [{#input:. #input:strategy:. #input:output:strategy:. #input:output:strategy:visualizePatternsAs:} anySatisfy: [:selector | self selector: selector receiverMatches: aBlock]]
+		and: [{#pattern:. #pattern:strategy:. #pattern:strategy:visualizePatternsAs:} anySatisfy: [:selector | self selector: selector receiverMatches: aBlock]]
 ]
 
 { #category : #'as yet unclassified' }
 SBVPQuery class >> newFor: aBlock [
 
-	| input output |
-	input := aBlock arguments first.
-	input isVisualPrimitive ifFalse: [input := input evaluate].
-	output := aBlock arguments second evaluate asSandblock.
+	| pattern |
+	pattern := aBlock arguments first.
+	pattern isVisualPrimitive ifFalse: [pattern := pattern evaluate].
 	^ aBlock arguments size caseOf: {
-		[1] -> [self input: input].
-		[2] -> [self input: input output: output].
-		[3] -> [self input: input output: output strategy: aBlock arguments third evaluate].
-		[4] -> [
+		[1] -> [self pattern: pattern].
+		[2] -> [self pattern: pattern strategy: aBlock arguments second evaluate].
+		[3] -> [
 			self
-				input: input
-				output: output
-				strategy: aBlock arguments third evaluate
-				visualizePatternsAs: aBlock arguments fourth evaluate]}
+				pattern: pattern
+				strategy: aBlock arguments second evaluate
+				visualizePatternsAs: aBlock arguments third evaluate]}
+]
+
+{ #category : #'as yet unclassified' }
+SBVPQuery class >> pattern: anSBVPVisualizer [
+	" marker "
+
+	^ self new pattern: anSBVPVisualizer
+]
+
+{ #category : #'as yet unclassified' }
+SBVPQuery class >> pattern: anSBVPVisualizer strategy: aDict [
+	" marker "
+
+	^ self new
+		pattern: anSBVPVisualizer;
+		strategy: aDict
+]
+
+{ #category : #'as yet unclassified' }
+SBVPQuery class >> pattern: aPattern strategy: aDict visualizePatternsAs: aClass [
+	" marker "
+
+	^ self new
+		pattern: aPattern;
+		strategy: aDict;
+		defaultVisualizationClass: aClass;
+		yourself
 ]
 
 { #category : #'as yet unclassified' }
 SBVPQuery >> buildImplicitChildrenMatchingPattern [
 
-	self input notNil ifTrue: [
-		self input removeImplicitChildren.
+	self pattern notNil ifTrue: [
+		self pattern removeImplicitChildren.
 		
-		self explicitChildrenMatching ifFalse: [ | additionalNodes |
-			additionalNodes := Dictionary new.
-			self input
-				buildImplicitChildren: additionalNodes;
+		self explicitChildrenMatching ifFalse: [
+			self pattern
+				buildImplicitChildren: Dictionary new;
 				attachTreeDecorator].
-		self input layout]
+		self pattern layout]
 ]
 
 { #category : #'as yet unclassified' }
@@ -176,7 +153,7 @@ SBVPQuery >> input: anSBBlock output: anotherSBBlock [
 { #category : #'as yet unclassified' }
 SBVPQuery >> query [
 
-	^ self query: self input findOriginRoot
+	^ self query: self pattern findOriginRoot
 ]
 
 { #category : #'as yet unclassified' }
@@ -185,18 +162,22 @@ SBVPQuery >> query: anSBVPDummyNode [
 	| matcher match |
 	matcher := (SBVPPatternMatcher
 		input: anSBVPDummyNode asVisualPrimitive
-		pattern: self input) strategy: self strategy.
+		pattern: self pattern) strategy: self strategy.
 	match := matcher getNextMatch.
-	^ match ifNil: [nil] ifNotNil: [(match at: #a) buildObject]
+	^ match
+]
+
+{ #category : #'as yet unclassified' }
+SBVPQuery >> toggleImplicitChildTo: aBoolean withBinding: aString [
+
+	self toggleImplicitChildTo: aBoolean withBinding: aString on: self pattern
 ]
 
 { #category : #'as yet unclassified' }
 SBVPQuery >> writeSourceOn: aStream [
 
-	aStream nextPutAll: '(SBVPQuery input: '.
-	self input writeSourceOn: aStream.
-	aStream nextPutAll: ' output: '.
-	self output writeSourceOn: aStream.
+	aStream nextPutAll: '(SBVPQuery pattern: '.
+	self pattern writeSourceOn: aStream.
 	
 	self strategy ifNotNil: [
 		aStream nextPutAll: ' strategy: '.

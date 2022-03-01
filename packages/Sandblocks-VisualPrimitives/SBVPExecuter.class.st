@@ -22,7 +22,7 @@ SBVPExecuter class >> anExample: anExampleTree [
 		example: [SBVPExecuter]
 		args: [{(SBVPDummyNode buildTree: {9 -> {10}}) showAsVisualPrimitive}]
 		label: 'example'.
-	^ (SBVPCase
+	^ (SBVPTransformation
 		input: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern bindingDict: {#identity -> #a}.
 			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) key = 10]})
@@ -64,7 +64,7 @@ SBVPExecuter class >> exampleBuildHeapBrokenBindings: aTree [
 			{
 				(SBVPDummyNode buildTree: {9 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}) showAsVisualPrimitive}]
 		label: 'example'.
-	^ (SBVPCase
+	^ (SBVPTransformation
 		input: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern bindingDict: {#identity -> #g} children: {
 				SBVPEllipsisPattern bindingDict: {#identity -> #b}.
@@ -90,7 +90,7 @@ SBVPExecuter class >> exampleBuildHeapBrokenBindings: aTree [
 { #category : #'as yet unclassified' }
 SBVPExecuter class >> exampleBuildHeapCase [
 
-	^ SBVPCase
+	^ SBVPTransformation
 		input: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern bindingDict: {#identity -> #a} children: {
 				SBVPEllipsisPattern bindingDict: {#identity -> #b}.
@@ -134,7 +134,7 @@ SBVPExecuter class >> exampleBuildHeapChain: aTree [
 						right: ((SBVPDummyNode key: 2) left: (SBVPDummyNode key: 8))))) showAsVisualPrimitive}]
 		label: 'example'.
 	maxHeap := self exampleBuildHeapCase replaceAllMatches: aTree.
-	^ (SBVPCase
+	^ (SBVPTransformation
 		input: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern
 				bindingDict: {#identity -> #a}
@@ -169,7 +169,7 @@ SBVPExecuter class >> exampleBuildHeapSpecialShape: aTree [
 			{
 				(SBVPSpecialShapeFixture buildTree: {9 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}) showAsVisualPrimitive}]
 		label: 'example'.
-	^ (SBVPCase
+	^ (SBVPTransformation
 		input: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern bindingDict: {#identity -> #a} children: {
 				SBVPEllipsisPattern bindingDict: {#identity -> #b}.
@@ -202,7 +202,7 @@ SBVPExecuter class >> exampleBuildHeapStrings: aTree [
 				(SBVPStringDummyNode buildTree: {
 					'a' -> {'b' -> {'cre' -> {'dko' -> {'e'. 'f'}. 'ghui' -> {'h'}}. 'alk' -> {'i' -> {'j'. 'k'}. 'l' -> {'m'}}}}}) showAsVisualPrimitive}]
 		label: 'example'.
-	^ (SBVPCase
+	^ (SBVPTransformation
 		input: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern bindingDict: {#identity -> #a} children: {
 				SBVPEllipsisPattern bindingDict: {#identity -> #b}.
@@ -234,7 +234,7 @@ SBVPExecuter class >> exampleBuildHeapTest: aTree [
 			{
 				(SBVPDummyNode buildTree: {9 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}) showAsVisualPrimitive}]
 		label: 'example'.
-	^ (SBVPCase
+	^ (SBVPTransformation
 		input: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern bindingDict: {#identity -> 'a'} children: {
 				SBVPEllipsisPattern bindingDict: {#identity -> 'aa'}.
@@ -290,7 +290,7 @@ SBVPExecuter class >> exampleGrammarRuleMergeRepeat: aGrammarObject [
 	biop := SBVPGrammarObject new.
 	biop type: 'REPEAT1'.
 	rüdigerString := 'SEQ'.
-	^ (SBVPCase
+	^ (SBVPTransformation
 		input: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern
 				bindingDict: {#identity -> #a}
@@ -341,7 +341,7 @@ SBVPExecuter class >> exampleGrammarRuleWeird: aGrammarObject [
 		label: 'example'.
 	bio := SBVPGrammarObject new.
 	bio type: 'REPEAT1'.
-	^ (SBVPCase
+	^ (SBVPTransformation
 		input: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern
 				bindingDict: {#identity -> #a}
@@ -371,7 +371,7 @@ SBVPExecuter class >> exampleGrammarRuleWeird: aGrammarObject [
 SBVPExecuter class >> exampleOrPattern [
 
 	^ SBVPExecuter
-		case: (SBVPCase
+		case: (SBVPTransformation
 			input: (SBVPOrGroupPattern patterns: {
 				SBVPBindingPattern bindingDict: {#identity -> #a} children: {
 					SBVPBindingPattern
@@ -407,7 +407,7 @@ SBVPExecuter class >> exampleWithConstants: aDummyNode [
 		label: 'example'.
 	
 	salzstangen := aDummyNode.
-	^ (SBVPCase
+	^ (SBVPTransformation
 		input: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern expressionDict: {#identity -> [salzstangen]} children: {
 				SBVPBindingPattern

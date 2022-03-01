@@ -10,7 +10,7 @@ Class {
 { #category : #'as yet unclassified' }
 SBVPGameCardHand class >> playCardFrom: aHand toBeat: aCard [
 
-	SBVPCase
+	SBVPTransformation
 		input: (SBVPGroupPattern patterns: {})
 		output: (SBVPGroupPattern patterns: {})
 		strategy: (Dictionary new

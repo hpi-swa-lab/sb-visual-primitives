@@ -504,13 +504,13 @@ SBVisualPrimitive >> parentCase [
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> parentCaseOrQuery [
+SBVisualPrimitive >> parentQuery [
 
 	^ nil
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> parentQuery [
+SBVisualPrimitive >> patternContainer [
 
 	^ nil
 ]
