@@ -141,10 +141,10 @@ SBVPConstraintPattern >> matches: aVisualPrimitive withBinding: aDict [
 	| originalBindings |
 	originalBindings := aDict collect: [:visualPrimitiveOrCollection |
 		visualPrimitiveOrCollection isCollection
-			ifTrue: [visualPrimitiveOrCollection collect: [:element | element isVisualPrimitive ifTrue: [element origin] ifFalse: [element]]]
+			ifTrue: [visualPrimitiveOrCollection collect: [:element | element isVisualPrimitive ifTrue: [element sourceObject] ifFalse: [element]]]
 			ifFalse: [
 				visualPrimitiveOrCollection isVisualPrimitive
-					ifTrue: [visualPrimitiveOrCollection origin]
+					ifTrue: [visualPrimitiveOrCollection sourceObject]
 					ifFalse: [visualPrimitiveOrCollection]]].
 	
 	^ self constraint value: originalBindings

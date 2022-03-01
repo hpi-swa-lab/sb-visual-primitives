@@ -36,7 +36,8 @@ Class {
 		'blockDict',
 		'children',
 		'parent',
-		'origin'
+		'origin',
+		'sourceObject'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
@@ -67,7 +68,7 @@ SBVisualPrimitive class >> newFromObject: anObject [
 
 	| vp |
 	vp := self new.
-	vp origin: anObject.
+	vp sourceObject: anObject.
 	vp addPropertyMappings: anObject class visualPrimitiveMapping.
 	^ vp
 ]
@@ -78,7 +79,7 @@ SBVisualPrimitive class >> newFromObject: anObject in: aMorph [
 	| vp |
 	vp := self new.
 	aMorph addMorphBack: vp.
-	vp origin: anObject.
+	vp sourceObject: anObject.
 	vp addPropertyMappings: anObject class visualPrimitiveMapping.
 	^ vp
 ]
@@ -164,7 +165,7 @@ SBVisualPrimitive >> addPropertyMapping: anSBVPPropertyMapping [
 						ifNil: [child asVisualPrimitive]
 						ifNotNil: [SBVisualPrimitive newFromObject: child in: self owner].
 					self addChild: newChild]]}
-		otherwise: [(self labelPositions includes: propertyMapping vpProperty) ifTrue: [(self blockDict at: propertyMapping vpProperty) addVPLabel: (propertyMapping getMorphFor: self origin)]]
+		otherwise: [(self labelPositions includes: propertyMapping vpProperty) ifTrue: [(self blockDict at: propertyMapping vpProperty) addVPLabel: (propertyMapping getMorphFor: self sourceObject)]]
 ]
 
 { #category : #accessing }
@@ -237,7 +238,7 @@ SBVisualPrimitive >> bottomLabelPositions [
 { #category : #'as yet unclassified' }
 SBVisualPrimitive >> buildNewInstance [
 
-	^ self origin ifNotNil: [self origin class new asVisualPrimitive] ifNil: [self class new]
+	^ self sourceObject ifNotNil: [self sourceObject class new asVisualPrimitive] ifNil: [self class new]
 ]
 
 { #category : #nil }
@@ -295,7 +296,7 @@ SBVisualPrimitive >> getLabelMorph: anObject [
 SBVisualPrimitive >> getObjectFromVisualPrimitive [
 
 	| anObject |
-	anObject := self origin copy.
+	anObject := self sourceObject copy.
 	anObject class visualPrimitiveMapping do: [:propertyMapping |
 		(propertyMapping isPropertyMapping
 			ifFalse: [SBVPPropertyMapping fromAssociation: propertyMapping]
@@ -485,18 +486,6 @@ SBVisualPrimitive >> moveCursorUp [
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> origin [
-
-	^ origin
-]
-
-{ #category : #accessing }
-SBVisualPrimitive >> origin: anObject [
-
-	origin := anObject
-]
-
-{ #category : #accessing }
 SBVisualPrimitive >> parent [
 
 	^ parent
@@ -619,6 +608,18 @@ SBVisualPrimitive >> siblingIndex [
 	^ self parent ifNil: [0] ifNotNil: [self parent children indexOf: self]
 ]
 
+{ #category : #accessing }
+SBVisualPrimitive >> sourceObject [
+
+	^sourceObject
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> sourceObject: anObject [
+
+	sourceObject := anObject
+]
+
 { #category : #'as yet unclassified' }
 SBVisualPrimitive >> topLabelPositions [
 
@@ -628,7 +629,7 @@ SBVisualPrimitive >> topLabelPositions [
 { #category : #accessing }
 SBVisualPrimitive >> valueFromPropertyMapping: aPropertyMapping [
 
-	^ aPropertyMapping value: self origin
+	^ aPropertyMapping value: self sourceObject
 ]
 
 { #category : #'as yet unclassified' }

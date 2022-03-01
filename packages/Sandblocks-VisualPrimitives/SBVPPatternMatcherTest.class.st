@@ -256,7 +256,7 @@ SBVPPatternMatcherTest >> testComplexTree [
 		pattern: self examplePatternTreeWithEllipses.
 	self
 		assert: {{vp10. vp3. vp7}. {vp3. vp1. vp3 right}. {vp1. vp1 left. vp1 right}. {vp7. vp7 left. vp7 right}} asSet
-		equals: (matcher getAllMatches collect: [:match | {match at: #a. match at: #b. match at: #c} collect: [:node | node origin]]) asSet
+		equals: (matcher getAllMatches collect: [:match | {match at: #a. match at: #b. match at: #c} collect: [:node | node sourceObject]]) asSet
 ]
 
 { #category : #'as yet unclassified' }
@@ -297,7 +297,7 @@ SBVPPatternMatcherTest >> testMatchAllChildrenTree [
 		pattern: self examplePatternTreeWithEllipses.
 	self
 		assert: {{vp5. vp2. vp3}. {vp2. vp2 left. vp2 right}. {vp3. vp3 left. vp3 right}} asSet
-		equals: (matcher getAllMatches collect: [:match | {match at: #a. match at: #b. match at: #c} collect: [:node | node origin]]) asSet
+		equals: (matcher getAllMatches collect: [:match | {match at: #a. match at: #b. match at: #c} collect: [:node | node sourceObject]]) asSet
 ]
 
 { #category : #'as yet unclassified' }
@@ -310,7 +310,7 @@ SBVPPatternMatcherTest >> testSimpleTree [
 		pattern: self examplePatternSimpleTree.
 	self
 		assert: {{#a -> root. #b -> root left. #c -> root right} asDictionary}
-		equals: (matcher getAllMatches collect: [:match | match collect: [:node | node origin]]) asArray
+		equals: (matcher getAllMatches collect: [:match | match collect: [:node | node sourceObject]]) asArray
 ]
 
 { #category : #'as yet unclassified' }

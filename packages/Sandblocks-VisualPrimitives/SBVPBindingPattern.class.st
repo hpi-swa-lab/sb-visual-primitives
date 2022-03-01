@@ -330,7 +330,7 @@ SBVPBindingPattern >> buildFromBinding: aDict [
 	self dynamicLabelDict associationsDo: [:assoc | output addPropertyMapping: assoc].
 	self labelBindingDict keysAndValuesDo: [:labelPosition :bindingName | output addPropertyMapping: labelPosition -> (aDict at: bindingName)].
 	self labelExpressionDict associationsDo: [:association |
-		self visualizingClass: (aDict at: self bindingIndex) origin class.
+		self visualizingClass: (aDict at: self bindingIndex) sourceObject class.
 		output addPropertyMapping: (SBVPPropertyMappingExpression
 			expression: association value
 			vpProperty: association key
@@ -460,7 +460,7 @@ SBVPBindingPattern >> convertToEllipsisPattern [
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> couldMatch: aVisualPrimitive [
 
-	^ self childrenInCurrentMatch = aVisualPrimitive children size and: [self constant isNil or: [self constant value = aVisualPrimitive origin]]
+	^ self childrenInCurrentMatch = aVisualPrimitive children size and: [self constant isNil or: [self constant value = aVisualPrimitive sourceObject]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -728,7 +728,7 @@ SBVPBindingPattern >> setBindingFor: aVisualPrimitive in: aDict [
 	currentPrimitive := self getCurrentPrimitive: aVisualPrimitive.
 	self bindingIndex ifNotNil: [setBinding value: self bindingIndex value: (self bindingFor: aVisualPrimitive)].
 	self labelBindingDict keysAndValuesDo: [:labelPosition :bindingName | setBinding value: bindingName value: (aVisualPrimitive labelDict at: labelPosition)].
-	self writeBackClosure ifNotNil: [self writeBackClosure value: currentPrimitive origin].
+	self writeBackClosure ifNotNil: [self writeBackClosure value: currentPrimitive sourceObject].
 	^ (self couldMatch: currentPrimitive) and: [self setChildBindingFor: currentPrimitive in: aDict]
 ]
 

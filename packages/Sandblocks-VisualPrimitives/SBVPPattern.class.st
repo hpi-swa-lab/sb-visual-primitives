@@ -45,7 +45,7 @@ SBVPPattern >> findConstant [
 { #category : #'as yet unclassified' }
 SBVPPattern >> findOriginRoot [
 
-	^ self findConstant asVisualPrimitive root origin
+	^ self findConstant asVisualPrimitive root sourceObject
 ]
 
 { #category : #'as yet unclassified' }
