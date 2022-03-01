@@ -81,13 +81,13 @@ SBVPCase class >> exampleWithEllipsisAndWildcardPattern [
 
 	SBVPCase
 		input: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern bindingIndex: 1 children: {
-				SBVPEllipsisPattern bindingIndex: 2 children: {}.
-				SBVPWildcardPattern bindingIndex: 3 children: {}}.
+			SBVPBindingPattern
+				bindingIndex: 1
+				children: {SBVPEllipsisPattern bindingIndex: 2 children: {}. SBVPWildcardPattern bindingIndex: 3 children: {}}.
 			SBVPConstraintPattern constraint: [:b | b label = 20]})
-		output: (SBVPBindingPattern bindingIndex: 1 children: {
-			SBVPEllipsisPattern bindingIndex: 2 children: {}.
-			SBVPWildcardPattern bindingIndex: 3 children: {}})
+		output: (SBVPBindingPattern
+			bindingIndex: 1
+			children: {SBVPEllipsisPattern bindingIndex: 2 children: {}. SBVPWildcardPattern bindingIndex: 3 children: {}})
 ]
 
 { #category : #examples }
@@ -387,7 +387,9 @@ SBVPCase >> input: anSBBlock output: anotherSBBlock [
 { #category : #'as yet unclassified' }
 SBVPCase >> inputRoot [
 
-	^ self input children isEmpty ifTrue: [nil] ifFalse: [self input children first]
+	^ self input children isEmpty
+		ifTrue: [nil]
+		ifFalse: [self input children first]
 ]
 
 { #category : #'as yet unclassified' }
@@ -402,20 +404,20 @@ SBVPCase >> noteNewOwner: aMorph [
 	| row |
 	super noteNewOwner: aMorph.
 	classNameInput ifNil: [
-	classNameInput := SBStClassNameInput new
-		object: self defaultPatternVisualizationClass;
-		prefix: 'Class: '.
-	self addMorph: (SBColumn new
-		cellPositioning: #center;
-		addMorphBack: classNameInput;
-		addMorphBack: self informationRow;
-		addMorphBack: (row := SBRow new
-			cellInset: 3;
-			cellPositioning: #center)).
-	row
-		addMorphBack: self input;
-		addMorphBack: SBIcon iconArrowRight;
-		addMorphBack: self output]
+		classNameInput := SBStClassNameInput new
+			object: self defaultPatternVisualizationClass;
+			prefix: 'Class: '.
+		self addMorph: (SBColumn new
+			cellPositioning: #center;
+			addMorphBack: classNameInput;
+			addMorphBack: self informationRow;
+			addMorphBack: (row := SBRow new
+				cellInset: 3;
+				cellPositioning: #center)).
+		row
+			addMorphBack: self input;
+			addMorphBack: SBIcon iconArrowRight;
+			addMorphBack: self output]
 ]
 
 { #category : #'as yet unclassified' }

@@ -162,9 +162,7 @@ SBVPEllipsisPattern >> reset [
 { #category : #'as yet unclassified' }
 SBVPEllipsisPattern >> searchRootFor: aVisualPrimitive at: anIndex [
 
-	^ aVisualPrimitive children
-		copyFrom: anIndex
-		to: anIndex + self indexOffset
+	^ aVisualPrimitive children copyFrom: anIndex to: anIndex + self indexOffset
 ]
 
 { #category : #'as yet unclassified' }

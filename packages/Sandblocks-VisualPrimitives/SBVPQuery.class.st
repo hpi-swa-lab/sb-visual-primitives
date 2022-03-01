@@ -76,49 +76,49 @@ SBVPQuery class >> exampleTwo: salzstangen [
 SBVPQuery class >> input: anSBVPVisualizer [
 	" marker "
 
-	^ (self new
+	^ self new
 		input: anSBVPVisualizer;
-		output: []) 
+		output: []
 ]
 
 { #category : #'as yet unclassified' }
 SBVPQuery class >> input: anSBVPVisualizer output: aBlock [
 	" marker "
 
-	^ (self new
+	^ self new
 		input: anSBVPVisualizer;
-		output: aBlock) 
+		output: aBlock
 ]
 
 { #category : #'as yet unclassified' }
 SBVPQuery class >> input: anSBVPVisualizer output: aBlock strategy: aDict [
 	" marker "
 
-	^ (self new
+	^ self new
 		input: anSBVPVisualizer;
 		output: aBlock;
-		strategy: aDict) 
+		strategy: aDict
 ]
 
 { #category : #'as yet unclassified' }
 SBVPQuery class >> input: anSBVPVisualizer output: aBlock strategy: aDict visualizePatternsAs: aClass [
 	" marker "
 
-	^ (self new
+	^ self new
 		input: anSBVPVisualizer;
 		output: aBlock;
 		strategy: aDict;
 		defaultPatternVisualizationClass: aClass;
-		yourself) 
+		yourself
 ]
 
 { #category : #'as yet unclassified' }
 SBVPQuery class >> input: anSBVPVisualizer strategy: aDict [
 	" marker "
 
-	^ (self new
+	^ self new
 		input: anSBVPVisualizer;
-		strategy: aDict) 
+		strategy: aDict
 ]
 
 { #category : #'as yet unclassified' }
@@ -132,6 +132,7 @@ SBVPQuery class >> matches: aBlock [
 
 { #category : #'as yet unclassified' }
 SBVPQuery class >> newFor: aBlock [
+
 	| input output |
 	input := aBlock arguments first.
 	input isVisualPrimitive ifFalse: [input := input evaluate].
@@ -145,8 +146,7 @@ SBVPQuery class >> newFor: aBlock [
 				input: input
 				output: output
 				strategy: aBlock arguments third evaluate
-				visualizePatternsAs: aBlock arguments fourth evaluate].
-		}
+				visualizePatternsAs: aBlock arguments fourth evaluate]}
 ]
 
 { #category : #'as yet unclassified' }

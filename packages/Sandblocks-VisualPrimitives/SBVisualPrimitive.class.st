@@ -238,15 +238,15 @@ SBVisualPrimitive >> bottomLabelPositions [
 { #category : #'as yet unclassified' }
 SBVisualPrimitive >> buildNewInstance [
 
-	^ self sourceObject ifNotNil: [self sourceObject class new asVisualPrimitive] ifNil: [self class new]
+	^ self sourceObject
+		ifNotNil: [self sourceObject class new asVisualPrimitive]
+		ifNil: [self class new]
 ]
 
 { #category : #nil }
 SBVisualPrimitive >> centerChild [
 
-	^ self children
-		ifEmpty: [nil]
-		ifNotEmpty: [self children at: self children size + 1 / 2]
+	^ self children ifEmpty: [nil] ifNotEmpty: [self children at: self children size + 1 / 2]
 ]
 
 { #category : #accessing }
@@ -611,7 +611,7 @@ SBVisualPrimitive >> siblingIndex [
 { #category : #accessing }
 SBVisualPrimitive >> sourceObject [
 
-	^sourceObject
+	^ sourceObject
 ]
 
 { #category : #accessing }

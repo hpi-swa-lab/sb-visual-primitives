@@ -49,13 +49,7 @@ SBVPPropertyMappingChildren class >> getter: aBlock setter: anotherBlock pattern
 
 	anObject
 		ifNotNil: [Error signal: 'SBVPPropertyMappingChildren does not support patternValue as this would lead to patterns recusively having children. This will result in an infinite number of children.']
-		ifNil: [
-			^ super
-				getter: aBlock
-				setter: anotherBlock
-				patternValue: anObject
-				vpProperty: aSymbol
-				name: 'children']
+		ifNil: [^ super getter: aBlock setter: anotherBlock patternValue: anObject vpProperty: aSymbol name: 'children']
 ]
 
 { #category : #'as yet unclassified' }

@@ -45,9 +45,9 @@ SBVPInsertCommand >> do [
 	((self parent isKindOf: SBVPGroupPattern) and: [self children notEmpty]) ifTrue: [self parent removeChild: self children first].
 	self children do: [:child | self morph addChild: child].
 	self parent ifNotNil: [
-		self parent addChild: self morph afterIndex: (self siblingIndex
-			ifNotNil: [self siblingIndex - 1]
-			ifNil: [self parent children size]).
+		self parent
+			addChild: self morph
+			afterIndex: (self siblingIndex ifNotNil: [self siblingIndex - 1] ifNil: [self parent children size]).
 		
 		" When adding a new root binding pattern, the row gets deleted and a new one is used.
 		That is why we have to reset the container and index. "

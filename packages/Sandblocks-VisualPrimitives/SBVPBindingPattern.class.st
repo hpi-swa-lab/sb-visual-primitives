@@ -416,9 +416,7 @@ SBVPBindingPattern >> changeVisualizingClass [
 SBVPBindingPattern >> childrenInCurrentMatch [
 
 	| offsetSum |
-	offsetSum := self children
-		inject: 0
-		into: [:sum :child | sum + child indexOffset].
+	offsetSum := self children inject: 0 into: [:sum :child | sum + child indexOffset].
 	^ self children size + offsetSum
 ]
 
@@ -605,9 +603,8 @@ SBVPBindingPattern >> labelPositionOf: aMorph [
 SBVPBindingPattern >> matches: aVisualPrimitive withBinding: aCollection [
 
 	| offset |
-	"self halt."
 	offset := 0.
-	self labelExpressionDict keysAndValuesDo: [:position :value| (aVisualPrimitive propertyAt: position) = (value value) ifFalse: [^ false]].
+	self labelExpressionDict keysAndValuesDo: [:position :value | (aVisualPrimitive propertyAt: position) = value value ifFalse: [^ false]].
 	
 	^ self children withIndexAllSatisfy: [:child :index | | wasSuccessful |
 		wasSuccessful := child
