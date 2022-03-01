@@ -32,13 +32,13 @@ SBVPPattern >> buildImplicitChildren: anArray [
 { #category : #'as yet unclassified' }
 SBVPPattern >> collectBindingsInto: aCollection [
 
-	self connections do: [:connection | connection collectBindingsInto: aCollection]
+	self children do: [:child | child collectBindingsInto: aCollection]
 ]
 
 { #category : #'as yet unclassified' }
 SBVPPattern >> findConstant [
 
-	self connections do: [:child | child findConstant ifNotNil: [:constant | ^ constant]].
+	self children do: [:child | child findConstant ifNotNil: [:constant | ^ constant]].
 	^ nil
 ]
 
@@ -90,7 +90,7 @@ SBVPPattern >> matches: aVisualPrimitive withBinding: aCollection [
 SBVPPattern >> nextIdentifier [
 
 	| invalidIdentifiers currentAttempt possibleIdentifer |
-	invalidIdentifiers := Array streamContents: [:stream | self allConnectionsDo: [:pattern | stream nextPut: pattern bindingIndex]].
+	invalidIdentifiers := Array streamContents: [:stream | self allChildrenDo: [:pattern | stream nextPut: pattern bindingIndex]].
 	
 	currentAttempt := 1.
 	[
@@ -129,11 +129,11 @@ SBVPPattern >> parentQuery [
 { #category : #'as yet unclassified' }
 SBVPPattern >> removeImplicitChildren [
 
-	self connections select: [:child | child isImplicitChild] thenDo: [:implicitChild |
+	self children select: [:child | child isImplicitChild] thenDo: [:implicitChild |
 		implicitChild abandon.
 		self withDecorator: SBTreeDecorator do: [:decorator | decorator removeChild: implicitChild]].
-	self connections: (self connections reject: [:child | child isImplicitChild]).
-	self connections do: [:child | child removeImplicitChildren]
+	self children: (self children reject: [:child | child isImplicitChild]).
+	self children do: [:child | child removeImplicitChildren]
 ]
 
 { #category : #'as yet unclassified' }

@@ -66,19 +66,19 @@ SBVPExecuter class >> exampleBuildHeapBrokenBindings: aTree [
 		label: 'example'.
 	^ (SBVPCase
 		input: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern bindingDict: {#identity -> #g} connections: {
+			SBVPBindingPattern bindingDict: {#identity -> #g} children: {
 				SBVPEllipsisPattern bindingDict: {#identity -> #b}.
 				SBVPBindingPattern
 					bindingDict: {#identity -> #boi}
-					connections: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}.
+					children: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}.
 				SBVPEllipsisPattern bindingDict: {#identity -> #d}}.
 			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) key < (bindings at: #boi) key]})
 		output: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern bindingDict: {#identity -> #boi} connections: {
+			SBVPBindingPattern bindingDict: {#identity -> #boi} children: {
 				SBVPEllipsisPattern bindingDict: {#identity -> #dude}.
 				SBVPBindingPattern
 					bindingDict: {#identity -> #a}
-					connections: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}.
+					children: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}.
 				SBVPEllipsisPattern bindingDict: {#identity -> #d}}})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> false;
@@ -92,19 +92,19 @@ SBVPExecuter class >> exampleBuildHeapCase [
 
 	^ SBVPCase
 		input: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern bindingDict: {#identity -> #a} connections: {
+			SBVPBindingPattern bindingDict: {#identity -> #a} children: {
 				SBVPEllipsisPattern bindingDict: {#identity -> #b}.
 				SBVPBindingPattern
 					bindingDict: {#identity -> #boi}
-					connections: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}.
+					children: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}.
 				SBVPEllipsisPattern bindingDict: {#identity -> #d}}.
 			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) key < (bindings at: #boi) key]})
 		output: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern bindingDict: {#identity -> #boi} connections: {
+			SBVPBindingPattern bindingDict: {#identity -> #boi} children: {
 				SBVPEllipsisPattern bindingDict: {#identity -> #b}.
 				SBVPBindingPattern
 					bindingDict: {#identity -> #a}
-					connections: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}.
+					children: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}.
 				SBVPEllipsisPattern bindingDict: {#identity -> #d}}})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> false;
@@ -138,20 +138,20 @@ SBVPExecuter class >> exampleBuildHeapChain: aTree [
 		input: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern
 				bindingDict: {#identity -> #a}
-				connections: {
+				children: {
 					SBVPEllipsisPattern bindingDict: {#identity -> #b}.
 					SBVPBindingPattern
 						bindingDict: {#identity -> #boi}
-						connections: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}.
+						children: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}.
 					SBVPEllipsisPattern bindingDict: {#identity -> #d}}
 				visualizingClass: SBVPDummyNode.
 			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) key > (bindings at: #boi) key]})
 		output: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern bindingDict: {#identity -> #boi} connections: {
+			SBVPBindingPattern bindingDict: {#identity -> #boi} children: {
 				SBVPEllipsisPattern bindingDict: {#identity -> #b}.
 				SBVPBindingPattern
 					bindingDict: {#identity -> #a}
-					connections: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}.
+					children: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}.
 				SBVPEllipsisPattern bindingDict: {#identity -> #d}}})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> false;
@@ -171,19 +171,19 @@ SBVPExecuter class >> exampleBuildHeapSpecialShape: aTree [
 		label: 'example'.
 	^ (SBVPCase
 		input: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern bindingDict: {#identity -> #a} connections: {
+			SBVPBindingPattern bindingDict: {#identity -> #a} children: {
 				SBVPEllipsisPattern bindingDict: {#identity -> #b}.
 				SBVPBindingPattern
 					bindingDict: {#identity -> #boi}
-					connections: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}.
+					children: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}.
 				SBVPEllipsisPattern bindingDict: {#identity -> #d}}.
 			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) key < (bindings at: #boi) key]})
 		output: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern bindingDict: {#identity -> #boi} connections: {
+			SBVPBindingPattern bindingDict: {#identity -> #boi} children: {
 				SBVPEllipsisPattern bindingDict: {#identity -> #b}.
 				SBVPBindingPattern
 					bindingDict: {#identity -> #a}
-					connections: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}.
+					children: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}.
 				SBVPEllipsisPattern bindingDict: {#identity -> #d}}})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> false;
@@ -204,19 +204,19 @@ SBVPExecuter class >> exampleBuildHeapStrings: aTree [
 		label: 'example'.
 	^ (SBVPCase
 		input: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern bindingDict: {#identity -> #a} connections: {
+			SBVPBindingPattern bindingDict: {#identity -> #a} children: {
 				SBVPEllipsisPattern bindingDict: {#identity -> #b}.
 				SBVPBindingPattern
 					bindingDict: {#identity -> #boi}
-					connections: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}.
+					children: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}.
 				SBVPEllipsisPattern bindingDict: {#identity -> #d}}.
 			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) key < (bindings at: #boi) key]})
 		output: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern bindingDict: {#identity -> #boi} connections: {
+			SBVPBindingPattern bindingDict: {#identity -> #boi} children: {
 				SBVPEllipsisPattern bindingDict: {#identity -> #b}.
 				SBVPBindingPattern
 					bindingDict: {#identity -> #a}
-					connections: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}.
+					children: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}.
 				SBVPEllipsisPattern bindingDict: {#identity -> #d}}})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> false;
@@ -236,20 +236,20 @@ SBVPExecuter class >> exampleBuildHeapTest: aTree [
 		label: 'example'.
 	^ (SBVPCase
 		input: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern bindingDict: {#identity -> 'a'} connections: {
+			SBVPBindingPattern bindingDict: {#identity -> 'a'} children: {
 				SBVPEllipsisPattern bindingDict: {#identity -> 'aa'}.
 				SBVPBindingPattern
 					bindingDict: {#identity -> 'boi'}
-					connections: {SBVPEllipsisPattern bindingDict: {#identity -> 'ac'}}.
+					children: {SBVPEllipsisPattern bindingDict: {#identity -> 'ac'}}.
 				SBVPEllipsisPattern bindingDict: {#identity -> 'ab'}}.
 			SBVPConstraintPattern constraint: [:bindings | false].
 			SBVPBindingPattern bindingDict: {#identity -> 'a'}})
 		output: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern bindingDict: {#identity -> 'boi'} connections: {
+			SBVPBindingPattern bindingDict: {#identity -> 'boi'} children: {
 				SBVPEllipsisPattern bindingDict: {#identity -> 'aa'}.
 				SBVPBindingPattern
 					bindingDict: {#identity -> 'a'}
-					connections: {SBVPEllipsisPattern bindingDict: {#identity -> 'ac'}}.
+					children: {SBVPEllipsisPattern bindingDict: {#identity -> 'ac'}}.
 				SBVPEllipsisPattern bindingDict: {#identity -> 'ab'}}})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> false;
@@ -295,14 +295,14 @@ SBVPExecuter class >> exampleGrammarRuleMergeRepeat: aGrammarObject [
 			SBVPBindingPattern
 				bindingDict: {#identity -> #a}
 				expressionDict: {#topLeftLabel -> [rüdigerString]}
-				connections: {
+				children: {
 					SBVPBindingPattern
 						bindingDict: {#identity -> #b}
 						expressionDict: {#topLeftLabel -> ['SYMBOL']}.
 					SBVPBindingPattern
 						bindingDict: {#identity -> #c}
 						expressionDict: {#topLeftLabel -> ['REPEAT']}
-						connections: {
+						children: {
 							SBVPBindingPattern
 								bindingDict: {#identity -> #d}
 								expressionDict: {#topLeftLabel -> ['SYMBOL']}}}.
@@ -311,7 +311,7 @@ SBVPExecuter class >> exampleGrammarRuleMergeRepeat: aGrammarObject [
 			SBVPBindingPattern
 				bindingDict: {#identity -> #c}
 				expressionDict: {#topLeftLabel -> ['REPEAT1']}
-				connections: {SBVPBindingPattern bindingDict: {#identity -> #b}}})
+				children: {SBVPBindingPattern bindingDict: {#identity -> #b}}})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> false;
 			add: #explicitChildrenMatching -> true;
@@ -346,12 +346,12 @@ SBVPExecuter class >> exampleGrammarRuleWeird: aGrammarObject [
 			SBVPBindingPattern
 				bindingDict: {#identity -> #a}
 				expressionDict: {#topLeftLabel -> ['SEQ']}
-				connections: {
+				children: {
 					SBVPBindingPattern bindingDict: {#identity -> #b. #topLeftLabel -> #type}.
 					SBVPBindingPattern
 						bindingDict: {#identity -> #c}
 						expressionDict: {#topLeftLabel -> ['REPEAT']}
-						connections: {
+						children: {
 							SBVPBindingPattern
 								bindingDict: {#identity -> #d}
 								expressionDict: {#topLeftLabel -> ['SYMBOL']}}}.
@@ -359,7 +359,7 @@ SBVPExecuter class >> exampleGrammarRuleWeird: aGrammarObject [
 		output: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern
 				bindingDict: {#identity -> #c. #topLeftLabel -> #type}
-				connections: {SBVPBindingPattern bindingDict: {#identity -> #b}}})
+				children: {SBVPBindingPattern bindingDict: {#identity -> #b}}})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> false;
 			add: #explicitChildrenMatching -> true;
@@ -373,20 +373,20 @@ SBVPExecuter class >> exampleOrPattern [
 	^ SBVPExecuter
 		case: (SBVPCase
 			input: (SBVPOrGroupPattern patterns: {
-				SBVPBindingPattern bindingDict: {#identity -> #a} connections: {
+				SBVPBindingPattern bindingDict: {#identity -> #a} children: {
 					SBVPBindingPattern
 						bindingDict: {#identity -> #b}
-						connections: {SBVPEllipsisPattern bindingDict: {#identity -> #c}}}.
+						children: {SBVPEllipsisPattern bindingDict: {#identity -> #c}}}.
 				SBVPGroupPattern patterns: {
 					SBVPBindingPattern
 						bindingDict: {#identity -> #a}
-						connections: {SBVPEllipsisPattern bindingDict: {#identity -> #c}}.
+						children: {SBVPEllipsisPattern bindingDict: {#identity -> #c}}.
 					SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) key = 3]}})
 			output: (SBVPGroupPattern patterns: {
 				SBVPBindingPattern
 					bindingDict: {#identity -> #a}
 					expressionDict: {#innerLabel -> [42]}
-					connections: {SBVPEllipsisPattern bindingDict: {#identity -> #c}}})
+					children: {SBVPEllipsisPattern bindingDict: {#identity -> #c}}})
 			strategy: (Dictionary new
 				add: #explicitRootMatching -> false;
 				add: #explicitChildrenMatching -> true;
@@ -409,15 +409,15 @@ SBVPExecuter class >> exampleWithConstants: aDummyNode [
 	salzstangen := aDummyNode.
 	^ (SBVPCase
 		input: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern expressionDict: {#identity -> [salzstangen]} connections: {
+			SBVPBindingPattern expressionDict: {#identity -> [salzstangen]} children: {
 				SBVPBindingPattern
 					bindingDict: {#identity -> #a}
-					connections: {SBVPEllipsisPattern bindingDict: {#identity -> #b}}}})
+					children: {SBVPEllipsisPattern bindingDict: {#identity -> #b}}}})
 		output: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern bindingDict: {#identity -> #a} connections: {
+			SBVPBindingPattern bindingDict: {#identity -> #a} children: {
 				SBVPBindingPattern
 					expressionDict: {#identity -> [salzstangen]}
-					connections: {SBVPEllipsisPattern bindingDict: {#identity -> #b}}}})
+					children: {SBVPEllipsisPattern bindingDict: {#identity -> #b}}}})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> false;
 			add: #explicitChildrenMatching -> true;

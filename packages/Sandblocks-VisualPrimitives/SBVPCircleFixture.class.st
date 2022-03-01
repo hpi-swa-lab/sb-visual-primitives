@@ -7,5 +7,5 @@ Class {
 { #category : #'as yet unclassified' }
 SBVPCircleFixture class >> visualPrimitiveMapping [
 
-	^ {#shape -> CircleMorph new. #innerLabel -> #key. self connectionsMappingEntry}
+	^ {#shape -> CircleMorph new. #innerLabel -> #key. self childrenMappingEntry}
 ]

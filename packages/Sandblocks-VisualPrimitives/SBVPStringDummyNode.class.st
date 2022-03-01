@@ -7,7 +7,7 @@ Class {
 { #category : #'as yet unclassified' }
 SBVPStringDummyNode class >> visualPrimitiveMapping [
 
-	^ {SBVPPropertyMappingString property: #key vpProperty: #innerLabel. self connectionsMappingEntry}
+	^ {SBVPPropertyMappingString property: #key vpProperty: #innerLabel. self childrenMappingEntry}
 ]
 
 { #category : #'as yet unclassified' }

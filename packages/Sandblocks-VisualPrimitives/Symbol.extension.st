@@ -1,9 +1,9 @@
 Extension { #name : #Symbol }
 
 { #category : #'*Sandblocks-VisualPrimitives' }
-Symbol >> vpConnectionFor: aSymbol [
+Symbol >> vpChildFor: aSymbol [
 
-	^ SBVPPropertyMappingConnections property: aSymbol vpProperty: self
+	^ SBVPPropertyMappingChildren property: aSymbol vpProperty: self
 ]
 
 { #category : #'*Sandblocks-VisualPrimitives' }
@@ -27,7 +27,7 @@ Symbol >> vpConstantString: aString [
 { #category : #'*Sandblocks-VisualPrimitives' }
 Symbol >> vpFor: aSymbol [
 
-	^ self vpConnectionFor: aSymbol
+	^ self vpChildFor: aSymbol
 ]
 
 { #category : #'*Sandblocks-VisualPrimitives' }

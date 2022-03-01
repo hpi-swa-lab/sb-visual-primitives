@@ -18,5 +18,5 @@ SBVPCircleAllLabelFixture class >> visualPrimitiveMapping [
 		#bottomCenterLabel -> 'bc'.
 		#bottomLeftLabel -> 'bl'.
 		#leftLabel -> 'l'.
-		self connectionsMappingEntry}
+		self childrenMappingEntry}
 ]

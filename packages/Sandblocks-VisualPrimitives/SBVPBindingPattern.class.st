@@ -1,5 +1,5 @@
 "
-A SBVPBindingPattern is used to represent a single object. It's connections are visualized as well recursively.
+A SBVPBindingPattern is used to represent a single object. It's children are visualized as well recursively.
 
 Instance Variables
 	bindingIndex:				Object
@@ -60,19 +60,19 @@ SBVPBindingPattern class >> bindingDict: aDict [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPBindingPattern class >> bindingDict: aDict connections: aCollection [
+SBVPBindingPattern class >> bindingDict: aDict children: aCollection [
 
 	^ self new
 		bindingDict: aDict asDictionary;
-		connections: aCollection
+		children: aCollection
 ]
 
 { #category : #'as yet unclassified' }
-SBVPBindingPattern class >> bindingDict: aDict connections: aCollection visualizingClass: aClass [
+SBVPBindingPattern class >> bindingDict: aDict children: aCollection visualizingClass: aClass [
 
 	^ self new
 		bindingDict: aDict asDictionary;
-		connections: aCollection;
+		children: aCollection;
 		visualizingClass: aClass
 ]
 
@@ -85,21 +85,21 @@ SBVPBindingPattern class >> bindingDict: aDict expressionDict: anotherDict [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPBindingPattern class >> bindingDict: aDict expressionDict: anotherDict connections: aCollection [
+SBVPBindingPattern class >> bindingDict: aDict expressionDict: anotherDict children: aCollection [
 
 	^ self new
 		bindingDict: aDict asDictionary;
 		expressionDict: anotherDict asDictionary;
-		connections: aCollection
+		children: aCollection
 ]
 
 { #category : #'as yet unclassified' }
-SBVPBindingPattern class >> bindingDict: aDict expressionDict: anotherDict connections: aCollection visualizingClass: aClass [
+SBVPBindingPattern class >> bindingDict: aDict expressionDict: anotherDict children: aCollection visualizingClass: aClass [
 
 	^ self new
 		bindingDict: aDict asDictionary;
 		expressionDict: anotherDict asDictionary;
-		connections: aCollection;
+		children: aCollection;
 		visualizingClass: aClass
 ]
 
@@ -144,19 +144,19 @@ SBVPBindingPattern class >> expressionDict: aDict bindingDict: anotherDict visua
 ]
 
 { #category : #'as yet unclassified' }
-SBVPBindingPattern class >> expressionDict: aDict connections: aCollection [
+SBVPBindingPattern class >> expressionDict: aDict children: aCollection [
 
 	^ self new
 		expressionDict: aDict asDictionary;
-		connections: aCollection
+		children: aCollection
 ]
 
 { #category : #'as yet unclassified' }
-SBVPBindingPattern class >> expressionDict: aDict connections: aCollection visualizingClass: aClass [
+SBVPBindingPattern class >> expressionDict: aDict children: aCollection visualizingClass: aClass [
 
 	^ self new
 		expressionDict: aDict asDictionary;
-		connections: aCollection;
+		children: aCollection;
 		visualizingClass: aClass
 ]
 
@@ -178,7 +178,7 @@ SBVPBindingPattern class >> identityName [
 SBVPBindingPattern class >> matches: aBlock [
 	"match any resonable combination of constructor arguments"
 
-	^ (({#bindingDict:. #expressionDict:. #bindingDict:expressionDict:} gather: [:symbol | {symbol. symbol, #connections:}]) gather: [:symbol | {symbol. symbol, #visualizingClass:}]), {#writeBackClosure:. #writeBackClosure:connections:} anySatisfy: [:methodName | self selector: methodName receiverMatches: aBlock]
+	^ (({#bindingDict:. #expressionDict:. #bindingDict:expressionDict:} gather: [:symbol | {symbol. symbol, #children:}]) gather: [:symbol | {symbol. symbol, #visualizingClass:}]), {#writeBackClosure:. #writeBackClosure:children:} anySatisfy: [:methodName | self selector: methodName receiverMatches: aBlock]
 ]
 
 { #category : #'as yet unclassified' }
@@ -187,7 +187,7 @@ SBVPBindingPattern class >> newFor: aBlock [
 	| selectors arguments |
 	selectors := aBlock selector findTokens: ':'.
 	arguments := aBlock arguments with: selectors collect: [:argument :selector |
-		selector = 'connections'
+		selector = 'children'
 			ifTrue: [argument childSandblocks]
 			ifFalse: [[argument evaluate] on: Error do: [{self identityName -> aBlock sourceString}]]].
 	
@@ -198,44 +198,44 @@ SBVPBindingPattern class >> newFor: aBlock [
 SBVPBindingPattern class >> writeBackClosure: aClosure [
 	"should look like [:var | yourVariable := var]"
 
-	^ self writeBackClosure: aClosure connections: {}
+	^ self writeBackClosure: aClosure children: {}
 ]
 
 { #category : #'as yet unclassified' }
-SBVPBindingPattern class >> writeBackClosure: aClosure connections: aCollection [
+SBVPBindingPattern class >> writeBackClosure: aClosure children: aCollection [
 	"should look like [:var | yourVariable := var]"
 
 	^ self new
 		writeBackClosure: aClosure;
-		connections: aCollection
+		children: aCollection
 ]
 
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> addImplicitChildren: aDict [
 
-	| addImplicitChild implicitChildrenIndices implicitChildrenCount oldConnections |
-	self connections do: [:connection | connection addImplicitChildren: aDict].
+	| addImplicitChild implicitChildrenIndices implicitChildrenCount oldChildren |
+	self children do: [:child | child addImplicitChildren: aDict].
 	implicitChildrenIndices := aDict at: self bindingIndex ifAbsent: [^ self].
 	implicitChildrenCount := 0.
 	addImplicitChild := [:index | | implicitChild |
 		implicitChildrenCount >= implicitChildrenIndices size ifTrue: [^ self].
 		implicitChild := SBVPEllipsisPattern bindingDict: {self class identityName -> (implicitChildrenIndices at: implicitChildrenCount + 1)}.
-		self addConnection: implicitChild afterIndex: index + implicitChildrenCount.
+		self addChild: implicitChild afterIndex: index + implicitChildrenCount.
 		implicitChild isImplicitChild: true.
 		self owner addMorphBack: implicitChild.
 		implicitChildrenCount := implicitChildrenCount + 1].
 	
-	oldConnections := self connections copy.
-	(self connections isEmpty or: [self connections first wantsImplicitNeighbors]) ifTrue: [addImplicitChild value: 0].
+	oldChildren := self children copy.
+	(self children isEmpty or: [self children first wantsImplicitNeighbors]) ifTrue: [addImplicitChild value: 0].
 	
-	oldConnections withIndexDo: [:connection :index |
-		(connection wantsImplicitNeighbors and: [
-			oldConnections
+	oldChildren withIndexDo: [:child :index |
+		(child wantsImplicitNeighbors and: [
+			oldChildren
 				at: index + 1
 				ifPresent: [:nextChild | nextChild wantsImplicitNeighbors]
 				ifAbsent: [true]]) ifTrue: [addImplicitChild value: index]].
 	
-	[implicitChildrenCount < implicitChildrenIndices size] whileTrue: [addImplicitChild value: oldConnections size]
+	[implicitChildrenCount < implicitChildrenIndices size] whileTrue: [addImplicitChild value: oldChildren size]
 ]
 
 { #category : #'as yet unclassified' }
@@ -262,7 +262,7 @@ SBVPBindingPattern >> addLabel [
 SBVPBindingPattern >> addToWorld: aWorld [
 
 	aWorld addMorphBack: self.
-	self connections do: [:child | child addToWorld: aWorld]
+	self children do: [:child | child addToWorld: aWorld]
 ]
 
 { #category : #'as yet unclassified' }
@@ -316,7 +316,7 @@ SBVPBindingPattern >> bindingLabelBlockFrom: aString [
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> buildChildrenFromBinding: aDict [
 
-	^ self connections gather: [:pattern | pattern buildFromBinding: aDict]
+	^ self children gather: [:pattern | pattern buildFromBinding: aDict]
 ]
 
 { #category : #'as yet unclassified' }
@@ -326,7 +326,7 @@ SBVPBindingPattern >> buildFromBinding: aDict [
 	output := self constant
 		ifNotNil: [self constant value asVisualPrimitive]
 		ifNil: [(aDict at: self bindingIndex) copy].
-	output connections: (self buildChildrenFromBinding: aDict).
+	output children: (self buildChildrenFromBinding: aDict).
 	self dynamicLabelDict associationsDo: [:assoc | output addPropertyMapping: assoc].
 	self labelBindingDict keysAndValuesDo: [:labelPosition :bindingName | output addPropertyMapping: labelPosition -> (aDict at: bindingName)].
 	self labelExpressionDict associationsDo: [:association |
@@ -348,7 +348,7 @@ SBVPBindingPattern >> buildFromBinding: aDict currentPrimitive: aVisualPrimitive
 			
 			]
 		ifNil: [(aDict at: self bindingIndex) copy].
-	output connections: (self buildChildrenFromBinding: aDict).
+	output children: (self buildChildrenFromBinding: aDict).
 	self dynamicLabelDict associationsDo: [:assoc | output addPropertyMapping: assoc].
 	self labelBindingDict keysAndValuesDo: [:labelPosition :bindingName | output addPropertyMapping: labelPosition -> (aDict at: bindingName)].
 	^ {output}
@@ -357,35 +357,35 @@ SBVPBindingPattern >> buildFromBinding: aDict currentPrimitive: aVisualPrimitive
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> buildImplicitChildren: aDict [
 
-	| implicitChildren nextIndex oldConnections addImplicitChild |
+	| implicitChildren nextIndex oldChildren addImplicitChild |
 	implicitChildren := OrderedCollection new.
 	nextIndex := ((aDict collect: [:subArray | subArray size])
 		ifEmpty: [0]
 		ifNotEmpty: [:guy | guy sum]) + 1.
 	
-	oldConnections := self connections copy.
+	oldChildren := self children copy.
 	
 	addImplicitChild := [:index | | implicitChild identifier |
 		identifier := self root nextIdentifier.
 		implicitChild := SBVPEllipsisPattern bindingDict: {self class identityName -> identifier}.
-		self addConnection: implicitChild afterIndex: index + implicitChildren size.
+		self addChild: implicitChild afterIndex: index + implicitChildren size.
 		implicitChild isImplicitChild: true.
 		self owner addMorphBack: implicitChild.
 		implicitChildren add: identifier.
 		nextIndex := nextIndex + 1].
 	
-	(self connections isEmpty or: [self connections first wantsImplicitNeighbors]) ifTrue: [addImplicitChild value: 0].
+	(self children isEmpty or: [self children first wantsImplicitNeighbors]) ifTrue: [addImplicitChild value: 0].
 	
-	oldConnections withIndexDo: [:connection :index |
-		(connection wantsImplicitNeighbors and: [
-			oldConnections
+	oldChildren withIndexDo: [:child :index |
+		(child wantsImplicitNeighbors and: [
+			oldChildren
 				at: index + 1
 				ifPresent: [:nextChild | nextChild wantsImplicitNeighbors]
 				ifAbsent: [true]]) ifTrue: [addImplicitChild value: index]].
 	
 	aDict at: self bindingIndex put: implicitChildren asArray.
 	
-	oldConnections do: [:connection | connection buildImplicitChildren: aDict]
+	oldChildren do: [:child | child buildImplicitChildren: aDict]
 ]
 
 { #category : #'as yet unclassified' }
@@ -416,10 +416,10 @@ SBVPBindingPattern >> changeVisualizingClass [
 SBVPBindingPattern >> childrenInCurrentMatch [
 
 	| offsetSum |
-	offsetSum := self connections
+	offsetSum := self children
 		inject: 0
-		into: [:sum :connection | sum + connection indexOffset].
-	^ self connections size + offsetSum
+		into: [:sum :child | sum + child indexOffset].
+	^ self children size + offsetSum
 ]
 
 { #category : #'as yet unclassified' }
@@ -460,7 +460,7 @@ SBVPBindingPattern >> convertToEllipsisPattern [
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> couldMatch: aVisualPrimitive [
 
-	^ self childrenInCurrentMatch = aVisualPrimitive connections size and: [self constant isNil or: [self constant value = aVisualPrimitive origin]]
+	^ self childrenInCurrentMatch = aVisualPrimitive children size and: [self constant isNil or: [self constant value = aVisualPrimitive origin]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -483,7 +483,7 @@ SBVPBindingPattern >> dynamicLabelDict [
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> enoughChildren: aVisualPrimitive [
 
-	^ self childrenInCurrentMatch <= aVisualPrimitive connections size
+	^ self childrenInCurrentMatch <= aVisualPrimitive children size
 ]
 
 { #category : #'as yet unclassified' }
@@ -527,11 +527,11 @@ SBVPBindingPattern >> getNext: aVisualPrimitive [
 	currentPrimitive := self getCurrentPrimitive: aVisualPrimitive.
 	(self enoughChildren: currentPrimitive) ifTrue: [ | offset |
 		offset := 0.
-		self connections withIndexDo: [:connection :index |
-			((connection getNext: (connection searchRootFor: currentPrimitive at: index + offset)) and: [self enoughChildren: currentPrimitive])
+		self children withIndexDo: [:child :index |
+			((child getNext: (child searchRootFor: currentPrimitive at: index + offset)) and: [self enoughChildren: currentPrimitive])
 				ifTrue: [^ true]
-				ifFalse: [connection reset].
-			offset := offset + connection indexOffset]].
+				ifFalse: [child reset].
+			offset := offset + child indexOffset]].
 	^ false
 ]
 
@@ -609,11 +609,11 @@ SBVPBindingPattern >> matches: aVisualPrimitive withBinding: aCollection [
 	offset := 0.
 	self labelExpressionDict keysAndValuesDo: [:position :value| (aVisualPrimitive propertyAt: position) = (value value) ifFalse: [^ false]].
 	
-	^ self connections withIndexAllSatisfy: [:connection :index | | wasSuccessful |
-		wasSuccessful := connection
-			matches: (connection searchRootFor: (self getCurrentPrimitive: aVisualPrimitive) at: index + offset)
+	^ self children withIndexAllSatisfy: [:child :index | | wasSuccessful |
+		wasSuccessful := child
+			matches: (child searchRootFor: (self getCurrentPrimitive: aVisualPrimitive) at: index + offset)
 			withBinding: aCollection.
-		offset := offset + connection indexOffset.
+		offset := offset + child indexOffset.
 		wasSuccessful]
 ]
 
@@ -705,7 +705,7 @@ SBVPBindingPattern >> reset [
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> resetChildren [
 
-	self connections do: [:connection | connection reset]
+	self children do: [:child | child reset]
 ]
 
 { #category : #'as yet unclassified' }
@@ -713,7 +713,7 @@ SBVPBindingPattern >> searchRootFor: aVisualPrimitive at: anIndex [
 
 	^ self indexOffset < 0
 		ifTrue: [aVisualPrimitive]
-		ifFalse: [aVisualPrimitive connections at: anIndex]
+		ifFalse: [aVisualPrimitive children at: anIndex]
 ]
 
 { #category : #'as yet unclassified' }
@@ -729,19 +729,19 @@ SBVPBindingPattern >> setBindingFor: aVisualPrimitive in: aDict [
 	self bindingIndex ifNotNil: [setBinding value: self bindingIndex value: (self bindingFor: aVisualPrimitive)].
 	self labelBindingDict keysAndValuesDo: [:labelPosition :bindingName | setBinding value: bindingName value: (aVisualPrimitive labelDict at: labelPosition)].
 	self writeBackClosure ifNotNil: [self writeBackClosure value: currentPrimitive origin].
-	^ (self couldMatch: currentPrimitive) and: [self setConnectionBindingFor: currentPrimitive in: aDict]
+	^ (self couldMatch: currentPrimitive) and: [self setChildBindingFor: currentPrimitive in: aDict]
 ]
 
 { #category : #'as yet unclassified' }
-SBVPBindingPattern >> setConnectionBindingFor: aVisualPrimitive in: aDict [
+SBVPBindingPattern >> setChildBindingFor: aVisualPrimitive in: aDict [
 
 	| offset |
 	offset := 0.
-	^ self connections withIndexAllSatisfy: [:connection :index | | wasSuccessful |
-		wasSuccessful := connection
-			setBindingFor: (connection searchRootFor: (self getCurrentPrimitive: aVisualPrimitive) at: index + offset)
+	^ self children withIndexAllSatisfy: [:child :index | | wasSuccessful |
+		wasSuccessful := child
+			setBindingFor: (child searchRootFor: (self getCurrentPrimitive: aVisualPrimitive) at: index + offset)
 			in: aDict.
-		offset := offset + connection indexOffset.
+		offset := offset + child indexOffset.
 		wasSuccessful]
 ]
 
@@ -870,10 +870,10 @@ SBVPBindingPattern >> writeSourceOn: aStream [
 					ifNil: [aStream nextPutAll: '[]']
 					ifNotNil: [:mapping | mapping writeValue: value on: aStream]]]].
 	
-	self connections ifNotEmpty: [
-		aStream nextPutAll: ' connections: {'.
-		(self connections reject: [:connection | connection isImplicitChild]) do: [:connection |
-			connection writeSourceOn: aStream.
+	self children ifNotEmpty: [
+		aStream nextPutAll: ' children: {'.
+		(self children reject: [:child | child isImplicitChild]) do: [:child |
+			child writeSourceOn: aStream.
 			aStream nextPut: $.].
 		aStream nextPut: $}].
 	

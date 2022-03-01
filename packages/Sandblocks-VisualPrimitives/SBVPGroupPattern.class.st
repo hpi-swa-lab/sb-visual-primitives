@@ -16,26 +16,26 @@ SBVPGroupPattern class >> matches: aBlock [
 { #category : #'as yet unclassified' }
 SBVPGroupPattern class >> newFor: aBlock [
 
-	^ self new connections: aBlock arguments first submorphs
+	^ self new children: aBlock arguments first submorphs
 ]
 
 { #category : #'as yet unclassified' }
 SBVPGroupPattern class >> patterns: aCollection [
 
-	^ self new connections: aCollection
+	^ self new children: aCollection
 ]
 
 { #category : #accessing }
-SBVPGroupPattern >> addConnection: aPattern afterIndex: aNumber [
+SBVPGroupPattern >> addChild: aPattern afterIndex: aNumber [
 
-	super addConnection: aPattern afterIndex: aNumber.
+	super addChild: aPattern afterIndex: aNumber.
 	self openPatternAsChild: aPattern
 ]
 
 { #category : #'as yet unclassified' }
 SBVPGroupPattern >> addImplicitChildren: anArray [
 
-	self connections do: [:pattern | pattern addImplicitChildren: anArray]
+	self children do: [:pattern | pattern addImplicitChildren: anArray]
 ]
 
 { #category : #'as yet unclassified' }
@@ -44,7 +44,7 @@ SBVPGroupPattern >> addNewBindingPattern [
 	| newPattern |
 	newPattern := SBVPBindingPattern new.
 	
-	self addConnection: newPattern
+	self addChild: newPattern
 ]
 
 { #category : #'as yet unclassified' }
@@ -94,34 +94,34 @@ SBVPGroupPattern >> addSeperatorsAround: aPattern [
 { #category : #'as yet unclassified' }
 SBVPGroupPattern >> addToWorld: aWorld [
 
-	self connections do: [:pattern | pattern addToWorld: aWorld].
+	self children do: [:pattern | pattern addToWorld: aWorld].
 	aWorld addMorphBack: self
 ]
 
 { #category : #'as yet unclassified' }
-SBVPGroupPattern >> allConnectionsDo: aBlock [
+SBVPGroupPattern >> allChildrenDo: aBlock [
 
-	self connections do: [:connection | connection allConnectionsDo: aBlock]
+	self children do: [:child | child allChildrenDo: aBlock]
 ]
 
 { #category : #'as yet unclassified' }
 SBVPGroupPattern >> attachTreeDecorator [
 
-	self connections do: [:child | child attachTreeDecorator]
+	self children do: [:child | child attachTreeDecorator]
 ]
 
 { #category : #'as yet unclassified' }
 SBVPGroupPattern >> buildFromBinding: anArray [
 
 	self flag: #TODO.
-	"Support multiple connections"
-	^ self connections first buildFromBinding: anArray
+	"Support multiple children"
+	^ self children first buildFromBinding: anArray
 ]
 
 { #category : #'as yet unclassified' }
 SBVPGroupPattern >> buildImplicitChildren: anArray [
 
-	self connections do: [:pattern | pattern buildImplicitChildren: anArray]
+	self children do: [:pattern | pattern buildImplicitChildren: anArray]
 ]
 
 { #category : #'as yet unclassified' }
@@ -144,7 +144,7 @@ SBVPGroupPattern >> deleteCommandFor: aBlock [
 { #category : #'as yet unclassified' }
 SBVPGroupPattern >> findConstant [
 
-	self connections do: [:child | child findConstant ifNotNil: [:constant | ^ constant]].
+	self children do: [:child | child findConstant ifNotNil: [:constant | ^ constant]].
 	^ nil
 ]
 
@@ -157,7 +157,7 @@ SBVPGroupPattern >> fixedNumberOfChildren [
 { #category : #'as yet unclassified' }
 SBVPGroupPattern >> getNext: aVisualPrimitive [
 
-	self connections do: [:pattern |
+	self children do: [:pattern |
 		(pattern getNext: aVisualPrimitive)
 			ifFalse: [pattern reset]
 			ifTrue: [^ true]].
@@ -199,7 +199,7 @@ SBVPGroupPattern >> label [
 { #category : #'as yet unclassified' }
 SBVPGroupPattern >> matches: aVisualPrimitive withBinding: aCollection [
 
-	^ self connections allSatisfy: [:pattern | pattern matches: aVisualPrimitive withBinding: aCollection]
+	^ self children allSatisfy: [:pattern | pattern matches: aVisualPrimitive withBinding: aCollection]
 ]
 
 { #category : #'as yet unclassified' }
@@ -252,26 +252,26 @@ SBVPGroupPattern >> openPatternAsChild: aPattern [
 { #category : #'as yet unclassified' }
 SBVPGroupPattern >> rebuild [
 
-	self allConnectionsDo: [:connection | connection rebuild]
+	self allChildrenDo: [:child | child rebuild]
 ]
 
 { #category : #'as yet unclassified' }
-SBVPGroupPattern >> removeConnection: aPattern [
+SBVPGroupPattern >> removeChild: aPattern [
 
-	super removeConnection: aPattern.
+	super removeChild: aPattern.
 	self resetVisualization
 ]
 
 { #category : #accessing }
 SBVPGroupPattern >> removeImplicitChildren [
 
-	self connections do: [:child | child removeImplicitChildren]
+	self children do: [:child | child removeImplicitChildren]
 ]
 
 { #category : #'as yet unclassified' }
 SBVPGroupPattern >> reset [
 
-	self connections do: [:pattern | pattern reset]
+	self children do: [:pattern | pattern reset]
 ]
 
 { #category : #'as yet unclassified' }
@@ -279,7 +279,7 @@ SBVPGroupPattern >> resetVisualization [
 
 	self parentCaseOrQuery ifNotNil: [
 		self row removeAllMorphs.
-		self connections do: [:aPattern | self openPatternAsChild: aPattern]]
+		self children do: [:aPattern | self openPatternAsChild: aPattern]]
 ]
 
 { #category : #accessing }
@@ -303,14 +303,14 @@ SBVPGroupPattern >> seperatorString [
 { #category : #accessing }
 SBVPGroupPattern >> setBindingFor: aVisualPrimitive in: aCollection [
 
-	^ self connections allSatisfy: [:pattern | pattern setBindingFor: aVisualPrimitive in: aCollection]
+	^ self children allSatisfy: [:pattern | pattern setBindingFor: aVisualPrimitive in: aCollection]
 ]
 
 { #category : #'as yet unclassified' }
 SBVPGroupPattern >> writeSourceOn: aStream [
 
 	aStream nextPutAll: '(', self class name, ' patterns: {'.
-	(self connections reject: [:pattern | pattern isImplicitChild]) do: [:pattern |
+	(self children reject: [:pattern | pattern isImplicitChild]) do: [:pattern |
 		pattern writeSourceOn: aStream.
 		aStream nextPut: $.].
 	aStream nextPutAll: '})'

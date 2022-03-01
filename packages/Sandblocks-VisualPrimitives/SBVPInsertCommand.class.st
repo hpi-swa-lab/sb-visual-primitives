@@ -7,13 +7,13 @@ Instance Variables
 	siblingIndex:	Number
 
 children
-	- SBVisualPrimitives that will be connections of the inserted primitive
+	- SBVisualPrimitives that will be children of the inserted primitive
 
 parent
 	- parent primitive of the inserted one
 
 siblingIndex
-	- position index of the inserted primitive in the parent's connections 
+	- position index of the inserted primitive in the parent's children 
 
 "
 Class {
@@ -42,12 +42,12 @@ SBVPInsertCommand >> children: anObject [
 { #category : #'as yet unclassified' }
 SBVPInsertCommand >> do [
 
-	((self parent isKindOf: SBVPGroupPattern) and: [self children notEmpty]) ifTrue: [self parent removeConnection: self children first].
-	self children do: [:child | self morph addConnection: child].
+	((self parent isKindOf: SBVPGroupPattern) and: [self children notEmpty]) ifTrue: [self parent removeChild: self children first].
+	self children do: [:child | self morph addChild: child].
 	self parent ifNotNil: [
-		self parent addConnection: self morph afterIndex: (self siblingIndex
+		self parent addChild: self morph afterIndex: (self siblingIndex
 			ifNotNil: [self siblingIndex - 1]
-			ifNil: [self parent connections size]).
+			ifNil: [self parent children size]).
 		
 		" When adding a new root binding pattern, the row gets deleted and a new one is used.
 		That is why we have to reset the container and index. "
@@ -75,7 +75,7 @@ SBVPInsertCommand >> insertSiblingIndex [
 
 	^ self siblingIndex
 		ifNotNil: [self siblingIndex - 1]
-		ifNil: [self parent connections size]
+		ifNil: [self parent children size]
 ]
 
 { #category : #accessing }
@@ -110,14 +110,14 @@ SBVPInsertCommand >> undo [
 	root := self morph root.
 	self parent
 		ifNotNil: [
-			self parent removeConnection: self morph.
+			self parent removeChild: self morph.
 			
 			" When adding a new root binding pattern, the row gets deleted and a new one is used.
 			That is why we have to reset the container. "
 			container := self parent owner.
-			self children reverseDo: [:child | self parent addConnection: child afterIndex: self insertSiblingIndex]]
-		ifNil: [self children do: [:child | self morph removeConnection: child]].
-	self morph connections do: [:connection | connection abandon].
+			self children reverseDo: [:child | self parent addChild: child afterIndex: self insertSiblingIndex]]
+		ifNil: [self children do: [:child | self morph removeChild: child]].
+	self morph children do: [:child | child abandon].
 	
 	super undo.
 	case ifNotNil: #buildImplicitChildrenMatchingPattern.

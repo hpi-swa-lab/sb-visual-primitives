@@ -20,7 +20,7 @@ setter
 
 vpProperty
 	- specifies where the mapping will be applied in the visual primitive
-	- can be #shape #connections or a labelPosition, e.g. #innerLabel or #topLeftLabel (see SBVisualPrimitive >> labelPositions) 
+	- can be #shape #children or a labelPosition, e.g. #innerLabel or #topLeftLabel (see SBVisualPrimitive >> labelPositions) 
 
 "
 Class {

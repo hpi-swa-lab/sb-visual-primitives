@@ -38,7 +38,7 @@ SBVPQuery class >> exampleExtractLeafOf: salzstangen [
 			input: (SBVPGroupPattern patterns: {
 				SBVPBindingPattern
 					expressionDict: {#identity -> [currentNode]}
-					connections: {SBVPBindingPattern bindingDict: {#identity -> #newChild}}})
+					children: {SBVPBindingPattern bindingDict: {#identity -> #newChild}}})
 			output: []
 			strategy: (Dictionary new
 				add: #explicitRootMatching -> true;
@@ -65,7 +65,7 @@ SBVPQuery class >> exampleTwo: salzstangen [
 				SBVPBindingPattern
 					bindingDict: {#identity -> #c}
 					expressionDict: {#topLeftLabel -> ['REPEAT1']}
-					connections: {SBVPBindingPattern bindingDict: {#identity -> #b}}})
+					children: {SBVPBindingPattern bindingDict: {#identity -> #b}}})
 			strategy: {#explicitRootMatching -> true} asDictionary] whileNotNil: [
 		Transcript showln: gerhard key.
 		currentSnack := gerhard].

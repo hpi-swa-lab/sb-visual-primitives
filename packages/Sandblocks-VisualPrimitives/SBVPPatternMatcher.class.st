@@ -30,7 +30,7 @@ SBVPPatternMatcher >> build: aPattern fromBinding: anArray currentPrimitive: aVi
 	subtreeRoot := self searchStack last.
 	^ aVisualPrimitive = subtreeRoot
 		ifTrue: [(aPattern buildFromBinding: anArray) first]
-		ifFalse: [aVisualPrimitive copy connections: (aVisualPrimitive connections collect: [:primitive | self build: aPattern fromBinding: anArray currentPrimitive: primitive])]
+		ifFalse: [aVisualPrimitive copy children: (aVisualPrimitive children collect: [:primitive | self build: aPattern fromBinding: anArray currentPrimitive: primitive])]
 ]
 
 { #category : #accessing }
@@ -54,12 +54,12 @@ SBVPPatternMatcher >> dealWithUndefinedResult [
 	(self strategy at: #explicitRootMatching ifAbsent: [true]) ifTrue: [^ nil].
 	
 	[self searchStack notEmpty] whileTrue: [
-		self currentPrimitive connections do: [:aConnection |
-			(self visitedPrimitives includes: aConnection) ifFalse: [
+		self currentPrimitive children do: [:aChild |
+			(self visitedPrimitives includes: aChild) ifFalse: [
 				self pattern reset.
 				self performedMatch: false.
-				self searchStack addLast: aConnection.
-				self visitedPrimitives add: aConnection.
+				self searchStack addLast: aChild.
+				self visitedPrimitives add: aChild.
 				^ self getNextMatch]].
 		self searchStack removeLast].
 	^ nil

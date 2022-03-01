@@ -12,7 +12,7 @@ SBVPOrGroupPattern >> getNext: aVisualPrimitive [
 
 	| gotNext |
 	gotNext := false.
-	self connections do: [:pattern | (pattern getNext: aVisualPrimitive) ifTrue: [gotNext := true]].
+	self children do: [:pattern | (pattern getNext: aVisualPrimitive) ifTrue: [gotNext := true]].
 	^ gotNext
 ]
 
@@ -33,7 +33,7 @@ SBVPOrGroupPattern >> setBindingFor: aVisualPrimitive in: aCollection [
 
 	| originalCollection |
 	originalCollection := aCollection copy.
-	^ self connections
+	^ self children
 		detect: [:pattern |
 			aCollection removeAll.
 			aCollection addAll: originalCollection.

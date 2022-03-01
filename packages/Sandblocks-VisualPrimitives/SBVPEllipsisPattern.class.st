@@ -41,10 +41,10 @@ SBVPEllipsisPattern >> buildImplicitChildren: anArray [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPEllipsisPattern >> connections: aCollection [
+SBVPEllipsisPattern >> children: aCollection [
 
 	self assert: aCollection isEmpty description: 'Ellipses should not have children'.
-	super connections: aCollection
+	super children: aCollection
 ]
 
 { #category : #'as yet unclassified' }
@@ -162,7 +162,7 @@ SBVPEllipsisPattern >> reset [
 { #category : #'as yet unclassified' }
 SBVPEllipsisPattern >> searchRootFor: aVisualPrimitive at: anIndex [
 
-	^ aVisualPrimitive connections
+	^ aVisualPrimitive children
 		copyFrom: anIndex
 		to: anIndex + self indexOffset
 ]

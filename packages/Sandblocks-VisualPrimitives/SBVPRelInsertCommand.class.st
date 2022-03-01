@@ -13,15 +13,15 @@ SBVPRelInsertCommand >> do [
 
 	| result |
 	result := super do.
-	self container addConnection: self morph afterIndex: self morphIndexInConnections.
+	self container addChild: self morph afterIndex: self morphIndexInChildren.
 	^ result
 ]
 
 { #category : #'as yet unclassified' }
-SBVPRelInsertCommand >> morphIndexInConnections [
+SBVPRelInsertCommand >> morphIndexInChildren [
 
 	^ self adjacent
-		ifNil: [self before ifTrue: [0] ifFalse: [self container connections size]]
+		ifNil: [self before ifTrue: [0] ifFalse: [self container children size]]
 		ifNotNil: [ | indexInRow actualAdjacent |
 			actualAdjacent := self container row
 				submorphThat: [:submorph | (self adjacent hasOwner: submorph) or: [submorph = self adjacent]]
@@ -46,7 +46,7 @@ SBVPRelInsertCommand >> suggestions [
 { #category : #'as yet unclassified' }
 SBVPRelInsertCommand >> undo [
 
-	self container removeConnection: self morph.
+	self container removeChild: self morph.
 	super undo.
 	^ self morph
 ]

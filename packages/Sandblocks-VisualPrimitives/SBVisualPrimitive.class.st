@@ -4,7 +4,7 @@ See SBVPPropertyMappings for the different ways of mapping.
 
 Instance Variables
 	blockDict:		Dictionary
-	connections:	OrderedCollection of SBVisualPrimitives
+	children:		OrderedCollection of SBVisualPrimitives
 	labelDict:		Dictionary
 	origin:			Object
 	parent:			SBVisualPrimitive
@@ -13,7 +13,7 @@ blockDict
 	-  (#blockPosition -> SBBlock)
 	- stores the blocks that the labels or shape blocks are inserted into
 
-connections
+children
 	- the connected SBVisualPrimitives
 
 labelDict
@@ -34,7 +34,7 @@ Class {
 	#instVars : [
 		'labelDict',
 		'blockDict',
-		'connections',
+		'children',
 		'parent',
 		'origin'
 	],
@@ -46,7 +46,7 @@ SBVisualPrimitive class >> buildTree: aCollection [
 
 	^ aCollection collect: [:element |
 		element isVariableBinding
-			ifTrue: [(self new: element key) connections: (self buildTree: element value)]
+			ifTrue: [(self new: element key) children: (self buildTree: element value)]
 			ifFalse: [self new: element]]
 ]
 
@@ -100,16 +100,16 @@ SBVisualPrimitive class >> selector: aString receiverMatches: aMessage [
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> addConnection: aVisualPrimitive [
+SBVisualPrimitive >> addChild: aVisualPrimitive [
 
-	self addConnection: aVisualPrimitive afterIndex: self connections size
+	self addChild: aVisualPrimitive afterIndex: self children size
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> addConnection: aVisualPrimitive afterIndex: aNumber [
+SBVisualPrimitive >> addChild: aVisualPrimitive afterIndex: aNumber [
 
-	aVisualPrimitive parent ifNotNil: [aVisualPrimitive parent removeConnection: aVisualPrimitive].
-	self connections add: aVisualPrimitive afterIndex: aNumber.
+	aVisualPrimitive parent ifNotNil: [aVisualPrimitive parent removeChild: aVisualPrimitive].
+	self children add: aVisualPrimitive afterIndex: aNumber.
 	aVisualPrimitive parent: self.
 	self withDecorator: SBTreeDecorator do: [:myDecorator |
 		aVisualPrimitive
@@ -157,13 +157,13 @@ SBVisualPrimitive >> addPropertyMapping: anSBVPPropertyMapping [
 	propertyMapping vpProperty
 		caseOf: {
 			[#shape] -> [self shape: (propertyMapping getMorphForValue: value)].
-			[#connections] -> [
-				self connections: OrderedCollection new.
-				value do: [:connection |
+			[#children] -> [
+				self children: OrderedCollection new.
+				value do: [:child |
 					child := self owner
-						ifNil: [connection asVisualPrimitive]
-						ifNotNil: [SBVisualPrimitive newFromObject: connection in: self owner].
-					self addConnection: child]]}
+						ifNil: [child asVisualPrimitive]
+						ifNotNil: [SBVisualPrimitive newFromObject: child in: self owner].
+					self addChild: child]]}
 		otherwise: [(self labelPositions includes: propertyMapping vpProperty) ifTrue: [(self blockDict at: propertyMapping vpProperty) addVPLabel: (propertyMapping getMorphFor: self origin)]]
 ]
 
@@ -180,10 +180,10 @@ SBVisualPrimitive >> addToWorld: aWorld [
 ]
 
 { #category : #nil }
-SBVisualPrimitive >> allConnectionsDo: aBlock [
+SBVisualPrimitive >> allChildrenDo: aBlock [
 
 	aBlock value: self.
-	self connections do: [:connection | connection allConnectionsDo: aBlock]
+	self children do: [:child | child allChildrenDo: aBlock]
 ]
 
 { #category : #'as yet unclassified' }
@@ -202,12 +202,12 @@ SBVisualPrimitive >> attachTreeDecorator [
 			parent
 				withDecorator: SBTreeDecorator
 				do: [:parentDecorator | parentDecorator addChild: decorator afterIndex: self siblingIndex - 1]].
-		self connections do: [:child |
+		self children do: [:child |
 			child
 				withDecorator: SBTreeDecorator
 				do: [:childDecorator | decorator addChild: childDecorator afterIndex: child siblingIndex - 1]]].
 	
-	self connections do: [:child | child attachTreeDecorator]
+	self children do: [:child | child attachTreeDecorator]
 ]
 
 { #category : #accessing }
@@ -243,22 +243,22 @@ SBVisualPrimitive >> buildNewInstance [
 { #category : #nil }
 SBVisualPrimitive >> centerChild [
 
-	^ self connections
+	^ self children
 		ifEmpty: [nil]
-		ifNotEmpty: [self connections at: self connections size + 1 / 2]
+		ifNotEmpty: [self children at: self children size + 1 / 2]
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> connections [
+SBVisualPrimitive >> children [
 
-	^ connections
+	^ children
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> connections: aCollection [
+SBVisualPrimitive >> children: aCollection [
 
-	connections := aCollection asOrderedCollection.
-	connections do: [:child | child parent: self]
+	children := aCollection asOrderedCollection.
+	children do: [:child | child parent: self]
 ]
 
 { #category : #'as yet unclassified' }
@@ -333,7 +333,7 @@ SBVisualPrimitive >> initialize [
 				hResizing: #spaceFill};
 		changeTableLayout;
 		shrinkWrap;
-		connections: OrderedCollection new;
+		children: OrderedCollection new;
 		color: Color transparent
 ]
 
@@ -417,15 +417,15 @@ SBVisualPrimitive >> layout [
 	self
 		withDecorator: SBTreeDecorator
 		do: [:dec | dec layout]
-		ifAbsent: [self connections do: [:connection | connection layout]]
+		ifAbsent: [self children do: [:child | child layout]]
 ]
 
 { #category : #'as yet unclassified' }
 SBVisualPrimitive >> leftSibling [
 
 	^ self parent ifNotNil: [:parent | | index |
-		index := parent connections indexOf: self.
-		index > 1 ifTrue: [parent connections at: index - 1]]
+		index := parent children indexOf: self.
+		index > 1 ifTrue: [parent children at: index - 1]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -444,7 +444,7 @@ SBVisualPrimitive >> middleLabelPositions [
 SBVisualPrimitive >> morphAt: aSymbol [
 
 	(self labelPositions includes: aSymbol) ifTrue: [^ self blockDict at: aSymbol ifPresent: [:block | block firstSubmorphOrNil] ifAbsent: [nil]].
-	aSymbol = #connections ifTrue: [^ self connections].
+	aSymbol = #children ifTrue: [^ self children].
 	aSymbol = #shape ifTrue: [^ self shape]
 ]
 
@@ -543,15 +543,15 @@ SBVisualPrimitive >> propertyAt: aSymbol [
 			at: aSymbol
 			ifPresent: [:block | self getLabelContents: block]
 			ifAbsent: [nil]].
-	aSymbol = #connections ifTrue: [^ self connections].
+	aSymbol = #children ifTrue: [^ self children].
 	aSymbol = #shape ifTrue: [^ self shape]
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> removeConnection: aVisualPrimitive [
+SBVisualPrimitive >> removeChild: aVisualPrimitive [
 
 	self withDecorator: SBTreeDecorator do: [:dec | dec removeChild: aVisualPrimitive].
-	self connections remove: aVisualPrimitive.
+	self children remove: aVisualPrimitive.
 	aVisualPrimitive parent: nil
 ]
 
@@ -565,8 +565,8 @@ SBVisualPrimitive >> removeLabelAt: aSymbol [
 SBVisualPrimitive >> rightSibling [
 
 	^ self parent ifNotNil: [:parent | | index |
-		index := parent connections indexOf: self.
-		index < parent connections size ifTrue: [parent connections at: index + 1]]
+		index := parent children indexOf: self.
+		index < parent children size ifTrue: [parent children at: index + 1]]
 ]
 
 { #category : #accessing }
@@ -616,7 +616,7 @@ SBVisualPrimitive >> shape: aMorph [
 { #category : #'as yet unclassified' }
 SBVisualPrimitive >> siblingIndex [
 
-	^ self parent ifNil: [0] ifNotNil: [self parent connections indexOf: self]
+	^ self parent ifNil: [0] ifNotNil: [self parent children indexOf: self]
 ]
 
 { #category : #'as yet unclassified' }

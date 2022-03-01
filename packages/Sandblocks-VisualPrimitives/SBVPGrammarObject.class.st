@@ -33,14 +33,14 @@ SBVPGrammarObject class >> visualPrimitiveMapping [
 		
 		#innerLabel vpStringFor: #objectName.
 		
-		SBVPPropertyMappingConnections
+		SBVPPropertyMappingChildren
 			getter: [:object | object members ifNil: [{object content} asOrderedCollection]]
-			setter: [:object :connections |
-				connections size < 1 ifTrue: [] ifFalse: [
-					connections size > 1
-						ifTrue: [object members: connections]
-						ifFalse: [object content: connections first]]]
-			vpProperty: #connections}
+			setter: [:object :children |
+				children size < 1 ifTrue: [] ifFalse: [
+					children size > 1
+						ifTrue: [object members: children]
+						ifFalse: [object content: children first]]]
+			vpProperty: #children}
 ]
 
 { #category : #accessing }

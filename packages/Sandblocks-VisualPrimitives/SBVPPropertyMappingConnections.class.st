@@ -1,86 +1,86 @@
 "
-An SBVPPropertyMappingConnections is used to map to and from the connections of a SBVisualPrimitive.
+An SBVPPropertyMappingChildren is used to map to and from the children of a SBVisualPrimitive.
 "
 Class {
-	#name : #SBVPPropertyMappingConnections,
+	#name : #SBVPPropertyMappingChildren,
 	#superclass : #SBVPPropertyMapping,
 	#category : #'Sandblocks-VisualPrimitives'
 }
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMappingConnections class >> defaultGetterBlockWith: aSymbol [
+SBVPPropertyMappingChildren class >> defaultGetterBlockWith: aSymbol [
 
 	^ aSymbol isSymbol
 		ifTrue: [
-			[:object | | connections |
-				connections := object perform: aSymbol asSimpleGetter.
-				connections ifNil: [nil] ifNotNil: [connections reject: [:entry | entry isNil]]]]
+			[:object | | children |
+				children := object perform: aSymbol asSimpleGetter.
+				children ifNil: [nil] ifNotNil: [children reject: [:entry | entry isNil]]]]
 		ifFalse: [[:object | aSymbol]]
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMappingConnections class >> defaultSetterBlockWith: aSymbol for: ignored [
+SBVPPropertyMappingChildren class >> defaultSetterBlockWith: aSymbol for: ignored [
 
 	^ aSymbol isSymbol
 		ifTrue: [
-			[:object :vp | | connections |
-				connections := (vp propertyAt: #connections) collect: [:connection | connection getObjectFromVisualPrimitive].
-				(connections notNil and: [connections notEmpty]) ifTrue: [object perform: aSymbol asSimpleSetter with: connections]]]
+			[:object :vp | | children |
+				children := (vp propertyAt: #children) collect: [:child | child getObjectFromVisualPrimitive].
+				(children notNil and: [children notEmpty]) ifTrue: [object perform: aSymbol asSimpleSetter with: children]]]
 		ifFalse: [[:object :vp | ]]
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMappingConnections class >> getter: aBlock setter: anotherBlock [
+SBVPPropertyMappingChildren class >> getter: aBlock setter: anotherBlock [
 
 	| wrappedGetter wrappedSetter |
 	wrappedGetter := [:object |
 		(aBlock value: object)
 			ifNil: [{}]
-			ifNotNil: [:connections | connections reject: [:entry | entry isNil]]].
+			ifNotNil: [:children | children reject: [:entry | entry isNil]]].
 	wrappedSetter := [:object :vp |
 		anotherBlock
 			value: object
-			value: ((vp propertyAt: #connections) collect: [:connection | connection getObjectFromVisualPrimitive])].
-	^ super getter: wrappedGetter setter: wrappedSetter vpProperty: #connections name: 'connections'
+			value: ((vp propertyAt: #children) collect: [:child | child getObjectFromVisualPrimitive])].
+	^ super getter: wrappedGetter setter: wrappedSetter vpProperty: #children name: 'children'
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMappingConnections class >> getter: aBlock setter: anotherBlock patternValue: anObject vpProperty: aSymbol [
+SBVPPropertyMappingChildren class >> getter: aBlock setter: anotherBlock patternValue: anObject vpProperty: aSymbol [
 
 	anObject
-		ifNotNil: [Error signal: 'SBVPPropertyMappingConnections does not support patternValue as this would lead to patterns recusively having children. This will result in an infinite number of children.']
+		ifNotNil: [Error signal: 'SBVPPropertyMappingChildren does not support patternValue as this would lead to patterns recusively having children. This will result in an infinite number of children.']
 		ifNil: [
 			^ super
 				getter: aBlock
 				setter: anotherBlock
 				patternValue: anObject
 				vpProperty: aSymbol
-				name: 'connections']
+				name: 'children']
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMappingConnections class >> getter: aBlock setter: anotherBlock vpProperty: aSymbol [
+SBVPPropertyMappingChildren class >> getter: aBlock setter: anotherBlock vpProperty: aSymbol [
 
-	self assert: aSymbol = #connections.
+	self assert: aSymbol = #children.
 	^ self getter: aBlock setter: anotherBlock
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMappingConnections class >> property: aSymbol [
+SBVPPropertyMappingChildren class >> property: aSymbol [
 
-	^ super property: aSymbol vpProperty: #connections
+	^ super property: aSymbol vpProperty: #children
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMappingConnections class >> property: aSymbol vpProperty: anotherSymbol [
+SBVPPropertyMappingChildren class >> property: aSymbol vpProperty: anotherSymbol [
 
-	self assert: anotherSymbol = #connections.
+	self assert: anotherSymbol = #children.
 	^ self property: aSymbol
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMappingConnections >> initialize [
+SBVPPropertyMappingChildren >> initialize [
 
 	super initialize.
-	name := 'connections'
+	name := 'children'
 ]

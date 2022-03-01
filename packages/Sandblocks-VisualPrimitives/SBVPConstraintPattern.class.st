@@ -49,7 +49,7 @@ SBVPConstraintPattern >> addToWorld: aWorld [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPConstraintPattern >> allConnectionsDo: aBlock [
+SBVPConstraintPattern >> allChildrenDo: aBlock [
 
 	
 ]

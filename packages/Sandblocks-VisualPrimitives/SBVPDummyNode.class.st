@@ -26,19 +26,19 @@ SBVPDummyNode class >> buildTreePrivate: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPDummyNode class >> connectionsMappingEntry [
+SBVPDummyNode class >> childrenMappingEntry [
 
 	^ SBVPPropertyMapping
-		getter: [:object | {object left. object right} reject: [:connection | connection isNil]]
+		getter: [:object | {object left. object right} reject: [:child | child isNil]]
 		setter: [:object :vp |
-			vp connections size >= 1
-				ifTrue: [object left: vp connections first getObjectFromVisualPrimitive]
+			vp children size >= 1
+				ifTrue: [object left: vp children first getObjectFromVisualPrimitive]
 				ifFalse: [object left: nil].
-			vp connections size >= 2
-				ifTrue: [object right: vp connections second getObjectFromVisualPrimitive]
+			vp children size >= 2
+				ifTrue: [object right: vp children second getObjectFromVisualPrimitive]
 				ifFalse: [object right: nil]]
-		vpProperty: #connections
-		name: 'connections'
+		vpProperty: #children
+		name: 'children'
 ]
 
 { #category : #'as yet unclassified' }
@@ -78,7 +78,7 @@ SBVPDummyNode class >> visualPrimitiveMapping [
 		#identityLabelPosition vpConstant: #bottomCenterLabel.
 		#topLeftLabel vpConstant: SBIcon iconBug.
 		#innerLabel vpNumberFor: #key.
-		self connectionsMappingEntry}
+		self childrenMappingEntry}
 ]
 
 { #category : #'as yet unclassified' }

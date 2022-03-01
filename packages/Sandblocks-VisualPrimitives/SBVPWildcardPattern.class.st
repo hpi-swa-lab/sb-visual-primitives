@@ -31,8 +31,8 @@ SBVPWildcardPattern >> buildFromBinding: anArray currentPrimitive: aVisualPrimit
 	
 	output := aVisualPrimitive copy.
 	aVisualPrimitive = leaf
-		ifTrue: [output connections: (self buildChildrenFromBinding: anArray)]
-		ifFalse: [output connections: (aVisualPrimitive connections collect: [:primitive | self buildFromBinding: anArray currentPrimitive: primitive])].
+		ifTrue: [output children: (self buildChildrenFromBinding: anArray)]
+		ifFalse: [output children: (aVisualPrimitive children collect: [:primitive | self buildFromBinding: anArray currentPrimitive: primitive])].
 	^ output
 ]
 
@@ -68,9 +68,9 @@ SBVPWildcardPattern >> getNext: aVisualPrimitive [
 		self pushToStack: aVisualPrimitive.
 		^ true].
 	[self dfsStack notEmpty] whileTrue: [
-		self currentTop connections do: [:connection |
-			(self visitedPrimitives includes: connection) ifFalse: [
-				self pushToStack: connection.
+		self currentTop children do: [:child |
+			(self visitedPrimitives includes: child) ifFalse: [
+				self pushToStack: child.
 				self resetChildren.
 				^ true]].
 		self dfsStack removeFirst].

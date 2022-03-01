@@ -81,13 +81,13 @@ SBVPCase class >> exampleWithEllipsisAndWildcardPattern [
 
 	SBVPCase
 		input: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern bindingIndex: 1 connections: {
-				SBVPEllipsisPattern bindingIndex: 2 connections: {}.
-				SBVPWildcardPattern bindingIndex: 3 connections: {}}.
+			SBVPBindingPattern bindingIndex: 1 children: {
+				SBVPEllipsisPattern bindingIndex: 2 children: {}.
+				SBVPWildcardPattern bindingIndex: 3 children: {}}.
 			SBVPConstraintPattern constraint: [:b | b label = 20]})
-		output: (SBVPBindingPattern bindingIndex: 1 connections: {
-			SBVPEllipsisPattern bindingIndex: 2 connections: {}.
-			SBVPWildcardPattern bindingIndex: 3 connections: {}})
+		output: (SBVPBindingPattern bindingIndex: 1 children: {
+			SBVPEllipsisPattern bindingIndex: 2 children: {}.
+			SBVPWildcardPattern bindingIndex: 3 children: {}})
 ]
 
 { #category : #examples }
@@ -97,12 +97,12 @@ SBVPCase class >> exampleWithPatterns [
 		input: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern
 				bindingIndex: 1
-				connections: {SBVPBindingPattern bindingIndex: 2 connections: {}. SBVPBindingPattern bindingIndex: 3 connections: {}}.
+				children: {SBVPBindingPattern bindingIndex: 2 children: {}. SBVPBindingPattern bindingIndex: 3 children: {}}.
 			SBVPConstraintPattern constraint: [:c :b :a | true]})
 		output: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern
 				bindingIndex: 1
-				connections: {SBVPBindingPattern bindingIndex: 3 connections: {}. SBVPBindingPattern bindingIndex: 2 connections: {}}})
+				children: {SBVPBindingPattern bindingIndex: 3 children: {}. SBVPBindingPattern bindingIndex: 2 children: {}}})
 ]
 
 { #category : #examples }
@@ -112,12 +112,12 @@ SBVPCase class >> exampleWithPatterns: aDummyNode [
 		input: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern
 				bindingIndex: 1
-				connections: {SBVPBindingPattern bindingIndex: 2 connections: {}. SBVPBindingPattern bindingIndex: 3 connections: {}}.
+				children: {SBVPBindingPattern bindingIndex: 2 children: {}. SBVPBindingPattern bindingIndex: 3 children: {}}.
 			SBVPConstraintPattern constraint: [:a :b :c | true]})
 		output: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern
 				bindingIndex: 1
-				connections: {SBVPBindingPattern bindingIndex: 3 connections: {}. SBVPBindingPattern bindingIndex: 2 connections: {}}})) value: aDummyNode
+				children: {SBVPBindingPattern bindingIndex: 3 children: {}. SBVPBindingPattern bindingIndex: 2 children: {}}})) value: aDummyNode
 ]
 
 { #category : #'as yet unclassified' }
@@ -273,8 +273,8 @@ SBVPCase >> color [
 SBVPCase >> colorDifferences [
 
 	| inputRoot outputRoot inputBindingDict outputBindingDict colors |
-	inputRoot := self input connections first.
-	outputRoot := self output connections first.
+	inputRoot := self input children first.
+	outputRoot := self output children first.
 	
 	inputBindingDict := self findAllBindings: inputRoot.
 	outputBindingDict := self findAllBindings: outputRoot.
@@ -288,12 +288,12 @@ SBVPCase >> colorDifferences [
 			ifTrue: ["do something here"
 			]
 			ifFalse: [
-				inputNode connections withIndexDo: [:connection :index | | outputConnection c |
-					outputConnection := outputNode connections at: index ifAbsent: [nil].
-					c := colors at: connection label.
-					connection label = (outputConnection ifNotNil: #label) ifFalse: [
-						connection color: c.
-						(outputBindingDict at: connection label ifAbsent: [nil]) ifNotNil: [:o | o color: c]]]]]
+				inputNode children withIndexDo: [:child :index | | outputChild c |
+					outputChild := outputNode children at: index ifAbsent: [nil].
+					c := colors at: child label.
+					child label = (outputChild ifNotNil: #label) ifFalse: [
+						child color: c.
+						(outputBindingDict at: child label ifAbsent: [nil]) ifNotNil: [:o | o color: c]]]]]
 ]
 
 { #category : #accessing }
@@ -387,7 +387,7 @@ SBVPCase >> input: anSBBlock output: anotherSBBlock [
 { #category : #'as yet unclassified' }
 SBVPCase >> inputRoot [
 
-	^ self input connections first
+	^ self input children first
 ]
 
 { #category : #'as yet unclassified' }
@@ -502,7 +502,7 @@ SBVPCase >> toggleImplicitChildTo: aBoolean withBinding: aString [
 { #category : #'as yet unclassified' }
 SBVPCase >> toggleImplicitChildTo: aBoolean withBinding: aString on: aSBVPPattern [
 
-	aSBVPPattern allConnectionsDo: [:pattern |
+	aSBVPPattern allChildrenDo: [:pattern |
 		pattern bindingIndex = aString ifTrue: [
 			pattern isImplicitChild: aBoolean.
 			^ self]]
