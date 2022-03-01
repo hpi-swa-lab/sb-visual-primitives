@@ -148,7 +148,7 @@ SBVisualPrimitive >> addNewParent [
 { #category : #accessing }
 SBVisualPrimitive >> addPropertyMapping: anSBVPPropertyMapping [
 
-	| value propertyMapping child |
+	| value propertyMapping newChild |
 	propertyMapping := anSBVPPropertyMapping asPropertyMapping.
 	value := self valueFromPropertyMapping: propertyMapping.
 	
@@ -160,10 +160,10 @@ SBVisualPrimitive >> addPropertyMapping: anSBVPPropertyMapping [
 			[#children] -> [
 				self children: OrderedCollection new.
 				value do: [:child |
-					child := self owner
+					newChild := self owner
 						ifNil: [child asVisualPrimitive]
 						ifNotNil: [SBVisualPrimitive newFromObject: child in: self owner].
-					self addChild: child]]}
+					self addChild: newChild]]}
 		otherwise: [(self labelPositions includes: propertyMapping vpProperty) ifTrue: [(self blockDict at: propertyMapping vpProperty) addVPLabel: (propertyMapping getMorphFor: self origin)]]
 ]
 
