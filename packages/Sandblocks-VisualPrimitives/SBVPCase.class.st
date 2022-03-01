@@ -225,7 +225,7 @@ SBVPCase >> binding: aString for: block class: aClass ifPresent: aBlock [
 
 	| bindingsSet |
 	bindingsSet := Set new.
-	self inputRoot ifNotNil: [self inputRoot collectBindingsInto: bindingsSet].
+	self inputRoots ifNotNil: [self inputRoots do: [:inputRoot | inputRoot collectBindingsInto: bindingsSet]].
 	bindingsSet
 		detect: [:b | b notNil and: [b contents = aString]]
 		ifFound: [:b | ^ aBlock value: b].
@@ -385,11 +385,11 @@ SBVPCase >> input: anSBBlock output: anotherSBBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPCase >> inputRoot [
+SBVPCase >> inputRoots [
 
 	^ self input children isEmpty
 		ifTrue: [nil]
-		ifFalse: [self input children first]
+		ifFalse: [self input children select: [:child | child isKindOf: SBVPBindingPattern]]
 ]
 
 { #category : #'as yet unclassified' }

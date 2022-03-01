@@ -90,7 +90,14 @@ SBVPPattern >> matches: aVisualPrimitive withBinding: aCollection [
 SBVPPattern >> nextIdentifier [
 
 	| invalidIdentifiers currentAttempt possibleIdentifer |
-	invalidIdentifiers := Array streamContents: [:stream | self allChildrenDo: [:pattern | stream nextPut: pattern bindingIndex]].
+	invalidIdentifiers := Array streamContents: [:stream |
+		self allChildrenDo: [:pattern | | element |
+			element := pattern bindingIndex.
+			element := element ifNotNil: [
+				(pattern bindingIndex beginsWith: 'i_')
+					ifTrue: [element from: 3]
+					ifFalse: [element]].
+			stream nextPut: element]].
 	
 	currentAttempt := 1.
 	[
