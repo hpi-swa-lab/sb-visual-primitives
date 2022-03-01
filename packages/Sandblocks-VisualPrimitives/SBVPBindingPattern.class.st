@@ -605,8 +605,10 @@ SBVPBindingPattern >> labelPositionOf: aMorph [
 SBVPBindingPattern >> matches: aVisualPrimitive withBinding: aCollection [
 
 	| offset |
+	"self halt."
 	offset := 0.
-	self dynamicLabelDict keysAndValuesDo: [:position :value | (aVisualPrimitive labelDict at: position ifAbsent: [^ false]) = value ifFalse: [^ false]].
+	self labelExpressionDict keysAndValuesDo: [:position :value| (aVisualPrimitive propertyAt: position) = (value value) ifFalse: [^ false]].
+	
 	^ self connections withIndexAllSatisfy: [:connection :index | | wasSuccessful |
 		wasSuccessful := connection
 			matches: (connection searchRootFor: (self getCurrentPrimitive: aVisualPrimitive) at: index + offset)
