@@ -58,7 +58,13 @@ SBVPPattern >> getNext: aVisualPrimitive [
 { #category : #'as yet unclassified' }
 SBVPPattern >> identifierForIndex: aNumber [
 
-	^ ('', (Character alphabet at: aNumber - 1 // 26 + 1)) asSymbol
+	^ ('', (Character alphabet at: aNumber - 1 // Character alphabet size + 1)) asSymbol
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPattern >> implicitPrefix [
+
+	^ 'i_'
 ]
 
 { #category : #accessing }
@@ -94,8 +100,8 @@ SBVPPattern >> nextIdentifier [
 		self allChildrenDo: [:pattern | | element |
 			element := pattern bindingIndex.
 			element := element ifNotNil: [
-				(pattern bindingIndex beginsWith: 'i_')
-					ifTrue: [element from: 3]
+				(pattern bindingIndex beginsWith: self implicitPrefix)
+					ifTrue: [element from: self implicitPrefix size]
 					ifFalse: [element]].
 			stream nextPut: element]].
 	

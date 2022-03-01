@@ -206,12 +206,6 @@ SBVisualPrimitive >> afterAddLabel: aBlock [
 	
 ]
 
-{ #category : #'as yet unclassified' }
-SBVisualPrimitive >> afterAddingLabel: aBlock [
-
-	
-]
-
 { #category : #nil }
 SBVisualPrimitive >> allChildrenDo: aBlock [
 

@@ -136,19 +136,13 @@ SBVPPatternContainer >> buildImplicitChildrenMatchingPattern [
 { #category : #'as yet unclassified' }
 SBVPPatternContainer >> cellInset [
 
-	^3
+	^ 3
 ]
 
 { #category : #accessing }
 SBVPPatternContainer >> classNameInput [
 
 	^ classNameInput
-]
-
-{ #category : #accessing }
-SBVPPatternContainer >> classNameInput: aBlock [
-
-	classNameInput := aBlock
 ]
 
 { #category : #'as yet unclassified' }
@@ -196,12 +190,6 @@ SBVPPatternContainer >> findAllBindings: aPattern [
 SBVPPatternContainer >> informationRow [
 
 	^ informationRow
-]
-
-{ #category : #accessing }
-SBVPPatternContainer >> informationRow: aBlock [
-
-	informationRow := aBlock
 ]
 
 { #category : #'as yet unclassified' }
@@ -301,7 +289,7 @@ SBVPPatternContainer >> strategyButtonFor: aSymbol [
 { #category : #'as yet unclassified' }
 SBVPPatternContainer >> toggleImplicitChildTo: aBoolean withBinding: aString on: aSBVPPattern [
 
-	aSBVPPattern allConnectionsDo: [:pattern |
+	aSBVPPattern allChildrenDo: [:pattern |
 		pattern bindingIndex = aString ifTrue: [
 			pattern isImplicitChild: aBoolean.
 			^ self]]

@@ -459,18 +459,6 @@ SBVPExecuter >> caseBlock [
 	^ caseBlock
 ]
 
-{ #category : #accessing }
-SBVPExecuter >> caseBlock: anSBBlock [
-
-	^ caseBlock := anSBBlock
-]
-
-{ #category : #'as yet unclassified' }
-SBVPExecuter >> evaluationContext [
-
-	^ nil
-]
-
 { #category : #'as yet unclassified' }
 SBVPExecuter >> evaluationReceiver [
 
@@ -559,12 +547,6 @@ SBVPExecuter >> inputBlock [
 ]
 
 { #category : #accessing }
-SBVPExecuter >> inputBlock: anSBBlock [
-
-	^ inputBlock := anSBBlock
-]
-
-{ #category : #accessing }
 SBVPExecuter >> inputCodeValue [
 
 	^ self input code firstSubmorph evaluate value
@@ -574,12 +556,6 @@ SBVPExecuter >> inputCodeValue [
 SBVPExecuter >> outputBlock [
 
 	^ outputBlock
-]
-
-{ #category : #accessing }
-SBVPExecuter >> outputBlock: anSBBlock [
-
-	^ outputBlock := anSBBlock
 ]
 
 { #category : #accessing }

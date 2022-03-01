@@ -437,6 +437,13 @@ SBVPBindingPattern >> constant: aBlock [
 SBVPBindingPattern >> convertToEllipsisPattern [
 	<action>
 
+	self convertToPatternClass:  SBVPEllipsisPattern
+]
+
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern >> convertToPatternClass: aClass [
+	"Only suitable for conversion from ellipsis to binding and vise versa."
+
 	self sandblockEditor do: (SBCombinedCommand newWith: {
 		SBVPDeleteCommand new target: self.
 		SBVPInsertCommand new
@@ -444,7 +451,7 @@ SBVPBindingPattern >> convertToEllipsisPattern [
 			parent: self parent;
 			container: self owner;
 			siblingIndex: self siblingIndex;
-			morph: (SBVPEllipsisPattern bindingDict: {self class identityName -> self bindingIndex} asDictionary);
+			morph: (aClass bindingDict: {self class identityName -> self bindingIndex} asDictionary);
 			shouldMergeWithNext: false;
 			yourself})
 ]

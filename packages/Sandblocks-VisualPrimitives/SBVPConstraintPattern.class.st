@@ -100,12 +100,6 @@ SBVPConstraintPattern >> fixedNumberOfChildren [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPConstraintPattern >> grammarHandler [
-
-	^ SBStGrammarHandler new
-]
-
-{ #category : #'as yet unclassified' }
 SBVPConstraintPattern >> initialize [
 
 	super initialize.

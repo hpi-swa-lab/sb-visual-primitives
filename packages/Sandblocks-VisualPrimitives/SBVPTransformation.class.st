@@ -229,7 +229,7 @@ SBVPTransformation >> replaceAllMatches: anObject [
 { #category : #'as yet unclassified' }
 SBVPTransformation >> toggleImplicitChildTo: aBoolean withBinding: aString [
 
-	super toggleImplicitChildTo: aBoolean withBinding: aString.
+	super toggleImplicitChildTo: aBoolean withBinding: aString on: self outputPattern.
 	self toggleImplicitChildTo: aBoolean withBinding: aString on: self outputPattern
 ]
 

@@ -128,19 +128,6 @@ SBVPQuery class >> pattern: aPattern strategy: aDict visualizePatternsAs: aClass
 ]
 
 { #category : #'as yet unclassified' }
-SBVPQuery >> buildImplicitChildrenMatchingPattern [
-
-	self pattern notNil ifTrue: [
-		self pattern removeImplicitChildren.
-		
-		self explicitChildrenMatching ifFalse: [
-			self pattern
-				buildImplicitChildren: Dictionary new;
-				attachTreeDecorator].
-		self pattern layout]
-]
-
-{ #category : #'as yet unclassified' }
 SBVPQuery >> query [
 
 	^ self query: self pattern findOriginRoot

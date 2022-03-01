@@ -141,13 +141,6 @@ SBVPGroupPattern >> deleteCommandFor: aBlock [
 	^ SBVPDeleteCommand new target: primitive
 ]
 
-{ #category : #'as yet unclassified' }
-SBVPGroupPattern >> findConstant [
-
-	self children do: [:child | child findConstant ifNotNil: [:constant | ^ constant]].
-	^ nil
-]
-
 { #category : #accessing }
 SBVPGroupPattern >> fixedNumberOfChildren [
 
@@ -286,12 +279,6 @@ SBVPGroupPattern >> resetVisualization [
 SBVPGroupPattern >> row [
 
 	^ row
-]
-
-{ #category : #accessing }
-SBVPGroupPattern >> row: anObject [
-
-	row := anObject
 ]
 
 { #category : #accessing }
