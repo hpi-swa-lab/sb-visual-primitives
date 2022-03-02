@@ -1,5 +1,5 @@
 "
-A SBVPOrGroupPattern is xxxxxxxxx.
+An SBVPOrGroupPattern is xxxxxxxxx.
 
 "
 Class {

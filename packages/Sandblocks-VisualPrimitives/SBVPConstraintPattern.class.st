@@ -1,11 +1,11 @@
 "
-A SBVPConstraintPattern is xxxxxxxxx.
+An SBVPConstraintPattern represents a textual condition and is used for pattern matching.
 
 Instance Variables
 	constraint:		BlockClosure
 
 constraint
-	- xxxxx
+	- contains the condition as a BlockClosure
 
 "
 Class {

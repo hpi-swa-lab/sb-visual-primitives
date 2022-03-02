@@ -18,13 +18,13 @@ constant
 	- can be nil if there is no underlying sourceObject
 
 labelBindingDict
-	- xxxxx
+	- dictionary of label positions and their bindings
 
 labelExpressionDict
-	- xxxxx
+	- dictionary of label positions and their values
 
 visualizingClass
-	- xxxxx
+	- the class to be visualized
 
 writeBackClosure
 	- xxxxx
@@ -544,7 +544,10 @@ SBVPBindingPattern >> initialize [
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> labelBindingChanged [
 
-	self labelBindingDict copy keysAndValuesDo: [:key :value | self labelBindingDict at: key put: ((self labelContentAt: key) as: value class)]
+	self labelBindingDict copy keysAndValuesDo: [:labelPosition :bindingName |
+		self labelBindingDict
+			at: labelPosition
+			put: ((self labelContentAt: labelPosition) as: bindingName class)]
 ]
 
 { #category : #'as yet unclassified' }
@@ -641,8 +644,8 @@ SBVPBindingPattern >> rebuild [
 			expression: association value
 			vpProperty: association key
 			originalMapping: (self originalPropertyMappingAt: association key)]).
-	self labelBindingDict keysAndValuesDo: [:key :value |
-		(self setLabelAt: key to: (self bindingLabelBlockFrom: value))
+	self labelBindingDict keysAndValuesDo: [:labelPosition :bindingName |
+		(self setLabelAt: labelPosition to: (self bindingLabelBlockFrom: bindingName))
 			when: #contentsChanged
 			send: #labelBindingChanged
 			to: self].

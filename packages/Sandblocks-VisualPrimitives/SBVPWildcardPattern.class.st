@@ -1,5 +1,5 @@
 "
-A SBVPWildcardPattern is xxxxxxxxx.
+An SBVPWildcardPattern is xxxxxxxxx.
 
 Instance Variables
 	searchStack:		LinkedList

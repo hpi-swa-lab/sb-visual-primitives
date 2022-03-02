@@ -1,11 +1,11 @@
 "
-A SBVPGroupPattern is xxxxxxxxx.
+An SBVPGroupPattern creates and contains SBVPBindingPatterns and SBVPConstraintPatterns. The patterns are seperated with an 'and'.
 
 Instance Variables
 	row:		SBRow
 
 row
-	- xxxxx
+	- container for SBVPBindingPatterns, SBVPConstraintPatterns and the seperator strings
 
 "
 Class {
@@ -73,7 +73,6 @@ SBVPGroupPattern >> addNewConstraintPattern [
 	| newPattern |
 	newPattern := SBVPConstraintPattern constraint: [:bindings | true].
 	
-	self halt.
 	self sandblockEditor do: (SBVPInsertCommand new
 		index: self owner submorphCount + 1;
 		parent: self;
