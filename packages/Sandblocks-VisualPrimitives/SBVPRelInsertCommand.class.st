@@ -40,6 +40,12 @@ SBVPRelInsertCommand >> suggestions [
 			previewOnly: false.
 		(SBInsertSuggestionItem selector: 'addNewConstraintPattern' label: 'choice')
 			morph: (SBVPConstraintPattern constraint: [:bindings | ])
+			previewOnly: false.
+		(SBInsertSuggestionItem selector: 'addNewAndPattern' label: 'choice')
+			morph: SBVPGroupPattern new
+			previewOnly: false.
+		(SBInsertSuggestionItem selector: 'addNewOrPattern' label: 'choice')
+			morph: SBVPOrGroupPattern new
 			previewOnly: false}
 ]
 

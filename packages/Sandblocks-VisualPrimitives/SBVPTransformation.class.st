@@ -227,7 +227,7 @@ SBVPTransformation >> value: anObject [
 { #category : #'as yet unclassified' }
 SBVPTransformation >> writeSourceOn: aStream [
 
-	aStream nextPutAll: '(SBVPCase input: '.
+	aStream nextPutAll: '(SBVPTransformation input: '.
 	self pattern writeSourceOn: aStream.
 	aStream nextPutAll: ' output: '.
 	self outputPattern writeSourceOn: aStream.
@@ -238,7 +238,7 @@ SBVPTransformation >> writeSourceOn: aStream [
 	
 	self defaultVisualizationClass ifNotNil: [
 		aStream nextPutAll: ' visualizePatternsAs: '.
-		self defaultPatternVisualizationClass storeOn: aStream].
+		self defaultVisualizationClass storeOn: aStream].
 	
 	aStream nextPut: $)
 ]

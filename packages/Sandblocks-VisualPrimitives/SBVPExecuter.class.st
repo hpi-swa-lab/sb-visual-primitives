@@ -297,20 +297,25 @@ SBVPExecuter class >> exampleGrammarRuleMergeRepeat: aGrammarObject [
 				children: {
 					SBVPBindingPattern
 						bindingDict: {#identity -> #b}
-						expressionDict: {#topLeftLabel -> ['SYMBOL']}.
+						expressionDict: {#topLeftLabel -> ['SYMBOL']}
+						visualizingClass: SBVPGrammarObject.
 					SBVPBindingPattern
 						bindingDict: {#identity -> #c}
 						expressionDict: {#topLeftLabel -> ['REPEAT']}
 						children: {
 							SBVPBindingPattern
 								bindingDict: {#identity -> #d}
-								expressionDict: {#topLeftLabel -> ['SYMBOL']}}}.
+								expressionDict: {#topLeftLabel -> ['SYMBOL']}
+								visualizingClass: SBVPGrammarObject}
+						visualizingClass: SBVPGrammarObject}
+				visualizingClass: SBVPGrammarObject.
 			SBVPConstraintPattern constraint: [:bindings | (bindings at: #b) objectName = (bindings at: #d) objectName]})
 		output: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern
 				bindingDict: {#identity -> #c}
 				expressionDict: {#topLeftLabel -> ['REPEAT1']}
-				children: {SBVPBindingPattern bindingDict: {#identity -> #b}}})
+				children: {SBVPBindingPattern bindingDict: {#identity -> #b} visualizingClass: SBVPGrammarObject}
+				visualizingClass: SBVPGrammarObject})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> false;
 			add: #explicitChildrenMatching -> true;
@@ -364,36 +369,6 @@ SBVPExecuter class >> exampleGrammarRuleWeird: aGrammarObject [
 			add: #explicitChildrenMatching -> true;
 			yourself)
 		visualizePatternsAs: SBVPGrammarObject) replaceAllMatches: aGrammarObject
-]
-
-{ #category : #'as yet unclassified' }
-SBVPExecuter class >> exampleOrPattern [
-
-	^ SBVPExecuter
-		case: (SBVPTransformation
-			input: (SBVPOrGroupPattern patterns: {
-				SBVPBindingPattern bindingDict: {#identity -> #a} children: {
-					SBVPBindingPattern
-						bindingDict: {#identity -> #b}
-						children: {SBVPEllipsisPattern bindingDict: {#identity -> #c}}}.
-				SBVPGroupPattern patterns: {
-					SBVPBindingPattern
-						bindingDict: {#identity -> #a}
-						children: {SBVPEllipsisPattern bindingDict: {#identity -> #c}}.
-					SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) key = 3]}})
-			output: (SBVPGroupPattern patterns: {
-				SBVPBindingPattern
-					bindingDict: {#identity -> #a}
-					expressionDict: {#innerLabel -> [42]}
-					children: {SBVPEllipsisPattern bindingDict: {#identity -> #c}}})
-			strategy: (Dictionary new
-				add: #explicitRootMatching -> false;
-				add: #explicitChildrenMatching -> true;
-				yourself)
-			visualizePatternsAs: SBVPDummyNode)
-		input: (SBVPVisualizer
-			code: [SBVPDummyNode buildTree: {9 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}]
-			showCode: true)
 ]
 
 { #category : #'as yet unclassified' }
