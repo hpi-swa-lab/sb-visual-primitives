@@ -137,6 +137,14 @@ SBVPPropertyMapping >> asPropertyMapping [
 	^ self
 ]
 
+{ #category : #accessing }
+SBVPPropertyMapping >> getLabelContents: anObject [
+
+	^ (anObject isString or: [anObject isNumber])
+		ifTrue: [anObject]
+		ifFalse: [[anObject firstSubmorph contents] on: Error do: [nil]]
+]
+
 { #category : #'as yet unclassified' }
 SBVPPropertyMapping >> getMorphFor: anObject [
 

@@ -21,7 +21,7 @@ SBVPPropertyMappingString class >> defaultSetterBlockWith: aSymbol for: anotherS
 { #category : #'as yet unclassified' }
 SBVPPropertyMappingString >> getMorphForValue: anObject [
 
-	^ anObject ifNotNil: [SBTextBubble new contents: anObject asString]
+	^ anObject ifNotNil: [SBStringMorph new contents: anObject asString]
 ]
 
 { #category : #'as yet unclassified' }
