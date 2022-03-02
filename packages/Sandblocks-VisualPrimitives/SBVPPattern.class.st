@@ -1,8 +1,8 @@
 "
-An SBVPPattern is used to define a combination of SBVisualPrimitives and constraints that can later be used to perform pattern matching with.
+An SBVPPattern is used to define a combination of SBVisualPrimitives and SBVPConstraintPatterns that can later be used to perform pattern matching with.
 
 Instance Variables
-	isImplicitChild:		bool
+	isImplicitChild:		Boolean
 
 isImplicitChild
 	- indicates whether the pattern was implicitly added to it's parent
@@ -101,7 +101,7 @@ SBVPPattern >> nextIdentifier [
 			element := pattern bindingIndex.
 			element := element ifNotNil: [
 				(pattern bindingIndex beginsWith: self implicitPrefix)
-					ifTrue: [element from: self implicitPrefix size]
+					ifTrue: [element from: self implicitPrefix size + 1]
 					ifFalse: [element]].
 			stream nextPut: element]].
 	

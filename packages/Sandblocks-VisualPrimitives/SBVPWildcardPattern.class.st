@@ -1,9 +1,23 @@
+"
+A SBVPWildcardPattern is xxxxxxxxx.
+
+Instance Variables
+	searchStack:		LinkedList
+	visitedPrimitives:	Set
+
+searchStack
+	- xxxxx
+
+visitedPrimitives
+	- xxxxx
+
+"
 Class {
 	#name : #SBVPWildcardPattern,
 	#superclass : #SBVPBindingPattern,
 	#instVars : [
-		'visitedPrimitives',
-		'searchStack'
+		'searchStack',
+		'visitedPrimitives'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
 }

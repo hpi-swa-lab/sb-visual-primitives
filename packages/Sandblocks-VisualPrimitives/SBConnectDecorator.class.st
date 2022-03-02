@@ -4,8 +4,8 @@ An SBConnectDecorator allows for connecting two morphs. When the mouse is nearby
 Instance Variables
 	connectionPoints:		Array of 4 CircleMorphs
 	connectors:				Set of SBNodeConnectors 
-	isConnecting:			boolean
-	isMouseClose:			boolean
+	isConnecting:			Boolean
+	isMouseClose:			Boolean
 
 connectionPoints
 	- connection endpoints on top, bottom, left and right side of the morph
@@ -25,10 +25,10 @@ Class {
 	#name : #SBConnectDecorator,
 	#superclass : #SBBlockDecorator,
 	#instVars : [
-		'isMouseClose',
-		'connectors',
 		'connectionPoints',
-		'isConnecting'
+		'connectors',
+		'isConnecting',
+		'isMouseClose'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
 }

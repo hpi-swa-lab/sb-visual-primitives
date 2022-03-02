@@ -5,10 +5,10 @@ Class {
 	#name : #SBVPExecuter,
 	#superclass : #SBStSubstitution,
 	#instVars : [
-		'input',
 		'case',
-		'inputBlock',
 		'caseBlock',
+		'input',
+		'inputBlock',
 		'outputBlock'
 	],
 	#category : #'Sandblocks-VisualPrimitives'

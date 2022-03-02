@@ -1,14 +1,33 @@
 "
 An SBVPVisualizer displayes the block's value as an SBVisualPrimitive. The code can be shown or not. If it's shown, changing the visuals will always be overwritten with the code. Otherwise changes made to the visual primitives will be saved and written back.
+
+Instance Variables
+	code:			SBBlock
+	isImplicit:	Boolean
+	showCode:	Boolean
+	visual:		SBBlock
+
+code
+	- container for the code of the visualization
+
+isImplicit
+	- indicates whether the SBVPVisualizer is shown implicitly
+
+showCode
+	- indicates whether the corresponding code of the visualization should be shown
+
+visual
+	- container for the visualization of code
+
 "
 Class {
 	#name : #SBVPVisualizer,
 	#superclass : #SBStSubstitution,
 	#instVars : [
-		'visual',
 		'code',
+		'isImplicit',
 		'showCode',
-		'isImplicit'
+		'visual'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
@@ -53,12 +72,6 @@ SBVPVisualizer >> artefactSaved: aMethodBlock [
 SBVPVisualizer >> code [
 
 	^ code
-]
-
-{ #category : #accessing }
-SBVPVisualizer >> code: aCodeBlock [
-
-	code := aCodeBlock
 ]
 
 { #category : #accessing }

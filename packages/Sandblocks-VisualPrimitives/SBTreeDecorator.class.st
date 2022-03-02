@@ -7,16 +7,16 @@ Class {
 	#name : #SBTreeDecorator,
 	#superclass : #SBBlockDecorator,
 	#instVars : [
+		'ancestor',
+		'change',
 		'children',
+		'connectorToParent',
 		'depth',
 		'mod',
 		'parent',
-		'x',
-		'ancestor',
 		'shift',
-		'change',
-		'connectorToParent',
-		'thread'
+		'thread',
+		'x'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
 }

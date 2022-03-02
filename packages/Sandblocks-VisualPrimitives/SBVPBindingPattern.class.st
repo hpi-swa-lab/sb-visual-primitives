@@ -1,25 +1,21 @@
 "
-A SBVPBindingPattern is used to represent a single object. It's children are visualized as well recursively.
+An SBVPBindingPattern is used to represent a single object visual. It's children are visualized as well recursively.
 
 Instance Variables
-	bindingIndex:				Object
-	constant:					Block
-	firstChildOffset:				Number
-	labelBindingDict:			Dictionary
-	labelExpressionDict:		Dictionary
-	visualizingClass:			Class
+	bindingIndex:					Object
+	constant:						SBBlock
+	labelBindingDict:				Dictionary
+	labelExpressionDict:			Dictionary
+	visualizingClass:				Class
 	writeBackClosure:			BlockClosure
-	writeBackClosureString:	String
+	writeBackClosureString:		String
 
 bindingIndex
 	- the primitive's binding 
 	
 constant
-	- stores value of origin if that's a constant
-	- can be nil if there is no underlying origin object
-
-firstChildOffset
-	- xxxxx
+	- stores value of sourceObject if it's a constant
+	- can be nil if there is no underlying sourceObject
 
 labelBindingDict
 	- xxxxx
@@ -41,13 +37,13 @@ Class {
 	#name : #SBVPBindingPattern,
 	#superclass : #SBVPPattern,
 	#instVars : [
-		'constant',
 		'bindingIndex',
-		'writeBackClosure',
-		'writeBackClosureString',
+		'constant',
 		'labelBindingDict',
 		'labelExpressionDict',
-		'visualizingClass'
+		'visualizingClass',
+		'writeBackClosure',
+		'writeBackClosureString'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
@@ -437,12 +433,12 @@ SBVPBindingPattern >> constant: aBlock [
 SBVPBindingPattern >> convertToEllipsisPattern [
 	<action>
 
-	self convertToPatternClass:  SBVPEllipsisPattern
+	self convertToPatternClass: SBVPEllipsisPattern
 ]
 
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> convertToPatternClass: aClass [
-	"Only suitable for conversion from ellipsis to binding and vise versa."
+	"Only suitable for conversion from ellipsis to binding and vice versa."
 
 	self sandblockEditor do: (SBCombinedCommand newWith: {
 		SBVPDeleteCommand new target: self.

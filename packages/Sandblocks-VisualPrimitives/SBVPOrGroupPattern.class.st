@@ -1,9 +1,10 @@
+"
+A SBVPOrGroupPattern is xxxxxxxxx.
+
+"
 Class {
 	#name : #SBVPOrGroupPattern,
 	#superclass : #SBVPGroupPattern,
-	#instVars : [
-		'boundPattern'
-	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
 

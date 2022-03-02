@@ -1,3 +1,13 @@
+"
+A SBVPGroupPattern is xxxxxxxxx.
+
+Instance Variables
+	row:		SBRow
+
+row
+	- xxxxx
+
+"
 Class {
 	#name : #SBVPGroupPattern,
 	#superclass : #SBVPPattern,
@@ -63,6 +73,7 @@ SBVPGroupPattern >> addNewConstraintPattern [
 	| newPattern |
 	newPattern := SBVPConstraintPattern constraint: [:bindings | true].
 	
+	self halt.
 	self sandblockEditor do: (SBVPInsertCommand new
 		index: self owner submorphCount + 1;
 		parent: self;

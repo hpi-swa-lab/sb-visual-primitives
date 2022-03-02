@@ -1,16 +1,5 @@
 "
-A SBVPQuery is used to query a part of the input that matches the query's pattern.
-
-Instance Variables
-	input:		<Object>
-	strategy:		<Object>
-
-input
-	- xxxxx
-
-strategy
-	- xxxxx
-
+An SBVPQuery is used to query a part of the input that matches the query's pattern.
 "
 Class {
 	#name : #SBVPQuery,

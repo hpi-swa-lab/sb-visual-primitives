@@ -2,13 +2,33 @@
 An SBVPSelectProperty displays the currently selected value of a number of choices as their corresponding representation. On double click a pop up allows to select a new value.
 
 SBVPSelectProperties are created through SBVPPropertyMappingSelects.
+
+Instance Variables
+	choices: 					OrderedCollection
+	currentValueIndex:	Object
+	representations:		OrderedCollection
+	title:						String
+
+choices
+	- contains the selectable options of the select
+
+currentValueIndex
+	- the actual selected object
+
+representations
+	- contains the visualizations of the choices
+	- if there are no visualizations, choices are shown as Strings
+
+title
+	- this is the name of the select property as a String
+
 "
 Class {
 	#name : #SBVPSelectProperty,
 	#superclass : #SBBlock,
 	#instVars : [
-		'currentValueIndex',
 		'choices',
+		'currentValueIndex',
 		'representations',
 		'title'
 	],
@@ -16,14 +36,14 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBVPSelectProperty class >> choices: aCollection representations: anotherCollection initialValue: anObject title: aString [
+SBVPSelectProperty class >> choices: anOrderedCollection representations: anotherOrderedCollection initialValue: anObject title: aString [
 
 	| index |
-	index := aCollection indexOf: anObject.
+	index := anOrderedCollection indexOf: anObject.
 	
 	^ SBVPSelectProperty new
-		choices: aCollection;
-		representations: anotherCollection;
+		choices: anOrderedCollection;
+		representations: anotherOrderedCollection;
 		currentValueIndex: index;
 		title: aString
 ]
@@ -58,9 +78,9 @@ SBVPSelectProperty >> choices [
 ]
 
 { #category : #accessing }
-SBVPSelectProperty >> choices: aCollection [
+SBVPSelectProperty >> choices: anOrderedCollection [
 
-	choices := aCollection
+	choices := anOrderedCollection
 ]
 
 { #category : #accessing }
@@ -139,9 +159,9 @@ SBVPSelectProperty >> representations [
 ]
 
 { #category : #accessing }
-SBVPSelectProperty >> representations: aCollection [
+SBVPSelectProperty >> representations: anOrderedCollection [
 
-	representations := aCollection
+	representations := anOrderedCollection
 ]
 
 { #category : #accessing }

@@ -3,8 +3,8 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'pattern',
-		'searchStack',
 		'performedMatch',
+		'searchStack',
 		'strategy',
 		'visitedPrimitives'
 	],

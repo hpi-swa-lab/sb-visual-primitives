@@ -1,3 +1,13 @@
+"
+A SBVPEllipsisPattern is xxxxxxxxx.
+
+Instance Variables
+	currentSize:		Number
+
+currentSize
+	- xxxxx
+
+"
 Class {
 	#name : #SBVPEllipsisPattern,
 	#superclass : #SBVPBindingPattern,

@@ -1,5 +1,11 @@
 "
-An SBVPPropertyMappingExpression is used to display an Expression at the given vpProperty. This is mostly needed in VPBindingPatterns.
+An SBVPPropertyMappingExpression is used to display an expression at the given vpProperty. This is mostly needed in SBVPBindingPatterns.
+
+Instance Variables
+	originalMapping: SBVPPropertyMapping
+
+originalMapping
+	- contains the original property mapping
 "
 Class {
 	#name : #SBVPPropertyMappingExpression,

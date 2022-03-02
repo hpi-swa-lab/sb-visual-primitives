@@ -4,41 +4,13 @@ An SBVPTransformation is the visual representation of a pattern matching rule wi
 By applying the case on an input object, the input pattern gets matched on this object and the matched part gets transformed to match the output pattern.
 
 Instance Variables
-	classNameInput:				SBStClassNameInput
-	defaultVisualizationClass:	Class
-	informationRow:				SBRow
-	pattern:							SBBlock (SBVPPattern)
-	outputPattern:					SBBlock (SBVPPattern)
-	strategy:							Dictionary
-
-classNameInput
-	- allows to select the defaultPatternVisualizationClass
-
-defaultVisualizationClass
-	- SBVPBindingPatterns use this class's visualPrimitiveMapping to determine how to display themselves per default
-
-informationRow
-	- container for all other components
-
-pattern
-	- the input pattern that is matched on
-	- can be every kind of SBVPPattern
+	outputPattern:		SBBlock (SBVPPattern)
 
 outputPattern
 	- this is the result of the transformation
 	if true, the root of every SBVPBindingPattern only matches the root of the input
 	if false, the pattern can also match somewhere else in the input without further specification
 
-strategy
-	- a dict to specify the matching strategy
-	- current specifiers with their defaults:
-		- #explicitRootMatching -> true
-			- if true, the root of every SBVPBindingPattern only matches the root of the input
-			- if false, the pattern can also match somewhere else in the input without further specification
-		- #explicitChildrenMatching -> true
-			- if true, every child has to be specified explicitly
-			- if false, the pattern can also match if the specified children have more siblings than the pattern has. 
-			  If there are no children specified in the pattern, an SBVPEllipsisPattern is implicitely added.
 "
 Class {
 	#name : #SBVPTransformation,

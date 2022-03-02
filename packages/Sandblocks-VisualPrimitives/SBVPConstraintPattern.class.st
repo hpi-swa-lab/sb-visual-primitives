@@ -1,3 +1,13 @@
+"
+A SBVPConstraintPattern is xxxxxxxxx.
+
+Instance Variables
+	constraint:		BlockClosure
+
+constraint
+	- xxxxx
+
+"
 Class {
 	#name : #SBVPConstraintPattern,
 	#superclass : #SBVPPattern,

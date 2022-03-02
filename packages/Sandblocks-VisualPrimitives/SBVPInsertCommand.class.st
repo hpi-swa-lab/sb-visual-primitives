@@ -1,8 +1,8 @@
 "
-A SBVPInsertCommand is used to Insert a SBVisualPrimitive into the current hirachy.
+An SBVPInsertCommand is used to insert an SBVisualPrimitive into the current hierarchy.
 
 Instance Variables
-	children:		OrderedCollection of SBVisualPrimitives
+	children:			OrderedCollection of SBVisualPrimitives
 	parent:			SBVisualPrimitive
 	siblingIndex:	Number
 
@@ -20,9 +20,9 @@ Class {
 	#name : #SBVPInsertCommand,
 	#superclass : #SBInsertCommand,
 	#instVars : [
+		'children',
 		'parent',
-		'siblingIndex',
-		'children'
+		'siblingIndex'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
