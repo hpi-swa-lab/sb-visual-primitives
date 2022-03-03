@@ -22,28 +22,28 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBVPTransformation class >> input: anInputVisualizer output: anOutputVisualizer [
+SBVPTransformation class >> input: aPattern output: anotherPattern [
 	" marker "
 
-	^ self new input: anInputVisualizer output: anOutputVisualizer
+	^ self new input: aPattern output: anotherPattern
 ]
 
 { #category : #'as yet unclassified' }
-SBVPTransformation class >> input: anInputVisualizer output: anOutputVisualizer strategy: aDict [
+SBVPTransformation class >> input: aPattern output: anotherPattern strategy: aDict [
 	" marker "
 
 	^ self new
-		input: anInputVisualizer output: anOutputVisualizer;
+		input: aPattern output: anotherPattern;
 		strategy: aDict
 ]
 
 { #category : #'as yet unclassified' }
-SBVPTransformation class >> input: anInputVisualizer output: anOutputVisualizer strategy: aDict visualizePatternsAs: aClass [
+SBVPTransformation class >> input: aPattern output: anotherPattern strategy: aDict visualizePatternsAs: aClass [
 	" marker "
 
 	^ self new
 		defaultVisualizationClass: aClass;
-		input: anInputVisualizer output: anOutputVisualizer;
+		input: aPattern output: anotherPattern;
 		strategy: aDict
 ]
 
@@ -138,7 +138,7 @@ SBVPTransformation >> input: aPattern output: anotherPattern [
 
 	self
 		pattern: aPattern;
-		outputPattern: anotherPattern.
+		outputPattern: (anotherPattern isOutputPattern: true).
 	self buildImplicitChildrenMatchingPattern
 ]
 

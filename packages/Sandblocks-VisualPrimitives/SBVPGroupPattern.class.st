@@ -2,17 +2,22 @@
 An SBVPGroupPattern creates and contains SBVPBindingPatterns and SBVPConstraintPatterns. The patterns are seperated with an 'and'.
 
 Instance Variables
-	row:		SBRow
+	row:					SBRow
+	isOutputPattern: 	Boolean
 
 row
 	- container for SBVPBindingPatterns, SBVPConstraintPatterns and the seperator strings
+
+isOutputPattern
+	- indicates whether this SBVPGGroupPattern is an output pattern
 
 "
 Class {
 	#name : #SBVPGroupPattern,
 	#superclass : #SBVPPattern,
 	#instVars : [
-		'row'
+		'row',
+		'isOutputPattern'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
@@ -173,6 +178,8 @@ SBVPGroupPattern >> initialize [
 	super initialize.
 	self removeAllMorphs.
 	
+	isOutputPattern := false.
+	
 	self
 		addKeyboardCaptureFilter: self;
 		addMouseCaptureFilter: self;
@@ -188,9 +195,25 @@ SBVPGroupPattern >> initialize [
 { #category : #'as yet unclassified' }
 SBVPGroupPattern >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 
-	^ SBVPRelInsertCommand new
+	| insertCommand |
+	insertCommand := SBVPRelInsertCommand new
 		near: aBlock before: aBoolean in: self morph: aMorph;
-		yourself
+		yourself.
+	^ self isOutputPattern not
+		ifTrue: [insertCommand]
+		ifFalse: [self row submorphs isEmpty ifTrue: [insertCommand] ifFalse: [nil]]
+]
+
+{ #category : #accessing }
+SBVPGroupPattern >> isOutputPattern [
+
+	^ isOutputPattern
+]
+
+{ #category : #accessing }
+SBVPGroupPattern >> isOutputPattern: aBoolean [
+
+	isOutputPattern := aBoolean
 ]
 
 { #category : #accessing }
