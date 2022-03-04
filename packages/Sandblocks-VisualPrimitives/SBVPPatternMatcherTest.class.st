@@ -188,15 +188,15 @@ SBVPPatternMatcherTest >> exampleWithConstants: salzstangen [
 	| case |
 	case := SBVPTransformation
 		input: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern expressionDict: {##identity -> [salzstangen]} children: {
+			SBVPBindingPattern expressionDict: {#identity -> [salzstangen]} children: {
 				SBVPBindingPattern
-					bindingDict: {##identity -> #a}
-					children: {SBVPEllipsisPattern bindingDict: {##identity -> #b}}}})
+					bindingDict: {#identity -> #a}
+					children: {SBVPEllipsisPattern bindingDict: {#identity -> #b}}}})
 		output: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern bindingDict: {##identity -> #a} children: {
+			SBVPBindingPattern bindingDict: {#identity -> #a} children: {
 				SBVPBindingPattern
-					expressionDict: {##identity -> [salzstangen]}
-					children: {SBVPEllipsisPattern bindingDict: {##identity -> #b}}}})
+					expressionDict: {#identity -> [salzstangen]}
+					children: {SBVPEllipsisPattern bindingDict: {#identity -> #b}}}})
 		strategy: {#explicitRootMatching -> false} asDictionary.
 	^ case replaceAllMatches: salzstangen
 ]
