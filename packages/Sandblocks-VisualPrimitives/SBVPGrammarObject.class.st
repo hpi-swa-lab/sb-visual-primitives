@@ -54,6 +54,68 @@ SBVPGrammarObject >> content: anObject [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPGrammarObject >> exampleGrammarRuleMergeWithExpression: aGrammarObject [
+
+	| variableType |
+	self
+		example: [SBVPGrammarObject new]
+		args: [
+			{
+				(SBVPGrammarObject new
+					objectName: '';
+					type: 'SEQ';
+					members: {
+						SBVPGrammarObject new
+							objectName: 'a';
+							type: 'SYMBOL';
+							members: {}.
+						SBVPGrammarObject new
+							objectName: '';
+							type: 'REPEAT';
+							members: {
+								SBVPGrammarObject new
+									objectName: 'a';
+									type: 'SYMBOL';
+									members: {}}
+							}) showAsVisualPrimitive}]
+		label: 'example'.
+	"We can also use variables to define the bindings"
+	variableType := 'SEQ'.
+	^ (SBVPTransformation
+		input: (SBVPGroupPattern patterns: {
+			SBVPBindingPattern
+				bindingDict: {#identity -> #a}
+				expressionDict: {#topLeftLabel -> [variableType]}
+				children: {
+					SBVPBindingPattern
+						bindingDict: {#identity -> #b}
+						expressionDict: {#topLeftLabel -> ['SYMBOL']}
+						visualizingClass: SBVPGrammarObject.
+					SBVPBindingPattern
+						bindingDict: {#identity -> #c}
+						expressionDict: {#topLeftLabel -> ['REPEAT']}
+						children: {
+							SBVPBindingPattern
+								bindingDict: {#identity -> #d}
+								expressionDict: {#topLeftLabel -> ['SYMBOL']}
+								visualizingClass: SBVPGrammarObject}
+						visualizingClass: SBVPGrammarObject}
+				visualizingClass: SBVPGrammarObject.
+			SBVPConstraintPattern constraint: [:bindings | (bindings at: #b) objectName = (bindings at: #d) objectName]})
+		output: (SBVPGroupPattern patterns: {
+			SBVPBindingPattern
+				bindingDict: {#identity -> #c}
+				expressionDict: {#topLeftLabel -> ['REPEAT1']}
+				children: {SBVPBindingPattern bindingDict: {#identity -> #b} visualizingClass: SBVPGrammarObject}
+				visualizingClass: SBVPGrammarObject})
+		strategy: (Dictionary new
+			add: #explicitRootMatching -> false;
+			add: #explicitChildrenMatching -> true;
+			yourself)
+		visualizePatternsAs: SBVPGrammarObject) replaceAllMatches: aGrammarObject
+]
+
+{ #category : #'as yet unclassified' }
 SBVPGrammarObject >> initialize [
 
 	members := nil.

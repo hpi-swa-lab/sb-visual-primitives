@@ -134,6 +134,35 @@ SBVPTransformation >> colorDifferences [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPTransformation >> exampleWithConstants: aDummyNode [
+
+	| salzstangen |
+	self
+		example: [SBVPTransformation new]
+		args: [
+			{
+				((SBVPDummyNode key: 9) left: ((SBVPDummyNode key: 10) left: (SBVPDummyNode key: 8))) showAsVisualPrimitive}]
+		label: 'example'.
+	
+	salzstangen := aDummyNode.
+	^ (SBVPTransformation
+		input: (SBVPGroupPattern patterns: {
+			SBVPBindingPattern expressionDict: {#identity -> [salzstangen]} children: {
+				SBVPBindingPattern
+					bindingDict: {#identity -> #a}
+					children: {SBVPEllipsisPattern bindingDict: {#identity -> #b}}}})
+		output: (SBVPGroupPattern patterns: {
+			SBVPBindingPattern bindingDict: {#identity -> #a} children: {
+				SBVPBindingPattern
+					expressionDict: {#identity -> [salzstangen]}
+					children: {SBVPEllipsisPattern bindingDict: {#identity -> #b}}}})
+		strategy: (Dictionary new
+			add: #explicitRootMatching -> false;
+			add: #explicitChildrenMatching -> true;
+			yourself)) replaceAllMatches
+]
+
+{ #category : #'as yet unclassified' }
 SBVPTransformation >> input: aPattern output: anotherPattern [
 
 	self
