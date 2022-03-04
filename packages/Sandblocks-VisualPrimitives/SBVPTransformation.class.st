@@ -81,6 +81,8 @@ SBVPTransformation class >> newFor: aBlock [
 { #category : #'as yet unclassified' }
 SBVPTransformation class >> suggestion [
 
+	"Used for the projection"
+
 	^ [:block | | case |
 		case := self input: SBVPGroupPattern new output: SBVPGroupPattern new.
 		block sandblockEditor do: (SBReplaceCommand new
