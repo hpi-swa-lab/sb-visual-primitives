@@ -7,25 +7,19 @@ Class {
 { #category : #'as yet unclassified' }
 SBVPPatternMatcherTest >> buildList: aCollection [
 
-	| previousPrimitive primitives numbers |
-	numbers := aCollection asOrderedCollection.
-	previousPrimitive := SBVisualPrimitive new: numbers removeLast.
-	primitives := LinkedList new
-		add: previousPrimitive;
-		yourself.
-	numbers reverseDo: [:element |
-		previousPrimitive := (SBVisualPrimitive new: element) children: {previousPrimitive}.
-		primitives addFirst: previousPrimitive].
-	^ primitives asArray
+	| asTree reversed |
+	
+	reversed := Array streamContents: [:stream | aCollection reverseDo: [:ea | stream nextPut: ea]].
+	
+	asTree := reversed inject: {} into: [:tree :next | {next -> tree}].
+	^ self buildTree: asTree.
+
 ]
 
 { #category : #'as yet unclassified' }
 SBVPPatternMatcherTest >> buildTree: aCollection [
 
-	^ aCollection collect: [:element |
-		element isVariableBinding
-			ifTrue: [(SBVisualPrimitive new: element key) children: (self buildTree: element value)]
-			ifFalse: [SBVisualPrimitive new: element]]
+	^ SBVPDummyNode buildTree: aCollection
 ]
 
 { #category : #'as yet unclassified' }
@@ -188,15 +182,15 @@ SBVPPatternMatcherTest >> exampleWithConstants: salzstangen [
 	| case |
 	case := SBVPTransformation
 		input: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern expressionDict: {##identity -> [salzstangen]} children: {
+			SBVPBindingPattern expressionDict: {#identity -> [salzstangen]} children: {
 				SBVPBindingPattern
-					bindingDict: {##identity -> #a}
-					children: {SBVPEllipsisPattern bindingDict: {##identity -> #b}}}})
+					bindingDict: {#identity -> #a}
+					children: {SBVPEllipsisPattern bindingDict: {#identity -> #b}}}})
 		output: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern bindingDict: {##identity -> #a} children: {
+			SBVPBindingPattern bindingDict: {#identity -> #a} children: {
 				SBVPBindingPattern
-					expressionDict: {##identity -> [salzstangen]}
-					children: {SBVPEllipsisPattern bindingDict: {##identity -> #b}}}})
+					expressionDict: {#identity -> [salzstangen]}
+					children: {SBVPEllipsisPattern bindingDict: {#identity -> #b}}}})
 		strategy: {#explicitRootMatching -> false} asDictionary.
 	^ case replaceAllMatches: salzstangen
 ]
@@ -208,9 +202,9 @@ SBVPPatternMatcherTest >> getLabelList: aPrimitive [
 	list := OrderedCollection new.
 	currentPrimitive := aPrimitive.
 	[currentPrimitive children notEmpty] whileTrue: [
-		list add: currentPrimitive key.
+		list add: (currentPrimitive labelDict at: #innerLabel).
 		currentPrimitive := currentPrimitive children first].
-	list add: currentPrimitive key.
+	list add: (currentPrimitive labelDict at: #innerLabel).
 	^ list
 ]
 
@@ -218,8 +212,8 @@ SBVPPatternMatcherTest >> getLabelList: aPrimitive [
 SBVPPatternMatcherTest >> getLabelTree: aPrimitive [
 
 	^ aPrimitive children
-		ifEmpty: [aPrimitive key]
-		ifNotEmpty: [aPrimitive key -> (aPrimitive children collect: [:child | self getLabelTree: child]) asArray]
+		ifEmpty: [aPrimitive labelDict at: #innerLabel]
+		ifNotEmpty: [(aPrimitive labelDict at: #innerLabel) -> (aPrimitive children collect: [:child | self getLabelTree: child]) asArray]
 ]
 
 { #category : #'as yet unclassified' }
@@ -251,17 +245,18 @@ SBVPPatternMatcherTest >> testConstantsWork [
 { #category : #'as yet unclassified' }
 SBVPPatternMatcherTest >> testFiveNodesWithWildcard [
 
-	| matcher primitives |
-	primitives := self buildList: {5. 10. 5. 0. 5. 10. 5. 0. 5}.
+	| matcher primitives config |
+	config := {5. 10. 5. 0. 5. 10. 5. 0. 5}.
+	primitives := (self buildList: config) asVisualPrimitive.
 	matcher := SBVPPatternMatcher
-		input: primitives first
+		input: primitives 
 		pattern: self examplePatternTwoWildcardList.
 	self
 		assert: {
-			{primitives second. primitives fourth}.
-			{primitives second. primitives eighth}.
-			{primitives sixth. primitives eighth}}
-		equals: (matcher getAllMatches collect: [:match | {match at: #a. match at: #b}]) asArray
+			{config second. config fourth}.
+			{config second. config eighth}.
+			{config sixth. config eighth}}
+		equals: (matcher getAllMatches collect: [:match | {(match at: #a) sourceObject key. (match at: #b) sourceObject key}]) asArray
 ]
 
 { #category : #'as yet unclassified' }
@@ -323,11 +318,14 @@ SBVPPatternMatcherTest >> testSimpleTreeOutput [
 SBVPPatternMatcherTest >> testSingleNodeMatch [
 
 	| matcher primitives |
-	primitives := self buildList: {10}.
+	primitives := (self buildList: {10}) asVisualPrimitive.
 	matcher := SBVPPatternMatcher
-		input: primitives first
+		input: primitives
 		pattern: self examplePatternSingleNode.
-	self assert: {{#a -> primitives first} asDictionary} equals: matcher getAllMatches asArray
+	self assert: 
+		{#a -> 10} 
+		equals: 
+		(matcher getAllMatches collect: [:match | {#a -> (match at: #a) sourceObject key}]) first.
 ]
 
 { #category : #'as yet unclassified' }
@@ -347,22 +345,22 @@ SBVPPatternMatcherTest >> testSortTreeOutput [
 SBVPPatternMatcherTest >> testThreeNodesWithWildcard [
 
 	| matcher primitives |
-	primitives := self buildList: {10. 42. 0. 0. 42}.
+	primitives := (self buildList: {10. 42. 0. 0. 42}) asVisualPrimitive.
 	matcher := SBVPPatternMatcher
-		input: primitives first
+		input: primitives
 		pattern: self examplePatternTwoNodesWithWildcard.
 	self
-		assert: {{primitives first. primitives third}. {primitives first. primitives fourth}}
-		equals: (matcher getAllMatches collect: [:match | {match at: #a. match at: #b}]) asArray
+		assert: {{10. 0}. {10. 0}}
+		equals: (matcher getAllMatches collect: [:match | {(match at: #a) sourceObject key . (match at: #b) sourceObject key}]) asArray
 ]
 
 { #category : #'as yet unclassified' }
 SBVPPatternMatcherTest >> testThreeNodesWithWildcardOutput [
 
 	| matcher primitives output match |
-	primitives := self buildList: {10. 101. 102. 0. 103}.
+	primitives := (self buildList: {10. 101. 102. 0. 103}) asVisualPrimitive.
 	matcher := SBVPPatternMatcher
-		input: primitives first
+		input: primitives
 		pattern: self examplePatternTwoNodesWithLabeledWildcard.
 	
 	match := matcher getNextMatch.
@@ -371,17 +369,4 @@ SBVPPatternMatcherTest >> testThreeNodesWithWildcardOutput [
 	output := (self examplePatternTwoNodesWithLabeledWildcardOutput buildFromBinding: match) first.
 	
 	self assert: {10. 103. 101. 102. 0} equals: (self getLabelList: output) asArray
-]
-
-{ #category : #'as yet unclassified' }
-SBVPPatternMatcherTest >> testTwoNodesWithoutWildcard [
-
-	| matcher primitives |
-	primitives := self buildList: {10. 0}.
-	matcher := SBVPPatternMatcher
-		input: primitives first
-		pattern: self examplePatternTwoNodes.
-	self
-		assert: {{#a -> primitives first. #b -> primitives second} asDictionary}
-		equals: matcher getAllMatches asArray
 ]
