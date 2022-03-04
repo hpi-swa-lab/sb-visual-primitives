@@ -32,10 +32,10 @@ SBVPPatternMatcherTest >> buildTree: aCollection [
 SBVPPatternMatcherTest >> examplePatternChildSmallerThanParent [
 
 	^ SBVPGroupPattern patterns: {
-		SBVPBindingPattern bindingIndex: #a children: {
-			SBVPEllipsisPattern bindingIndex: #b.
-			SBVPBindingPattern bindingIndex: #c children: {SBVPEllipsisPattern bindingIndex: #e}.
-			SBVPEllipsisPattern bindingIndex: #d}.
+		SBVPBindingPattern bindingDict: {#identity -> #a} children: {
+			SBVPEllipsisPattern bindingDict: {#identity -> #b}.
+			SBVPBindingPattern bindingDict: {#identity -> #c} children: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}}.
+			SBVPEllipsisPattern bindingDict: {#identity -> #d}.
 		SBVPConstraintPattern constraint: [:bindings | (bindings at: #c) label asInteger < (bindings at: #a) label asInteger]}
 ]
 
@@ -43,10 +43,10 @@ SBVPPatternMatcherTest >> examplePatternChildSmallerThanParent [
 SBVPPatternMatcherTest >> examplePatternChildSmallerThanParentOutput [
 
 	^ SBVPGroupPattern patterns: {
-		SBVPBindingPattern bindingIndex: #c children: {
-			SBVPEllipsisPattern bindingIndex: #b.
-			SBVPBindingPattern bindingIndex: #a children: {SBVPEllipsisPattern bindingIndex: #e}.
-			SBVPEllipsisPattern bindingIndex: #d}}
+		SBVPBindingPattern bindingDict: {#identity -> #c} children: {
+			SBVPEllipsisPattern bindingDict: {#identity -> #b}.
+			SBVPBindingPattern bindingDict: {#identity -> #a} children: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}.
+			SBVPEllipsisPattern bindingDict: {#identity -> #d}}}
 ]
 
 { #category : #'as yet unclassified' }
@@ -54,8 +54,8 @@ SBVPPatternMatcherTest >> examplePatternSimpleTree [
 
 	^ SBVPGroupPattern patterns: {
 		SBVPBindingPattern
-			bindingIndex: #a
-			children: {SBVPBindingPattern bindingIndex: #b. SBVPBindingPattern bindingIndex: #c}.
+			bindingDict: {#identity -> #a}
+			children: {SBVPBindingPattern bindingDict: {#identity -> #b}. SBVPBindingPattern bindingDict: {#identity -> #c}}.
 		SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label asInteger = ((bindings at: #b) label asInteger + (bindings at: #c) label asInteger)]}
 ]
 
@@ -63,15 +63,15 @@ SBVPPatternMatcherTest >> examplePatternSimpleTree [
 SBVPPatternMatcherTest >> examplePatternSimpleTreeOutput [
 
 	^ SBVPBindingPattern
-		bindingIndex: #a
-		children: {SBVPBindingPattern bindingIndex: #c. SBVPBindingPattern bindingIndex: #b}
+		bindingDict: {#identity -> #a}
+		children: {SBVPBindingPattern bindingDict: {#identity -> #c}. SBVPBindingPattern bindingDict: {#identity -> #b}}
 ]
 
 { #category : #'as yet unclassified' }
 SBVPPatternMatcherTest >> examplePatternSingleNode [
 
 	^ SBVPGroupPattern patterns: {
-		SBVPBindingPattern bindingIndex: #a.
+		SBVPBindingPattern bindingDict: {#identity -> #a}.
 		SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label asInteger = 10]}
 ]
 
@@ -79,12 +79,12 @@ SBVPPatternMatcherTest >> examplePatternSingleNode [
 SBVPPatternMatcherTest >> examplePatternSortTree [
 
 	^ SBVPGroupPattern patterns: {
-		SBVPWildcardPattern bindingIndex: #f children: {
-			SBVPEllipsisPattern bindingIndex: #g.
-			SBVPBindingPattern bindingIndex: #a children: {
-				SBVPBindingPattern bindingIndex: #b children: {SBVPEllipsisPattern bindingIndex: #d}.
-				SBVPBindingPattern bindingIndex: #c children: {SBVPEllipsisPattern bindingIndex: #e}}.
-			SBVPEllipsisPattern bindingIndex: #h}.
+		SBVPWildcardPattern bindingDict: {#identity -> #f} children: {
+			SBVPEllipsisPattern bindingDict: {#identity -> #g}.
+			SBVPBindingPattern bindingDict: {#identity -> #a} children: {
+				SBVPBindingPattern bindingDict: {#identity -> #b} children: {SBVPEllipsisPattern bindingDict: {#identity -> #d}}.
+				SBVPBindingPattern bindingDict: {#identity -> #c} children: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}}.
+			SBVPEllipsisPattern bindingDict: {#identity -> #h}}.
 		SBVPConstraintPattern constraint: [:bindings | (bindings at: #b) label asInteger > (bindings at: #c) label asInteger]}
 ]
 
@@ -92,24 +92,24 @@ SBVPPatternMatcherTest >> examplePatternSortTree [
 SBVPPatternMatcherTest >> examplePatternSortTreeOutput [
 
 	^ SBVPGroupPattern patterns: {
-		SBVPWildcardPattern bindingIndex: #f children: {
-			SBVPEllipsisPattern bindingIndex: #g.
-			SBVPBindingPattern bindingIndex: #a children: {
-				SBVPBindingPattern bindingIndex: #c children: {SBVPEllipsisPattern bindingIndex: #e}.
-				SBVPBindingPattern bindingIndex: #b children: {SBVPEllipsisPattern bindingIndex: #d}}.
-			SBVPEllipsisPattern bindingIndex: #h}}
+		SBVPWildcardPattern bindingDict: {#identity -> #f} children: {
+			SBVPEllipsisPattern bindingDict: {#identity -> #g}.
+			SBVPBindingPattern bindingDict: {#identity -> #a} children: {
+				SBVPBindingPattern bindingDict: {#identity -> #c} children: {SBVPEllipsisPattern bindingDict: {#identity -> #e}}.
+				SBVPBindingPattern bindingDict: {#identity -> #b} children: {SBVPEllipsisPattern bindingDict: {#identity -> #d}}}.
+			SBVPEllipsisPattern bindingDict: {#identity -> #h}}}
 ]
 
 { #category : #'as yet unclassified' }
 SBVPPatternMatcherTest >> examplePatternTreeWithEllipses [
 
 	^ SBVPGroupPattern patterns: {
-		SBVPWildcardPattern bindingIndex: #d children: {
-			SBVPEllipsisPattern bindingIndex: #e.
-			SBVPBindingPattern bindingIndex: #a children: {
-				SBVPBindingPattern bindingIndex: #b children: {SBVPEllipsisPattern bindingIndex: #f}.
-				SBVPBindingPattern bindingIndex: #c children: {SBVPEllipsisPattern bindingIndex: #g}}.
-			SBVPEllipsisPattern bindingIndex: #h}.
+		SBVPWildcardPattern bindingDict: {#identity -> #d} children: {
+			SBVPEllipsisPattern bindingDict: {#identity -> #e}.
+			SBVPBindingPattern bindingDict: {#identity -> #a} children: {
+				SBVPBindingPattern bindingDict: {#identity -> #b} children: {SBVPEllipsisPattern bindingDict: {#identity -> #f}}.
+				SBVPBindingPattern bindingDict: {#identity -> #c} children: {SBVPEllipsisPattern bindingDict: {#identity -> #g}}}.
+			SBVPEllipsisPattern bindingDict: {#identity -> #h}}.
 		SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label asInteger = ((bindings at: #b) label asInteger + (bindings at: #c) label asInteger)]}
 ]
 
@@ -118,8 +118,8 @@ SBVPPatternMatcherTest >> examplePatternTreeWithLabeledEllipses [
 
 	^ SBVPGroupPattern patterns: {
 		SBVPBindingPattern
-			bindingIndex: #a
-			children: {SBVPEllipsisPattern bindingIndex: #b. SBVPBindingPattern bindingIndex: #c}}
+			bindingDict: {#identity -> #a}
+			children: {SBVPEllipsisPattern bindingDict: {#identity -> #b}. SBVPBindingPattern bindingDict: {#identity -> #c}}}
 ]
 
 { #category : #'as yet unclassified' }
@@ -127,15 +127,15 @@ SBVPPatternMatcherTest >> examplePatternTreeWithLabeledEllipsesOutput [
 
 	^ SBVPGroupPattern patterns: {
 		SBVPBindingPattern
-			bindingIndex: #a
-			children: {SBVPBindingPattern bindingIndex: #c. SBVPEllipsisPattern bindingIndex: #b}}
+			bindingDict: {#identity -> #a}
+			children: {SBVPBindingPattern bindingDict: {#identity -> #c}. SBVPEllipsisPattern bindingDict: {#identity -> #b}}}
 ]
 
 { #category : #'as yet unclassified' }
 SBVPPatternMatcherTest >> examplePatternTwoNodes [
 
 	^ SBVPGroupPattern patterns: {
-		SBVPBindingPattern bindingIndex: #a children: {SBVPBindingPattern bindingIndex: #b}.
+		SBVPBindingPattern bindingDict: {#identity -> #a} children: {SBVPBindingPattern bindingDict: {#identity -> #b}}.
 		SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label asInteger = ((bindings at: #b) label asInteger + 10)]}
 ]
 
@@ -143,30 +143,30 @@ SBVPPatternMatcherTest >> examplePatternTwoNodes [
 SBVPPatternMatcherTest >> examplePatternTwoNodesWithLabeledWildcard [
 
 	^ SBVPGroupPattern patterns: {
-		SBVPBindingPattern bindingIndex: #a children: {
+		SBVPBindingPattern bindingDict: {#identity -> #a} children: {
 			SBVPWildcardPattern
-				bindingIndex: #c
-				children: {SBVPBindingPattern bindingIndex: #b children: {SBVPWildcardPattern bindingIndex: #d}}}.
+				bindingDict: {#identity -> #c}
+				children: {SBVPBindingPattern bindingDict: {#identity -> #b} children: {SBVPWildcardPattern bindingDict: {#identity -> #d}}}}.
 		SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label asInteger = ((bindings at: #b) label asInteger + 10)]}
 ]
 
 { #category : #'as yet unclassified' }
 SBVPPatternMatcherTest >> examplePatternTwoNodesWithLabeledWildcardOutput [
 
-	^ SBVPBindingPattern bindingIndex: #a children: {
+	^ SBVPBindingPattern bindingDict: {#identity -> #a} children: {
 		SBVPWildcardPattern
-			bindingIndex: #d
-			children: {SBVPWildcardPattern bindingIndex: #c children: {SBVPBindingPattern bindingIndex: #b}}}
+			bindingDict: {#identity -> #d}
+			children: {SBVPWildcardPattern bindingDict: {#identity -> #c} children: {SBVPBindingPattern bindingDict: {#identity -> #b}}}}
 ]
 
 { #category : #'as yet unclassified' }
 SBVPPatternMatcherTest >> examplePatternTwoNodesWithWildcard [
 
 	^ SBVPGroupPattern patterns: {
-		SBVPBindingPattern bindingIndex: #a children: {
+		SBVPBindingPattern bindingDict: {#identity -> #a} children: {
 			SBVPWildcardPattern
-				bindingIndex: #c
-				children: {SBVPBindingPattern bindingIndex: #b children: {SBVPWildcardPattern bindingIndex: #d}}}.
+				bindingDict: {#identity -> #c}
+				children: {SBVPBindingPattern bindingDict: {#identity -> #b} children: {SBVPWildcardPattern bindingDict: {#identity -> #d}}}}.
 		SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label asInteger = ((bindings at: #b) label asInteger + 10)]}
 ]
 
@@ -174,11 +174,11 @@ SBVPPatternMatcherTest >> examplePatternTwoNodesWithWildcard [
 SBVPPatternMatcherTest >> examplePatternTwoWildcardList [
 
 	^ SBVPGroupPattern patterns: {
-		SBVPWildcardPattern bindingIndex: #c children: {
-			SBVPBindingPattern bindingIndex: #a children: {
+		SBVPWildcardPattern bindingDict: {#identity -> #c} children: {
+			SBVPBindingPattern bindingDict: {#identity -> #a} children: {
 				SBVPWildcardPattern
-					bindingIndex: #d
-					children: {SBVPBindingPattern bindingIndex: #b children: {SBVPWildcardPattern bindingIndex: #e}}}}.
+					bindingDict: {#identity -> #d}
+					children: {SBVPBindingPattern bindingDict: {#identity -> #b} children: {SBVPWildcardPattern bindingDict: {#identity -> #e}}}}}.
 		SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) label asInteger = ((bindings at: #b) label asInteger + 10)]}
 ]
 
@@ -188,15 +188,15 @@ SBVPPatternMatcherTest >> exampleWithConstants: salzstangen [
 	| case |
 	case := SBVPTransformation
 		input: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern expressionDict: {#identity -> [salzstangen]} children: {
+			SBVPBindingPattern expressionDict: {##identity -> [salzstangen]} children: {
 				SBVPBindingPattern
-					bindingDict: {#identity -> #a}
-					children: {SBVPEllipsisPattern bindingDict: {#identity -> #b}}}})
+					bindingDict: {##identity -> #a}
+					children: {SBVPEllipsisPattern bindingDict: {##identity -> #b}}}})
 		output: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern bindingDict: {#identity -> #a} children: {
+			SBVPBindingPattern bindingDict: {##identity -> #a} children: {
 				SBVPBindingPattern
-					expressionDict: {#identity -> [salzstangen]}
-					children: {SBVPEllipsisPattern bindingDict: {#identity -> #b}}}})
+					expressionDict: {##identity -> [salzstangen]}
+					children: {SBVPEllipsisPattern bindingDict: {##identity -> #b}}}})
 		strategy: {#explicitRootMatching -> false} asDictionary.
 	^ case replaceAllMatches: salzstangen
 ]
