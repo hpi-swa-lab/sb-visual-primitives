@@ -56,6 +56,78 @@ SBVPWildcardPattern >> currentTop [
 	^ self searchStack first
 ]
 
+{ #category : #accessing }
+SBVPWildcardPattern >> exampleExtractLeaf: aTree [
+
+	self
+		example: [SBVPWildcardPattern new]
+		args: [
+			{
+				((SBVPDummyNode key: 1) left: ((SBVPDummyNode key: 2) left: ((SBVPDummyNode key: 3) left: ((SBVPDummyNode key: 4) left: (SBVPDummyNode key: 5))))) showAsVisualPrimitive}]
+		label: 'example'.
+	^ (SBVPTransformation
+		input: (SBVPGroupPattern patterns: {
+			SBVPBindingPattern
+				bindingDict: {#identity -> #root}
+				children: {
+					SBVPWildcardPattern
+						bindingDict: {#identity -> #pathToLeaf}
+						children: {SBVPBindingPattern bindingDict: {#identity -> #leaf} visualizingClass: SBVPDummyNode}
+						visualizingClass: SBVPDummyNode}
+				visualizingClass: SBVPDummyNode})
+		output: (SBVPGroupPattern patterns: {SBVPBindingPattern bindingDict: {#identity -> #leaf} visualizingClass: SBVPDummyNode})
+		strategy: (Dictionary new
+			add: #explicitRootMatching -> true;
+			add: #explicitChildrenMatching -> true;
+			yourself)
+		visualizePatternsAs: SBVPDummyNode) replaceAllMatches: aTree
+]
+
+{ #category : #'as yet unclassified' }
+SBVPWildcardPattern >> exampleExtractNodeWithTwoChildren: aTree [
+
+	self
+		example: [SBVPWildcardPattern new]
+		args: [
+			{
+				((SBVPDummyNode key: 1) left: ((SBVPDummyNode key: 2) left: ((SBVPDummyNode key: 3) left: ((SBVPDummyNode key: 4)
+					left: (SBVPDummyNode key: 5);
+					right: (SBVPDummyNode key: 6))))) showAsVisualPrimitive}]
+		label: 'example'.
+	
+	^ (SBVPTransformation
+		input: (SBVPGroupPattern patterns: {
+			SBVPBindingPattern
+				bindingDict: {#identity -> #root}
+				children: {
+					SBVPWildcardPattern
+						bindingDict: {#identity -> #pathToNode}
+						children: {
+							SBVPBindingPattern
+								bindingDict: {#identity -> #node}
+								children: {
+									SBVPEllipsisPattern
+										bindingDict: {#identity -> #children}
+										visualizingClass: SBVPDummyNode}
+								visualizingClass: SBVPDummyNode}
+						visualizingClass: SBVPDummyNode}
+				visualizingClass: SBVPDummyNode.
+			SBVPConstraintPattern constraint: [:bindings | (bindings at: #children) size = 2]})
+		output: (SBVPGroupPattern patterns: {
+			SBVPBindingPattern
+				bindingDict: {#identity -> #node}
+				children: {
+					SBVPEllipsisPattern
+						bindingDict: {#identity -> #children}
+						visualizingClass: SBVPDummyNode}
+				visualizingClass: SBVPDummyNode})
+		strategy: (Dictionary new
+			add: #explicitRootMatching -> true;
+			add: #explicitChildrenMatching -> true;
+			yourself)
+		visualizePatternsAs: SBVPDummyNode) replaceAllMatches: aTree
+]
+
 { #category : #'as yet unclassified' }
 SBVPWildcardPattern >> getCurrentPrimitive: aVisualPrimitive [
 
