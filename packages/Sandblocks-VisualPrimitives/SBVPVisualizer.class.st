@@ -98,7 +98,7 @@ SBVPVisualizer >> devisualize [
 	<actionValidIf: #isImplicit>
 
 	| replacer |
-	replacer := self code firstSubmorph.
+	replacer := (String streamContents: [:stream | self writeCodeOn: stream]) parseAsSandblock.
 	
 	self sandblockEditor do: (SBCombinedCommand newWith: {
 		SBReplaceCommand new

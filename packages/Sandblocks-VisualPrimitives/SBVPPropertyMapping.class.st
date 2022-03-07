@@ -32,6 +32,7 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'getter',
+		'isConstant',
 		'name',
 		'patternValue',
 		'setter',
@@ -43,12 +44,12 @@ Class {
 { #category : #'as yet unclassified' }
 SBVPPropertyMapping class >> constant: anObject vpProperty: aSymbol [
 
-	^ self
+	^ (self
 		getter: [:ignore | anObject]
 		setter: [:ignore :ignore2 | ]
 		patternValue: anObject
 		vpProperty: aSymbol
-		name: aSymbol asString
+		name: aSymbol asString) isConstant: true
 ]
 
 { #category : #'as yet unclassified' }
@@ -82,12 +83,12 @@ SBVPPropertyMapping class >> fromAssociation: anAssociation [
 	patternValue := self defaultPatternValueFor: anAssociation value.
 	name := self mappingName: anAssociation value withDefault: anAssociation key asString.
 	
-	^ self
+	^ (self
 		getter: getterBlock
 		setter: setterBlock
 		patternValue: patternValue
 		vpProperty: anAssociation key
-		name: name
+		name: name) isConstant: anAssociation value isSymbol not
 ]
 
 { #category : #'as yet unclassified' }
@@ -141,6 +142,14 @@ SBVPPropertyMapping >> asPropertyMapping [
 	^ self
 ]
 
+{ #category : #accessing }
+SBVPPropertyMapping >> getLabelContents: anObject [
+
+	^ (anObject isString or: [anObject isNumber])
+		ifTrue: [anObject]
+		ifFalse: [[anObject firstSubmorph contents] on: Error do: [nil]]
+]
+
 { #category : #'as yet unclassified' }
 SBVPPropertyMapping >> getMorphFor: anObject [
 
@@ -163,6 +172,25 @@ SBVPPropertyMapping >> getter [
 SBVPPropertyMapping >> getter: aBlockClosure [
 
 	getter := aBlockClosure
+]
+
+{ #category : #'as yet unclassified' }
+SBVPPropertyMapping >> initialize [
+
+	super initialize.
+	self isConstant: false
+]
+
+{ #category : #accessing }
+SBVPPropertyMapping >> isConstant [
+
+	^ isConstant
+]
+
+{ #category : #accessing }
+SBVPPropertyMapping >> isConstant: anObject [
+
+	isConstant := anObject
 ]
 
 { #category : #accessing }

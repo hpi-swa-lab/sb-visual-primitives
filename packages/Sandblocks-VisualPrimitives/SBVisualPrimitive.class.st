@@ -308,7 +308,7 @@ SBVisualPrimitive >> constantSuggestionsFor: aSBVPUnknownLabel [
 { #category : #'as yet unclassified' }
 SBVisualPrimitive >> defaultShape [
 
-	^ CircleMorph new
+	^ CircleMorph new layoutInset: 4
 ]
 
 { #category : #'as yet unclassified' }
@@ -317,14 +317,6 @@ SBVisualPrimitive >> deleteBlock [
 	self sandblockEditor do: (SBVPDeleteCommand new
 		target: self;
 		yourself)
-]
-
-{ #category : #accessing }
-SBVisualPrimitive >> getLabelContents: anObject [
-
-	^ (anObject isString or: [anObject isNumber])
-		ifTrue: [anObject]
-		ifFalse: [[anObject firstSubmorph contents] on: Error do: [nil]]
 ]
 
 { #category : #accessing }
@@ -460,6 +452,12 @@ SBVisualPrimitive >> labelSuggestionsFor: aSBVPUnknownLabel [
 ]
 
 { #category : #'as yet unclassified' }
+SBVisualPrimitive >> layoutInset [
+
+	^ 0
+]
+
+{ #category : #'as yet unclassified' }
 SBVisualPrimitive >> leftSibling [
 
 	^ self parent ifNotNil: [:parent | | index |
@@ -579,6 +577,12 @@ SBVisualPrimitive >> patternContainer [
 ]
 
 { #category : #'as yet unclassified' }
+SBVisualPrimitive >> prefersNoBorder [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBVisualPrimitive >> printOn: aStream [
 
 	super printOn: aStream.
@@ -593,9 +597,9 @@ SBVisualPrimitive >> propertyAt: aSymbol [
 	(self labelPositions includes: aSymbol) ifTrue: [
 		^ self blockDict
 			at: aSymbol
-			ifPresent: [:block | self getLabelContents: block]
+			ifPresent: [:block | (self vpMappingAt: aSymbol) getLabelContents: block]
 			ifAbsent: [nil]].
-	aSymbol = #children ifTrue: [^ self children].
+	aSymbol = #children ifTrue: [^ self children collect: #buildObject].
 	aSymbol = #shape ifTrue: [^ self shape]
 ]
 
@@ -653,8 +657,7 @@ SBVisualPrimitive >> shape: aMorph [
 			changeTableLayout;
 			listCentering: #center;
 			wrapCentering: #center;
-			shrinkWrap;
-			layoutInset: 8].
+			shrinkWrap].
 	innerBlockWrapper := self blockDict at: #shape.
 	innerLabel := self innerLabel.
 	self blockDict at: #innerLabel put: aMorph.
