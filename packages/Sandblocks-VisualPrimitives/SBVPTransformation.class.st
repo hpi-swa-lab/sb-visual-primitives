@@ -80,7 +80,6 @@ SBVPTransformation class >> newFor: aBlock [
 
 { #category : #'as yet unclassified' }
 SBVPTransformation class >> suggestion [
-
 	"Used for the projection"
 
 	^ [:block | | case |
@@ -141,7 +140,8 @@ SBVPTransformation >> exampleDeleteNodeInside: aTree [
 					right: ((SBVPDummyNode key: 4) left: (SBVPDummyNode key: 42))) showAsVisualPrimitive}]
 		label: 'example'.
 	"Nodes that do not appear in the output pattern, are simply left out / deleted."
-	self flag: #bug. "building the implicit children seems to not work."
+	self flag: #bug.
+	"building the implicit children seems to not work."
 	^ (SBVPTransformation
 		input: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern
@@ -194,8 +194,8 @@ SBVPTransformation >> exampleInsertWithExpression: aTree [
 
 { #category : #'as yet unclassified' }
 SBVPTransformation >> exampleMissingBindingsAreMarked: aTree [
-
 	"Notice how bindings are marked if they are not found in the input."
+
 	^ (SBVPTransformation
 		input: (SBVPGroupPattern patterns: {
 			SBVPBindingPattern
@@ -303,7 +303,6 @@ SBVPTransformation >> exampleTransformInputDifferentStrategies: aTree [
 		label: 'example'.
 	"Compare this one to the exampleTransformInputAsOftenAsPossible. Our Pattern Matching supports 'root matching' (anchor the first node at the tree's root) and 'subtree matching' (the first node can by any node in the tree, the remaining matching only happens on that node's subtree). The children can also explicit (must be there 
 for a match) and implicit (may or may not be there)"
-	
 	"You can toggle between the strategies using the buttons"
 	^ (SBVPTransformation
 		input: (SBVPGroupPattern patterns: {

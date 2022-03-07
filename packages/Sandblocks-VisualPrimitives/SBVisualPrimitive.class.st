@@ -117,12 +117,12 @@ SBVisualPrimitive >> addChild: aVisualPrimitive afterIndex: aNumber [
 SBVisualPrimitive >> addConnectorLinesIn: aMorph [
 
 	self children do: [:child | | connector |
-					connector := (SBConnectorLine connect: self to: child)
-						connectorType: #line;
-						lineWidth: 1;
-						color: Color black.
-					aMorph addMorphBack: connector.
-					child addConnectorLinesIn: aMorph]
+		connector := (SBConnectorLine connect: self to: child)
+			connectorType: #line;
+			lineWidth: 1;
+			color: Color black.
+		aMorph addMorphBack: connector.
+		child addConnectorLinesIn: aMorph]
 ]
 
 { #category : #'as yet unclassified' }
@@ -140,8 +140,7 @@ SBVisualPrimitive >> addLabel [
 				self setLabelAt: vpProperty to: (newBlock := self newLabelBlockAt: vpProperty).
 				self afterAddLabel: newBlock.
 				newBlock];
-			undo: [
-				self removeLabelAt: vpProperty])]
+			undo: [self removeLabelAt: vpProperty])]
 ]
 
 { #category : #'as yet unclassified' }

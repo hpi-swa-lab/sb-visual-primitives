@@ -5,27 +5,10 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBVPSpecialShapeFixture class >> visualPrimitiveMapping [
-
-	^ {
-		SBVPPropertyMapping
-			getter: [:object |
-				CircleMorph new
-					color: (Color r: 0.5 g: 0.5 b: (object key ifNotNil: [:key | key asInteger / 255] ifNil: [0]));
-					yourself]
-			setter: [:object :vp | object key: ((vp propertyAt: #shape) color blue * 255) rounded]
-			patternValue: (CircleMorph new color: (Color r: 0.5 g: 0.5 b: 0.1))
-			vpProperty: #shape
-			name: 'shape'.
-		SBVPPropertyMappingNumber property: #key vpProperty: #innerLabel.
-		self childrenMappingEntry}
-]
-
-{ #category : #'as yet unclassified' }
-SBVPSpecialShapeFixture >> exampleBuildHeapSpecialShape: aTree [
+SBVPSpecialShapeFixture class >> exampleBuildHeapSpecialShape: aTree [
 
 	self
-		example: [SBVPExecuter]
+		example: [SBVPSpecialShapeFixture]
 		args: [
 			{
 				((SBVPSpecialShapeFixture key: 9) left: ((SBVPSpecialShapeFixture key: 10)
@@ -83,4 +66,21 @@ SBVPSpecialShapeFixture >> exampleBuildHeapSpecialShape: aTree [
 			add: #explicitChildrenMatching -> false;
 			yourself)
 		visualizePatternsAs: SBVPSpecialShapeFixture) replaceAllMatches: aTree
+]
+
+{ #category : #'as yet unclassified' }
+SBVPSpecialShapeFixture class >> visualPrimitiveMapping [
+
+	^ {
+		SBVPPropertyMapping
+			getter: [:object |
+				CircleMorph new
+					color: (Color r: 0.5 g: 0.5 b: (object key ifNotNil: [:key | key asInteger / 255] ifNil: [0]));
+					yourself]
+			setter: [:object :vp | object key: ((vp propertyAt: #shape) color blue * 255) rounded]
+			patternValue: (CircleMorph new color: (Color r: 0.5 g: 0.5 b: 0.1))
+			vpProperty: #shape
+			name: 'shape'.
+		SBVPPropertyMappingNumber property: #key vpProperty: #innerLabel.
+		self childrenMappingEntry}
 ]

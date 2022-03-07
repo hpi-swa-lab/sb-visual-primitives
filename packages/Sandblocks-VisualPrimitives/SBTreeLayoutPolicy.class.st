@@ -31,7 +31,7 @@ SBTreeLayoutPolicy >> apportion: aPattern defaultAncestor: aDefaultAncestor [
 		vol := self leftMostSibling: aPattern.
 		sir := self modOf: aPattern.
 		sor := self modOf: aPattern.
-		sil := self modOf:  vil.
+		sil := self modOf: vil.
 		sol := self modOf: vol.
 		[(self nextRight: vil) notNil and: (self nextLeft: vir) notNil] whileTrue: [
 			vil := self nextRight: vil.
@@ -52,14 +52,14 @@ SBTreeLayoutPolicy >> apportion: aPattern defaultAncestor: aDefaultAncestor [
 			sir := sir + (self modOf: vir).
 			sol := sol + (self modOf: vol).
 			sor := sor + (self modOf: vor)].
-		((self nextRight: vil )notNil and: (self nextRight: vor) isNil)
+		((self nextRight: vil) notNil and: (self nextRight: vor) isNil)
 			ifTrue: [
 				self setThreadOf: vor to: (self nextRight: vil).
 				self setModOf: vor to: (self modOf: vor) + sil - sor]
 			ifFalse: [
 				((self nextLeft: vir) notNil and: (self nextLeft: vol) isNil) ifTrue: [
-					self setThreadOf: vol to:( self nextLeft: vir).
-					self setModOf: vol to: (self modOf: vol )+ sir - sol].
+					self setThreadOf: vol to: (self nextLeft: vir).
+					self setModOf: vol to: (self modOf: vol) + sir - sol].
 				newDefaultAncestor := self]].
 	^ newDefaultAncestor
 ]
@@ -85,7 +85,7 @@ SBTreeLayoutPolicy >> depthOf: aPattern [
 { #category : #layouting }
 SBTreeLayoutPolicy >> distance: aPattern [
 
-	^ aPattern fullBounds width + 10
+	^ aPattern fullBounds width + self inset
 ]
 
 { #category : #layouting }
@@ -116,7 +116,7 @@ SBTreeLayoutPolicy >> firstWalk: aPattern [
 				self firstWalk: child.
 				defaultAncestor := self apportion: child defaultAncestor: defaultAncestor].
 			self executeShifts: aPattern.
-			midpoint := (self xOf: aPattern children first) - (self distance: aPattern children first)  + (self xOf: aPattern children last) / 2.
+			midpoint := (self xOf: aPattern children first) - (self distance: aPattern children first) + (self xOf: aPattern children last) / 2.
 			dist := self distance: aPattern.
 			left ifNil: [self setXOf: aPattern to: midpoint + (dist / 2)] ifNotNil: [
 				self setXOf: aPattern to: (self xOf: left) + dist.
@@ -131,15 +131,21 @@ SBTreeLayoutPolicy >> initialize [
 ]
 
 { #category : #layouting }
+SBTreeLayoutPolicy >> inset [
+
+	^ 10
+]
+
+{ #category : #layouting }
 SBTreeLayoutPolicy >> layout: aMorph in: aRectangle [
 
 	| root |
 	(aMorph submorphsSatisfying: #isConnector) do: #abandon.
 	root := aMorph submorphs detect: [:submorph | submorph isTreeLayoutRoot].
 	self
-			resetAll;
-			firstWalk: root;
-			secondWalk: root modSum: 0 layerHeights: (self maximumHeight: root).
+		resetAll;
+		firstWalk: root;
+		secondWalk: root modSum: 0 layerHeights: (self maximumHeight: root) + self inset.
 	root addConnectorLinesIn: aMorph
 ]
 
@@ -200,22 +206,28 @@ SBTreeLayoutPolicy >> moveSubtree: aPattern by: aShiftValue of: aParentPattern [
 	| numberOfSubtrees |
 	numberOfSubtrees := aPattern siblingIndex - aParentPattern siblingIndex.
 	self setChangeOf: aPattern to: (self changeOf: aPattern) - aShiftValue / numberOfSubtrees.
-	self  setShiftOf: aPattern to: (self shiftOf: aPattern) + aShiftValue.
-	self  setXOf: aPattern to: (self xOf: aPattern) + aShiftValue.
-	self setModOf: aPattern to: (self modOf: aPattern )+ aShiftValue.
-	self setChangeOf: aParentPattern to: (self changeOf: aParentPattern) + aShiftValue / numberOfSubtrees
+	self setShiftOf: aPattern to: (self shiftOf: aPattern) + aShiftValue.
+	self setXOf: aPattern to: (self xOf: aPattern) + aShiftValue.
+	self setModOf: aPattern to: (self modOf: aPattern) + aShiftValue.
+	self
+		setChangeOf: aParentPattern
+		to: (self changeOf: aParentPattern) + aShiftValue / numberOfSubtrees
 ]
 
 { #category : #layouting }
 SBTreeLayoutPolicy >> nextLeft: aPattern [
 
-	^ aPattern children ifEmpty: [self threadOf: aPattern] ifNotEmpty: [aPattern children first]
+	^ aPattern children
+		ifEmpty: [self threadOf: aPattern]
+		ifNotEmpty: [aPattern children first]
 ]
 
 { #category : #layouting }
 SBTreeLayoutPolicy >> nextRight: aPattern [
 
-	^ aPattern children ifEmpty: [self threadOf: aPattern] ifNotEmpty: [aPattern children last]
+	^ aPattern children
+		ifEmpty: [self threadOf: aPattern]
+		ifNotEmpty: [aPattern children last]
 ]
 
 { #category : #'initialize-release' }
@@ -230,7 +242,7 @@ SBTreeLayoutPolicy >> secondWalk: aPattern modSum: aValue layerHeights: anotherV
 	aPattern
 		fullBounds;
 		center: (self xOf: aPattern) + aValue - ((self distance: aPattern) / 2) @ (anotherValue * (self depthOf: aPattern)).
-"	self addConnectorLineToWorld."
+	"	self addConnectorLineToWorld."
 	aPattern children do: [:child | self secondWalk: child modSum: aValue + (self modOf: aPattern) layerHeights: anotherValue]
 ]
 

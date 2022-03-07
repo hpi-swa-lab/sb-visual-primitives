@@ -76,8 +76,7 @@ SBVPGrammarObject >> exampleGrammarRuleMergeWithExpression: aGrammarObject [
 								SBVPGrammarObject new
 									objectName: 'a';
 									type: 'SYMBOL';
-									members: {}}
-							}) showAsVisualPrimitive}]
+									members: {}}}) showAsVisualPrimitive}]
 		label: 'example'.
 	"We can also use variables to define the bindings"
 	variableType := 'SEQ'.

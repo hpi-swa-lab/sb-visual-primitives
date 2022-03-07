@@ -120,8 +120,7 @@ SBVPPatternContainer >> buildImplicitChildrenMatchingPattern [
 
 	self pattern ifNotNil: [
 		self pattern removeImplicitChildren.
-		self explicitChildrenMatching ifFalse: [
-			self pattern buildImplicitChildren: Dictionary new]]
+		self explicitChildrenMatching ifFalse: [self pattern buildImplicitChildren: Dictionary new]]
 ]
 
 { #category : #'as yet unclassified' }

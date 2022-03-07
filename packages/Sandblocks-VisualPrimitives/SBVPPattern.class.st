@@ -113,6 +113,12 @@ SBVPPattern >> nextIdentifier [
 	^ possibleIdentifer
 ]
 
+{ #category : #accessing }
+SBVPPattern >> objectInterfaceNear: aBlock at: aSymbol [
+
+	^ {[:o | o isKindOf: SBVisualPrimitive]}
+]
+
 { #category : #'as yet unclassified' }
 SBVPPattern >> parentCase [
 
