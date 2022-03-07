@@ -24,7 +24,7 @@ SBVPPropertyMappingChildren class >> defaultSetterBlockWith: aSymbol for: ignore
 	^ aSymbol isSymbol
 		ifTrue: [
 			[:object :vp | | children |
-				children := (vp propertyAt: #children) collect: [:child | child buildObject].
+				children := vp propertyAt: #children.
 				(children notNil and: [children notEmpty]) ifTrue: [object perform: aSymbol asSimpleSetter with: children]]]
 		ifFalse: [[:object :vp | ]]
 ]
@@ -37,10 +37,7 @@ SBVPPropertyMappingChildren class >> getter: aBlock setter: anotherBlock [
 		(aBlock value: object)
 			ifNil: [{}]
 			ifNotNil: [:children | children reject: [:entry | entry isNil]]].
-	wrappedSetter := [:object :vp |
-		anotherBlock
-			value: object
-			value: ((vp propertyAt: #children) collect: [:child | child buildObject])].
+	wrappedSetter := [:object :vp | anotherBlock value: object value: (vp propertyAt: #children)].
 	^ super getter: wrappedGetter setter: wrappedSetter vpProperty: #children name: 'children'
 ]
 

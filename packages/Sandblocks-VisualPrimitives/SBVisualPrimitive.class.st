@@ -308,7 +308,7 @@ SBVisualPrimitive >> constantSuggestionsFor: aSBVPUnknownLabel [
 { #category : #'as yet unclassified' }
 SBVisualPrimitive >> defaultShape [
 
-	^ CircleMorph new
+	^ CircleMorph new layoutInset: 4
 ]
 
 { #category : #'as yet unclassified' }
@@ -317,14 +317,6 @@ SBVisualPrimitive >> deleteBlock [
 	self sandblockEditor do: (SBVPDeleteCommand new
 		target: self;
 		yourself)
-]
-
-{ #category : #accessing }
-SBVisualPrimitive >> getLabelContents: anObject [
-
-	^ (anObject isString or: [anObject isNumber])
-		ifTrue: [anObject]
-		ifFalse: [[anObject firstSubmorph contents] on: Error do: [nil]]
 ]
 
 { #category : #accessing }
