@@ -218,7 +218,7 @@ SBVPBindingPattern >> addImplicitChildren: aDict [
 		implicitChild := SBVPEllipsisPattern bindingDict: {self class identityName -> (implicitChildrenIndices at: implicitChildrenCount + 1)}.
 		self addChild: implicitChild afterIndex: index + implicitChildrenCount.
 		implicitChild isImplicitChild: true.
-		self owner addMorphBack: implicitChild.
+		self owner ifNotNil: [:owner | owner addMorphBack: implicitChild].
 		implicitChildrenCount := implicitChildrenCount + 1].
 	
 	oldChildren := self children copy.

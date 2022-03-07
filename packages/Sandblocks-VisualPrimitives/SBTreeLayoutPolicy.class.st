@@ -101,6 +101,12 @@ SBTreeLayoutPolicy >> executeShifts: aPattern [
 		shift := shift + (self shiftOf: child) + change]
 ]
 
+{ #category : #'as yet unclassified' }
+SBTreeLayoutPolicy >> findRootIn: aMorph [
+
+	^ aMorph submorphs detect: [:submorph | submorph isTreeLayoutRoot]
+]
+
 { #category : #layouting }
 SBTreeLayoutPolicy >> firstWalk: aPattern [
 
@@ -141,7 +147,7 @@ SBTreeLayoutPolicy >> layout: aMorph in: aRectangle [
 
 	| root |
 	(aMorph submorphsSatisfying: #isConnector) do: #abandon.
-	root := aMorph submorphs detect: [:submorph | submorph isTreeLayoutRoot].
+	root := self findRootIn: aMorph.
 	self
 		resetAll;
 		firstWalk: root;
@@ -187,7 +193,12 @@ SBTreeLayoutPolicy >> maximumHeight: aPattern [
 { #category : #layouting }
 SBTreeLayoutPolicy >> minExtentOf: aMorph in: aRectangle [
 
-	^ aMorph extent
+	| root |
+	root := self findRootIn: aMorph.
+	^ (self
+		resetAll;
+		firstWalk: root;
+		secondWalkExtent: root modSum: 0 layerHeights: (self maximumHeight: root) + self inset) extent 
 ]
 
 { #category : #accessing }
@@ -240,6 +251,20 @@ SBTreeLayoutPolicy >> secondWalk: aPattern modSum: aValue layerHeights: anotherV
 		center: (self xOf: aPattern) + aValue - ((self distance: aPattern) / 2) @ (anotherValue * (self depthOf: aPattern)).
 	"	self addConnectorLineToWorld."
 	aPattern children do: [:child | self secondWalk: child modSum: aValue + (self modOf: aPattern) layerHeights: anotherValue]
+]
+
+{ #category : #layouting }
+SBTreeLayoutPolicy >> secondWalkExtent: aPattern modSum: aValue layerHeights: anotherValue [
+
+	| bounds |
+	aPattern
+		fullBounds;
+		center: (self xOf: aPattern) + aValue - ((self distance: aPattern) / 2) @ (anotherValue * (self depthOf: aPattern)).
+	bounds := Rectangle
+		center: (self xOf: aPattern) + aValue - ((self distance: aPattern) / 2) @ (anotherValue * (self depthOf: aPattern))
+		extent: aPattern extent.
+	aPattern children do: [:child | bounds := bounds merge: (self secondWalkExtent: child modSum: aValue + (self modOf: aPattern) layerHeights: anotherValue)].
+	^ bounds
 ]
 
 { #category : #accessing }
