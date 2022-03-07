@@ -101,14 +101,8 @@ SBVPTransformation >> buildImplicitChildrenMatchingPattern [
 		
 		self explicitChildrenMatching ifFalse: [ | additionalNodes |
 			additionalNodes := Dictionary new.
-			self pattern
-				buildImplicitChildren: additionalNodes;
-				attachTreeDecorator.
-			self outputPattern
-				addImplicitChildren: additionalNodes;
-				attachTreeDecorator].
-		self pattern layout.
-		self outputPattern layout]
+			self pattern buildImplicitChildren: additionalNodes.
+			self outputPattern addImplicitChildren: additionalNodes]]
 ]
 
 { #category : #'as yet unclassified' }

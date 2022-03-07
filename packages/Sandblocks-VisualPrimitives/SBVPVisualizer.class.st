@@ -89,9 +89,7 @@ SBVPVisualizer >> code: aCodeBlock showCode: aBoolean [
 		newFromObject: (aSandblock evaluate isBlock
 			ifTrue: [aSandblock evaluate value]
 			ifFalse: [aSandblock evaluate])
-		in: self visual.
-	vp attachTreeDecorator.
-	vp layout
+		in: self visual
 ]
 
 { #category : #'as yet unclassified' }
@@ -288,6 +286,7 @@ SBVPVisualizer >> initialize [
 		cellInset: 6;
 		addMorphBack: (SBRow new
 			addMorphBack: (visual := SBBlock new
+				layoutPolicy: SBTreeLayoutPolicy new;
 				shrinkWrap;
 				layoutInset: 6;
 				when: #reportError send: #reportError: to: self);

@@ -118,13 +118,10 @@ SBVPPatternContainer >> binding: aString for: block class: aClass ifPresent: aBl
 { #category : #'as yet unclassified' }
 SBVPPatternContainer >> buildImplicitChildrenMatchingPattern [
 
-	self pattern notNil ifTrue: [
+	self pattern ifNotNil: [
 		self pattern removeImplicitChildren.
 		self explicitChildrenMatching ifFalse: [
-			self pattern
-				buildImplicitChildren: Dictionary new;
-				attachTreeDecorator].
-		self pattern layout]
+			self pattern buildImplicitChildren: Dictionary new]]
 ]
 
 { #category : #'as yet unclassified' }

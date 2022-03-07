@@ -56,10 +56,7 @@ SBVPGroupPattern >> addImplicitChildren: anArray [
 { #category : #'as yet unclassified' }
 SBVPGroupPattern >> addNewBindingPattern [
 
-	| newPattern |
-	newPattern := SBVPBindingPattern new.
-	
-	self addChild: newPattern
+	self addChild: SBVPBindingPattern new
 ]
 
 { #category : #'as yet unclassified' }
@@ -117,12 +114,6 @@ SBVPGroupPattern >> addToWorld: aWorld [
 SBVPGroupPattern >> allChildrenDo: aBlock [
 
 	self children do: [:child | child allChildrenDo: aBlock]
-]
-
-{ #category : #'as yet unclassified' }
-SBVPGroupPattern >> attachTreeDecorator [
-
-	self children do: [:child | child attachTreeDecorator]
 ]
 
 { #category : #'as yet unclassified' }
@@ -252,22 +243,19 @@ SBVPGroupPattern >> openPatternAsChild: aPattern [
 	isBindingPattern
 		ifTrue: [ | patternContainer |
 			patternContainer := SBBlock new
-				hResizing: #shrinkWrap;
-				vResizing: #shrinkWrap;
+				layoutPolicy: SBTreeLayoutPolicy new;
+				shrinkWrap;
 				layoutInset: 6;
 				when: #reportError send: #reportError: to: self.
 			
 			self row
 				addMorph: (addedBlock := SBRow new
 					addMorphBack: patternContainer;
-					hResizing: #shrinkWrap;
-					vResizing: #shrinkWrap)
+					shrinkWrap)
 				atIndex: insertPosition.
 			
-			aPattern
-				addToWorld: patternContainer;
-				attachTreeDecorator;
-				layout]
+			aPattern addToWorld: patternContainer.
+			aPattern addConnectorLinesIn: patternContainer]
 		ifFalse: [
 			self row addMorph: aPattern atIndex: insertPosition.
 			addedBlock := aPattern].

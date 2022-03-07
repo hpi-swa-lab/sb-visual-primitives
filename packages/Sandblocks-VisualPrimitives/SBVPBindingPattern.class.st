@@ -351,7 +351,7 @@ SBVPBindingPattern >> buildImplicitChildren: aDict [
 	implicitChildren := OrderedCollection new.
 	nextIndex := ((aDict collect: [:subArray | subArray size])
 		ifEmpty: [0]
-		ifNotEmpty: [:guy | guy sum]) + 1.
+		ifNotEmpty: #sum) + 1.
 	
 	oldChildren := self children copy.
 	
@@ -539,6 +539,12 @@ SBVPBindingPattern >> initialize [
 	super initialize.
 	self labelBindingDict: Dictionary new.
 	self labelExpressionDict: Dictionary new
+]
+
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern >> isTreeLayoutRoot [
+
+	^ self parent isKindOf: SBVPGroupPattern
 ]
 
 { #category : #'as yet unclassified' }

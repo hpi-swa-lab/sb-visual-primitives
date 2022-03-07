@@ -57,9 +57,6 @@ SBVPInsertCommand >> do [
 	(self parent isKindOf: SBVPGroupPattern) ifFalse: [super do].
 	
 	self morph parentCase ifNotNil: #buildImplicitChildrenMatchingPattern.
-	self morph root
-		attachTreeDecorator;
-		layout.
 	^ self morph
 ]
 
@@ -121,6 +118,5 @@ SBVPInsertCommand >> undo [
 	
 	super undo.
 	case ifNotNil: #buildImplicitChildrenMatchingPattern.
-	root layout.
 	^ self morph
 ]

@@ -140,11 +140,9 @@ SBVPPattern >> patternContainer [
 { #category : #'as yet unclassified' }
 SBVPPattern >> removeImplicitChildren [
 
-	self children select: [:child | child isImplicitChild] thenDo: [:implicitChild |
-		implicitChild abandon.
-		self withDecorator: SBTreeDecorator do: [:decorator | decorator removeChild: implicitChild]].
-	self children: (self children reject: [:child | child isImplicitChild]).
-	self children do: [:child | child removeImplicitChildren]
+	self children select: #isImplicitChild thenDo: #abandon.
+	self children: (self children reject: #isImplicitChild).
+	self children do: #removeImplicitChildren
 ]
 
 { #category : #'as yet unclassified' }

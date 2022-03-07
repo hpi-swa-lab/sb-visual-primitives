@@ -33,7 +33,6 @@ SBVPDeleteCommand >> do [
 	self oldParent ifNotNil: [self oldParent removeChild: target].
 	target allChildrenDo: [:block | block abandon].
 	self oldParent parentCase ifNotNil: #buildImplicitChildrenMatchingPattern.
-	self oldParent ifNotNil: #layout.
 	^ self oldParent
 ]
 
@@ -70,6 +69,5 @@ SBVPDeleteCommand >> undo [
 		target allChildrenDo: [:block | oldOwner addMorphBack: block].
 		super undo].
 	self oldParent parentCase ifNotNil: #buildImplicitChildrenMatchingPattern.
-	target layout.
 	^ target
 ]
