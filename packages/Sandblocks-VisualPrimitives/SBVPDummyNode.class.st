@@ -88,6 +88,40 @@ SBVPDummyNode >> children: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPDummyNode >> exampleHeapTransformation [
+
+	^ SBVPTransformation
+		input: (SBVPGroupPattern patterns: {
+			SBVPBindingPattern
+				bindingDict: {#identity -> #a}
+				children: {
+					SBVPEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBVPDummyNode.
+					SBVPBindingPattern
+						bindingDict: {#identity -> #boi}
+						children: {SBVPEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBVPDummyNode}
+						visualizingClass: SBVPDummyNode.
+					SBVPEllipsisPattern bindingDict: {#identity -> #d} visualizingClass: SBVPDummyNode}
+				visualizingClass: SBVPDummyNode.
+			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) key < (bindings at: #boi) key]})
+		output: (SBVPGroupPattern patterns: {
+			SBVPBindingPattern
+				bindingDict: {#identity -> #boi}
+				children: {
+					SBVPEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBVPDummyNode.
+					SBVPBindingPattern
+						bindingDict: {#identity -> #a}
+						children: {SBVPEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBVPDummyNode}
+						visualizingClass: SBVPDummyNode.
+					SBVPEllipsisPattern bindingDict: {#identity -> #d} visualizingClass: SBVPDummyNode}
+				visualizingClass: SBVPDummyNode})
+		strategy: (Dictionary new
+			add: #explicitRootMatching -> false;
+			add: #explicitChildrenMatching -> false;
+			yourself)
+		visualizePatternsAs: SBVPDummyNode
+]
+
+{ #category : #'as yet unclassified' }
 SBVPDummyNode >> exampleMultipleBindings: aTree [
 
 	self

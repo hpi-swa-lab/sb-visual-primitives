@@ -37,10 +37,8 @@ Class {
 	#name : #SBVPBindingPattern,
 	#superclass : #SBVPPattern,
 	#instVars : [
-		'bindingIndex',
-		'constant',
-		'labelBindingDict',
-		'labelExpressionDict',
+		'bindingDict',
+		'expressionDict',
 		'visualizingClass',
 		'writeBackClosure',
 		'writeBackClosureString'
@@ -250,12 +248,15 @@ SBVPBindingPattern >> afterAddLabel: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPBindingPattern >> bindingDict [
+
+	^ bindingDict
+]
+
+{ #category : #'as yet unclassified' }
 SBVPBindingPattern >> bindingDict: aDict [
 
-	(aDict includesKey: self class identityName) ifTrue: [
-		self bindingIndex: (aDict at: self class identityName).
-		aDict removeKey: self class identityName].
-	self labelBindingDict: aDict
+	bindingDict := aDict
 ]
 
 { #category : #'as yet unclassified' }
@@ -267,15 +268,15 @@ SBVPBindingPattern >> bindingFor: aVisualPrimitive [
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> bindingIndex [
 
-	^ bindingIndex
+	^ self bindingDict at: self class identityName ifAbsent: nil
 ]
 
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> bindingIndex: anObject [
 
-	bindingIndex := anObject isSandblock
+	self labelBindingDict at: self class identityName put: (anObject isSandblock
 		ifTrue: [[anObject evaluate] on: Error do: [anObject sourceString]]
-		ifFalse: [anObject]
+		ifFalse: [anObject])
 ]
 
 { #category : #'as yet unclassified' }
@@ -420,7 +421,7 @@ SBVPBindingPattern >> collectBindingsInto: aCollection [
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> constant [
 
-	^ constant
+	^ self expressionDict at: self class identityName ifAbsent: nil
 ]
 
 { #category : #'as yet unclassified' }
@@ -482,13 +483,15 @@ SBVPBindingPattern >> enoughChildren: aVisualPrimitive [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPBindingPattern >> expressionDict [
+
+	^ expressionDict
+]
+
+{ #category : #'as yet unclassified' }
 SBVPBindingPattern >> expressionDict: aDict [
 
-	(aDict includesKey: self class identityName) ifTrue: [
-		self constant: (aDict at: self class identityName).
-		aDict removeKey: self class identityName].
-	
-	self labelExpressionDict: aDict
+	expressionDict := aDict
 ]
 
 { #category : #'as yet unclassified' }
@@ -537,8 +540,8 @@ SBVPBindingPattern >> indexOffset [
 SBVPBindingPattern >> initialize [
 
 	super initialize.
-	self labelBindingDict: Dictionary new.
-	self labelExpressionDict: Dictionary new
+	self bindingDict: Dictionary new.
+	self expressionDict: Dictionary new
 ]
 
 { #category : #'as yet unclassified' }
@@ -559,25 +562,17 @@ SBVPBindingPattern >> labelBindingChanged [
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> labelBindingDict [
 
-	^ labelBindingDict
-]
-
-{ #category : #'as yet unclassified' }
-SBVPBindingPattern >> labelBindingDict: aDict [
-
-	labelBindingDict := aDict
+	^ self bindingDict copy
+		removeKey: #identity ifAbsent: [];
+		yourself
 ]
 
 { #category : #accessing }
 SBVPBindingPattern >> labelExpressionDict [
 
-	^ labelExpressionDict
-]
-
-{ #category : #accessing }
-SBVPBindingPattern >> labelExpressionDict: aDict [
-
-	labelExpressionDict := aDict
+	^ self expressionDict copy
+		removeKey: #identity ifAbsent: [];
+		yourself
 ]
 
 { #category : #'as yet unclassified' }

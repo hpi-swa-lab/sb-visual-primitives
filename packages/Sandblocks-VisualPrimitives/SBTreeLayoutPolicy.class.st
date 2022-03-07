@@ -198,7 +198,7 @@ SBTreeLayoutPolicy >> minExtentOf: aMorph in: aRectangle [
 	^ (self
 		resetAll;
 		firstWalk: root;
-		secondWalkExtent: root modSum: 0 layerHeights: (self maximumHeight: root) + self inset) extent 
+		secondWalkExtent: root modSum: 0 layerHeights: (self maximumHeight: root) + self inset) extent
 ]
 
 { #category : #accessing }
