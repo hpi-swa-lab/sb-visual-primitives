@@ -1,3 +1,13 @@
+"
+An SBVPEllipsisPattern is used to represent any children of an object. It is an abstraction to sum up many children and it is used for pattern matching if the number of children doesn't matter.
+
+Instance Variables
+	currentSize:		Number
+
+currentSize
+	- indicates the current number of children it represents
+
+"
 Class {
 	#name : #SBVPEllipsisPattern,
 	#superclass : #SBVPBindingPattern,

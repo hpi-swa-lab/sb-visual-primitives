@@ -1,16 +1,16 @@
 "
-An SBVisualPrimitive is the visuall representation of an Object. It can also be used to display various patterns. When originating from an object, this object's class's visualPrimitiveMapping will be used as a directive on how to map from object properties to properties of the visual primitive (vpProperty). 
+An SBVisualPrimitive is the visual representation of an object. It can also be used to display various patterns. When originating from an object, this object's class visualPrimitiveMapping will be used as a directive on how to map from object properties to properties of the visual primitive (vpProperty). 
 See SBVPPropertyMappings for the different ways of mapping.
 
 Instance Variables
 	blockDict:		Dictionary
-	children:		OrderedCollection of SBVisualPrimitives
+	children:			OrderedCollection of SBVisualPrimitives
 	labelDict:		Dictionary
-	origin:			Object
 	parent:			SBVisualPrimitive
+	sourceObject:	Object
 
 blockDict
-	-  (#blockPosition -> SBBlock)
+	- (#blockPosition -> SBBlock)
 	- stores the blocks that the labels or shape blocks are inserted into
 
 children
@@ -19,22 +19,22 @@ children
 labelDict
 	- (#labelPosition -> SBBlock)
 
-origin
-	- the object the primitive is buid for
-	- may be nil if the SBPrimitive is a pattern
-
 parent
 	- the parent primitive
-	- also indicates the hirachy of patterns 
+	- also indicates the hierarchy of patterns 
+
+sourceObject
+	- the object the primitive is build for
+	- may be nil if the SBVisualPrimitive is a pattern
 
 "
 Class {
 	#name : #SBVisualPrimitive,
 	#superclass : #SBStSubstitution,
 	#instVars : [
-		'labelDict',
 		'blockDict',
 		'children',
+		'labelDict',
 		'parent',
 		'sourceObject'
 	],
@@ -110,11 +110,19 @@ SBVisualPrimitive >> addChild: aVisualPrimitive afterIndex: aNumber [
 
 	aVisualPrimitive parent ifNotNil: [aVisualPrimitive parent removeChild: aVisualPrimitive].
 	self children add: aVisualPrimitive afterIndex: aNumber.
-	aVisualPrimitive parent: self.
-	self withDecorator: SBTreeDecorator do: [:myDecorator |
-		aVisualPrimitive
-			withDecorator: SBTreeDecorator
-			do: [:childDecorator | myDecorator addChild: childDecorator afterIndex: aNumber]]
+	aVisualPrimitive parent: self
+]
+
+{ #category : #accessing }
+SBVisualPrimitive >> addConnectorLinesIn: aMorph [
+
+	self children do: [:child | | connector |
+		connector := (SBConnectorLine connect: self to: child)
+			connectorType: #line;
+			lineWidth: 1;
+			color: Color black.
+		aMorph addMorphBack: connector.
+		child addConnectorLinesIn: aMorph]
 ]
 
 { #category : #'as yet unclassified' }
@@ -130,12 +138,9 @@ SBVisualPrimitive >> addLabel [
 		self sandblockEditor do: (SBDoItCommand new
 			do: [
 				self setLabelAt: vpProperty to: (newBlock := self newLabelBlockAt: vpProperty).
-				self layout.
 				self afterAddLabel: newBlock.
 				newBlock];
-			undo: [
-				self removeLabelAt: vpProperty.
-				self layout])]
+			undo: [self removeLabelAt: vpProperty])]
 ]
 
 { #category : #'as yet unclassified' }
@@ -217,24 +222,6 @@ SBVisualPrimitive >> allChildrenDo: aBlock [
 SBVisualPrimitive >> asVisualPrimitive [
 
 	^ self
-]
-
-{ #category : #nil }
-SBVisualPrimitive >> attachTreeDecorator [
-
-	self withDecorator: SBTreeDecorator do: [:d | ] ifAbsent: [ | decorator |
-		decorator := SBTreeDecorator new.
-		self attachDecorator: decorator.
-		self parent ifNotNil: [:parent |
-			parent
-				withDecorator: SBTreeDecorator
-				do: [:parentDecorator | parentDecorator addChild: decorator afterIndex: self siblingIndex - 1]].
-		self children do: [:child |
-			child
-				withDecorator: SBTreeDecorator
-				do: [:childDecorator | decorator addChild: childDecorator afterIndex: child siblingIndex - 1]]].
-	
-	self children do: [:child | child attachTreeDecorator]
 ]
 
 { #category : #accessing }
@@ -412,6 +399,12 @@ SBVisualPrimitive >> isExpression [
 ]
 
 { #category : #'as yet unclassified' }
+SBVisualPrimitive >> isTreeLayoutRoot [
+
+	^ self parent isNil
+]
+
+{ #category : #'as yet unclassified' }
 SBVisualPrimitive >> isVisualPrimitive [
 
 	^ true
@@ -464,15 +457,6 @@ SBVisualPrimitive >> labelPositions [
 SBVisualPrimitive >> labelSuggestionsFor: aSBVPUnknownLabel [
 
 	^ {self constantSuggestionsFor: aSBVPUnknownLabel}
-]
-
-{ #category : #'as yet unclassified' }
-SBVisualPrimitive >> layout [
-
-	self
-		withDecorator: SBTreeDecorator
-		do: [:dec | dec layout]
-		ifAbsent: [self children do: [:child | child layout]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -630,7 +614,6 @@ SBVisualPrimitive >> propertyAt: aSymbol [
 { #category : #accessing }
 SBVisualPrimitive >> removeChild: aVisualPrimitive [
 
-	self withDecorator: SBTreeDecorator do: [:dec | dec removeChild: aVisualPrimitive].
 	self children remove: aVisualPrimitive.
 	aVisualPrimitive parent: nil
 ]

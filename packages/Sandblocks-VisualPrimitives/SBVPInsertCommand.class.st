@@ -1,8 +1,8 @@
 "
-A SBVPInsertCommand is used to Insert a SBVisualPrimitive into the current hirachy.
+An SBVPInsertCommand is used to insert an SBVisualPrimitive into the current hierarchy.
 
 Instance Variables
-	children:		OrderedCollection of SBVisualPrimitives
+	children:			OrderedCollection of SBVisualPrimitives
 	parent:			SBVisualPrimitive
 	siblingIndex:	Number
 
@@ -20,9 +20,9 @@ Class {
 	#name : #SBVPInsertCommand,
 	#superclass : #SBInsertCommand,
 	#instVars : [
+		'children',
 		'parent',
-		'siblingIndex',
-		'children'
+		'siblingIndex'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
@@ -57,9 +57,6 @@ SBVPInsertCommand >> do [
 	(self parent isKindOf: SBVPGroupPattern) ifFalse: [super do].
 	
 	self morph parentCase ifNotNil: #buildImplicitChildrenMatchingPattern.
-	self morph root
-		attachTreeDecorator;
-		layout.
 	^ self morph
 ]
 
@@ -121,6 +118,5 @@ SBVPInsertCommand >> undo [
 	
 	super undo.
 	case ifNotNil: #buildImplicitChildrenMatchingPattern.
-	root layout.
 	^ self morph
 ]

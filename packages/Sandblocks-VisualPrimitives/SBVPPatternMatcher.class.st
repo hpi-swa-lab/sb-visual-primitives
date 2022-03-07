@@ -1,10 +1,44 @@
+"
+An SBVPPatternMatcher is used for pattern matching. It tries to match the defined pattern in the SBVPTransformation to the input.
+
+Instance Variables
+	pattern:					Pattern
+	performedMatch:		Boolean
+	searchStack:			LinkedList
+	strategy:					Dictionary
+	visitedPrimitives:		Set
+
+pattern
+	- the defined pattern that is used for pattern matching
+
+performedMatch
+	- indicates whether the pattern matched on input
+
+searchStack
+	- stack that contains all possible matchable primitives
+
+strategy
+	- a dict to specify the matching strategy
+	- current specifiers with their defaults:
+		- #explicitRootMatching -> true
+			- if true, the root of every SBVPBindingPattern only matches the root of the input
+			- if false, the pattern can also match somewhere else in the input without further specification
+		- #explicitChildrenMatching -> true
+			- if true, every child has to be specified explicitly
+			- if false, the pattern can also match if the specified children have more siblings than the pattern has
+		- if there are no children specified in the pattern, an SBVPEllipsisPattern is implicitely added
+
+visitedPrimitives
+	- set of all visited primitives during the pattern matching
+
+"
 Class {
 	#name : #SBVPPatternMatcher,
 	#superclass : #Object,
 	#instVars : [
 		'pattern',
-		'searchStack',
 		'performedMatch',
+		'searchStack',
 		'strategy',
 		'visitedPrimitives'
 	],

@@ -1,5 +1,16 @@
 "
 An SBVPPropertyMappingSelect is used to map from a specific set of choices to corresponding representations for a vpProperty. To be able to change the selection the returned Morph is an SBVPSelectProperty.
+
+Instance Variables
+	choices: 				OrderedCollection
+	representations:	OrderedCollection
+
+choices
+	- contains the selectable options of the select
+
+representations
+	- contains the visualizations of the choices
+	- if there are no visualizations, choices are shown as Strings
 "
 Class {
 	#name : #SBVPPropertyMappingSelect,
@@ -20,17 +31,21 @@ SBVPPropertyMappingSelect class >> defaultSetterBlockWith: aSymbol for: anotherS
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMappingSelect class >> property: aSymbol vpProperty: anotherSymbol choices: aCollection [
+SBVPPropertyMappingSelect class >> property: aSymbol vpProperty: anotherSymbol choices: anOrderedCollection [
 
-	^ self property: aSymbol vpProperty: anotherSymbol choices: aCollection representations: aCollection
+	^ self
+		property: aSymbol
+		vpProperty: anotherSymbol
+		choices: anOrderedCollection
+		representations: anOrderedCollection
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMappingSelect class >> property: aSymbol vpProperty: anotherSymbol choices: aCollection representations: anotherCollection [
+SBVPPropertyMappingSelect class >> property: aSymbol vpProperty: anotherSymbol choices: anOrderedCollection representations: anotherOrderedCollection [
 
 	^ (self property: aSymbol vpProperty: anotherSymbol)
-		choices: aCollection;
-		representations: anotherCollection;
+		choices: anOrderedCollection;
+		representations: anotherOrderedCollection;
 		yourself
 ]
 
@@ -47,9 +62,9 @@ SBVPPropertyMappingSelect >> choices [
 ]
 
 { #category : #accessing }
-SBVPPropertyMappingSelect >> choices: aCollection [
+SBVPPropertyMappingSelect >> choices: anOrderedCollection [
 
-	choices := aCollection
+	choices := anOrderedCollection
 ]
 
 { #category : #accessing }
@@ -69,9 +84,9 @@ SBVPPropertyMappingSelect >> representations [
 ]
 
 { #category : #accessing }
-SBVPPropertyMappingSelect >> representations: aCollection [
+SBVPPropertyMappingSelect >> representations: anOrderedCollection [
 
-	representations := aCollection
+	representations := anOrderedCollection
 ]
 
 { #category : #'as yet unclassified' }

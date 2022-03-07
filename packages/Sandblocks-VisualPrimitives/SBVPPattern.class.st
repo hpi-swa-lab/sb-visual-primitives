@@ -1,8 +1,8 @@
 "
-An SBVPPattern is used to define a combination of SBVisualPrimitives and constraints that can later be used to perform pattern matching with.
+An SBVPPattern is used to define a combination of SBVisualPrimitives and SBVPConstraintPatterns that can later be used to perform pattern matching with.
 
 Instance Variables
-	isImplicitChild:		bool
+	isImplicitChild:		Boolean
 
 isImplicitChild
 	- indicates whether the pattern was implicitly added to it's parent
@@ -101,7 +101,7 @@ SBVPPattern >> nextIdentifier [
 			element := pattern bindingIndex.
 			element := element ifNotNil: [
 				(pattern bindingIndex beginsWith: self implicitPrefix)
-					ifTrue: [element from: self implicitPrefix size]
+					ifTrue: [element from: self implicitPrefix size + 1]
 					ifFalse: [element]].
 			stream nextPut: element]].
 	
@@ -111,6 +111,12 @@ SBVPPattern >> nextIdentifier [
 		invalidIdentifiers includes: possibleIdentifer] whileTrue: [currentAttempt := currentAttempt + 1].
 	
 	^ possibleIdentifer
+]
+
+{ #category : #accessing }
+SBVPPattern >> objectInterfaceNear: aBlock at: aSymbol [
+
+	^ {[:o | o isKindOf: SBVisualPrimitive]}
 ]
 
 { #category : #'as yet unclassified' }
@@ -140,11 +146,9 @@ SBVPPattern >> patternContainer [
 { #category : #'as yet unclassified' }
 SBVPPattern >> removeImplicitChildren [
 
-	self children select: [:child | child isImplicitChild] thenDo: [:implicitChild |
-		implicitChild abandon.
-		self withDecorator: SBTreeDecorator do: [:decorator | decorator removeChild: implicitChild]].
-	self children: (self children reject: [:child | child isImplicitChild]).
-	self children do: [:child | child removeImplicitChildren]
+	self children select: #isImplicitChild thenDo: #abandon.
+	self children: (self children reject: #isImplicitChild).
+	self children do: #removeImplicitChildren
 ]
 
 { #category : #'as yet unclassified' }

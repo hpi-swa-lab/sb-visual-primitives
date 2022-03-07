@@ -1,33 +1,27 @@
 "
-An SBVPCase is the visual representation of a pattern matching rule with SBVisualPrimitives. It consists of an input and an output pattern (see SBVPPattern). For the pattern matching see SBVPPatternMatcher. You can choose a default class that determines the visualPrimitiveMapping for the SBVPBindingPatterns.
+An SBVPPatternContainer is the visual representation of a pattern matching rule with SBVisualPrimitives. It consists of an input and an output pattern (see SBVPPattern). For the pattern matching see SBVPPatternMatcher. You can choose a default class that determines the visualPrimitiveMapping for the SBVPBindingPatterns.
 
 By applying the case on an input object, the input pattern gets matched on this object and the matched part gets transformed to match the output pattern.
 
 Instance Variables
-	classNameInput:					SBStClassNameInput
-	defaultPatternVisualizationClass:	Class
-	informationRow:					SBRow
-	input:								SBBlock (SBVPPattern)
-	output:								SBBlock (SBVPPattern)
+	classNameInput:				SBStClassNameInput
+	defaultVisualizationClass:	Class
+	informationRow:				SBRow
+	pattern:							SBBlock (SBVPPattern)
 	strategy:							Dictionary
 
 classNameInput
-	- allows to select the defaultPatternVisualizationClass
+	- allows to select the defaultVisualizationClass
 
-defaultPatternVisualizationClass
+defaultVisualizationClass
 	- SBVPBindingPatterns use this class's visualPrimitiveMapping to determine how to display themselves per default
 
 informationRow
 	- container for all other components
 
-input
+pattern
 	- the input pattern that is matched on
 	- can be every kind of SBVPPattern
-
-output
-	- this is the result of the transformation
-	if true, the root of every SBVPBindingPattern only matches the root of the input
-	if false, the pattern can also match somewhere else in the input without further specification
 
 strategy
 	- a dict to specify the matching strategy
@@ -37,19 +31,19 @@ strategy
 			- if false, the pattern can also match somewhere else in the input without further specification
 		- #explicitChildrenMatching -> true
 			- if true, every child has to be specified explicitly
-			- if false, the pattern can also match if the specified children have more siblings than the pattern has. 
-			  If there are no children specified in the pattern, an SBVPEllipsisPattern is implicitely added.
+			- if false, the pattern can also match if the specified children have more siblings than the pattern has
+		- if there are no children specified in the pattern, an SBVPEllipsisPattern is implicitely added
 
 "
 Class {
 	#name : #SBVPPatternContainer,
 	#superclass : #SBStSubstitution,
 	#instVars : [
-		'pattern',
-		'strategy',
-		'informationRow',
+		'classNameInput',
 		'defaultVisualizationClass',
-		'classNameInput'
+		'informationRow',
+		'pattern',
+		'strategy'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
@@ -124,13 +118,9 @@ SBVPPatternContainer >> binding: aString for: block class: aClass ifPresent: aBl
 { #category : #'as yet unclassified' }
 SBVPPatternContainer >> buildImplicitChildrenMatchingPattern [
 
-	self pattern notNil ifTrue: [
+	self pattern ifNotNil: [
 		self pattern removeImplicitChildren.
-		self explicitChildrenMatching ifFalse: [
-			self pattern
-				buildImplicitChildren: Dictionary new;
-				attachTreeDecorator].
-		self pattern layout]
+		self explicitChildrenMatching ifFalse: [self pattern buildImplicitChildren: Dictionary new]]
 ]
 
 { #category : #'as yet unclassified' }

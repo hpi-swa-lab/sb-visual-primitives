@@ -1,5 +1,16 @@
 "
-An SBVPDeleteCommand is a Command to remove a SBVisualPrimitive. It's removed from its world and hirachy. The Morphs in the primitive's children will be abandoned, too.
+An SBVPDeleteCommand is a Command to remove an SBVisualPrimitive. It's removed from its world and hirachy. The Morphs in the primitive's children will be abandoned, too.
+
+Instance Variables
+	oldParent:			SBBlock
+	oldSiblingIndex:	Number
+
+oldParent
+	- saves the previous parent for do and undo
+
+oldSiblingIndex
+	- previous position index of the deleted primitive in the parent's children
+
 "
 Class {
 	#name : #SBVPDeleteCommand,
@@ -22,7 +33,6 @@ SBVPDeleteCommand >> do [
 	self oldParent ifNotNil: [self oldParent removeChild: target].
 	target allChildrenDo: [:block | block abandon].
 	self oldParent parentCase ifNotNil: #buildImplicitChildrenMatchingPattern.
-	self oldParent ifNotNil: #layout.
 	^ self oldParent
 ]
 
@@ -59,6 +69,5 @@ SBVPDeleteCommand >> undo [
 		target allChildrenDo: [:block | oldOwner addMorphBack: block].
 		super undo].
 	self oldParent parentCase ifNotNil: #buildImplicitChildrenMatchingPattern.
-	target layout.
 	^ target
 ]

@@ -1,8 +1,9 @@
 "
-An SBVPPropertyMapping hold information on how the properties of an object are to be displayed in a SBVisualPrimitive and how changes on the primitive affect the origin object.
+An SBVPPropertyMapping hold information on how the properties of an object are to be displayed in an SBVisualPrimitive and how changes on the primitive affect the origin object.
 
 Instance Variables
 	getter:			BlockClosure
+	name:			String
 	patternValue:	Object
 	setter:			BlockClosure
 	vpProperty:		Symbol
@@ -11,6 +12,9 @@ getter
 	- should look like this: [:object | ... ]
 	- the result from evaluating the getter should be a String, Number or Morph
 	- the result is what will be displayed in the SBVisualPrimitive
+
+name
+	- this is the name of the property as a String
 
 patternValue
 	- this value will be displayed if there is no origin object, because the primitive is a pattern
@@ -28,10 +32,10 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'getter',
-		'setter',
+		'name',
 		'patternValue',
-		'vpProperty',
-		'name'
+		'setter',
+		'vpProperty'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
@@ -188,9 +192,9 @@ SBVPPropertyMapping >> name [
 ]
 
 { #category : #accessing }
-SBVPPropertyMapping >> name: anObject [
+SBVPPropertyMapping >> name: aString [
 
-	name := anObject
+	name := aString
 ]
 
 { #category : #accessing }

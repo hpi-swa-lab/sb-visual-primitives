@@ -1,8 +1,6 @@
 "
 An SBStConstraintVariableBehavior is xxxxxxxxx.
 
-Instance Variables
-
 "
 Class {
 	#name : #SBStConstraintVariableBehavior,

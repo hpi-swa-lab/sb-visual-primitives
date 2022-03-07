@@ -1,34 +1,30 @@
 "
-A SBVPBindingPattern is used to represent a single object. It's children are visualized as well recursively.
+An SBVPBindingPattern is used to represent a single object visual. It's children are visualized as well recursively.
 
 Instance Variables
-	bindingIndex:				Object
-	constant:					Block
-	firstChildOffset:				Number
-	labelBindingDict:			Dictionary
-	labelExpressionDict:		Dictionary
-	visualizingClass:			Class
+	bindingIndex:					Object
+	constant:						SBBlock
+	labelBindingDict:				Dictionary
+	labelExpressionDict:			Dictionary
+	visualizingClass:				Class
 	writeBackClosure:			BlockClosure
-	writeBackClosureString:	String
+	writeBackClosureString:		String
 
 bindingIndex
 	- the primitive's binding 
 	
 constant
-	- stores value of origin if that's a constant
-	- can be nil if there is no underlying origin object
-
-firstChildOffset
-	- xxxxx
+	- stores value of sourceObject if it's a constant
+	- can be nil if there is no underlying sourceObject
 
 labelBindingDict
-	- xxxxx
+	- dictionary of label positions and their bindings
 
 labelExpressionDict
-	- xxxxx
+	- dictionary of label positions and their values
 
 visualizingClass
-	- xxxxx
+	- the class to be visualized
 
 writeBackClosure
 	- xxxxx
@@ -41,13 +37,11 @@ Class {
 	#name : #SBVPBindingPattern,
 	#superclass : #SBVPPattern,
 	#instVars : [
-		'constant',
-		'bindingIndex',
+		'bindingDict',
+		'expressionDict',
+		'visualizingClass',
 		'writeBackClosure',
-		'writeBackClosureString',
-		'labelBindingDict',
-		'labelExpressionDict',
-		'visualizingClass'
+		'writeBackClosureString'
 	],
 	#category : #'Sandblocks-VisualPrimitives'
 }
@@ -222,7 +216,7 @@ SBVPBindingPattern >> addImplicitChildren: aDict [
 		implicitChild := SBVPEllipsisPattern bindingDict: {self class identityName -> (implicitChildrenIndices at: implicitChildrenCount + 1)}.
 		self addChild: implicitChild afterIndex: index + implicitChildrenCount.
 		implicitChild isImplicitChild: true.
-		self owner addMorphBack: implicitChild.
+		self owner ifNotNil: [:owner | owner addMorphBack: implicitChild].
 		implicitChildrenCount := implicitChildrenCount + 1].
 	
 	oldChildren := self children copy.
@@ -254,12 +248,15 @@ SBVPBindingPattern >> afterAddLabel: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPBindingPattern >> bindingDict [
+
+	^ bindingDict
+]
+
+{ #category : #'as yet unclassified' }
 SBVPBindingPattern >> bindingDict: aDict [
 
-	(aDict includesKey: self class identityName) ifTrue: [
-		self bindingIndex: (aDict at: self class identityName).
-		aDict removeKey: self class identityName].
-	self labelBindingDict: aDict
+	bindingDict := aDict
 ]
 
 { #category : #'as yet unclassified' }
@@ -271,15 +268,15 @@ SBVPBindingPattern >> bindingFor: aVisualPrimitive [
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> bindingIndex [
 
-	^ bindingIndex
+	^ self bindingDict at: self class identityName ifAbsent: nil
 ]
 
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> bindingIndex: anObject [
 
-	bindingIndex := anObject isSandblock
+	self labelBindingDict at: self class identityName put: (anObject isSandblock
 		ifTrue: [[anObject evaluate] on: Error do: [anObject sourceString]]
-		ifFalse: [anObject]
+		ifFalse: [anObject])
 ]
 
 { #category : #'as yet unclassified' }
@@ -355,7 +352,7 @@ SBVPBindingPattern >> buildImplicitChildren: aDict [
 	implicitChildren := OrderedCollection new.
 	nextIndex := ((aDict collect: [:subArray | subArray size])
 		ifEmpty: [0]
-		ifNotEmpty: [:guy | guy sum]) + 1.
+		ifNotEmpty: #sum) + 1.
 	
 	oldChildren := self children copy.
 	
@@ -424,7 +421,7 @@ SBVPBindingPattern >> collectBindingsInto: aCollection [
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> constant [
 
-	^ constant
+	^ self expressionDict at: self class identityName ifAbsent: nil
 ]
 
 { #category : #'as yet unclassified' }
@@ -437,12 +434,12 @@ SBVPBindingPattern >> constant: aBlock [
 SBVPBindingPattern >> convertToEllipsisPattern [
 	<action>
 
-	self convertToPatternClass:  SBVPEllipsisPattern
+	self convertToPatternClass: SBVPEllipsisPattern
 ]
 
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> convertToPatternClass: aClass [
-	"Only suitable for conversion from ellipsis to binding and vise versa."
+	"Only suitable for conversion from ellipsis to binding and vice versa."
 
 	self sandblockEditor do: (SBCombinedCommand newWith: {
 		SBVPDeleteCommand new target: self.
@@ -486,13 +483,15 @@ SBVPBindingPattern >> enoughChildren: aVisualPrimitive [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPBindingPattern >> expressionDict [
+
+	^ expressionDict
+]
+
+{ #category : #'as yet unclassified' }
 SBVPBindingPattern >> expressionDict: aDict [
 
-	(aDict includesKey: self class identityName) ifTrue: [
-		self constant: (aDict at: self class identityName).
-		aDict removeKey: self class identityName].
-	
-	self labelExpressionDict: aDict
+	expressionDict := aDict
 ]
 
 { #category : #'as yet unclassified' }
@@ -541,38 +540,39 @@ SBVPBindingPattern >> indexOffset [
 SBVPBindingPattern >> initialize [
 
 	super initialize.
-	self labelBindingDict: Dictionary new.
-	self labelExpressionDict: Dictionary new
+	self bindingDict: Dictionary new.
+	self expressionDict: Dictionary new
+]
+
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern >> isTreeLayoutRoot [
+
+	^ self parent isKindOf: SBVPGroupPattern
 ]
 
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> labelBindingChanged [
 
-	self labelBindingDict copy keysAndValuesDo: [:key :value | self labelBindingDict at: key put: ((self labelContentAt: key) as: value class)]
+	self labelBindingDict copy keysAndValuesDo: [:labelPosition :bindingName |
+		self labelBindingDict
+			at: labelPosition
+			put: ((self labelContentAt: labelPosition) as: bindingName class)]
 ]
 
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> labelBindingDict [
 
-	^ labelBindingDict
-]
-
-{ #category : #'as yet unclassified' }
-SBVPBindingPattern >> labelBindingDict: aDict [
-
-	labelBindingDict := aDict
+	^ self bindingDict copy
+		removeKey: #identity ifAbsent: [];
+		yourself
 ]
 
 { #category : #accessing }
 SBVPBindingPattern >> labelExpressionDict [
 
-	^ labelExpressionDict
-]
-
-{ #category : #accessing }
-SBVPBindingPattern >> labelExpressionDict: aDict [
-
-	labelExpressionDict := aDict
+	^ self expressionDict copy
+		removeKey: #identity ifAbsent: [];
+		yourself
 ]
 
 { #category : #'as yet unclassified' }
@@ -620,6 +620,13 @@ SBVPBindingPattern >> noteNewOwner: newOwner [
 ]
 
 { #category : #'as yet unclassified' }
+SBVPBindingPattern >> objectInterface [
+
+	self halt.
+	^ self parent objectInterfaceNear: self at: #replace
+]
+
+{ #category : #'as yet unclassified' }
 SBVPBindingPattern >> originalPropertyMappingAt: aVPProperty [
 
 	^ self visualPrimitiveMapping
@@ -645,8 +652,8 @@ SBVPBindingPattern >> rebuild [
 			expression: association value
 			vpProperty: association key
 			originalMapping: (self originalPropertyMappingAt: association key)]).
-	self labelBindingDict keysAndValuesDo: [:key :value |
-		(self setLabelAt: key to: (self bindingLabelBlockFrom: value))
+	self labelBindingDict keysAndValuesDo: [:labelPosition :bindingName |
+		(self setLabelAt: labelPosition to: (self bindingLabelBlockFrom: bindingName))
 			when: #contentsChanged
 			send: #labelBindingChanged
 			to: self].

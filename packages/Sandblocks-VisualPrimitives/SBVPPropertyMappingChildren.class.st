@@ -1,5 +1,5 @@
 "
-An SBVPPropertyMappingChildren is used to map to and from the children of a SBVisualPrimitive.
+An SBVPPropertyMappingChildren is used to map to and from the children of an SBVisualPrimitive.
 "
 Class {
 	#name : #SBVPPropertyMappingChildren,

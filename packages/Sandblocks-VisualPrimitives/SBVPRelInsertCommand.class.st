@@ -34,13 +34,23 @@ SBVPRelInsertCommand >> morphIndexInChildren [
 { #category : #'as yet unclassified' }
 SBVPRelInsertCommand >> suggestions [
 
-	^ {
+	| suggestions outputPattern |
+	suggestions := {
 		(SBInsertSuggestionItem selector: 'addNewBindingPattern' label: 'choice')
 			morph: SBVPBindingPattern new
 			previewOnly: false.
 		(SBInsertSuggestionItem selector: 'addNewConstraintPattern' label: 'choice')
 			morph: (SBVPConstraintPattern constraint: [:bindings | ])
-			previewOnly: false}
+			previewOnly: false.
+		(SBInsertSuggestionItem selector: 'addNewAndPattern' label: 'choice')
+			morph: SBVPGroupPattern new
+			previewOnly: false.
+		(SBInsertSuggestionItem selector: 'addNewOrPattern' label: 'choice')
+			morph: SBVPOrGroupPattern new
+			previewOnly: false}.
+	outputPattern := self container patternContainer outputPattern.
+	outputPattern = self container ifTrue: [^ {suggestions first}].
+	^ suggestions
 ]
 
 { #category : #'as yet unclassified' }
