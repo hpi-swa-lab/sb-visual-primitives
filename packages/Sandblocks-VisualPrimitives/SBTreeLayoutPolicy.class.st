@@ -187,11 +187,7 @@ SBTreeLayoutPolicy >> maximumHeight: aPattern [
 { #category : #layouting }
 SBTreeLayoutPolicy >> minExtentOf: aMorph in: aRectangle [
 
-	| m |
-	m := aMorph submorphs detect: [:child | child disableLayout not] ifNone: [^ 0 @ 0].
-	^ m layoutPolicy
-		ifNil: [m minExtent]
-		ifNotNil: [m layoutPolicy minExtentOf: m in: aRectangle]
+	^ aMorph extent
 ]
 
 { #category : #accessing }

@@ -284,13 +284,11 @@ SBVPVisualizer >> initialize [
 		shrinkWrap;
 		changeTableLayout;
 		cellInset: 6;
-		addMorphBack: (SBRow new
-			addMorphBack: (visual := SBBlock new
-				layoutPolicy: SBTreeLayoutPolicy new;
-				shrinkWrap;
-				layoutInset: 6;
-				when: #reportError send: #reportError: to: self);
-			shrinkWrap);
+		addMorphBack: (visual := SBBlock new
+			layoutPolicy: SBTreeLayoutPolicy new;
+			shrinkWrap;
+			layoutInset: 6;
+			when: #reportError send: #reportError: to: self);
 		addMorphBack: (code := SBColumn new)
 ]
 

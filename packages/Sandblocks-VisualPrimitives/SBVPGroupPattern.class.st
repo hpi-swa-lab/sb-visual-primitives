@@ -235,21 +235,17 @@ SBVPGroupPattern >> openPatternAsChild: aPattern [
 	
 	isBindingPattern := SBVPBindingPattern withAllSubclasses anySatisfy: [:subclass | subclass = aPattern class].
 	isBindingPattern
-		ifTrue: [ | patternContainer |
-			patternContainer := SBBlock new
+		ifTrue: [
+			addedBlock := SBBlock new
 				layoutPolicy: SBTreeLayoutPolicy new;
 				shrinkWrap;
 				layoutInset: 6;
 				when: #reportError send: #reportError: to: self.
 			
-			self row
-				addMorph: (addedBlock := SBRow new
-					addMorphBack: patternContainer;
-					shrinkWrap)
-				atIndex: insertPosition.
+			self row addMorph: addedBlock atIndex: insertPosition.
 			
-			aPattern addToWorld: patternContainer.
-			aPattern addConnectorLinesIn: patternContainer]
+			aPattern addToWorld: addedBlock.
+			aPattern addConnectorLinesIn: addedBlock]
 		ifFalse: [
 			self row addMorph: aPattern atIndex: insertPosition.
 			addedBlock := aPattern].
