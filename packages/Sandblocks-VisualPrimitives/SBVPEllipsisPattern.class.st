@@ -157,7 +157,10 @@ SBVPEllipsisPattern >> searchRootFor: aVisualPrimitive at: anIndex [
 { #category : #'as yet unclassified' }
 SBVPEllipsisPattern >> setLabelBindingsFor: aCollection in: aDict using: aBlockClosure [
 
-	self labelBindingDict keysAndValuesDo: [:labelPosition :bindingName | aBlockClosure value: bindingName value: (aCollection collect: [:visualPrimitive | visualPrimitive propertyAt: labelPosition])].
+	self labelBindingDict keysAndValuesDo: [:labelPosition :bindingName |
+		aBlockClosure
+			value: bindingName
+			value: (aCollection collect: [:visualPrimitive | visualPrimitive propertyAt: labelPosition])]
 ]
 
 { #category : #'as yet unclassified' }

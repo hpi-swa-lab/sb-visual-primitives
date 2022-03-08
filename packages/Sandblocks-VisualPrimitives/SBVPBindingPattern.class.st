@@ -324,20 +324,6 @@ SBVPBindingPattern >> buildFromBinding: aDict [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPBindingPattern >> buildFromBinding: aDict currentPrimitive: aVisualPrimitive [
-
-	| output |
-	self halt. "Method is probably trash"
-	output := self constant
-		ifNotNil: [self constant value asVisualPrimitive]
-		ifNil: [(aDict at: self bindingIndex) copy].
-	output children: (self buildChildrenFromBinding: aDict).
-	output addPropertyMappings: self expressionMappings.
-	self labelBindingDict keysAndValuesDo: [:labelPosition :bindingName | output addPropertyMapping: labelPosition -> (aDict at: bindingName)].
-	^ {output}
-]
-
-{ #category : #'as yet unclassified' }
 SBVPBindingPattern >> buildImplicitChildren: aDict [
 
 	| implicitChildren nextIndex oldChildren addImplicitChild |
@@ -708,7 +694,7 @@ SBVPBindingPattern >> setChildBindingFor: aVisualPrimitive in: aDict [
 { #category : #'as yet unclassified' }
 SBVPBindingPattern >> setLabelBindingsFor: aVisualPrimitive in: aDict using: aBlockClosure [
 
-	self labelBindingDict keysAndValuesDo: [:labelPosition :bindingName | aBlockClosure value: bindingName value: (aVisualPrimitive propertyAt: labelPosition)].
+	self labelBindingDict keysAndValuesDo: [:labelPosition :bindingName | aBlockClosure value: bindingName value: (aVisualPrimitive propertyAt: labelPosition)]
 ]
 
 { #category : #'as yet unclassified' }
