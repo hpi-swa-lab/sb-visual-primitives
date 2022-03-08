@@ -60,7 +60,7 @@ SBTreeLayoutPolicy >> apportion: aPattern defaultAncestor: aDefaultAncestor [
 				((self nextLeft: vir) notNil and: (self nextLeft: vol) isNil) ifTrue: [
 					self setThreadOf: vol to: (self nextLeft: vir).
 					self setModOf: vol to: (self modOf: vol) + sir - sol].
-				newDefaultAncestor := self]].
+				newDefaultAncestor := aPattern]].
 	^ newDefaultAncestor
 ]
 
@@ -104,7 +104,7 @@ SBTreeLayoutPolicy >> executeShifts: aPattern [
 { #category : #'as yet unclassified' }
 SBTreeLayoutPolicy >> findRootIn: aMorph [
 
-	^ aMorph submorphs detect: [:submorph | submorph isTreeLayoutRoot]
+	^ aMorph submorphs detect: [:submorph | (submorph respondsTo: #isTreeLayoutRoot) and: [submorph isTreeLayoutRoot]]
 ]
 
 { #category : #layouting }

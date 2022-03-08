@@ -531,6 +531,18 @@ SBVisualPrimitive >> newUnknown [
 ]
 
 { #category : #accessing }
+SBVisualPrimitive >> objectInterface [
+
+	^ self parent objectInterfaceNear: self at: #replace
+]
+
+{ #category : #'as yet unclassified' }
+SBVisualPrimitive >> objectInterfaceNear: aBlock at: aSymbol [
+
+	^ {[:o | o isKindOf: SBVisualPrimitive]}
+]
+
+{ #category : #accessing }
 SBVisualPrimitive >> parent [
 
 	^ parent
@@ -552,6 +564,40 @@ SBVisualPrimitive >> parentCase [
 SBVisualPrimitive >> parentQuery [
 
 	^ nil
+]
+
+{ #category : #'as yet unclassified' }
+SBVisualPrimitive >> pasteReplace [
+	<action>
+
+	| position editor |
+	editor := self sandblockEditor.
+	position := editor cursor cursorPosition.
+	editor
+		copyBufferForContext: ((position isKindOf: SBCursorInsert)
+			ifTrue: [position objectInterface]
+			ifFalse: [self objectInterface])
+		reversed: ((position isKindOf: SBCursorInsert) and: [position adjacent notNil])
+		do: [:block :index :isLast |
+			(position isKindOf: SBCursorInsert)
+				ifTrue: [
+					editor do: ((position container
+						insertCommandRequest: block
+						near: position adjacent
+						before: position before) shouldMergeWithNext: isLast not)]
+				ifFalse: [
+					index = 1 ifTrue: [
+						editor do: (SBCombinedCommand newWith: {
+							SBVPDeleteCommand new target: self.
+							SBVPInsertCommand new
+								index: self owner submorphCount + 1;
+								parent: self parent;
+								container: self owner;
+								siblingIndex: self siblingIndex;
+								morph: block;
+								shouldMergeWithNext: false;
+								yourself})]]]
+		ifWrappingDo: [:block | self wrapSelectionWith: block]
 ]
 
 { #category : #accessing }

@@ -56,6 +56,7 @@ SBVPInsertCommand >> do [
 	
 	(self parent isKindOf: SBVPGroupPattern) ifFalse: [super do].
 	
+	self morph allChildrenDo: [:child | self container addMorphBack: child].
 	self morph parentCase ifNotNil: #buildImplicitChildrenMatchingPattern.
 	^ self morph
 ]

@@ -599,13 +599,6 @@ SBVPBindingPattern >> noteNewOwner: newOwner [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPBindingPattern >> objectInterface [
-
-	self halt.
-	^ self parent objectInterfaceNear: self at: #replace
-]
-
-{ #category : #'as yet unclassified' }
 SBVPBindingPattern >> originalPropertyMappingAt: aVPProperty [
 
 	^ self visualPrimitiveMapping
