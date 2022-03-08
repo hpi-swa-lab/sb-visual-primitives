@@ -318,14 +318,8 @@ SBVPBindingPattern >> buildFromBinding: aDict [
 		ifNotNil: [self constant value asVisualPrimitive]
 		ifNil: [(aDict at: self bindingIndex) copy].
 	output children: (self buildChildrenFromBinding: aDict).
-	self dynamicLabelDict associationsDo: [:assoc | output addPropertyMapping: assoc].
+	output addPropertyMappings: self expressionMappings.
 	self labelBindingDict keysAndValuesDo: [:labelPosition :bindingName | output addPropertyMapping: labelPosition -> (aDict at: bindingName)].
-	self labelExpressionDict associationsDo: [:association |
-		self visualizingClass: (aDict at: self bindingIndex) sourceObject class.
-		output addPropertyMapping: (SBVPPropertyMappingExpression
-			expression: association value
-			vpProperty: association key
-			originalMapping: (self originalPropertyMappingAt: association key))].
 	^ {output}
 ]
 
@@ -333,14 +327,12 @@ SBVPBindingPattern >> buildFromBinding: aDict [
 SBVPBindingPattern >> buildFromBinding: aDict currentPrimitive: aVisualPrimitive [
 
 	| output |
+	self halt. "Method is probably trash"
 	output := self constant
-		ifNotNil: [ | temp |
-			temp := self constant value asVisualPrimitive.
-			
-			]
+		ifNotNil: [self constant value asVisualPrimitive]
 		ifNil: [(aDict at: self bindingIndex) copy].
 	output children: (self buildChildrenFromBinding: aDict).
-	self dynamicLabelDict associationsDo: [:assoc | output addPropertyMapping: assoc].
+	output addPropertyMappings: self expressionMappings.
 	self labelBindingDict keysAndValuesDo: [:labelPosition :bindingName | output addPropertyMapping: labelPosition -> (aDict at: bindingName)].
 	^ {output}
 ]
@@ -468,15 +460,6 @@ SBVPBindingPattern >> drawOn: aCanvas [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPBindingPattern >> dynamicLabelDict [
-
-	| dict |
-	dict := Dictionary new.
-	self labelDict keysAndValuesDo: [:position :value | (self staticVisualPrimitiveMapping anySatisfy: [:association | association key = position]) ifFalse: [dict at: position put: value]].
-	^ dict
-]
-
-{ #category : #'as yet unclassified' }
 SBVPBindingPattern >> enoughChildren: aVisualPrimitive [
 
 	^ self childrenInCurrentMatch <= aVisualPrimitive children size
@@ -492,6 +475,16 @@ SBVPBindingPattern >> expressionDict [
 SBVPBindingPattern >> expressionDict: aDict [
 
 	expressionDict := aDict
+]
+
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern >> expressionMappings [
+
+	^ self labelExpressionDict associations collect: [:association |
+		SBVPPropertyMappingExpression
+			expression: association value
+			vpProperty: association key
+			originalMapping: (self originalPropertyMappingAt: association key)]
 ]
 
 { #category : #'as yet unclassified' }
@@ -647,11 +640,7 @@ SBVPBindingPattern >> rebuild [
 	self blockPositions do: [:position | (self blockDict at: position) removeAllMorphs].
 	self shape: self defaultShape.
 	self addPropertyMappings: self staticVisualPrimitiveMapping.
-	self addPropertyMappings: (self labelExpressionDict associations collect: [:association |
-		SBVPPropertyMappingExpression
-			expression: association value
-			vpProperty: association key
-			originalMapping: (self originalPropertyMappingAt: association key)]).
+	self addPropertyMappings: self expressionMappings.
 	self labelBindingDict keysAndValuesDo: [:labelPosition :bindingName |
 		(self setLabelAt: labelPosition to: (self bindingLabelBlockFrom: bindingName))
 			when: #contentsChanged
@@ -698,7 +687,7 @@ SBVPBindingPattern >> setBindingFor: aVisualPrimitive in: aDict [
 			ifAbsent: [aDict at: bindingName put: binding]].
 	currentPrimitive := self getCurrentPrimitive: aVisualPrimitive.
 	self bindingIndex ifNotNil: [setBinding value: self bindingIndex value: (self bindingFor: aVisualPrimitive)].
-	self labelBindingDict keysAndValuesDo: [:labelPosition :bindingName | setBinding value: bindingName value: (aVisualPrimitive labelDict at: labelPosition)].
+	self setLabelBindingsFor: aVisualPrimitive in: aDict using: setBinding.
 	self writeBackClosure ifNotNil: [self writeBackClosure value: currentPrimitive sourceObject].
 	^ (self couldMatch: currentPrimitive) and: [self setChildBindingFor: currentPrimitive in: aDict]
 ]
@@ -714,6 +703,12 @@ SBVPBindingPattern >> setChildBindingFor: aVisualPrimitive in: aDict [
 			in: aDict.
 		offset := offset + child indexOffset.
 		wasSuccessful]
+]
+
+{ #category : #'as yet unclassified' }
+SBVPBindingPattern >> setLabelBindingsFor: aVisualPrimitive in: aDict using: aBlockClosure [
+
+	self labelBindingDict keysAndValuesDo: [:labelPosition :bindingName | aBlockClosure value: bindingName value: (aVisualPrimitive propertyAt: labelPosition)].
 ]
 
 { #category : #'as yet unclassified' }
@@ -842,7 +837,7 @@ SBVPBindingPattern >> writeSourceOn: aStream [
 			value isBlockBody ifTrue: [value writeSourceOn: aStream] ifFalse: [
 				(self originalPropertyMappingAt: key)
 					ifNil: [aStream nextPutAll: '[]']
-					ifNotNil: [:mapping | mapping writeValue: value on: aStream]]]].
+					ifNotNil: [:mapping | mapping writeExpression: value on: aStream]]]].
 	
 	self children ifNotEmpty: [
 		aStream nextPutAll: ' children: {'.

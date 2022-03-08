@@ -222,9 +222,9 @@ SBVPPatternMatcherTest >> getLabelList: aPrimitive [
 	list := OrderedCollection new.
 	currentPrimitive := aPrimitive.
 	[currentPrimitive children notEmpty] whileTrue: [
-		list add: (currentPrimitive labelDict at: #innerLabel).
+		list add: (currentPrimitive propertyAt: #innerLabel).
 		currentPrimitive := currentPrimitive children first].
-	list add: (currentPrimitive labelDict at: #innerLabel).
+	list add: (currentPrimitive propertyAt: #innerLabel).
 	^ list
 ]
 
@@ -232,8 +232,8 @@ SBVPPatternMatcherTest >> getLabelList: aPrimitive [
 SBVPPatternMatcherTest >> getLabelTree: aPrimitive [
 
 	^ aPrimitive children
-		ifEmpty: [aPrimitive labelDict at: #innerLabel]
-		ifNotEmpty: [(aPrimitive labelDict at: #innerLabel) -> (aPrimitive children collect: [:child | self getLabelTree: child]) asArray]
+		ifEmpty: [aPrimitive propertyAt: #innerLabel]
+		ifNotEmpty: [(aPrimitive propertyAt: #innerLabel) -> (aPrimitive children collect: [:child | self getLabelTree: child]) asArray]
 ]
 
 { #category : #'as yet unclassified' }

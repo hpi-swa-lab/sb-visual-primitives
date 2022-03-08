@@ -34,7 +34,6 @@ Class {
 	#instVars : [
 		'blockDict',
 		'children',
-		'labelDict',
 		'parent',
 		'sourceObject'
 	],
@@ -117,7 +116,7 @@ SBVisualPrimitive >> addChild: aVisualPrimitive afterIndex: aNumber [
 SBVisualPrimitive >> addConnectorLinesIn: aMorph [
 
 	self children do: [:child | | connector |
-		connector := (SBConnectorLine connect: self to: child)
+		connector := (SBConnectorLine connect: self align: #bottom to: child align: #top)
 			connectorType: #line;
 			lineWidth: 1;
 			color: Color black.
@@ -177,8 +176,6 @@ SBVisualPrimitive >> addPropertyMapping: anSBVPPropertyMapping [
 	| value propertyMapping newChild |
 	propertyMapping := anSBVPPropertyMapping asPropertyMapping.
 	value := self valueFromPropertyMapping: propertyMapping.
-	
-	self labelDict at: propertyMapping vpProperty put: value.
 	
 	propertyMapping vpProperty
 		caseOf: {
@@ -334,7 +331,6 @@ SBVisualPrimitive >> initialize [
 	
 	self
 		blockDict: Dictionary new;
-		labelDict: Dictionary new;
 		initializeLabelBlocks;
 		shape: self defaultShape.
 	self blockDict at: #innerLabel put: self shape.
@@ -418,18 +414,6 @@ SBVisualPrimitive >> label: anObject [
 SBVisualPrimitive >> labelContentAt: aSymbol [
 
 	^ (self blockDict at: aSymbol) firstSubmorph contents
-]
-
-{ #category : #accessing }
-SBVisualPrimitive >> labelDict [
-
-	^ labelDict
-]
-
-{ #category : #accessing }
-SBVisualPrimitive >> labelDict: anObject [
-
-	labelDict := anObject
 ]
 
 { #category : #'as yet unclassified' }

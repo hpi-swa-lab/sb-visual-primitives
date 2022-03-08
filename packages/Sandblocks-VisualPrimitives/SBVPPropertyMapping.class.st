@@ -266,9 +266,9 @@ SBVPPropertyMapping >> vpProperty: aSymbol [
 ]
 
 { #category : #accessing }
-SBVPPropertyMapping >> writeValue: value on: aStream [
+SBVPPropertyMapping >> writeExpression: aSandblock on: aStream [
 
 	aStream nextPut: $[.
-	value contents storeOn: aStream.
+	aSandblock writeSourceOn: aStream.
 	aStream nextPut: $]
 ]
