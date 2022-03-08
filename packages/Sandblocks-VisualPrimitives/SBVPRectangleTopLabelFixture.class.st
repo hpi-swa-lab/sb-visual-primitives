@@ -1,11 +1,11 @@
 Class {
-	#name : #SBVPRectangleTopLabelFixture,
-	#superclass : #SBVPDummyNode,
-	#category : #'Sandblocks-VisualPrimitives-Fixtures'
+	#name : #SBRectangleTopLabelFixture,
+	#superclass : #SBDummyNode,
+	#category : #'Sandblocks-DomainBlocks-Fixtures'
 }
 
 { #category : #'as yet unclassified' }
-SBVPRectangleTopLabelFixture class >> visualPrimitiveMapping [
+SBRectangleTopLabelFixture class >> domainBlockMapping [
 
-	^ super visualPrimitiveMapping, {SBVPPropertyMappingString property: #key vpProperty: #innerLabel}
+	^ super domainBlockMapping, {SBPropertyMappingString property: #key vpProperty: #innerLabel}
 ]

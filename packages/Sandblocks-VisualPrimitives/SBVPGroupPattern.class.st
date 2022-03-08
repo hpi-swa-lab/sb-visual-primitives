@@ -1,66 +1,66 @@
 "
-An SBVPGroupPattern creates and contains SBVPBindingPatterns and SBVPConstraintPatterns. The patterns are seperated with an 'and'.
+An SBGroupPattern creates and contains SBBindingPatterns and SBConstraintPatterns. The patterns are seperated with an 'and'.
 
 Instance Variables
 	row:					SBRow
 	isOutputPattern: 	Boolean
 
 row
-	- container for SBVPBindingPatterns, SBVPConstraintPatterns and the seperator strings
+	- container for SBBindingPatterns, SBConstraintPatterns and the seperator strings
 
 isOutputPattern
-	- indicates whether this SBVPGGroupPattern is an output pattern
+	- indicates whether this SBGGroupPattern is an output pattern
 
 "
 Class {
-	#name : #SBVPGroupPattern,
-	#superclass : #SBVPPattern,
+	#name : #SBGroupPattern,
+	#superclass : #SBPattern,
 	#instVars : [
 		'row',
 		'isOutputPattern'
 	],
-	#category : #'Sandblocks-VisualPrimitives'
+	#category : #'Sandblocks-DomainBlocks'
 }
 
 { #category : #'as yet unclassified' }
-SBVPGroupPattern class >> matches: aBlock [
+SBGroupPattern class >> matches: aBlock [
 
 	^ self selector: #patterns: receiverMatches: aBlock
 ]
 
 { #category : #'as yet unclassified' }
-SBVPGroupPattern class >> newFor: aBlock [
+SBGroupPattern class >> newFor: aBlock [
 
 	^ self new children: aBlock arguments first submorphs
 ]
 
 { #category : #'as yet unclassified' }
-SBVPGroupPattern class >> patterns: aCollection [
+SBGroupPattern class >> patterns: aCollection [
 
 	^ self new children: aCollection
 ]
 
 { #category : #accessing }
-SBVPGroupPattern >> addChild: aPattern afterIndex: aNumber [
+SBGroupPattern >> addChild: aPattern afterIndex: aNumber [
 
 	super addChild: aPattern afterIndex: aNumber.
 	self openPatternAsChild: aPattern
 ]
 
 { #category : #'as yet unclassified' }
-SBVPGroupPattern >> addImplicitChildren: anArray [
+SBGroupPattern >> addImplicitChildren: anArray [
 
 	self children do: [:pattern | pattern addImplicitChildren: anArray]
 ]
 
 { #category : #'as yet unclassified' }
-SBVPGroupPattern >> addNewBindingPattern [
+SBGroupPattern >> addNewBindingPattern [
 
-	self addChild: SBVPBindingPattern new
+	self addChild: SBBindingPattern new
 ]
 
 { #category : #'as yet unclassified' }
-SBVPGroupPattern >> addNewChild [
+SBGroupPattern >> addNewChild [
 	<action>
 
 	| selectedIndex options |
@@ -70,12 +70,12 @@ SBVPGroupPattern >> addNewChild [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPGroupPattern >> addNewConstraintPattern [
+SBGroupPattern >> addNewConstraintPattern [
 
 	| newPattern |
-	newPattern := SBVPConstraintPattern constraint: [:bindings | true].
+	newPattern := SBConstraintPattern constraint: [:bindings | true].
 	
-	self sandblockEditor do: (SBVPInsertCommand new
+	self sandblockEditor do: (SBInsertDomainBlockCommand new
 		index: self owner submorphCount + 1;
 		parent: self;
 		container: self owner;
@@ -85,14 +85,14 @@ SBVPGroupPattern >> addNewConstraintPattern [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPGroupPattern >> addNewParent [
+SBGroupPattern >> addNewParent [
 	"Do nothing yet"
 
 	
 ]
 
 { #category : #accessing }
-SBVPGroupPattern >> addSeperatorsAround: aPattern [
+SBGroupPattern >> addSeperatorsAround: aPattern [
 
 	(aPattern submorphAfter
 		ifNil: [false]
@@ -104,20 +104,20 @@ SBVPGroupPattern >> addSeperatorsAround: aPattern [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPGroupPattern >> addToWorld: aWorld [
+SBGroupPattern >> addToWorld: aWorld [
 
 	self children do: [:pattern | pattern addToWorld: aWorld].
 	aWorld addMorphBack: self
 ]
 
 { #category : #'as yet unclassified' }
-SBVPGroupPattern >> allChildrenDo: aBlock [
+SBGroupPattern >> allChildrenDo: aBlock [
 
 	self children do: [:child | child allChildrenDo: aBlock]
 ]
 
 { #category : #'as yet unclassified' }
-SBVPGroupPattern >> buildFromBinding: anArray [
+SBGroupPattern >> buildFromBinding: anArray [
 
 	self flag: #TODO.
 	"Support multiple children"
@@ -125,46 +125,46 @@ SBVPGroupPattern >> buildFromBinding: anArray [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPGroupPattern >> buildImplicitChildren: anArray [
+SBGroupPattern >> buildImplicitChildren: anArray [
 
 	self children do: [:pattern | pattern buildImplicitChildren: anArray]
 ]
 
 { #category : #'as yet unclassified' }
-SBVPGroupPattern >> canDeleteChild: aBlock [
+SBGroupPattern >> canDeleteChild: aBlock [
 
 	^ true
 ]
 
 { #category : #'as yet unclassified' }
-SBVPGroupPattern >> deleteCommandFor: aBlock [
+SBGroupPattern >> deleteCommandFor: aBlock [
 
 	| primitive |
-	primitive := aBlock isVisualPrimitive
+	primitive := aBlock isDomainBlock
 		ifTrue: [aBlock]
-		ifFalse: [aBlock submorphThat: [:morph | morph isVisualPrimitive and: [morph parent = self]] ifNone: [nil]].
+		ifFalse: [aBlock submorphThat: [:morph | morph isDomainBlock and: [morph parent = self]] ifNone: [nil]].
 	
-	^ SBVPDeleteCommand new target: primitive
+	^ SBDeleteDomainBlockCommand new target: primitive
 ]
 
 { #category : #accessing }
-SBVPGroupPattern >> fixedNumberOfChildren [
+SBGroupPattern >> fixedNumberOfChildren [
 
 	^ false
 ]
 
 { #category : #'as yet unclassified' }
-SBVPGroupPattern >> getNext: aVisualPrimitive [
+SBGroupPattern >> getNext: aDomainBlock [
 
 	self children do: [:pattern |
-		(pattern getNext: aVisualPrimitive)
+		(pattern getNext: aDomainBlock)
 			ifFalse: [pattern reset]
 			ifTrue: [^ true]].
 	^ false
 ]
 
 { #category : #'as yet unclassified' }
-SBVPGroupPattern >> initialize [
+SBGroupPattern >> initialize [
 
 	super initialize.
 	self removeAllMorphs.
@@ -184,10 +184,10 @@ SBVPGroupPattern >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPGroupPattern >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
+SBGroupPattern >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 
 	| insertCommand |
-	insertCommand := SBVPRelInsertCommand new
+	insertCommand := SBRelInsertDomainBlockCommand new
 		near: aBlock before: aBoolean in: self morph: aMorph;
 		yourself.
 	^ self isOutputPattern not
@@ -196,31 +196,31 @@ SBVPGroupPattern >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 ]
 
 { #category : #accessing }
-SBVPGroupPattern >> isOutputPattern [
+SBGroupPattern >> isOutputPattern [
 
 	^ isOutputPattern
 ]
 
 { #category : #accessing }
-SBVPGroupPattern >> isOutputPattern: aBoolean [
+SBGroupPattern >> isOutputPattern: aBoolean [
 
 	isOutputPattern := aBoolean
 ]
 
 { #category : #accessing }
-SBVPGroupPattern >> label [
+SBGroupPattern >> label [
 
 	^ nil
 ]
 
 { #category : #'as yet unclassified' }
-SBVPGroupPattern >> matches: aVisualPrimitive withBinding: aCollection [
+SBGroupPattern >> matches: aDomainBlock withBinding: aCollection [
 
-	^ self children allSatisfy: [:pattern | pattern matches: aVisualPrimitive withBinding: aCollection]
+	^ self children allSatisfy: [:pattern | pattern matches: aDomainBlock withBinding: aCollection]
 ]
 
 { #category : #'as yet unclassified' }
-SBVPGroupPattern >> noteNewOwner: aMorph [
+SBGroupPattern >> noteNewOwner: aMorph [
 
 	super noteNewOwner: aMorph.
 	
@@ -228,12 +228,12 @@ SBVPGroupPattern >> noteNewOwner: aMorph [
 ]
 
 { #category : #accessing }
-SBVPGroupPattern >> openPatternAsChild: aPattern [
+SBGroupPattern >> openPatternAsChild: aPattern [
 
 	| isBindingPattern insertPosition addedBlock |
 	insertPosition := aPattern siblingIndex * 2 - 1.
 	
-	isBindingPattern := SBVPBindingPattern withAllSubclasses anySatisfy: [:subclass | subclass = aPattern class].
+	isBindingPattern := SBBindingPattern withAllSubclasses anySatisfy: [:subclass | subclass = aPattern class].
 	isBindingPattern
 		ifTrue: [
 			addedBlock := SBBlock new
@@ -254,32 +254,32 @@ SBVPGroupPattern >> openPatternAsChild: aPattern [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPGroupPattern >> rebuild [
+SBGroupPattern >> rebuild [
 
 	self allChildrenDo: [:child | child rebuild]
 ]
 
 { #category : #'as yet unclassified' }
-SBVPGroupPattern >> removeChild: aPattern [
+SBGroupPattern >> removeChild: aPattern [
 
 	super removeChild: aPattern.
 	self resetVisualization
 ]
 
 { #category : #accessing }
-SBVPGroupPattern >> removeImplicitChildren [
+SBGroupPattern >> removeImplicitChildren [
 
 	self children do: [:child | child removeImplicitChildren]
 ]
 
 { #category : #'as yet unclassified' }
-SBVPGroupPattern >> reset [
+SBGroupPattern >> reset [
 
 	self children do: [:pattern | pattern reset]
 ]
 
 { #category : #'as yet unclassified' }
-SBVPGroupPattern >> resetVisualization [
+SBGroupPattern >> resetVisualization [
 
 	self patternContainer ifNotNil: [
 		self row removeAllMorphs.
@@ -287,25 +287,25 @@ SBVPGroupPattern >> resetVisualization [
 ]
 
 { #category : #accessing }
-SBVPGroupPattern >> row [
+SBGroupPattern >> row [
 
 	^ row
 ]
 
 { #category : #accessing }
-SBVPGroupPattern >> seperatorString [
+SBGroupPattern >> seperatorString [
 
 	^ ' and '
 ]
 
 { #category : #accessing }
-SBVPGroupPattern >> setBindingFor: aVisualPrimitive in: aCollection [
+SBGroupPattern >> setBindingFor: aDomainBlock in: aCollection [
 
-	^ self children allSatisfy: [:pattern | pattern setBindingFor: aVisualPrimitive in: aCollection]
+	^ self children allSatisfy: [:pattern | pattern setBindingFor: aDomainBlock in: aCollection]
 ]
 
 { #category : #'as yet unclassified' }
-SBVPGroupPattern >> writeSourceOn: aStream [
+SBGroupPattern >> writeSourceOn: aStream [
 
 	aStream nextPutAll: '(', self class name, ' patterns: {'.
 	(self children reject: [:pattern | pattern isImplicitChild]) do: [:pattern |

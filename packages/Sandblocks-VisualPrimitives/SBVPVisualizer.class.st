@@ -1,5 +1,5 @@
 "
-An SBVPVisualizer displayes the block's value as an SBVisualPrimitive. The code can be shown or not. If it's shown, changing the visuals will always be overwritten with the code. Otherwise changes made to the visual primitives will be saved and written back.
+An SBDomainBlockContainer displayes the block's value as an SBDomainBlock. The code can be shown or not. If it's shown, changing the visuals will always be overwritten with the code. Otherwise changes made to the visual primitives will be saved and written back.
 
 Instance Variables
 	code:			SBBlock
@@ -11,7 +11,7 @@ code
 	- container for the code of the visualization
 
 isImplicit
-	- indicates whether the SBVPVisualizer is shown implicitly
+	- indicates whether the SBDomainBlockContainer is shown implicitly
 
 showCode
 	- indicates whether the corresponding code of the visualization should be shown
@@ -21,7 +21,7 @@ visual
 
 "
 Class {
-	#name : #SBVPVisualizer,
+	#name : #SBDomainBlockContainer,
 	#superclass : #SBStSubstitution,
 	#instVars : [
 		'code',
@@ -29,36 +29,36 @@ Class {
 		'showCode',
 		'visual'
 	],
-	#category : #'Sandblocks-VisualPrimitives'
+	#category : #'Sandblocks-DomainBlocks'
 }
 
 { #category : #'as yet unclassified' }
-SBVPVisualizer class >> code: aCode showCode: aBoolean [
+SBDomainBlockContainer class >> code: aCode showCode: aBoolean [
 	" marker "
 
 	^ self new code: aCode asSandblock showCode: aBoolean
 ]
 
 { #category : #'as yet unclassified' }
-SBVPVisualizer class >> matches: aBlock [
+SBDomainBlockContainer class >> matches: aBlock [
 
 	(super matches: aBlock) ifFalse: [^ false].
-	^ ((aBlock receiver satisfies: #(#notNil #isBinding)) and: [aBlock receiver contents = self name and: ['code:showCode:' = aBlock selector]]) or: [{'showAsVisualPrimitive'} includes: aBlock selector]
+	^ ((aBlock receiver satisfies: #(#notNil #isBinding)) and: [aBlock receiver contents = self name and: ['code:showCode:' = aBlock selector]]) or: [{'showAsDomainBlock'} includes: aBlock selector]
 ]
 
 { #category : #'as yet unclassified' }
-SBVPVisualizer class >> newFor: aBlock [
+SBDomainBlockContainer class >> newFor: aBlock [
 
 	aBlock arguments size >= 2
 		ifTrue: [^ self new code: aBlock arguments first showCode: aBlock arguments second evaluate]
 		ifFalse: [
 			^ self new
 				code: aBlock receiver showCode: false;
-				isImplicit: aBlock selector = 'showAsVisualPrimitive']
+				isImplicit: aBlock selector = 'showAsDomainBlock']
 ]
 
 { #category : #'as yet unclassified' }
-SBVPVisualizer >> artefactSaved: aMethodBlock [
+SBDomainBlockContainer >> artefactSaved: aMethodBlock [
 
 	self showCode
 		ifTrue: [self code: self code firstSubmorph showCode: self showCode]
@@ -69,13 +69,13 @@ SBVPVisualizer >> artefactSaved: aMethodBlock [
 ]
 
 { #category : #accessing }
-SBVPVisualizer >> code [
+SBDomainBlockContainer >> code [
 
 	^ code
 ]
 
 { #category : #accessing }
-SBVPVisualizer >> code: aCodeBlock showCode: aBoolean [
+SBDomainBlockContainer >> code: aCodeBlock showCode: aBoolean [
 
 	| aSandblock vp |
 	self code removeAllMorphs.
@@ -85,7 +85,7 @@ SBVPVisualizer >> code: aCodeBlock showCode: aBoolean [
 	self showCode: aBoolean.
 	aBoolean ifFalse: [aSandblock hide].
 	
-	vp := SBVisualPrimitive
+	vp := SBDomainBlock
 		newFromObject: (aSandblock evaluate isBlock
 			ifTrue: [aSandblock evaluate value]
 			ifFalse: [aSandblock evaluate])
@@ -93,7 +93,7 @@ SBVPVisualizer >> code: aCodeBlock showCode: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPVisualizer >> devisualize [
+SBDomainBlockContainer >> devisualize [
 	<action>
 	<actionValidIf: #isImplicit>
 
@@ -111,21 +111,21 @@ SBVPVisualizer >> devisualize [
 ]
 
 { #category : #accessing }
-SBVPVisualizer >> evaluate [
+SBDomainBlockContainer >> evaluate [
 
 	^ self code evaluate
 ]
 
 { #category : #accessing }
-SBVPVisualizer >> exampleCircleAllLabels [
+SBDomainBlockContainer >> exampleCircleAllLabels [
 
-	SBVPVisualizer
+	SBDomainBlockContainer
 		code: [ | root n1 n2 |
-			root := SBVPCircleAllLabelFixture new.
+			root := SBCircleAllLabelFixture new.
 			root key: 'Root Rundi'.
-			n1 := SBVPCircleAllLabelFixture new.
+			n1 := SBCircleAllLabelFixture new.
 			n1 key: 'Rundi jr'.
-			n2 := SBVPCircleAllLabelFixture new.
+			n2 := SBCircleAllLabelFixture new.
 			n2 key: 'Kindkreis'.
 			root
 				left: n1;
@@ -135,11 +135,11 @@ SBVPVisualizer >> exampleCircleAllLabels [
 ]
 
 { #category : #accessing }
-SBVPVisualizer >> exampleGameCard [
+SBDomainBlockContainer >> exampleGameCard [
 
-	SBVPVisualizer
+	SBDomainBlockContainer
 		code: [
-			SBVPGameCard new
+			SBGameCard new
 				attack: 5;
 				defense: 6;
 				type: 'fire';
@@ -148,40 +148,40 @@ SBVPVisualizer >> exampleGameCard [
 ]
 
 { #category : #accessing }
-SBVPVisualizer >> exampleGameCardHand [
+SBDomainBlockContainer >> exampleGameCardHand [
 
 	| c1 c2 c3 |
-	SBVPVisualizer
+	SBDomainBlockContainer
 		code: [
-			c1 := SBVPGameCard new
+			c1 := SBGameCard new
 				attack: 5;
 				defense: 6;
 				type: 'fire';
 				yourself.
-			c2 := SBVPGameCard new
+			c2 := SBGameCard new
 				attack: 300;
 				defense: 1;
 				type: 'bug';
 				yourself.
-			c3 := SBVPGameCard new
+			c3 := SBGameCard new
 				attack: 3;
 				defense: 10;
 				type: 'water';
 				yourself.
-			SBVPGameCardHand new cards: {c1. c2. c3}]
+			SBGameCardHand new cards: {c1. c2. c3}]
 		showCode: true
 ]
 
 { #category : #accessing }
-SBVPVisualizer >> exampleRectangleTopLabel [
+SBDomainBlockContainer >> exampleRectangleTopLabel [
 
-	SBVPVisualizer
+	SBDomainBlockContainer
 		code: [ | root n1 n2 |
-			root := SBVPRectangleTopLabelFixture new.
+			root := SBRectangleTopLabelFixture new.
 			root key: 'Carl-Friedrich'.
-			n1 := SBVPRectangleTopLabelFixture new.
+			n1 := SBRectangleTopLabelFixture new.
 			n1 key: 'peter'.
-			n2 := SBVPRectangleTopLabelFixture new.
+			n2 := SBRectangleTopLabelFixture new.
 			n2 key: 'n2'.
 			root
 				left: n1;
@@ -191,15 +191,15 @@ SBVPVisualizer >> exampleRectangleTopLabel [
 ]
 
 { #category : #accessing }
-SBVPVisualizer >> exampleSimpleCircle [
+SBDomainBlockContainer >> exampleSimpleCircle [
 
-	SBVPVisualizer
+	SBDomainBlockContainer
 		code: [ | root n1 n2 |
-			root := SBVPCircleFixture new.
+			root := SBCircleFixture new.
 			root key: 'Root Rundi'.
-			n1 := SBVPCircleFixture new.
+			n1 := SBCircleFixture new.
 			n1 key: 'Rundi jr'.
-			n2 := SBVPCircleFixture new.
+			n2 := SBCircleFixture new.
 			n2 key: 'Kindkreis'.
 			root
 				left: n1;
@@ -209,15 +209,15 @@ SBVPVisualizer >> exampleSimpleCircle [
 ]
 
 { #category : #accessing }
-SBVPVisualizer >> exampleSimpleRectangle [
+SBDomainBlockContainer >> exampleSimpleRectangle [
 
-	SBVPVisualizer
+	SBDomainBlockContainer
 		code: [ | root n1 n2 |
-			root := SBVPDummyNode new.
+			root := SBDummyNode new.
 			root key: 3.
-			n1 := SBVPDummyNode new.
+			n1 := SBDummyNode new.
 			n1 key: 5.
-			n2 := SBVPDummyNode new.
+			n2 := SBDummyNode new.
 			n2 key: 1.
 			root
 				left: n1;
@@ -227,41 +227,41 @@ SBVPVisualizer >> exampleSimpleRectangle [
 ]
 
 { #category : #accessing }
-SBVPVisualizer >> exampleSimpleTomGrammar [
+SBDomainBlockContainer >> exampleSimpleTomGrammar [
 
-	SBVPVisualizer
-		code: (SBVPGrammarObject new
+	SBDomainBlockContainer
+		code: (SBGrammarObject new
 			objectName: '';
 			type: 'SEQ';
 			members: {
-				SBVPGrammarObject new
+				SBGrammarObject new
 					objectName: 'aahh';
 					type: 'SYMBOL';
 					members: {}.
-				SBVPGrammarObject new
+				SBGrammarObject new
 					objectName: 'bbb';
 					type: 'REPEAT';
 					members: {
-						SBVPGrammarObject new
+						SBGrammarObject new
 							objectName: 'aahh';
 							type: 'SYMBOL';
 							members: {}};
-					content: (SBVPGrammarObject new
+					content: (SBGrammarObject new
 						objectName: 'aahh';
 						type: 'SYMBOL')})
 		showCode: false
 ]
 
 { #category : #accessing }
-SBVPVisualizer >> exampleSpecialShape [
+SBDomainBlockContainer >> exampleSpecialShape [
 
-	SBVPVisualizer
+	SBDomainBlockContainer
 		code: [ | root n1 n2 |
-			root := SBVPSpecialShapeFixture new.
+			root := SBSpecialShapeFixture new.
 			root key: 255.
-			n1 := SBVPSpecialShapeFixture new.
+			n1 := SBSpecialShapeFixture new.
 			n1 key: 100.
-			n2 := SBVPSpecialShapeFixture new.
+			n2 := SBSpecialShapeFixture new.
 			n2 key: 1.
 			root
 				left: n1;
@@ -271,7 +271,7 @@ SBVPVisualizer >> exampleSpecialShape [
 ]
 
 { #category : #accessing }
-SBVPVisualizer >> initialize [
+SBDomainBlockContainer >> initialize [
 
 	super initialize.
 	self isImplicit: false.
@@ -293,32 +293,32 @@ SBVPVisualizer >> initialize [
 ]
 
 { #category : #accessing }
-SBVPVisualizer >> isImplicit [
+SBDomainBlockContainer >> isImplicit [
 
 	^ isImplicit
 ]
 
 { #category : #accessing }
-SBVPVisualizer >> isImplicit: aBoolean [
-	"Sometimes, e.g. when using showAsVisualPrimitive, we implicitly show a Visualizer, which we don't want to see in the writeSourceOn:"
+SBDomainBlockContainer >> isImplicit: aBoolean [
+	"Sometimes, e.g. when using showAsDomainBlock, we implicitly show a DomainBlockContainer, which we don't want to see in the writeSourceOn:"
 
 	isImplicit := aBoolean
 ]
 
 { #category : #accessing }
-SBVPVisualizer >> showCode [
+SBDomainBlockContainer >> showCode [
 
 	^ showCode
 ]
 
 { #category : #accessing }
-SBVPVisualizer >> showCode: aBoolean [
+SBDomainBlockContainer >> showCode: aBoolean [
 
 	showCode := aBoolean
 ]
 
 { #category : #accessing }
-SBVPVisualizer >> tryWriteSourceOrStore: anObject on: aStream [
+SBDomainBlockContainer >> tryWriteSourceOrStore: anObject on: aStream [
 
 	(anObject respondsTo: #writeSourceOn:)
 		ifTrue: [anObject writeSourceOn: aStream]
@@ -326,23 +326,23 @@ SBVPVisualizer >> tryWriteSourceOrStore: anObject on: aStream [
 ]
 
 { #category : #accessing }
-SBVPVisualizer >> visual [
+SBDomainBlockContainer >> visual [
 
 	^ visual
 ]
 
 { #category : #accessing }
-SBVPVisualizer >> visualPrimitiveFrom: anObject [
+SBDomainBlockContainer >> domainBlockFrom: anObject [
 
-	^ SBVisualPrimitive newFromObject: anObject in: self visual
+	^ SBDomainBlock newFromObject: anObject in: self visual
 ]
 
 { #category : #accessing }
-SBVPVisualizer >> writeCodeOn: aStream [
+SBDomainBlockContainer >> writeCodeOn: aStream [
 
 	| object |
 	aStream nextPut: $(.
-	object := (self visual submorphs detect: [:morph | morph isVisualPrimitive]) root buildObject.
+	object := (self visual submorphs detect: [:morph | morph isDomainBlock]) root buildObject.
 	self showCode not
 		ifTrue: [self tryWriteSourceOrStore: object on: aStream]
 		ifFalse: [self code submorphsDo: [:morph | self tryWriteSourceOrStore: morph on: aStream]].
@@ -350,15 +350,15 @@ SBVPVisualizer >> writeCodeOn: aStream [
 ]
 
 { #category : #accessing }
-SBVPVisualizer >> writeSourceOn: aStream [
+SBDomainBlockContainer >> writeSourceOn: aStream [
 
 	self isImplicit
 		ifTrue: [
 			aStream nextPut: $(.
 			self writeCodeOn: aStream.
-			aStream nextPutAll: ') showAsVisualPrimitive']
+			aStream nextPutAll: ') showAsDomainBlock']
 		ifFalse: [
-			aStream nextPutAll: '(SBVPVisualizer code: '.
+			aStream nextPutAll: '(SBDomainBlockContainer code: '.
 			self writeCodeOn: aStream.
 			aStream nextPutAll: ' showCode: '.
 			self showCode storeOn: aStream.

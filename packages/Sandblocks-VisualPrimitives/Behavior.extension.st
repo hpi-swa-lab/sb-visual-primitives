@@ -1,6 +1,6 @@
 Extension { #name : #Behavior }
 
-{ #category : #'*Sandblocks-VisualPrimitives' }
+{ #category : #'*Sandblocks-DomainBlocks' }
 Behavior >> canUnderstandBeforeObject: selector [ 
 
 	(self includesSelector: selector) ifTrue: [^true].

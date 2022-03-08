@@ -1,5 +1,5 @@
 Extension { #name : #UndefinedObject }
 
-{ #category : #'*Sandblocks-VisualPrimitives' }
+{ #category : #'*Sandblocks-DomainBlocks' }
 UndefinedObject >> firstSubmorphOrNil [
 ]

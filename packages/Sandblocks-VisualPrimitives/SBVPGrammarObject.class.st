@@ -1,5 +1,5 @@
 Class {
-	#name : #SBVPGrammarObject,
+	#name : #SBGrammarObject,
 	#superclass : #Object,
 	#instVars : [
 		'type',
@@ -8,22 +8,22 @@ Class {
 		'objectName',
 		'objectValue'
 	],
-	#category : #'Sandblocks-VisualPrimitives-Fixtures'
+	#category : #'Sandblocks-DomainBlocks-Fixtures'
 }
 
 { #category : #'as yet unclassified' }
-SBVPGrammarObject class >> fromJsonObject: aJsonObject [
+SBGrammarObject class >> fromJsonObject: aJsonObject [
 
-	SBVPGrammarObject new
+	SBGrammarObject new
 		type: (aJsonObject at: 'type');
-		members: ((aJsonObject at: 'members') do: [:member | SBVPGrammarObject fromJsonObject: member]);
-		content: (SBVPGrammarObject fromJsonObject: (aJsonObject at: 'content'));
+		members: ((aJsonObject at: 'members') do: [:member | SBGrammarObject fromJsonObject: member]);
+		content: (SBGrammarObject fromJsonObject: (aJsonObject at: 'content'));
 		objectName: (aJsonObject at: 'name');
 		objectValue: (aJsonObject at: 'value')
 ]
 
 { #category : #'as yet unclassified' }
-SBVPGrammarObject class >> visualPrimitiveMapping [
+SBGrammarObject class >> domainBlockMapping [
 
 	^ {
 		#shape vpConstant: (CircleMorph new color: Color white).
@@ -31,7 +31,7 @@ SBVPGrammarObject class >> visualPrimitiveMapping [
 		#topLeftLabel vpSelectFrom: {'SEQ'. 'REPEAT'. 'REPEAT1'. 'SYMBOL'} for: #type.
 		#innerLabel vpStringFor: #objectName.
 		
-		SBVPPropertyMappingChildren
+		SBPropertyMappingChildren
 			getter: [:object | object members ifNil: [{object content} asOrderedCollection]]
 			setter: [:object :children |
 				children size < 1 ifTrue: [] ifFalse: [
@@ -42,80 +42,80 @@ SBVPGrammarObject class >> visualPrimitiveMapping [
 ]
 
 { #category : #accessing }
-SBVPGrammarObject >> content [
+SBGrammarObject >> content [
 
 	^ content
 ]
 
 { #category : #accessing }
-SBVPGrammarObject >> content: anObject [
+SBGrammarObject >> content: anObject [
 
 	content := anObject
 ]
 
 { #category : #'as yet unclassified' }
-SBVPGrammarObject >> exampleGrammarRuleMergeWithExpression: aGrammarObject [
+SBGrammarObject >> exampleGrammarRuleMergeWithExpression: aGrammarObject [
 
 	| variableType |
 	self
-		example: [SBVPGrammarObject new]
+		example: [SBGrammarObject new]
 		args: [
 			{
-				(SBVPGrammarObject new
+				(SBGrammarObject new
 					objectName: '';
 					type: 'SEQ';
 					members: {
-						SBVPGrammarObject new
+						SBGrammarObject new
 							objectName: 'a';
 							type: 'SYMBOL';
 							members: {}.
-						SBVPGrammarObject new
+						SBGrammarObject new
 							objectName: '';
 							type: 'REPEAT';
 							members: {
-								SBVPGrammarObject new
+								SBGrammarObject new
 									objectName: 'a';
 									type: 'SYMBOL';
-									members: {}}}) showAsVisualPrimitive}]
+									members: {}}}) showAsDomainBlock}]
 		label: 'example'.
 	"We can also use variables to define the bindings"
 	variableType := 'SEQ'.
-	^ (SBVPTransformation
-		input: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern
+	^ (SBTransformation
+		input: (SBGroupPattern patterns: {
+			SBBindingPattern
 				bindingDict: {#identity -> #a}
 				expressionDict: {#topLeftLabel -> [variableType]}
 				children: {
-					SBVPBindingPattern
+					SBBindingPattern
 						bindingDict: {#identity -> #b}
 						expressionDict: {#topLeftLabel -> ['SYMBOL']}
-						visualizingClass: SBVPGrammarObject.
-					SBVPBindingPattern
+						visualizingClass: SBGrammarObject.
+					SBBindingPattern
 						bindingDict: {#identity -> #c}
 						expressionDict: {#topLeftLabel -> ['REPEAT']}
 						children: {
-							SBVPBindingPattern
+							SBBindingPattern
 								bindingDict: {#identity -> #d}
 								expressionDict: {#topLeftLabel -> ['SYMBOL']}
-								visualizingClass: SBVPGrammarObject}
-						visualizingClass: SBVPGrammarObject}
-				visualizingClass: SBVPGrammarObject.
-			SBVPConstraintPattern constraint: [:bindings | (bindings at: #b) objectName = (bindings at: #d) objectName]})
-		output: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern
+								visualizingClass: SBGrammarObject}
+						visualizingClass: SBGrammarObject}
+				visualizingClass: SBGrammarObject.
+			SBConstraintPattern constraint: [:bindings | (bindings at: #b) objectName = (bindings at: #d) objectName]})
+		output: (SBGroupPattern patterns: {
+			SBBindingPattern
 				bindingDict: {#identity -> #c}
 				expressionDict: {#topLeftLabel -> ['REPEAT1']}
-				children: {SBVPBindingPattern bindingDict: {#identity -> #b} visualizingClass: SBVPGrammarObject}
-				visualizingClass: SBVPGrammarObject})
+				children: {SBBindingPattern bindingDict: {#identity -> #b} visualizingClass: SBGrammarObject}
+				visualizingClass: SBGrammarObject})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> false;
 			add: #explicitChildrenMatching -> true;
 			yourself)
-		visualizePatternsAs: SBVPGrammarObject) replaceAllMatches: aGrammarObject
+		visualizePatternsAs: SBGrammarObject) replaceAllMatches: aGrammarObject
 ]
 
 { #category : #'as yet unclassified' }
-SBVPGrammarObject >> initialize [
+SBGrammarObject >> initialize [
 
 	members := nil.
 	content := nil.
@@ -125,55 +125,55 @@ SBVPGrammarObject >> initialize [
 ]
 
 { #category : #accessing }
-SBVPGrammarObject >> members [
+SBGrammarObject >> members [
 
 	^ members
 ]
 
 { #category : #accessing }
-SBVPGrammarObject >> members: anArray [
+SBGrammarObject >> members: anArray [
 
 	members := anArray
 ]
 
 { #category : #accessing }
-SBVPGrammarObject >> objectName [
+SBGrammarObject >> objectName [
 
 	^ objectName
 ]
 
 { #category : #accessing }
-SBVPGrammarObject >> objectName: aString [
+SBGrammarObject >> objectName: aString [
 
 	objectName := aString
 ]
 
 { #category : #accessing }
-SBVPGrammarObject >> objectValue [
+SBGrammarObject >> objectValue [
 
 	^ objectValue
 ]
 
 { #category : #accessing }
-SBVPGrammarObject >> objectValue: aString [
+SBGrammarObject >> objectValue: aString [
 
 	objectValue := aString
 ]
 
 { #category : #accessing }
-SBVPGrammarObject >> type [
+SBGrammarObject >> type [
 
 	^ type
 ]
 
 { #category : #accessing }
-SBVPGrammarObject >> type: aString [
+SBGrammarObject >> type: aString [
 
 	type := aString
 ]
 
 { #category : #accessing }
-SBVPGrammarObject >> writeSourceOn: aStream [
+SBGrammarObject >> writeSourceOn: aStream [
 
 	aStream
 		nextPutAll: self className;

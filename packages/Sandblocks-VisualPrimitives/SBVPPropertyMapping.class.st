@@ -1,5 +1,5 @@
 "
-An SBVPPropertyMapping hold information on how the properties of an object are to be displayed in an SBVisualPrimitive and how changes on the primitive affect the origin object.
+An SBPropertyMapping hold information on how the properties of an object are to be displayed in an SBDomainBlock and how changes on the primitive affect the origin object.
 
 Instance Variables
 	getter:			BlockClosure
@@ -11,7 +11,7 @@ Instance Variables
 getter
 	- should look like this: [:object | ... ]
 	- the result from evaluating the getter should be a String, Number or Morph
-	- the result is what will be displayed in the SBVisualPrimitive
+	- the result is what will be displayed in the SBDomainBlock
 
 name
 	- this is the name of the property as a String
@@ -24,11 +24,11 @@ setter
 
 vpProperty
 	- specifies where the mapping will be applied in the visual primitive
-	- can be #shape #children or a labelPosition, e.g. #innerLabel or #topLeftLabel (see SBVisualPrimitive >> labelPositions) 
+	- can be #shape #children or a labelPosition, e.g. #innerLabel or #topLeftLabel (see SBDomainBlock >> labelPositions) 
 
 "
 Class {
-	#name : #SBVPPropertyMapping,
+	#name : #SBPropertyMapping,
 	#superclass : #Object,
 	#instVars : [
 		'getter',
@@ -38,11 +38,11 @@ Class {
 		'setter',
 		'vpProperty'
 	],
-	#category : #'Sandblocks-VisualPrimitives'
+	#category : #'Sandblocks-DomainBlocks'
 }
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMapping class >> constant: anObject vpProperty: aSymbol [
+SBPropertyMapping class >> constant: anObject vpProperty: aSymbol [
 
 	^ (self
 		getter: [:ignore | anObject]
@@ -53,7 +53,7 @@ SBVPPropertyMapping class >> constant: anObject vpProperty: aSymbol [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMapping class >> defaultGetterBlockWith: anObject [
+SBPropertyMapping class >> defaultGetterBlockWith: anObject [
 
 	^ anObject isSymbol
 		ifTrue: [[:object | object perform: anObject asSimpleGetter]]
@@ -61,13 +61,13 @@ SBVPPropertyMapping class >> defaultGetterBlockWith: anObject [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMapping class >> defaultPatternValueFor: aSymbol [
+SBPropertyMapping class >> defaultPatternValueFor: aSymbol [
 
 	^ aSymbol isSymbol ifTrue: [nil] ifFalse: [aSymbol]
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMapping class >> defaultSetterBlockWith: aSymbol for: anotherSymbol [
+SBPropertyMapping class >> defaultSetterBlockWith: aSymbol for: anotherSymbol [
 
 	^ aSymbol isSymbol
 		ifTrue: [[:object :vp | object perform: aSymbol asSimpleSetter with: (vp propertyAt: anotherSymbol)]]
@@ -75,7 +75,7 @@ SBVPPropertyMapping class >> defaultSetterBlockWith: aSymbol for: anotherSymbol 
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMapping class >> fromAssociation: anAssociation [
+SBPropertyMapping class >> fromAssociation: anAssociation [
 
 	| getterBlock setterBlock patternValue name |
 	getterBlock := self defaultGetterBlockWith: anAssociation value.
@@ -92,7 +92,7 @@ SBVPPropertyMapping class >> fromAssociation: anAssociation [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMapping class >> getter: aBlock setter: anotherBlock patternValue: anObject vpProperty: aSymbol name: aString [
+SBPropertyMapping class >> getter: aBlock setter: anotherBlock patternValue: anObject vpProperty: aSymbol name: aString [
 
 	^ self new
 		getter: aBlock;
@@ -104,25 +104,25 @@ SBVPPropertyMapping class >> getter: aBlock setter: anotherBlock patternValue: a
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMapping class >> getter: aBlock setter: anotherBlock vpProperty: aSymbol name: aString [
+SBPropertyMapping class >> getter: aBlock setter: anotherBlock vpProperty: aSymbol name: aString [
 
 	^ self getter: aBlock setter: anotherBlock patternValue: nil vpProperty: aSymbol name: aString
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMapping class >> mappingName: anObject withDefault: aString [
+SBPropertyMapping class >> mappingName: anObject withDefault: aString [
 
 	^ anObject isSymbol ifTrue: [anObject asString] ifFalse: [aString]
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMapping class >> property: aSymbol vpProperty: anotherSymbol [
+SBPropertyMapping class >> property: aSymbol vpProperty: anotherSymbol [
 
 	^ self property: aSymbol vpProperty: anotherSymbol patternValue: nil
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMapping class >> property: aSymbol vpProperty: anotherSymbol patternValue: anObject [
+SBPropertyMapping class >> property: aSymbol vpProperty: anotherSymbol patternValue: anObject [
 
 	| getterBlock setterBlock |
 	getterBlock := self defaultGetterBlockWith: aSymbol.
@@ -137,13 +137,13 @@ SBVPPropertyMapping class >> property: aSymbol vpProperty: anotherSymbol pattern
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMapping >> asPropertyMapping [
+SBPropertyMapping >> asPropertyMapping [
 
 	^ self
 ]
 
 { #category : #accessing }
-SBVPPropertyMapping >> getLabelContents: anObject [
+SBPropertyMapping >> getLabelContents: anObject [
 
 	^ (anObject isString or: [anObject isNumber])
 		ifTrue: [anObject]
@@ -151,122 +151,122 @@ SBVPPropertyMapping >> getLabelContents: anObject [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMapping >> getMorphFor: anObject [
+SBPropertyMapping >> getMorphFor: anObject [
 
 	^ self getMorphForValue: (self value: anObject)
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMapping >> getMorphForValue: anObject [
+SBPropertyMapping >> getMorphForValue: anObject [
 
 	^ anObject isMorph ifTrue: [anObject] ifFalse: [SBTextBubble new contents: anObject]
 ]
 
 { #category : #accessing }
-SBVPPropertyMapping >> getter [
+SBPropertyMapping >> getter [
 
 	^ getter
 ]
 
 { #category : #accessing }
-SBVPPropertyMapping >> getter: aBlockClosure [
+SBPropertyMapping >> getter: aBlockClosure [
 
 	getter := aBlockClosure
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMapping >> initialize [
+SBPropertyMapping >> initialize [
 
 	super initialize.
 	self isConstant: false
 ]
 
 { #category : #accessing }
-SBVPPropertyMapping >> isConstant [
+SBPropertyMapping >> isConstant [
 
 	^ isConstant
 ]
 
 { #category : #accessing }
-SBVPPropertyMapping >> isConstant: anObject [
+SBPropertyMapping >> isConstant: anObject [
 
 	isConstant := anObject
 ]
 
 { #category : #accessing }
-SBVPPropertyMapping >> isPropertyMapping [
+SBPropertyMapping >> isPropertyMapping [
 
 	^ true
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMapping >> key [
+SBPropertyMapping >> key [
 
 	^ self vpProperty
 ]
 
 { #category : #accessing }
-SBVPPropertyMapping >> name [
+SBPropertyMapping >> name [
 
 	^ name
 ]
 
 { #category : #accessing }
-SBVPPropertyMapping >> name: aString [
+SBPropertyMapping >> name: aString [
 
 	name := aString
 ]
 
 { #category : #accessing }
-SBVPPropertyMapping >> patternValue [
+SBPropertyMapping >> patternValue [
 
 	^ patternValue
 ]
 
 { #category : #accessing }
-SBVPPropertyMapping >> patternValue: anObject [
+SBPropertyMapping >> patternValue: anObject [
 
 	patternValue := anObject
 ]
 
 { #category : #accessing }
-SBVPPropertyMapping >> setter [
+SBPropertyMapping >> setter [
 
 	^ setter
 ]
 
 { #category : #accessing }
-SBVPPropertyMapping >> setter: aBlockClosure [
+SBPropertyMapping >> setter: aBlockClosure [
 
 	setter := aBlockClosure
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMapping >> suggestionConstant [
+SBPropertyMapping >> suggestionConstant [
 
 	^ #a
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMapping >> value: anObject [
+SBPropertyMapping >> value: anObject [
 
 	^ self getter value: anObject
 ]
 
 { #category : #accessing }
-SBVPPropertyMapping >> vpProperty [
+SBPropertyMapping >> vpProperty [
 
 	^ vpProperty
 ]
 
 { #category : #accessing }
-SBVPPropertyMapping >> vpProperty: aSymbol [
+SBPropertyMapping >> vpProperty: aSymbol [
 
 	vpProperty := aSymbol
 ]
 
 { #category : #accessing }
-SBVPPropertyMapping >> writeExpression: aSandblock on: aStream [
+SBPropertyMapping >> writeExpression: aSandblock on: aStream [
 
 	aStream nextPut: $[.
 	aSandblock writeSourceOn: aStream.

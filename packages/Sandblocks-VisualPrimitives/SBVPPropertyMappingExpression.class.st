@@ -1,29 +1,29 @@
 "
-An SBVPPropertyMappingExpression is used to display an expression at the given vpProperty. This is mostly needed in SBVPBindingPatterns.
+An SBPropertyMappingExpression is used to display an expression at the given vpProperty. This is mostly needed in SBBindingPatterns.
 
 Instance Variables
-	originalMapping: SBVPPropertyMapping
+	originalMapping: SBPropertyMapping
 
 originalMapping
 	- contains the original property mapping
 "
 Class {
-	#name : #SBVPPropertyMappingExpression,
-	#superclass : #SBVPPropertyMapping,
+	#name : #SBPropertyMappingExpression,
+	#superclass : #SBPropertyMapping,
 	#instVars : [
 		'originalMapping'
 	],
-	#category : #'Sandblocks-VisualPrimitives'
+	#category : #'Sandblocks-DomainBlocks'
 }
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMappingExpression class >> expression: aBlock vpProperty: aSymbol originalMapping: aPropertyMapping [
+SBPropertyMappingExpression class >> expression: aBlock vpProperty: aSymbol originalMapping: aPropertyMapping [
 
 	^ (self getter: aBlock setter: [:ignore | ] vpProperty: aSymbol name: aPropertyMapping name) originalMapping: aPropertyMapping
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMappingExpression >> getMorphFor: anObject [
+SBPropertyMappingExpression >> getMorphFor: anObject [
 
 	| value |
 	self originalMapping ifNil: [^ self getter asSandblock].
@@ -32,25 +32,25 @@ SBVPPropertyMappingExpression >> getMorphFor: anObject [
 ]
 
 { #category : #accessing }
-SBVPPropertyMappingExpression >> originalMapping [
+SBPropertyMappingExpression >> originalMapping [
 
 	^ originalMapping
 ]
 
 { #category : #accessing }
-SBVPPropertyMappingExpression >> originalMapping: aPropertyMapping [
+SBPropertyMappingExpression >> originalMapping: aPropertyMapping [
 
 	originalMapping := aPropertyMapping
 ]
 
 { #category : #accessing }
-SBVPPropertyMappingExpression >> value: ignored [
+SBPropertyMappingExpression >> value: ignored [
 
 	^ self getter value
 ]
 
 { #category : #accessing }
-SBVPPropertyMappingExpression >> writeValue: value on: aStream [
+SBPropertyMappingExpression >> writeValue: value on: aStream [
 
 	aStream writeSourceOn: value.
 	self assert: false.

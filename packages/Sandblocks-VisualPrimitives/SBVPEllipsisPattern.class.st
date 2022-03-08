@@ -1,5 +1,5 @@
 "
-An SBVPEllipsisPattern is used to represent any children of an object. It is an abstraction to sum up many children and it is used for pattern matching if the number of children doesn't matter.
+An SBEllipsisPattern is used to represent any children of an object. It is an abstraction to sum up many children and it is used for pattern matching if the number of children doesn't matter.
 
 Instance Variables
 	currentSize:		Number
@@ -9,22 +9,22 @@ currentSize
 
 "
 Class {
-	#name : #SBVPEllipsisPattern,
-	#superclass : #SBVPBindingPattern,
+	#name : #SBEllipsisPattern,
+	#superclass : #SBBindingPattern,
 	#instVars : [
 		'currentSize'
 	],
-	#category : #'Sandblocks-VisualPrimitives'
+	#category : #'Sandblocks-DomainBlocks'
 }
 
 { #category : #'as yet unclassified' }
-SBVPEllipsisPattern >> addImplicitChildren: aDict [
+SBEllipsisPattern >> addImplicitChildren: aDict [
 
 	
 ]
 
 { #category : #'as yet unclassified' }
-SBVPEllipsisPattern >> bindingIndexWithImplicitPrefix: aBoolean [
+SBEllipsisPattern >> bindingIndexWithImplicitPrefix: aBoolean [
 
 	self bindingIndex ifNil: [^ nil].
 	aBoolean
@@ -39,77 +39,77 @@ SBVPEllipsisPattern >> bindingIndexWithImplicitPrefix: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPEllipsisPattern >> buildFromBinding: anArray [
+SBEllipsisPattern >> buildFromBinding: anArray [
 
 	^ (anArray at: self bindingIndex) veryDeepCopy
 ]
 
 { #category : #'as yet unclassified' }
-SBVPEllipsisPattern >> buildImplicitChildren: anArray [
+SBEllipsisPattern >> buildImplicitChildren: anArray [
 
 	
 ]
 
 { #category : #'as yet unclassified' }
-SBVPEllipsisPattern >> children: aCollection [
+SBEllipsisPattern >> children: aCollection [
 
 	self assert: aCollection isEmpty description: 'Ellipses should not have children'.
 	super children: aCollection
 ]
 
 { #category : #'as yet unclassified' }
-SBVPEllipsisPattern >> convertToBindingPattern [
+SBEllipsisPattern >> convertToBindingPattern [
 	<action>
 
-	self convertToPatternClass: SBVPBindingPattern
+	self convertToPatternClass: SBBindingPattern
 ]
 
 { #category : #'as yet unclassified' }
-SBVPEllipsisPattern >> convertToEllipsisPattern [
+SBEllipsisPattern >> convertToEllipsisPattern [
 	"we done here"
 
 	
 ]
 
 { #category : #'as yet unclassified' }
-SBVPEllipsisPattern >> couldMatch: aVisualPrimitive [
+SBEllipsisPattern >> couldMatch: aDomainBlock [
 
 	^ true
 ]
 
 { #category : #accessing }
-SBVPEllipsisPattern >> currentSize [
+SBEllipsisPattern >> currentSize [
 
 	^ currentSize
 ]
 
 { #category : #accessing }
-SBVPEllipsisPattern >> currentSize: aNumber [
+SBEllipsisPattern >> currentSize: aNumber [
 
 	currentSize := aNumber
 ]
 
 { #category : #'as yet unclassified' }
-SBVPEllipsisPattern >> doubleClick: anEvent [
+SBEllipsisPattern >> doubleClick: anEvent [
 
 	self isImplicitChild: self isImplicitChild not
 ]
 
 { #category : #'as yet unclassified' }
-SBVPEllipsisPattern >> getNext: aVisualPrimitive [
+SBEllipsisPattern >> getNext: aDomainBlock [
 
 	self currentSize: self currentSize + 1.
 	^ true
 ]
 
 { #category : #'as yet unclassified' }
-SBVPEllipsisPattern >> indexOffset [
+SBEllipsisPattern >> indexOffset [
 
 	^ self currentSize - 1
 ]
 
 { #category : #'as yet unclassified' }
-SBVPEllipsisPattern >> initialize [
+SBEllipsisPattern >> initialize [
 
 	super initialize.
 	self currentSize: 0.
@@ -119,7 +119,7 @@ SBVPEllipsisPattern >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPEllipsisPattern >> isImplicitChild: aBoolean [
+SBEllipsisPattern >> isImplicitChild: aBoolean [
 
 	| setColor previousImplicit prevBindingIndex bindingInputBlock |
 	previousImplicit := self isImplicitChild.
@@ -142,35 +142,35 @@ SBVPEllipsisPattern >> isImplicitChild: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPEllipsisPattern >> reset [
+SBEllipsisPattern >> reset [
 
 	super reset.
 	self currentSize: 0
 ]
 
 { #category : #'as yet unclassified' }
-SBVPEllipsisPattern >> searchRootFor: aVisualPrimitive at: anIndex [
+SBEllipsisPattern >> searchRootFor: aDomainBlock at: anIndex [
 
-	^ aVisualPrimitive children copyFrom: anIndex to: anIndex + self indexOffset
+	^ aDomainBlock children copyFrom: anIndex to: anIndex + self indexOffset
 ]
 
 { #category : #'as yet unclassified' }
-SBVPEllipsisPattern >> setLabelBindingsFor: aCollection in: aDict using: aBlockClosure [
+SBEllipsisPattern >> setLabelBindingsFor: aCollection in: aDict using: aBlockClosure [
 
 	self labelBindingDict keysAndValuesDo: [:labelPosition :bindingName |
 		aBlockClosure
 			value: bindingName
-			value: (aCollection collect: [:visualPrimitive | visualPrimitive propertyAt: labelPosition])]
+			value: (aCollection collect: [:domainBlock | domainBlock propertyAt: labelPosition])]
 ]
 
 { #category : #'as yet unclassified' }
-SBVPEllipsisPattern >> wantsImplicitNeighbors [
+SBEllipsisPattern >> wantsImplicitNeighbors [
 
 	^ false
 ]
 
 { #category : #'as yet unclassified' }
-SBVPEllipsisPattern >> wrapInMessageSend [
+SBEllipsisPattern >> wrapInMessageSend [
 	"NO CHILDREN ALLOWED!
 	
               ,-----.

@@ -30,7 +30,7 @@ Class {
 		'isConnecting',
 		'isMouseClose'
 	],
-	#category : #'Sandblocks-VisualPrimitives'
+	#category : #'Sandblocks-DomainBlocks'
 }
 
 { #category : #examples }

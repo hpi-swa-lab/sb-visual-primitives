@@ -1,5 +1,5 @@
 "
-An SBVPPropertyMappingSelect is used to map from a specific set of choices to corresponding representations for a vpProperty. To be able to change the selection the returned Morph is an SBVPSelectProperty.
+An SBPropertyMappingSelect is used to map from a specific set of choices to corresponding representations for a vpProperty. To be able to change the selection the returned Morph is an SBSelectProperty.
 
 Instance Variables
 	choices: 				OrderedCollection
@@ -13,17 +13,17 @@ representations
 	- if there are no visualizations, choices are shown as Strings
 "
 Class {
-	#name : #SBVPPropertyMappingSelect,
-	#superclass : #SBVPPropertyMapping,
+	#name : #SBPropertyMappingSelect,
+	#superclass : #SBPropertyMapping,
 	#instVars : [
 		'choices',
 		'representations'
 	],
-	#category : #'Sandblocks-VisualPrimitives'
+	#category : #'Sandblocks-DomainBlocks'
 }
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMappingSelect class >> defaultSetterBlockWith: aSymbol for: anotherSymbol [
+SBPropertyMappingSelect class >> defaultSetterBlockWith: aSymbol for: anotherSymbol [
 
 	^ aSymbol isSymbol
 		ifTrue: [[:object :vp | (vp morphAt: anotherSymbol) ifNotNil: [object perform: aSymbol asSimpleSetter with: (vp morphAt: anotherSymbol) currentChoice]]]
@@ -31,7 +31,7 @@ SBVPPropertyMappingSelect class >> defaultSetterBlockWith: aSymbol for: anotherS
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMappingSelect class >> property: aSymbol vpProperty: anotherSymbol choices: anOrderedCollection [
+SBPropertyMappingSelect class >> property: aSymbol vpProperty: anotherSymbol choices: anOrderedCollection [
 
 	^ self
 		property: aSymbol
@@ -41,7 +41,7 @@ SBVPPropertyMappingSelect class >> property: aSymbol vpProperty: anotherSymbol c
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMappingSelect class >> property: aSymbol vpProperty: anotherSymbol choices: anOrderedCollection representations: anotherOrderedCollection [
+SBPropertyMappingSelect class >> property: aSymbol vpProperty: anotherSymbol choices: anOrderedCollection representations: anotherOrderedCollection [
 
 	^ (self property: aSymbol vpProperty: anotherSymbol)
 		choices: anOrderedCollection;
@@ -50,27 +50,27 @@ SBVPPropertyMappingSelect class >> property: aSymbol vpProperty: anotherSymbol c
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMappingSelect class >> representationsOf: aCollection [
+SBPropertyMappingSelect class >> representationsOf: aCollection [
 
 	^ aCollection
 ]
 
 { #category : #accessing }
-SBVPPropertyMappingSelect >> choices [
+SBPropertyMappingSelect >> choices [
 
 	^ choices
 ]
 
 { #category : #accessing }
-SBVPPropertyMappingSelect >> choices: anOrderedCollection [
+SBPropertyMappingSelect >> choices: anOrderedCollection [
 
 	choices := anOrderedCollection
 ]
 
 { #category : #accessing }
-SBVPPropertyMappingSelect >> getMorphForValue: anObject [
+SBPropertyMappingSelect >> getMorphForValue: anObject [
 
-	^ SBVPSelectProperty
+	^ SBSelectProperty
 		choices: self choices
 		representations: self representations
 		initialValue: anObject
@@ -78,19 +78,19 @@ SBVPPropertyMappingSelect >> getMorphForValue: anObject [
 ]
 
 { #category : #accessing }
-SBVPPropertyMappingSelect >> representations [
+SBPropertyMappingSelect >> representations [
 
 	^ representations
 ]
 
 { #category : #accessing }
-SBVPPropertyMappingSelect >> representations: anOrderedCollection [
+SBPropertyMappingSelect >> representations: anOrderedCollection [
 
 	representations := anOrderedCollection
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMappingSelect >> suggestionConstant [
+SBPropertyMappingSelect >> suggestionConstant [
 
 	^ self choices first
 ]

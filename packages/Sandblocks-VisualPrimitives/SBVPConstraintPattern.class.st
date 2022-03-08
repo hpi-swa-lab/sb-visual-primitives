@@ -1,5 +1,5 @@
 "
-An SBVPConstraintPattern represents a textual condition and is used for pattern matching.
+An SBConstraintPattern represents a textual condition and is used for pattern matching.
 
 Instance Variables
 	constraint:		BlockClosure
@@ -9,35 +9,35 @@ constraint
 
 "
 Class {
-	#name : #SBVPConstraintPattern,
-	#superclass : #SBVPPattern,
+	#name : #SBConstraintPattern,
+	#superclass : #SBPattern,
 	#instVars : [
 		'constraint'
 	],
-	#category : #'Sandblocks-VisualPrimitives'
+	#category : #'Sandblocks-DomainBlocks'
 }
 
 { #category : #'as yet unclassified' }
-SBVPConstraintPattern class >> constraint: aClosure [
+SBConstraintPattern class >> constraint: aClosure [
 	"marker"
 
 	^ self new constraint: aClosure
 ]
 
 { #category : #'as yet unclassified' }
-SBVPConstraintPattern class >> constraintInputName [
+SBConstraintPattern class >> constraintInputName [
 
 	^ 'bindings'
 ]
 
 { #category : #'as yet unclassified' }
-SBVPConstraintPattern class >> matches: aBlock [
+SBConstraintPattern class >> matches: aBlock [
 
 	^ self selector: #constraint: receiverMatches: aBlock
 ]
 
 { #category : #'as yet unclassified' }
-SBVPConstraintPattern class >> newFor: aBlock [
+SBConstraintPattern class >> newFor: aBlock [
 
 	| constraintBlock |
 	constraintBlock := aBlock arguments first.
@@ -46,45 +46,45 @@ SBVPConstraintPattern class >> newFor: aBlock [
 			and: [block receiver contents = self constraintInputName]
 			and: [block selector = 'at:']) ifTrue: [ | variableName |
 			variableName := block arguments first evaluate.
-			block replaceBy: ((SBStName poolDeclaration: variableName) binding: variableName -> SBVisualPrimitive new)]].
+			block replaceBy: ((SBStName poolDeclaration: variableName) binding: variableName -> SBDomainBlock new)]].
 	constraintBlock bindings do: [:b | b owner hide].
 	
 	^ self new constraint: constraintBlock evaluate
 ]
 
 { #category : #accessing }
-SBVPConstraintPattern >> addToWorld: aWorld [
+SBConstraintPattern >> addToWorld: aWorld [
 
 	aWorld addMorphBack: self
 ]
 
 { #category : #'as yet unclassified' }
-SBVPConstraintPattern >> allChildrenDo: aBlock [
+SBConstraintPattern >> allChildrenDo: aBlock [
 
 	
 ]
 
 { #category : #'as yet unclassified' }
-SBVPConstraintPattern >> attachTreeDecorator [
+SBConstraintPattern >> attachTreeDecorator [
 
 	
 ]
 
 { #category : #accessing }
-SBVPConstraintPattern >> collectBindingsInto: aCollection [
+SBConstraintPattern >> collectBindingsInto: aCollection [
 	"we do not define bindings"
 
 	
 ]
 
 { #category : #accessing }
-SBVPConstraintPattern >> constraint [
+SBConstraintPattern >> constraint [
 
 	^ constraint
 ]
 
 { #category : #accessing }
-SBVPConstraintPattern >> constraint: aBlockClosure [
+SBConstraintPattern >> constraint: aBlockClosure [
 
 	constraint := aBlockClosure.
 	self removeAllMorphs.
@@ -96,7 +96,7 @@ SBVPConstraintPattern >> constraint: aBlockClosure [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPConstraintPattern >> deleteCommandFor: aBlock [
+SBConstraintPattern >> deleteCommandFor: aBlock [
 
 	^ self submorphCount = 1
 		ifTrue: [self parentSandblock deleteCommandFor: self]
@@ -104,13 +104,13 @@ SBVPConstraintPattern >> deleteCommandFor: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPConstraintPattern >> fixedNumberOfChildren [
+SBConstraintPattern >> fixedNumberOfChildren [
 
 	^ false
 ]
 
 { #category : #'as yet unclassified' }
-SBVPConstraintPattern >> initialize [
+SBConstraintPattern >> initialize [
 
 	super initialize.
 	
@@ -120,19 +120,19 @@ SBVPConstraintPattern >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPConstraintPattern >> isBlockBody [
+SBConstraintPattern >> isBlockBody [
 
 	^ true
 ]
 
 { #category : #'as yet unclassified' }
-SBVPConstraintPattern >> isSelectable [
+SBConstraintPattern >> isSelectable [
 
 	^ false
 ]
 
 { #category : #'as yet unclassified' }
-SBVPConstraintPattern >> layoutCommands [
+SBConstraintPattern >> layoutCommands [
 
 	^ SBAlgebraCommand container
 		morph: self;
@@ -140,43 +140,43 @@ SBVPConstraintPattern >> layoutCommands [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPConstraintPattern >> matches: aVisualPrimitive withBinding: aDict [
+SBConstraintPattern >> matches: aDomainBlock withBinding: aDict [
 
 	| originalBindings |
-	originalBindings := aDict collect: [:visualPrimitiveOrCollection |
-		visualPrimitiveOrCollection isCollection
-			ifTrue: [visualPrimitiveOrCollection collect: [:element | element isVisualPrimitive ifTrue: [element sourceObject] ifFalse: [element]]]
+	originalBindings := aDict collect: [:domainBlockOrCollection |
+		domainBlockOrCollection isCollection
+			ifTrue: [domainBlockOrCollection collect: [:element | element isDomainBlock ifTrue: [element sourceObject] ifFalse: [element]]]
 			ifFalse: [
-				visualPrimitiveOrCollection isVisualPrimitive
-					ifTrue: [visualPrimitiveOrCollection sourceObject]
-					ifFalse: [visualPrimitiveOrCollection]]].
+				domainBlockOrCollection isDomainBlock
+					ifTrue: [domainBlockOrCollection sourceObject]
+					ifFalse: [domainBlockOrCollection]]].
 	
 	^ self constraint value: originalBindings
 ]
 
 { #category : #'as yet unclassified' }
-SBVPConstraintPattern >> newUnknown [
+SBConstraintPattern >> newUnknown [
 
 	^ SBUnknown new grammarHandler: SBStGrammarHandler new
 ]
 
 { #category : #accessing }
-SBVPConstraintPattern >> statements [
+SBConstraintPattern >> statements [
 
 	^ self submorphs
 ]
 
 { #category : #'as yet unclassified' }
-SBVPConstraintPattern >> wantsMethodBody [
+SBConstraintPattern >> wantsMethodBody [
 
 	^ false
 ]
 
 { #category : #'as yet unclassified' }
-SBVPConstraintPattern >> writeSourceOn: aStream [
+SBConstraintPattern >> writeSourceOn: aStream [
 
 	aStream
-		nextPutAll: '(SBVPConstraintPattern constraint: [:bindings | ';
+		nextPutAll: '(SBConstraintPattern constraint: [:bindings | ';
 		cr.
 	
 	self submorphs do: [:m |

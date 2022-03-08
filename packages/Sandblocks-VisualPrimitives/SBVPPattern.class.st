@@ -1,5 +1,5 @@
 "
-An SBVPPattern is used to define a combination of SBVisualPrimitives and SBVPConstraintPatterns that can later be used to perform pattern matching with.
+An SBPattern is used to define a combination of SBDomainBlocks and SBConstraintPatterns that can later be used to perform pattern matching with.
 
 Instance Variables
 	isImplicitChild:		Boolean
@@ -9,91 +9,91 @@ isImplicitChild
 
 "
 Class {
-	#name : #SBVPPattern,
-	#superclass : #SBVisualPrimitive,
+	#name : #SBPattern,
+	#superclass : #SBDomainBlock,
 	#instVars : [
 		'isImplicitChild'
 	],
-	#category : #'Sandblocks-VisualPrimitives'
+	#category : #'Sandblocks-DomainBlocks'
 }
 
 { #category : #'as yet unclassified' }
-SBVPPattern >> addImplicitChildren: anArray [
+SBPattern >> addImplicitChildren: anArray [
 
 	
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPattern >> buildImplicitChildren: anArray [
+SBPattern >> buildImplicitChildren: anArray [
 
 	
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPattern >> collectBindingsInto: aCollection [
+SBPattern >> collectBindingsInto: aCollection [
 
 	self children do: [:child | child collectBindingsInto: aCollection]
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPattern >> findConstant [
+SBPattern >> findConstant [
 
 	self children do: [:child | child findConstant ifNotNil: [:constant | ^ constant]].
 	^ nil
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPattern >> findOriginRoot [
+SBPattern >> findOriginRoot [
 
-	^ self findConstant asVisualPrimitive root sourceObject
+	^ self findConstant asDomainBlock root sourceObject
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPattern >> getNext: aVisualPrimitive [
+SBPattern >> getNext: aDomainBlock [
 	"updates the visual primitive the pattern will bind to and returns whether a new binding was found. Whether the binding is correct needs to be checked with matches: withBinding:."
 
 	^ false
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPattern >> identifierForIndex: aNumber [
+SBPattern >> identifierForIndex: aNumber [
 
 	^ ('', (Character alphabet at: aNumber - 1 // Character alphabet size + 1)) asSymbol
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPattern >> implicitPrefix [
+SBPattern >> implicitPrefix [
 
 	^ 'i_'
 ]
 
 { #category : #accessing }
-SBVPPattern >> initialize [
+SBPattern >> initialize [
 
 	super initialize.
 	isImplicitChild := false
 ]
 
 { #category : #accessing }
-SBVPPattern >> isImplicitChild [
+SBPattern >> isImplicitChild [
 
 	^ isImplicitChild
 ]
 
 { #category : #accessing }
-SBVPPattern >> isImplicitChild: aBoolean [
+SBPattern >> isImplicitChild: aBoolean [
 
 	isImplicitChild := aBoolean
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPattern >> matches: aVisualPrimitive withBinding: aCollection [
+SBPattern >> matches: aDomainBlock withBinding: aCollection [
 
 	^ true
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPattern >> nextIdentifier [
+SBPattern >> nextIdentifier [
 
 	| invalidIdentifiers currentAttempt possibleIdentifer |
 	invalidIdentifiers := Array streamContents: [:stream |
@@ -114,31 +114,31 @@ SBVPPattern >> nextIdentifier [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPattern >> parentCase [
+SBPattern >> parentCase [
 
 	| case |
 	case := self root parentSandblock.
-	^ ((case isKindOf: SBVPTransformation) or: [case isKindOf: SBVPQuery])
+	^ ((case isKindOf: SBTransformation) or: [case isKindOf: SBQuery])
 		ifTrue: [case]
 		ifFalse: [nil]
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPattern >> parentQuery [
+SBPattern >> parentQuery [
 
 	| case |
 	case := self root parentSandblock.
-	^ (case isKindOf: SBVPQuery) ifTrue: [case] ifFalse: [nil]
+	^ (case isKindOf: SBQuery) ifTrue: [case] ifFalse: [nil]
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPattern >> patternContainer [
+SBPattern >> patternContainer [
 
 	^ self parentCase ifNotNil: [self parentCase] ifNil: [self parentQuery]
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPattern >> removeImplicitChildren [
+SBPattern >> removeImplicitChildren [
 
 	self children select: #isImplicitChild thenDo: #abandon.
 	self children: (self children reject: #isImplicitChild).
@@ -146,26 +146,26 @@ SBVPPattern >> removeImplicitChildren [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPattern >> reset [
+SBPattern >> reset [
 	"do nothing"
 
 	
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPattern >> setBindingFor: aVisualPrimitive in: aCollection [
+SBPattern >> setBindingFor: aDomainBlock in: aCollection [
 
 	^ true
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPattern >> supportsLabels [
+SBPattern >> supportsLabels [
 
 	^ false
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPattern >> wantsImplicitNeighbors [
+SBPattern >> wantsImplicitNeighbors [
 
 	^ true
 ]

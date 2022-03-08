@@ -1,6 +1,6 @@
 Extension { #name : #Morph }
 
-{ #category : #'*Sandblocks-VisualPrimitives' }
+{ #category : #'*Sandblocks-DomainBlocks' }
 Morph >> addVPLabel: aMorph [
 
 	aMorph ifNil: [^nil].
@@ -9,13 +9,13 @@ Morph >> addVPLabel: aMorph [
 
 ]
 
-{ #category : #'*Sandblocks-VisualPrimitives' }
+{ #category : #'*Sandblocks-DomainBlocks' }
 Morph >> firstSubmorphOrNil [
 	
 	^ self submorphs ifEmpty: [nil] ifNotEmpty: [self firstSubmorph]
 ]
 
-{ #category : #'*Sandblocks-VisualPrimitives' }
+{ #category : #'*Sandblocks-DomainBlocks' }
 Morph >> shrinkWrap [
 	
 	self

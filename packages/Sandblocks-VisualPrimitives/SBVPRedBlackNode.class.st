@@ -1,5 +1,5 @@
 Class {
-	#name : #SBVPRedBlackNode,
+	#name : #SBRedBlackNode,
 	#superclass : #Object,
 	#instVars : [
 		'children',
@@ -7,17 +7,17 @@ Class {
 		'key',
 		'isRed'
 	],
-	#category : #'Sandblocks-VisualPrimitives-Fixtures'
+	#category : #'Sandblocks-DomainBlocks-Fixtures'
 }
 
 { #category : #'as yet unclassified' }
-SBVPRedBlackNode class >> buildTree: aCollection [
+SBRedBlackNode class >> buildTree: aCollection [
 
 	^ (self buildTreePrivate: aCollection) first
 ]
 
 { #category : #'as yet unclassified' }
-SBVPRedBlackNode class >> buildTreePrivate: aCollection [
+SBRedBlackNode class >> buildTreePrivate: aCollection [
 
 	^ aCollection collect: [:element |
 		element isVariableBinding
@@ -26,9 +26,9 @@ SBVPRedBlackNode class >> buildTreePrivate: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPRedBlackNode class >> childrenMappingEntry [
+SBRedBlackNode class >> childrenMappingEntry [
 
-	^ SBVPPropertyMapping
+	^ SBPropertyMapping
 		getter: [:object | {object left. object right} reject: [:child | child isNil]]
 		setter: [:object :vp |
 			vp children size >= 1
@@ -42,27 +42,27 @@ SBVPRedBlackNode class >> childrenMappingEntry [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPRedBlackNode class >> exampleRootWithTwoChildren [
+SBRedBlackNode class >> exampleRootWithTwoChildren [
 
 	| n1 n2 root |
-	root := SBVPRedBlackNode new.
+	root := SBRedBlackNode new.
 	root key: 4.
-	n1 := SBVPRedBlackNode new.
+	n1 := SBRedBlackNode new.
 	n1 key: 1.
-	n2 := SBVPRedBlackNode new.
+	n2 := SBRedBlackNode new.
 	n2 key: 2.
 	root children: {n1. n2}.
 	^ root
 ]
 
 { #category : #'as yet unclassified' }
-SBVPRedBlackNode class >> key: anObject [
+SBRedBlackNode class >> key: anObject [
 
 	^ self new key: anObject
 ]
 
 { #category : #nil }
-SBVPRedBlackNode class >> visualPrimitiveMapping [
+SBRedBlackNode class >> domainBlockMapping [
 
 	^ {
 		#shape
@@ -75,31 +75,31 @@ SBVPRedBlackNode class >> visualPrimitiveMapping [
 ]
 
 { #category : #nil }
-SBVPRedBlackNode >> add: aNode [
+SBRedBlackNode >> add: aNode [
 
 	self
 		example: [
-			((SBVPRedBlackNode key: nil)
+			((SBRedBlackNode key: nil)
 				children: {};
-				isRed: true) showAsVisualPrimitive]
+				isRed: true) showAsDomainBlock]
 		args: [{'Hallo'}]
 		label: 'example'
 ]
 
 { #category : #accessing }
-SBVPRedBlackNode >> children [
+SBRedBlackNode >> children [
 
 	^ children
 ]
 
 { #category : #accessing }
-SBVPRedBlackNode >> children: aCollection [
+SBRedBlackNode >> children: aCollection [
 
 	children := aCollection
 ]
 
 { #category : #nil }
-SBVPRedBlackNode >> initialize [
+SBRedBlackNode >> initialize [
 
 	super initialize.
 	self isRed: true.
@@ -107,43 +107,43 @@ SBVPRedBlackNode >> initialize [
 ]
 
 { #category : #accessing }
-SBVPRedBlackNode >> isRed [
+SBRedBlackNode >> isRed [
 
 	^ isRed
 ]
 
 { #category : #accessing }
-SBVPRedBlackNode >> isRed: aBoolean [
+SBRedBlackNode >> isRed: aBoolean [
 
 	isRed := aBoolean
 ]
 
 { #category : #accessing }
-SBVPRedBlackNode >> key [
+SBRedBlackNode >> key [
 
 	^ key
 ]
 
 { #category : #accessing }
-SBVPRedBlackNode >> key: anObject [
+SBRedBlackNode >> key: anObject [
 
 	key := anObject
 ]
 
 { #category : #accessing }
-SBVPRedBlackNode >> parent [
+SBRedBlackNode >> parent [
 
 	^ parent
 ]
 
 { #category : #accessing }
-SBVPRedBlackNode >> parent: aNode [
+SBRedBlackNode >> parent: aNode [
 
 	parent := aNode
 ]
 
 { #category : #accessing }
-SBVPRedBlackNode >> writeSourceOn: aStream [
+SBRedBlackNode >> writeSourceOn: aStream [
 
 	aStream
 		nextPutAll: '((';

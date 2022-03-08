@@ -1,37 +1,37 @@
 Extension { #name : #Object }
 
-{ #category : #'*Sandblocks-VisualPrimitives' }
-Object >> asVisualPrimitive [
+{ #category : #'*Sandblocks-DomainBlocks' }
+Object >> asDomainBlock [
 
-	^ SBVisualPrimitive newFromObject: self
+	^ SBDomainBlock newFromObject: self
 ]
 
-{ #category : #'*Sandblocks-VisualPrimitives' }
+{ #category : #'*Sandblocks-DomainBlocks' }
 Object >> isPropertyMapping [
 
 	^ false
 ]
 
-{ #category : #'*Sandblocks-VisualPrimitives' }
-Object >> isVisualPrimitive [
+{ #category : #'*Sandblocks-DomainBlocks' }
+Object >> isDomainBlock [
 
 	^ false
 ]
 
-{ #category : #'*Sandblocks-VisualPrimitives' }
+{ #category : #'*Sandblocks-DomainBlocks' }
 Object >> propertyMappingClass [
 
-	^ SBVPPropertyMapping
+	^ SBPropertyMapping
 ]
 
-{ #category : #'*Sandblocks-VisualPrimitives' }
-Object >> showAsVisualPrimitive [
+{ #category : #'*Sandblocks-DomainBlocks' }
+Object >> showAsDomainBlock [
 	"marker"
 	^ self
 ]
 
-{ #category : #'*Sandblocks-VisualPrimitives' }
-Object class >> visualPrimitiveMapping [
+{ #category : #'*Sandblocks-DomainBlocks' }
+Object class >> domainBlockMapping [
 
 	^ {}
 ]

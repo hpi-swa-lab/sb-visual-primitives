@@ -1,16 +1,16 @@
 Class {
-	#name : #SBVPGameCard,
+	#name : #SBGameCard,
 	#superclass : #Object,
 	#instVars : [
 		'attack',
 		'defense',
 		'type'
 	],
-	#category : #'Sandblocks-VisualPrimitives-Fixtures'
+	#category : #'Sandblocks-DomainBlocks-Fixtures'
 }
 
 { #category : #'as yet unclassified' }
-SBVPGameCard class >> visualPrimitiveMapping [
+SBGameCard class >> domainBlockMapping [
 
 	^ {
 		#topLeftLabel vpConstant: 'ATK:'.
@@ -27,37 +27,37 @@ SBVPGameCard class >> visualPrimitiveMapping [
 ]
 
 { #category : #accessing }
-SBVPGameCard >> attack [
+SBGameCard >> attack [
 
 	^ attack
 ]
 
 { #category : #accessing }
-SBVPGameCard >> attack: anObject [
+SBGameCard >> attack: anObject [
 
 	attack := anObject
 ]
 
 { #category : #accessing }
-SBVPGameCard >> defense [
+SBGameCard >> defense [
 
 	^ defense
 ]
 
 { #category : #accessing }
-SBVPGameCard >> defense: anObject [
+SBGameCard >> defense: anObject [
 
 	defense := anObject
 ]
 
 { #category : #accessing }
-SBVPGameCard >> type [
+SBGameCard >> type [
 
 	^ type
 ]
 
 { #category : #accessing }
-SBVPGameCard >> type: anObject [
+SBGameCard >> type: anObject [
 
 	type := anObject
 ]

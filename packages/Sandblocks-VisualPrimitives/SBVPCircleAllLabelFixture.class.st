@@ -1,11 +1,11 @@
 Class {
-	#name : #SBVPCircleAllLabelFixture,
-	#superclass : #SBVPDummyNode,
-	#category : #'Sandblocks-VisualPrimitives-Fixtures'
+	#name : #SBCircleAllLabelFixture,
+	#superclass : #SBDummyNode,
+	#category : #'Sandblocks-DomainBlocks-Fixtures'
 }
 
 { #category : #'as yet unclassified' }
-SBVPCircleAllLabelFixture class >> visualPrimitiveMapping [
+SBCircleAllLabelFixture class >> domainBlockMapping [
 
 	^ {
 		#shape -> CircleMorph new.

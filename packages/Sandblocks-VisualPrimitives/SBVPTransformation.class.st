@@ -1,35 +1,35 @@
 "
-An SBVPTransformation is the visual representation of a pattern matching rule with SBVisualPrimitives. It consists of an input and an output pattern (see SBVPPattern). For the pattern matching see SBVPPatternMatcher. You can choose a default class that determines the visualPrimitiveMapping for the SBVPBindingPatterns.
+An SBTransformation is the visual representation of a pattern matching rule with SBDomainBlocks. It consists of an input and an output pattern (see SBPattern). For the pattern matching see SBPatternMatcher. You can choose a default class that determines the domainBlockMapping for the SBBindingPatterns.
 
 By applying the case on an input object, the input pattern gets matched on this object and the matched part gets transformed to match the output pattern.
 
 Instance Variables
-	outputPattern:		SBBlock (SBVPPattern)
+	outputPattern:		SBBlock (SBPattern)
 
 outputPattern
 	- this is the result of the transformation
-	if true, the root of every SBVPBindingPattern only matches the root of the input
+	if true, the root of every SBBindingPattern only matches the root of the input
 	if false, the pattern can also match somewhere else in the input without further specification
 
 "
 Class {
-	#name : #SBVPTransformation,
-	#superclass : #SBVPPatternContainer,
+	#name : #SBTransformation,
+	#superclass : #SBPatternContainer,
 	#instVars : [
 		'outputPattern'
 	],
-	#category : #'Sandblocks-VisualPrimitives'
+	#category : #'Sandblocks-DomainBlocks'
 }
 
 { #category : #'as yet unclassified' }
-SBVPTransformation class >> input: aPattern output: anotherPattern [
+SBTransformation class >> input: aPattern output: anotherPattern [
 	" marker "
 
 	^ self new input: aPattern output: anotherPattern
 ]
 
 { #category : #'as yet unclassified' }
-SBVPTransformation class >> input: aPattern output: anotherPattern strategy: aDict [
+SBTransformation class >> input: aPattern output: anotherPattern strategy: aDict [
 	" marker "
 
 	^ self new
@@ -38,7 +38,7 @@ SBVPTransformation class >> input: aPattern output: anotherPattern strategy: aDi
 ]
 
 { #category : #'as yet unclassified' }
-SBVPTransformation class >> input: aPattern output: anotherPattern strategy: aDict visualizePatternsAs: aClass [
+SBTransformation class >> input: aPattern output: anotherPattern strategy: aDict visualizePatternsAs: aClass [
 	" marker "
 
 	^ self new
@@ -48,7 +48,7 @@ SBVPTransformation class >> input: aPattern output: anotherPattern strategy: aDi
 ]
 
 { #category : #'as yet unclassified' }
-SBVPTransformation class >> matches: aBlock [
+SBTransformation class >> matches: aBlock [
 
 	^ (aBlock receiver satisfies: #(#notNil #isBinding))
 		and: [aBlock receiver contents = self name]
@@ -56,13 +56,13 @@ SBVPTransformation class >> matches: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPTransformation class >> newFor: aBlock [
+SBTransformation class >> newFor: aBlock [
 
 	| input output |
 	input := aBlock arguments first.
-	input isVisualPrimitive ifFalse: [input := input evaluate].
+	input isDomainBlock ifFalse: [input := input evaluate].
 	output := aBlock arguments second.
-	output isVisualPrimitive ifFalse: [output := output evaluate].
+	output isDomainBlock ifFalse: [output := output evaluate].
 	
 	^ aBlock arguments size > 2
 		ifTrue: [ | strategy |
@@ -79,11 +79,11 @@ SBVPTransformation class >> newFor: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPTransformation class >> suggestion [
+SBTransformation class >> suggestion [
 	"Used for the projection"
 
 	^ [:block | | case |
-		case := self input: SBVPGroupPattern new output: SBVPGroupPattern new.
+		case := self input: SBGroupPattern new output: SBGroupPattern new.
 		block sandblockEditor do: (SBReplaceCommand new
 			target: block;
 			replacer: case;
@@ -92,7 +92,7 @@ SBVPTransformation class >> suggestion [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPTransformation >> buildImplicitChildrenMatchingPattern [
+SBTransformation >> buildImplicitChildrenMatchingPattern [
 
 	(self pattern notNil and: [self outputPattern notNil]) ifTrue: [
 		self pattern removeImplicitChildren.
@@ -105,7 +105,7 @@ SBVPTransformation >> buildImplicitChildrenMatchingPattern [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPTransformation >> colorDifferences [
+SBTransformation >> colorDifferences [
 
 	| inputRoot outputRoot inputBindingDict outputBindingDict colors |
 	inputRoot := self pattern connections first.
@@ -129,344 +129,344 @@ SBVPTransformation >> colorDifferences [
 ]
 
 { #category : #examples }
-SBVPTransformation >> exampleDeleteNodeInside: aTree [
+SBTransformation >> exampleDeleteNodeInside: aTree [
 
 	self
-		example: [SBVPTransformation new]
+		example: [SBTransformation new]
 		args: [
 			{
-				((SBVPDummyNode key: 1)
-					left: ((SBVPDummyNode key: 2) left: (SBVPDummyNode key: 3));
-					right: ((SBVPDummyNode key: 4) left: (SBVPDummyNode key: 42))) showAsVisualPrimitive}]
+				((SBDummyNode key: 1)
+					left: ((SBDummyNode key: 2) left: (SBDummyNode key: 3));
+					right: ((SBDummyNode key: 4) left: (SBDummyNode key: 42))) showAsDomainBlock}]
 		label: 'example'.
 	"Nodes that do not appear in the output pattern, are simply left out / deleted."
 	self flag: #bug.
 	"building the implicit children seems to not work."
-	^ (SBVPTransformation
-		input: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern
+	^ (SBTransformation
+		input: (SBGroupPattern patterns: {
+			SBBindingPattern
 				bindingDict: {#identity -> #parent}
 				children: {
-					SBVPBindingPattern
+					SBBindingPattern
 						bindingDict: {#identity -> #nodeWeWantToDelete}
 						children: {}
-						visualizingClass: SBVPDummyNode}
-				visualizingClass: SBVPDummyNode.
-			SBVPConstraintPattern constraint: [:bindings | (bindings at: #nodeWeWantToDelete) key = 42]})
-		output: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern
+						visualizingClass: SBDummyNode}
+				visualizingClass: SBDummyNode.
+			SBConstraintPattern constraint: [:bindings | (bindings at: #nodeWeWantToDelete) key = 42]})
+		output: (SBGroupPattern patterns: {
+			SBBindingPattern
 				bindingDict: {#identity -> #parent}
 				children: {}
-				visualizingClass: SBVPDummyNode})
+				visualizingClass: SBDummyNode})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> false;
 			add: #explicitChildrenMatching -> false;
 			yourself)
-		visualizePatternsAs: SBVPDummyNode) replaceAllMatches: aTree
+		visualizePatternsAs: SBDummyNode) replaceAllMatches: aTree
 ]
 
 { #category : #'as yet unclassified' }
-SBVPTransformation >> exampleEllipsisPatternWithLabel: aDummyNode [
+SBTransformation >> exampleEllipsisPatternWithLabel: aDummyNode [
 
 	self
-		example: [SBVPTransformation new]
+		example: [SBTransformation new]
 		args: [
 			{
-				((SBVPDummyNode key: 10)
-					left: ((SBVPDummyNode key: 1)
-						left: (SBVPDummyNode key: 4);
-						right: (SBVPDummyNode key: 5));
-					right: ((SBVPDummyNode key: 2)
-						left: (SBVPDummyNode key: 4);
-						right: (SBVPDummyNode key: 5))) showAsVisualPrimitive}]
+				((SBDummyNode key: 10)
+					left: ((SBDummyNode key: 1)
+						left: (SBDummyNode key: 4);
+						right: (SBDummyNode key: 5));
+					right: ((SBDummyNode key: 2)
+						left: (SBDummyNode key: 4);
+						right: (SBDummyNode key: 5))) showAsDomainBlock}]
 		label: 'example'.
-	^ (SBVPTransformation
-		input: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern
+	^ (SBTransformation
+		input: (SBGroupPattern patterns: {
+			SBBindingPattern
 				bindingDict: {#identity -> #a}
 				children: {
-					SBVPBindingPattern
+					SBBindingPattern
 						bindingDict: {#identity -> #b}
 						children: {
-							SBVPEllipsisPattern
+							SBEllipsisPattern
 								bindingDict: {#innerLabel -> #g. #identity -> #bChildren}
-								visualizingClass: SBVPDummyNode}
-						visualizingClass: SBVPDummyNode.
-					SBVPBindingPattern
+								visualizingClass: SBDummyNode}
+						visualizingClass: SBDummyNode.
+					SBBindingPattern
 						bindingDict: {#identity -> #c}
 						children: {
-							SBVPEllipsisPattern
+							SBEllipsisPattern
 								bindingDict: {#innerLabel -> #g. #identity -> #cChildren}
-								visualizingClass: SBVPDummyNode}
-						visualizingClass: SBVPDummyNode}
-				visualizingClass: SBVPDummyNode})
-		output: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern
+								visualizingClass: SBDummyNode}
+						visualizingClass: SBDummyNode}
+				visualizingClass: SBDummyNode})
+		output: (SBGroupPattern patterns: {
+			SBBindingPattern
 				bindingDict: {#identity -> #a}
 				children: {
-					SBVPBindingPattern
+					SBBindingPattern
 						bindingDict: {#identity -> #b}
 						children: {
-							SBVPEllipsisPattern
+							SBEllipsisPattern
 								bindingDict: {#identity -> #bChildren}
-								visualizingClass: SBVPDummyNode}
-						visualizingClass: SBVPDummyNode.
-					SBVPBindingPattern bindingDict: {#identity -> #c} visualizingClass: SBVPDummyNode}
-				visualizingClass: SBVPDummyNode})
+								visualizingClass: SBDummyNode}
+						visualizingClass: SBDummyNode.
+					SBBindingPattern bindingDict: {#identity -> #c} visualizingClass: SBDummyNode}
+				visualizingClass: SBDummyNode})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> true;
 			add: #explicitChildrenMatching -> false;
 			yourself)
-		visualizePatternsAs: SBVPDummyNode) replaceAllMatches: aDummyNode
+		visualizePatternsAs: SBDummyNode) replaceAllMatches: aDummyNode
 ]
 
 { #category : #examples }
-SBVPTransformation >> exampleInsertWithExpression: aTree [
+SBTransformation >> exampleInsertWithExpression: aTree [
 
 	| newNode |
 	self
-		example: [SBVPTransformation new]
-		args: [{(SBVPStringDummyNode key: 'should get a new child') showAsVisualPrimitive}]
+		example: [SBTransformation new]
+		args: [{(SBStringDummyNode key: 'should get a new child') showAsDomainBlock}]
 		label: 'example'.
-	newNode := (SBVPStringDummyNode key: 'to be inserted node') showAsVisualPrimitive.
+	newNode := (SBStringDummyNode key: 'to be inserted node') showAsDomainBlock.
 	"newNode is set as an Expression for the key in the child of a"
-	^ (SBVPTransformation
-		input: (SBVPGroupPattern patterns: {SBVPBindingPattern bindingDict: {#identity -> #a} visualizingClass: SBVPDummyNode})
-		output: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern
+	^ (SBTransformation
+		input: (SBGroupPattern patterns: {SBBindingPattern bindingDict: {#identity -> #a} visualizingClass: SBDummyNode})
+		output: (SBGroupPattern patterns: {
+			SBBindingPattern
 				bindingDict: {#identity -> #a}
 				children: {
-					SBVPBindingPattern
+					SBBindingPattern
 						expressionDict: {#identity -> [newNode]}
-						visualizingClass: SBVPDummyNode}
-				visualizingClass: SBVPDummyNode})
+						visualizingClass: SBDummyNode}
+				visualizingClass: SBDummyNode})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> true;
 			add: #explicitChildrenMatching -> true;
 			yourself)
-		visualizePatternsAs: SBVPStringDummyNode) replaceAllMatches: aTree
+		visualizePatternsAs: SBStringDummyNode) replaceAllMatches: aTree
 ]
 
 { #category : #'as yet unclassified' }
-SBVPTransformation >> exampleMissingBindingsAreMarked: aTree [
+SBTransformation >> exampleMissingBindingsAreMarked: aTree [
 	"Notice how bindings are marked if they are not found in the input."
 
-	^ (SBVPTransformation
-		input: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern
+	^ (SBTransformation
+		input: (SBGroupPattern patterns: {
+			SBBindingPattern
 				bindingDict: {#identity -> #g}
 				children: {
-					SBVPEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBVPDummyNode.
-					SBVPBindingPattern
+					SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBDummyNode.
+					SBBindingPattern
 						bindingDict: {#identity -> #boi}
-						children: {SBVPEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBVPDummyNode}
-						visualizingClass: SBVPDummyNode.
-					SBVPEllipsisPattern bindingDict: {#identity -> #d} visualizingClass: SBVPDummyNode}
-				visualizingClass: SBVPDummyNode.
-			SBVPConstraintPattern constraint: [:bindings | (bindings at: #boi) key < (bindings at: #boi) key]})
-		output: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern
+						children: {SBEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBDummyNode}
+						visualizingClass: SBDummyNode.
+					SBEllipsisPattern bindingDict: {#identity -> #d} visualizingClass: SBDummyNode}
+				visualizingClass: SBDummyNode.
+			SBConstraintPattern constraint: [:bindings | (bindings at: #boi) key < (bindings at: #boi) key]})
+		output: (SBGroupPattern patterns: {
+			SBBindingPattern
 				bindingDict: {#identity -> #boi}
 				children: {
-					SBVPBindingPattern
+					SBBindingPattern
 						bindingDict: {#identity -> #notFound}
-						visualizingClass: SBVPDummyNode.
-					SBVPBindingPattern
+						visualizingClass: SBDummyNode.
+					SBBindingPattern
 						bindingDict: {#identity -> #a}
-						children: {SBVPEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBVPDummyNode}
-						visualizingClass: SBVPDummyNode.
-					SBVPEllipsisPattern bindingDict: {#identity -> #d} visualizingClass: SBVPDummyNode}
-				visualizingClass: SBVPDummyNode})
+						children: {SBEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBDummyNode}
+						visualizingClass: SBDummyNode.
+					SBEllipsisPattern bindingDict: {#identity -> #d} visualizingClass: SBDummyNode}
+				visualizingClass: SBDummyNode})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> false;
 			add: #explicitChildrenMatching -> false;
 			yourself)
-		visualizePatternsAs: SBVPDummyNode) replaceAllMatches: aTree
+		visualizePatternsAs: SBDummyNode) replaceAllMatches: aTree
 ]
 
 { #category : #examples }
-SBVPTransformation >> exampleTransformInputAsOftenAsPossible: aTree [
+SBTransformation >> exampleTransformInputAsOftenAsPossible: aTree [
 
 	self
-		example: [SBVPTransformation new]
+		example: [SBTransformation new]
 		args: [
 			{
-				((SBVPDummyNode key: 1)
-					left: ((SBVPDummyNode key: 2)
-						left: (SBVPDummyNode key: 3);
-						right: (SBVPDummyNode key: 4));
-					right: ((SBVPDummyNode key: 5)
-						left: (SBVPDummyNode key: 6);
-						right: (SBVPDummyNode key: 7))) showAsVisualPrimitive}]
+				((SBDummyNode key: 1)
+					left: ((SBDummyNode key: 2)
+						left: (SBDummyNode key: 3);
+						right: (SBDummyNode key: 4));
+					right: ((SBDummyNode key: 5)
+						left: (SBDummyNode key: 6);
+						right: (SBDummyNode key: 7))) showAsDomainBlock}]
 		label: 'example'.
 	"In this example we will create a MaxHeap by matching any parent and child and checking wether they violate the heap condition. If they do, we swap them."
-	^ (SBVPTransformation
-		input: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern
+	^ (SBTransformation
+		input: (SBGroupPattern patterns: {
+			SBBindingPattern
 				bindingDict: {#identity -> #parent}
 				children: {
-					SBVPEllipsisPattern
+					SBEllipsisPattern
 						bindingDict: {#identity -> #leftSiblings}
-						visualizingClass: SBVPDummyNode.
-					SBVPBindingPattern
+						visualizingClass: SBDummyNode.
+					SBBindingPattern
 						bindingDict: {#identity -> #child}
 						children: {
-							SBVPEllipsisPattern
+							SBEllipsisPattern
 								bindingDict: {#identity -> #grandchildren}
-								visualizingClass: SBVPDummyNode}
-						visualizingClass: SBVPDummyNode.
-					SBVPEllipsisPattern
+								visualizingClass: SBDummyNode}
+						visualizingClass: SBDummyNode.
+					SBEllipsisPattern
 						bindingDict: {#identity -> #rightSiblings}
-						visualizingClass: SBVPDummyNode}
-				visualizingClass: SBVPDummyNode.
-			SBVPConstraintPattern constraint: [:bindings | (bindings at: #parent) key < (bindings at: #child) key]})
-		output: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern
+						visualizingClass: SBDummyNode}
+				visualizingClass: SBDummyNode.
+			SBConstraintPattern constraint: [:bindings | (bindings at: #parent) key < (bindings at: #child) key]})
+		output: (SBGroupPattern patterns: {
+			SBBindingPattern
 				bindingDict: {#identity -> #child}
 				children: {
-					SBVPEllipsisPattern
+					SBEllipsisPattern
 						bindingDict: {#identity -> #leftSiblings}
-						visualizingClass: SBVPDummyNode.
-					SBVPBindingPattern
+						visualizingClass: SBDummyNode.
+					SBBindingPattern
 						bindingDict: {#identity -> #parent}
 						children: {
-							SBVPEllipsisPattern
+							SBEllipsisPattern
 								bindingDict: {#identity -> #grandchildren}
-								visualizingClass: SBVPDummyNode}
-						visualizingClass: SBVPDummyNode.
-					SBVPEllipsisPattern
+								visualizingClass: SBDummyNode}
+						visualizingClass: SBDummyNode.
+					SBEllipsisPattern
 						bindingDict: {#identity -> #rightSiblings}
-						visualizingClass: SBVPDummyNode}
-				visualizingClass: SBVPDummyNode})
+						visualizingClass: SBDummyNode}
+				visualizingClass: SBDummyNode})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> false;
 			add: #explicitChildrenMatching -> false;
 			yourself)
-		visualizePatternsAs: SBVPDummyNode) replaceAllMatches: aTree
+		visualizePatternsAs: SBDummyNode) replaceAllMatches: aTree
 ]
 
 { #category : #examples }
-SBVPTransformation >> exampleTransformInputDifferentStrategies: aTree [
+SBTransformation >> exampleTransformInputDifferentStrategies: aTree [
 
 	self
-		example: [SBVPTransformation new]
+		example: [SBTransformation new]
 		args: [
 			{
-				((SBVPDummyNode key: 1)
-					left: ((SBVPDummyNode key: 2) left: (SBVPDummyNode key: 3));
-					right: ((SBVPDummyNode key: 4) left: (SBVPDummyNode key: 5))) showAsVisualPrimitive}]
+				((SBDummyNode key: 1)
+					left: ((SBDummyNode key: 2) left: (SBDummyNode key: 3));
+					right: ((SBDummyNode key: 4) left: (SBDummyNode key: 5))) showAsDomainBlock}]
 		label: 'example'.
 	"Compare this one to the exampleTransformInputAsOftenAsPossible. Our Pattern Matching supports 'root matching' (anchor the first node at the tree's root) and 'subtree matching' (the first node can by any node in the tree, the remaining matching only happens on that node's subtree). The children can also explicit (must be there 
 for a match) and implicit (may or may not be there)"
 	"You can toggle between the strategies using the buttons"
-	^ (SBVPTransformation
-		input: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern
+	^ (SBTransformation
+		input: (SBGroupPattern patterns: {
+			SBBindingPattern
 				bindingDict: {#identity -> #parent}
-				children: {SBVPBindingPattern bindingDict: {#identity -> #child} visualizingClass: SBVPDummyNode}
-				visualizingClass: SBVPDummyNode.
-			SBVPConstraintPattern constraint: [:bindings | (bindings at: #parent) key < (bindings at: #child) key]})
-		output: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern
+				children: {SBBindingPattern bindingDict: {#identity -> #child} visualizingClass: SBDummyNode}
+				visualizingClass: SBDummyNode.
+			SBConstraintPattern constraint: [:bindings | (bindings at: #parent) key < (bindings at: #child) key]})
+		output: (SBGroupPattern patterns: {
+			SBBindingPattern
 				bindingDict: {#identity -> #child}
-				children: {SBVPBindingPattern bindingDict: {#identity -> #parent} visualizingClass: SBVPDummyNode}
-				visualizingClass: SBVPDummyNode})
+				children: {SBBindingPattern bindingDict: {#identity -> #parent} visualizingClass: SBDummyNode}
+				visualizingClass: SBDummyNode})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> true;
 			add: #explicitChildrenMatching -> true;
 			yourself)
-		visualizePatternsAs: SBVPDummyNode) replaceAllMatches: aTree
+		visualizePatternsAs: SBDummyNode) replaceAllMatches: aTree
 ]
 
 { #category : #examples }
-SBVPTransformation >> exampleTransformWithConstant: aTree [
+SBTransformation >> exampleTransformWithConstant: aTree [
 
 	self
-		example: [SBVPTransformation new]
-		args: [{(SBVPDummyNode key: 1) showAsVisualPrimitive}]
+		example: [SBTransformation new]
+		args: [{(SBDummyNode key: 1) showAsDomainBlock}]
 		label: 'example'.
-	^ (SBVPTransformation
-		input: (SBVPGroupPattern patterns: {SBVPBindingPattern bindingDict: {#identity -> #a} visualizingClass: SBVPDummyNode})
-		output: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern
+	^ (SBTransformation
+		input: (SBGroupPattern patterns: {SBBindingPattern bindingDict: {#identity -> #a} visualizingClass: SBDummyNode})
+		output: (SBGroupPattern patterns: {
+			SBBindingPattern
 				bindingDict: {#identity -> #a}
 				expressionDict: {#innerLabel -> [5]}
-				visualizingClass: SBVPDummyNode})
+				visualizingClass: SBDummyNode})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> false;
 			add: #explicitChildrenMatching -> true;
 			yourself)
-		visualizePatternsAs: SBVPDummyNode)
+		visualizePatternsAs: SBDummyNode)
 		replace: 1
 		matches: aTree
 ]
 
 { #category : #examples }
-SBVPTransformation >> exampleTransformWithExpression: aTree [
+SBTransformation >> exampleTransformWithExpression: aTree [
 
 	| newValue |
 	self
-		example: [SBVPTransformation new]
-		args: [{(SBVPDummyNode key: 1) showAsVisualPrimitive}]
+		example: [SBTransformation new]
+		args: [{(SBDummyNode key: 1) showAsDomainBlock}]
 		label: 'example'.
 	newValue := 100.
 	"Since we do not use a constraint here, we should only transform the input once. Otherwise there would be endless matches."
-	^ (SBVPTransformation
-		input: (SBVPGroupPattern patterns: {SBVPBindingPattern bindingDict: {#identity -> #a} visualizingClass: SBVPDummyNode})
-		output: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern
+	^ (SBTransformation
+		input: (SBGroupPattern patterns: {SBBindingPattern bindingDict: {#identity -> #a} visualizingClass: SBDummyNode})
+		output: (SBGroupPattern patterns: {
+			SBBindingPattern
 				bindingDict: {#identity -> #a}
 				expressionDict: {#innerLabel -> [newValue]}
-				visualizingClass: SBVPDummyNode})
+				visualizingClass: SBDummyNode})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> true;
 			add: #explicitChildrenMatching -> true;
 			yourself)
-		visualizePatternsAs: SBVPDummyNode)
+		visualizePatternsAs: SBDummyNode)
 		replace: 1
 		matches: aTree
 ]
 
 { #category : #examples }
-SBVPTransformation >> exampleWithConstants: aDummyNode [
+SBTransformation >> exampleWithConstants: aDummyNode [
 
 	| salzstangen |
 	self
-		example: [SBVPTransformation new]
+		example: [SBTransformation new]
 		args: [
 			{
-				((SBVPDummyNode key: 9) left: ((SBVPDummyNode key: 10) left: (SBVPDummyNode key: 8))) showAsVisualPrimitive}]
+				((SBDummyNode key: 9) left: ((SBDummyNode key: 10) left: (SBDummyNode key: 8))) showAsDomainBlock}]
 		label: 'example'.
 	
 	salzstangen := aDummyNode.
-	^ (SBVPTransformation
-		input: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern
+	^ (SBTransformation
+		input: (SBGroupPattern patterns: {
+			SBBindingPattern
 				expressionDict: {#identity -> [salzstangen]}
 				children: {
-					SBVPBindingPattern
+					SBBindingPattern
 						bindingDict: {#identity -> #a}
-						children: {SBVPEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBVPDummyNode}
-						visualizingClass: SBVPDummyNode}
-				visualizingClass: SBVPDummyNode})
-		output: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern
+						children: {SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBDummyNode}
+						visualizingClass: SBDummyNode}
+				visualizingClass: SBDummyNode})
+		output: (SBGroupPattern patterns: {
+			SBBindingPattern
 				bindingDict: {#identity -> #a}
 				children: {
-					SBVPBindingPattern
+					SBBindingPattern
 						expressionDict: {#identity -> [salzstangen]}
-						children: {SBVPEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBVPDummyNode}
-						visualizingClass: SBVPDummyNode}
-				visualizingClass: SBVPDummyNode})
+						children: {SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBDummyNode}
+						visualizingClass: SBDummyNode}
+				visualizingClass: SBDummyNode})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> false;
 			add: #explicitChildrenMatching -> true;
 			yourself)
-		visualizePatternsAs: SBVPDummyNode) replaceAllMatches: aDummyNode
+		visualizePatternsAs: SBDummyNode) replaceAllMatches: aDummyNode
 ]
 
 { #category : #'as yet unclassified' }
-SBVPTransformation >> input: aPattern output: anotherPattern [
+SBTransformation >> input: aPattern output: anotherPattern [
 
 	self
 		pattern: aPattern;
@@ -475,7 +475,7 @@ SBVPTransformation >> input: aPattern output: anotherPattern [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPTransformation >> noteNewOwner: aMorph [
+SBTransformation >> noteNewOwner: aMorph [
 
 	| wasBuilt |
 	wasBuilt := self classNameInput notNil.
@@ -487,23 +487,23 @@ SBVPTransformation >> noteNewOwner: aMorph [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPTransformation >> outputPattern [
+SBTransformation >> outputPattern [
 
 	^ outputPattern
 ]
 
 { #category : #'as yet unclassified' }
-SBVPTransformation >> outputPattern: aPattern [
+SBTransformation >> outputPattern: aPattern [
 
 	outputPattern := aPattern
 ]
 
 { #category : #'as yet unclassified' }
-SBVPTransformation >> replace: aNumber matches: anObject [
+SBTransformation >> replace: aNumber matches: anObject [
 
 	| matcher currentPrimitive match iteration |
-	currentPrimitive := anObject asVisualPrimitive.
-	matcher := (SBVPPatternMatcher input: currentPrimitive pattern: self pattern) strategy: self strategy.
+	currentPrimitive := anObject asDomainBlock.
+	matcher := (SBPatternMatcher input: currentPrimitive pattern: self pattern) strategy: self strategy.
 	iteration := 0.
 	[(match := matcher getNextMatch) notNil and: [(iteration := iteration + 1) <= aNumber]] whileTrue: [
 		currentPrimitive := matcher build: self outputPattern fromBinding: match.
@@ -512,18 +512,18 @@ SBVPTransformation >> replace: aNumber matches: anObject [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPTransformation >> replaceAllMatches [
+SBTransformation >> replaceAllMatches [
 
 	^ self replaceAllMatches: self pattern findOriginRoot
 ]
 
 { #category : #'as yet unclassified' }
-SBVPTransformation >> replaceAllMatches: anObject [
+SBTransformation >> replaceAllMatches: anObject [
 
 	| matcher currentPrimitive match |
-	currentPrimitive := anObject asVisualPrimitive.
+	currentPrimitive := anObject asDomainBlock.
 	
-	matcher := (SBVPPatternMatcher input: currentPrimitive pattern: self pattern) strategy: self strategy.
+	matcher := (SBPatternMatcher input: currentPrimitive pattern: self pattern) strategy: self strategy.
 	[match := matcher getNextMatch] whileNotNil: [
 		currentPrimitive := matcher build: self outputPattern fromBinding: match.
 		matcher input: currentPrimitive].
@@ -531,24 +531,24 @@ SBVPTransformation >> replaceAllMatches: anObject [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPTransformation >> toggleImplicitChildTo: aBoolean withBinding: aString [
+SBTransformation >> toggleImplicitChildTo: aBoolean withBinding: aString [
 
 	super toggleImplicitChildTo: aBoolean withBinding: aString on: self outputPattern.
 	self toggleImplicitChildTo: aBoolean withBinding: aString on: self outputPattern
 ]
 
 { #category : #'as yet unclassified' }
-SBVPTransformation >> value [
+SBTransformation >> value [
 
 	^ self value: self pattern findOriginRoot
 ]
 
 { #category : #'as yet unclassified' }
-SBVPTransformation >> value: anObject [
+SBTransformation >> value: anObject [
 
 	| matcher match |
-	matcher := (SBVPPatternMatcher
-		input: anObject asVisualPrimitive
+	matcher := (SBPatternMatcher
+		input: anObject asDomainBlock
 		pattern: self pattern) strategy: self strategy.
 	match := matcher getNextMatch.
 	^ match
@@ -557,9 +557,9 @@ SBVPTransformation >> value: anObject [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPTransformation >> writeSourceOn: aStream [
+SBTransformation >> writeSourceOn: aStream [
 
-	aStream nextPutAll: '(SBVPTransformation input: '.
+	aStream nextPutAll: '(SBTransformation input: '.
 	self pattern writeSourceOn: aStream.
 	aStream nextPutAll: ' output: '.
 	self outputPattern writeSourceOn: aStream.

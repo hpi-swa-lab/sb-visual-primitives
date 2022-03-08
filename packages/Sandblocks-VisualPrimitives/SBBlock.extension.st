@@ -1,6 +1,6 @@
 Extension { #name : #SBBlock }
 
-{ #category : #'*Sandblocks-VisualPrimitives' }
+{ #category : #'*Sandblocks-DomainBlocks' }
 SBBlock >> inspectProperties [
 	<action>
 
@@ -12,7 +12,7 @@ SBBlock >> inspectProperties [
 		openMorphInView: (SBForceConnector connect: self to: inspector)
 ]
 
-{ #category : #'*Sandblocks-VisualPrimitives' }
+{ #category : #'*Sandblocks-DomainBlocks' }
 SBBlock >> inspectableProperties [
 
 	^ {#color. #position}

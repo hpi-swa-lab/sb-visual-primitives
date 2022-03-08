@@ -1,5 +1,5 @@
 "
-An SBVPPatternMatcher is used for pattern matching. It tries to match the defined pattern in the SBVPTransformation to the input.
+An SBPatternMatcher is used for pattern matching. It tries to match the defined pattern in the SBTransformation to the input.
 
 Instance Variables
 	pattern:					Pattern
@@ -21,19 +21,19 @@ strategy
 	- a dict to specify the matching strategy
 	- current specifiers with their defaults:
 		- #explicitRootMatching -> true
-			- if true, the root of every SBVPBindingPattern only matches the root of the input
+			- if true, the root of every SBBindingPattern only matches the root of the input
 			- if false, the pattern can also match somewhere else in the input without further specification
 		- #explicitChildrenMatching -> true
 			- if true, every child has to be specified explicitly
 			- if false, the pattern can also match if the specified children have more siblings than the pattern has
-		- if there are no children specified in the pattern, an SBVPEllipsisPattern is implicitely added
+		- if there are no children specified in the pattern, an SBEllipsisPattern is implicitely added
 
 visitedPrimitives
 	- set of all visited primitives during the pattern matching
 
 "
 Class {
-	#name : #SBVPPatternMatcher,
+	#name : #SBPatternMatcher,
 	#superclass : #Object,
 	#instVars : [
 		'pattern',
@@ -42,48 +42,48 @@ Class {
 		'strategy',
 		'visitedPrimitives'
 	],
-	#category : #'Sandblocks-VisualPrimitives'
+	#category : #'Sandblocks-DomainBlocks'
 }
 
 { #category : #'as yet unclassified' }
-SBVPPatternMatcher class >> input: aVisualPrimitive pattern: aPattern [
+SBPatternMatcher class >> input: aDomainBlock pattern: aPattern [
 
-	^ self new input: aVisualPrimitive pattern: aPattern
+	^ self new input: aDomainBlock pattern: aPattern
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPatternMatcher >> build: aPattern fromBinding: anArray [
+SBPatternMatcher >> build: aPattern fromBinding: anArray [
 
 	^ self build: aPattern fromBinding: anArray currentPrimitive: self searchStack first
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPatternMatcher >> build: aPattern fromBinding: anArray currentPrimitive: aVisualPrimitive [
+SBPatternMatcher >> build: aPattern fromBinding: anArray currentPrimitive: aDomainBlock [
 
 	| subtreeRoot |
 	subtreeRoot := self searchStack last.
-	^ aVisualPrimitive = subtreeRoot
+	^ aDomainBlock = subtreeRoot
 		ifTrue: [(aPattern buildFromBinding: anArray) first]
-		ifFalse: [aVisualPrimitive copy children: (aVisualPrimitive children collect: [:primitive | self build: aPattern fromBinding: anArray currentPrimitive: primitive])]
+		ifFalse: [aDomainBlock copy children: (aDomainBlock children collect: [:primitive | self build: aPattern fromBinding: anArray currentPrimitive: primitive])]
 ]
 
 { #category : #accessing }
-SBVPPatternMatcher >> currentPrimitive [
+SBPatternMatcher >> currentPrimitive [
 
 	^ self searchStack last
 ]
 
 { #category : #accessing }
-SBVPPatternMatcher >> currentPrimitive: aVisualPrimitive [
+SBPatternMatcher >> currentPrimitive: aDomainBlock [
 
 	self searchStack: LinkedList new.
-	self searchStack addLast: aVisualPrimitive.
+	self searchStack addLast: aDomainBlock.
 	self visitedPrimitives: Set new.
-	self visitedPrimitives add: aVisualPrimitive
+	self visitedPrimitives add: aDomainBlock
 ]
 
 { #category : #accessing }
-SBVPPatternMatcher >> dealWithUndefinedResult [
+SBPatternMatcher >> dealWithUndefinedResult [
 
 	(self strategy at: #explicitRootMatching ifAbsent: [true]) ifTrue: [^ nil].
 	
@@ -100,13 +100,13 @@ SBVPPatternMatcher >> dealWithUndefinedResult [
 ]
 
 { #category : #accessing }
-SBVPPatternMatcher >> explicitChildrenMatching [
+SBPatternMatcher >> explicitChildrenMatching [
 
 	^ self strategy at: #explicitChildrenMatching ifAbsent: [true]
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPatternMatcher >> getAllMatches [
+SBPatternMatcher >> getAllMatches [
 
 	| matches match |
 	matches := OrderedCollection new.
@@ -115,7 +115,7 @@ SBVPPatternMatcher >> getAllMatches [
 ]
 
 { #category : #accessing }
-SBVPPatternMatcher >> getMatch [
+SBPatternMatcher >> getMatch [
 
 	| bindings |
 	bindings := Dictionary new.
@@ -125,7 +125,7 @@ SBVPPatternMatcher >> getMatch [
 ]
 
 { #category : #accessing }
-SBVPPatternMatcher >> getNextMatch [
+SBPatternMatcher >> getNextMatch [
 
 	self performedMatch
 		ifTrue: [(self pattern getNext: self currentPrimitive) ifFalse: [^ self dealWithUndefinedResult]]
@@ -135,85 +135,85 @@ SBVPPatternMatcher >> getNextMatch [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPatternMatcher >> initialize [
+SBPatternMatcher >> initialize [
 
 	super initialize.
 	self strategy: Dictionary new
 ]
 
 { #category : #accessing }
-SBVPPatternMatcher >> input: aVisualPrimitive [
+SBPatternMatcher >> input: aDomainBlock [
 
-	self currentPrimitive: aVisualPrimitive.
+	self currentPrimitive: aDomainBlock.
 	self pattern reset.
 	self performedMatch: false
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPatternMatcher >> input: aVisualPrimitive pattern: aPattern [
+SBPatternMatcher >> input: aDomainBlock pattern: aPattern [
 
 	self
 		pattern: aPattern;
-		currentPrimitive: aVisualPrimitive;
+		currentPrimitive: aDomainBlock;
 		performedMatch: false
 ]
 
 { #category : #accessing }
-SBVPPatternMatcher >> pattern [
+SBPatternMatcher >> pattern [
 
 	^ pattern
 ]
 
 { #category : #accessing }
-SBVPPatternMatcher >> pattern: aPattern [
+SBPatternMatcher >> pattern: aPattern [
 
 	pattern := aPattern
 ]
 
 { #category : #accessing }
-SBVPPatternMatcher >> performedMatch [
+SBPatternMatcher >> performedMatch [
 
 	^ performedMatch
 ]
 
 { #category : #accessing }
-SBVPPatternMatcher >> performedMatch: aBoolean [
+SBPatternMatcher >> performedMatch: aBoolean [
 
 	performedMatch := aBoolean
 ]
 
 { #category : #accessing }
-SBVPPatternMatcher >> searchStack [
+SBPatternMatcher >> searchStack [
 
 	^ searchStack
 ]
 
 { #category : #accessing }
-SBVPPatternMatcher >> searchStack: aLinkedList [
+SBPatternMatcher >> searchStack: aLinkedList [
 
 	searchStack := aLinkedList
 ]
 
 { #category : #accessing }
-SBVPPatternMatcher >> strategy [
+SBPatternMatcher >> strategy [
 
 	^ strategy
 ]
 
 { #category : #accessing }
-SBVPPatternMatcher >> strategy: aDict [
+SBPatternMatcher >> strategy: aDict [
 
 	strategy := aDict
 ]
 
 { #category : #accessing }
-SBVPPatternMatcher >> visitedPrimitives [
+SBPatternMatcher >> visitedPrimitives [
 
 	^ visitedPrimitives
 ]
 
 { #category : #accessing }
-SBVPPatternMatcher >> visitedPrimitives: aSet [
+SBPatternMatcher >> visitedPrimitives: aSet [
 
 	visitedPrimitives := aSet
 ]

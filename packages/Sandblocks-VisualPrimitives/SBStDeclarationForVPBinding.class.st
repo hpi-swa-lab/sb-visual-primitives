@@ -5,14 +5,14 @@ An SBStDeclarationForVPBinding is xxxxxxxxx.
 Class {
 	#name : #SBStDeclarationForVPBinding,
 	#superclass : #SBStDeclarationBehavior,
-	#category : #'Sandblocks-VisualPrimitives'
+	#category : #'Sandblocks-DomainBlocks'
 }
 
 { #category : #'as yet unclassified' }
 SBStDeclarationForVPBinding class >> checkCastFor: aBlock parent: aMorph [
 
 	| case |
-	case := (aMorph containingSandblock isKindOf: SBVPBindingPattern)
+	case := (aMorph containingSandblock isKindOf: SBBindingPattern)
 		ifTrue: [aMorph containingSandblock patternContainer]
 		ifFalse: [^ false].
 	^ case notNil and: [aBlock hasOwner: case pattern]
@@ -80,7 +80,7 @@ SBStDeclarationForVPBinding >> printBlockOn: aStream [
 SBStDeclarationForVPBinding >> refreshBindingIndex [
 
 	| bindingPattern |
-	bindingPattern := name firstOwnerSuchThat: [:owner | owner isVisualPrimitive].
+	bindingPattern := name firstOwnerSuchThat: [:owner | owner isDomainBlock].
 	(bindingPattern labelPositionOf: name) = bindingPattern identityLabelPosition ifTrue: [bindingPattern bindingIndex: name contents]
 ]
 

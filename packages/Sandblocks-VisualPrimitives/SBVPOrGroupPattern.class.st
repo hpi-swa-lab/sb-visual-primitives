@@ -1,82 +1,82 @@
 "
-An SBVPOrGroupPattern is xxxxxxxxx.
+An SBOrGroupPattern is xxxxxxxxx.
 
 "
 Class {
-	#name : #SBVPOrGroupPattern,
-	#superclass : #SBVPGroupPattern,
-	#category : #'Sandblocks-VisualPrimitives'
+	#name : #SBOrGroupPattern,
+	#superclass : #SBGroupPattern,
+	#category : #'Sandblocks-DomainBlocks'
 }
 
 { #category : #examples }
-SBVPOrGroupPattern class >> example: aDummyNode [
+SBOrGroupPattern class >> example: aDummyNode [
 
 	self
-		example: [SBVPOrGroupPattern]
+		example: [SBOrGroupPattern]
 		args: [
 			{
-				((SBVPDummyNode key: 9) left: ((SBVPDummyNode key: 10)
-					left: ((SBVPDummyNode key: 3)
-						left: ((SBVPDummyNode key: 1)
-							left: (SBVPDummyNode key: 0);
-							right: (SBVPDummyNode key: 1));
-						right: ((SBVPDummyNode key: 2) left: (SBVPDummyNode key: 5)));
-					right: ((SBVPDummyNode key: 7)
-						left: ((SBVPDummyNode key: 5)
-							left: (SBVPDummyNode key: 5);
-							right: (SBVPDummyNode key: 5));
-						right: ((SBVPDummyNode key: 2) left: (SBVPDummyNode key: 8))))) showAsVisualPrimitive}]
+				((SBDummyNode key: 9) left: ((SBDummyNode key: 10)
+					left: ((SBDummyNode key: 3)
+						left: ((SBDummyNode key: 1)
+							left: (SBDummyNode key: 0);
+							right: (SBDummyNode key: 1));
+						right: ((SBDummyNode key: 2) left: (SBDummyNode key: 5)));
+					right: ((SBDummyNode key: 7)
+						left: ((SBDummyNode key: 5)
+							left: (SBDummyNode key: 5);
+							right: (SBDummyNode key: 5));
+						right: ((SBDummyNode key: 2) left: (SBDummyNode key: 8))))) showAsDomainBlock}]
 		label: 'example'.
 	
-	^ (SBVPTransformation
-		input: (SBVPOrGroupPattern patterns: {
-			SBVPBindingPattern
+	^ (SBTransformation
+		input: (SBOrGroupPattern patterns: {
+			SBBindingPattern
 				bindingDict: {#identity -> #a}
 				expressionDict: {#innerLabel -> ['10']}
-				children: {SBVPEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBVPDummyNode}
-				visualizingClass: SBVPDummyNode.
-			SBVPGroupPattern patterns: {
-				SBVPBindingPattern
+				children: {SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBDummyNode}
+				visualizingClass: SBDummyNode.
+			SBGroupPattern patterns: {
+				SBBindingPattern
 					bindingDict: {#innerLabel -> #k. #identity -> #a}
-					children: {SBVPEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBVPDummyNode}
-					visualizingClass: SBVPDummyNode.
-				SBVPConstraintPattern constraint: [:bindings | (bindings at: #k) = 3]}})
-		output: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern
+					children: {SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBDummyNode}
+					visualizingClass: SBDummyNode.
+				SBConstraintPattern constraint: [:bindings | (bindings at: #k) = 3]}})
+		output: (SBGroupPattern patterns: {
+			SBBindingPattern
 				bindingDict: {#identity -> #a}
 				expressionDict: {#innerLabel -> ['42']}
-				children: {SBVPEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBVPDummyNode}
-				visualizingClass: SBVPDummyNode})
+				children: {SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBDummyNode}
+				visualizingClass: SBDummyNode})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> false;
 			add: #explicitChildrenMatching -> true;
 			yourself)
-		visualizePatternsAs: SBVPDummyNode) replaceAllMatches: aDummyNode
+		visualizePatternsAs: SBDummyNode) replaceAllMatches: aDummyNode
 ]
 
 { #category : #'as yet unclassified' }
-SBVPOrGroupPattern >> getNext: aVisualPrimitive [
+SBOrGroupPattern >> getNext: aDomainBlock [
 
 	| gotNext |
 	gotNext := false.
-	self children do: [:pattern | (pattern getNext: aVisualPrimitive) ifTrue: [gotNext := true]].
+	self children do: [:pattern | (pattern getNext: aDomainBlock) ifTrue: [gotNext := true]].
 	^ gotNext
 ]
 
 { #category : #'as yet unclassified' }
-SBVPOrGroupPattern >> matches: aVisualPrimitive withBinding: aCollection [
+SBOrGroupPattern >> matches: aDomainBlock withBinding: aCollection [
 
-	^ boundPattern matches: aVisualPrimitive withBinding: aCollection
+	^ boundPattern matches: aDomainBlock withBinding: aCollection
 ]
 
 { #category : #'as yet unclassified' }
-SBVPOrGroupPattern >> seperatorString [
+SBOrGroupPattern >> seperatorString [
 
 	^ ' or '
 ]
 
 { #category : #'as yet unclassified' }
-SBVPOrGroupPattern >> setBindingFor: aVisualPrimitive in: aCollection [
+SBOrGroupPattern >> setBindingFor: aDomainBlock in: aCollection [
 
 	| originalCollection |
 	originalCollection := aCollection copy.
@@ -84,7 +84,7 @@ SBVPOrGroupPattern >> setBindingFor: aVisualPrimitive in: aCollection [
 		detect: [:pattern |
 			aCollection removeAll.
 			aCollection addAll: originalCollection.
-			pattern setBindingFor: aVisualPrimitive in: aCollection]
+			pattern setBindingFor: aDomainBlock in: aCollection]
 		ifFound: [:pattern |
 			boundPattern := pattern.
 			true]

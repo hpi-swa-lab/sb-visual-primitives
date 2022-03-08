@@ -1,5 +1,5 @@
 "
-An SBVPPatternContainer is the visual representation of a pattern matching rule with SBVisualPrimitives. It consists of an input and an output pattern (see SBVPPattern). For the pattern matching see SBVPPatternMatcher. You can choose a default class that determines the visualPrimitiveMapping for the SBVPBindingPatterns.
+An SBPatternContainer is the visual representation of a pattern matching rule with SBDomainBlocks. It consists of an input and an output pattern (see SBPattern). For the pattern matching see SBPatternMatcher. You can choose a default class that determines the domainBlockMapping for the SBBindingPatterns.
 
 By applying the case on an input object, the input pattern gets matched on this object and the matched part gets transformed to match the output pattern.
 
@@ -7,36 +7,36 @@ Instance Variables
 	classNameInput:				SBStClassNameInput
 	defaultVisualizationClass:	Class
 	informationRow:				SBRow
-	pattern:							SBBlock (SBVPPattern)
+	pattern:							SBBlock (SBPattern)
 	strategy:							Dictionary
 
 classNameInput
 	- allows to select the defaultVisualizationClass
 
 defaultVisualizationClass
-	- SBVPBindingPatterns use this class's visualPrimitiveMapping to determine how to display themselves per default
+	- SBBindingPatterns use this class's domainBlockMapping to determine how to display themselves per default
 
 informationRow
 	- container for all other components
 
 pattern
 	- the input pattern that is matched on
-	- can be every kind of SBVPPattern
+	- can be every kind of SBPattern
 
 strategy
 	- a dict to specify the matching strategy
 	- current specifiers with their defaults:
 		- #explicitRootMatching -> true
-			- if true, the root of every SBVPBindingPattern only matches the root of the input
+			- if true, the root of every SBBindingPattern only matches the root of the input
 			- if false, the pattern can also match somewhere else in the input without further specification
 		- #explicitChildrenMatching -> true
 			- if true, every child has to be specified explicitly
 			- if false, the pattern can also match if the specified children have more siblings than the pattern has
-		- if there are no children specified in the pattern, an SBVPEllipsisPattern is implicitely added
+		- if there are no children specified in the pattern, an SBEllipsisPattern is implicitely added
 
 "
 Class {
-	#name : #SBVPPatternContainer,
+	#name : #SBPatternContainer,
 	#superclass : #SBStSubstitution,
 	#instVars : [
 		'classNameInput',
@@ -45,11 +45,11 @@ Class {
 		'pattern',
 		'strategy'
 	],
-	#category : #'Sandblocks-VisualPrimitives'
+	#category : #'Sandblocks-DomainBlocks'
 }
 
 { #category : #'as yet unclassified' }
-SBVPPatternContainer class >> buttonSpecifications [
+SBPatternContainer class >> buttonSpecifications [
 
 	^ {
 		self rootStrategy -> {
@@ -63,25 +63,25 @@ SBVPPatternContainer class >> buttonSpecifications [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPatternContainer class >> childrenStrategy [
+SBPatternContainer class >> childrenStrategy [
 
 	^ #explicitChildrenMatching
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPatternContainer class >> matches: aMessageSend [
+SBPatternContainer class >> matches: aMessageSend [
 
 	^ false
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPatternContainer class >> rootStrategy [
+SBPatternContainer class >> rootStrategy [
 
 	^ #explicitRootMatching
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPatternContainer >> addToggleButtonFor: aSymbol [
+SBPatternContainer >> addToggleButtonFor: aSymbol [
 
 	| correctIcon correctText button isExplicit |
 	isExplicit := self strategy at: aSymbol.
@@ -98,13 +98,13 @@ SBVPPatternContainer >> addToggleButtonFor: aSymbol [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPatternContainer >> artefactChanged: aMethodBlock [
+SBPatternContainer >> artefactChanged: aMethodBlock [
 
 	classNameInput ifNotNil: [classNameInput selectedClass ~= self defaultVisualizationClass ifTrue: [self defaultVisualizationClass: classNameInput selectedClass]]
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPatternContainer >> binding: aString for: block class: aClass ifPresent: aBlock [
+SBPatternContainer >> binding: aString for: block class: aClass ifPresent: aBlock [
 
 	| bindingsSet |
 	bindingsSet := Set new.
@@ -116,7 +116,7 @@ SBVPPatternContainer >> binding: aString for: block class: aClass ifPresent: aBl
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPatternContainer >> buildImplicitChildrenMatchingPattern [
+SBPatternContainer >> buildImplicitChildrenMatchingPattern [
 
 	self pattern ifNotNil: [
 		self pattern removeImplicitChildren.
@@ -124,49 +124,49 @@ SBVPPatternContainer >> buildImplicitChildrenMatchingPattern [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPatternContainer >> cellInset [
+SBPatternContainer >> cellInset [
 
 	^ 3
 ]
 
 { #category : #accessing }
-SBVPPatternContainer >> classNameInput [
+SBPatternContainer >> classNameInput [
 
 	^ classNameInput
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPatternContainer >> color [
+SBPatternContainer >> color [
 
 	^ color
 ]
 
 { #category : #accessing }
-SBVPPatternContainer >> defaultVisualizationClass [
+SBPatternContainer >> defaultVisualizationClass [
 
 	^ defaultVisualizationClass
 ]
 
 { #category : #accessing }
-SBVPPatternContainer >> defaultVisualizationClass: aClass [
+SBPatternContainer >> defaultVisualizationClass: aClass [
 
 	defaultVisualizationClass := aClass
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPatternContainer >> explicitChildrenMatching [
+SBPatternContainer >> explicitChildrenMatching [
 
 	^ self strategy at: #explicitChildrenMatching ifAbsent: [true]
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPatternContainer >> explicitRootMatching [
+SBPatternContainer >> explicitRootMatching [
 
 	^ self strategy at: #explicitRootMatching ifAbsent: [true]
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPatternContainer >> findAllBindings: aPattern [
+SBPatternContainer >> findAllBindings: aPattern [
 
 	| bindings |
 	bindings := Set new.
@@ -177,13 +177,13 @@ SBVPPatternContainer >> findAllBindings: aPattern [
 ]
 
 { #category : #accessing }
-SBVPPatternContainer >> informationRow [
+SBPatternContainer >> informationRow [
 
 	^ informationRow
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPatternContainer >> initialize [
+SBPatternContainer >> initialize [
 
 	super initialize.
 	informationRow := SBRow new cellInset: self cellInset.
@@ -198,13 +198,13 @@ SBVPPatternContainer >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPatternContainer >> isValidBinding: aString [
+SBPatternContainer >> isValidBinding: aString [
 
 	^ (self findAllBindings: self pattern) contains: [:binding | binding contents = aString]
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPatternContainer >> noteNewOwner: aMorph [
+SBPatternContainer >> noteNewOwner: aMorph [
 
 	super noteNewOwner: aMorph.
 	classNameInput ifNil: [ | row |
@@ -222,46 +222,46 @@ SBVPPatternContainer >> noteNewOwner: aMorph [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPatternContainer >> objectInterfaceNear: aBlock at: aSymbol [
+SBPatternContainer >> objectInterfaceNear: aBlock at: aSymbol [
 
-	^ {[:o | o isKindOf: SBVisualPrimitive]}
+	^ {[:o | o isKindOf: SBDomainBlock]}
 ]
 
 { #category : #accessing }
-SBVPPatternContainer >> pattern [
+SBPatternContainer >> pattern [
 
 	^ pattern
 ]
 
 { #category : #accessing }
-SBVPPatternContainer >> pattern: anSBBlock [
+SBPatternContainer >> pattern: anSBBlock [
 
 	pattern := anSBBlock
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPatternContainer >> patternRoot [
+SBPatternContainer >> patternRoot [
 
 	self flag: #tooOptimistic.
 	^ self pattern children first
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPatternContainer >> patternRoots [
+SBPatternContainer >> patternRoots [
 
 	^ self pattern children isEmpty
 		ifTrue: [nil]
-		ifFalse: [self pattern children select: [:child | child isKindOf: SBVPBindingPattern]]
+		ifFalse: [self pattern children select: [:child | child isKindOf: SBBindingPattern]]
 ]
 
 { #category : #accessing }
-SBVPPatternContainer >> strategy [
+SBPatternContainer >> strategy [
 
 	^ strategy
 ]
 
 { #category : #accessing }
-SBVPPatternContainer >> strategy: aDict [
+SBPatternContainer >> strategy: aDict [
 
 	strategy ifNotNil: [strategy addAll: aDict] ifNil: [strategy := aDict].
 	self class buttonSpecifications keysDo: [:strategySymbol | self addToggleButtonFor: strategySymbol].
@@ -269,7 +269,7 @@ SBVPPatternContainer >> strategy: aDict [
 ]
 
 { #category : #accessing }
-SBVPPatternContainer >> strategyButtonFor: aSymbol [
+SBPatternContainer >> strategyButtonFor: aSymbol [
 
 	| index |
 	index := (self class buttonSpecifications at: aSymbol) at: #index.
@@ -277,16 +277,16 @@ SBVPPatternContainer >> strategyButtonFor: aSymbol [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPatternContainer >> toggleImplicitChildTo: aBoolean withBinding: aString on: aSBVPPattern [
+SBPatternContainer >> toggleImplicitChildTo: aBoolean withBinding: aString on: aSBPattern [
 
-	aSBVPPattern allChildrenDo: [:pattern |
+	aSBPattern allChildrenDo: [:pattern |
 		pattern bindingIndex = aString ifTrue: [
 			pattern isImplicitChild: aBoolean.
 			^ self]]
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPatternContainer >> toggleStrategy: aSymbol [
+SBPatternContainer >> toggleStrategy: aSymbol [
 
 	self strategy at: aSymbol put: (self strategy at: aSymbol) not.
 	aSymbol = self class childrenStrategy ifTrue: [self buildImplicitChildrenMatchingPattern].

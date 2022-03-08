@@ -1,7 +1,7 @@
 "
-An SBVPSelectProperty displays the currently selected value of a number of choices as their corresponding representation. On double click a pop up allows to select a new value.
+An SBSelectProperty displays the currently selected value of a number of choices as their corresponding representation. On double click a pop up allows to select a new value.
 
-SBVPSelectProperties are created through SBVPPropertyMappingSelects.
+SBSelectProperties are created through SBPropertyMappingSelects.
 
 Instance Variables
 	choices: 					OrderedCollection
@@ -24,7 +24,7 @@ title
 
 "
 Class {
-	#name : #SBVPSelectProperty,
+	#name : #SBSelectProperty,
 	#superclass : #SBBlock,
 	#instVars : [
 		'choices',
@@ -32,16 +32,16 @@ Class {
 		'representations',
 		'title'
 	],
-	#category : #'Sandblocks-VisualPrimitives'
+	#category : #'Sandblocks-DomainBlocks'
 }
 
 { #category : #'as yet unclassified' }
-SBVPSelectProperty class >> choices: anOrderedCollection representations: anotherOrderedCollection initialValue: anObject title: aString [
+SBSelectProperty class >> choices: anOrderedCollection representations: anotherOrderedCollection initialValue: anObject title: aString [
 
 	| index |
 	index := anOrderedCollection indexOf: anObject.
 	
-	^ SBVPSelectProperty new
+	^ SBSelectProperty new
 		choices: anOrderedCollection;
 		representations: anotherOrderedCollection;
 		currentValueIndex: index;
@@ -49,7 +49,7 @@ SBVPSelectProperty class >> choices: anOrderedCollection representations: anothe
 ]
 
 { #category : #accessing }
-SBVPSelectProperty >> addVPLabel: aMorph [
+SBSelectProperty >> addVPLabel: aMorph [
 
 	| temp |
 	^ self hasSubmorphs
@@ -66,49 +66,49 @@ SBVPSelectProperty >> addVPLabel: aMorph [
 ]
 
 { #category : #accessing }
-SBVPSelectProperty >> balloonText [
+SBSelectProperty >> balloonText [
 
 	^ 'Double click to change value.'
 ]
 
 { #category : #accessing }
-SBVPSelectProperty >> choices [
+SBSelectProperty >> choices [
 
 	^ choices
 ]
 
 { #category : #accessing }
-SBVPSelectProperty >> choices: anOrderedCollection [
+SBSelectProperty >> choices: anOrderedCollection [
 
 	choices := anOrderedCollection
 ]
 
 { #category : #accessing }
-SBVPSelectProperty >> contents [
+SBSelectProperty >> contents [
 
 	^ self currentChoice
 ]
 
 { #category : #accessing }
-SBVPSelectProperty >> currentChoice [
+SBSelectProperty >> currentChoice [
 
 	^ self choices at: self currentValueIndex
 ]
 
 { #category : #accessing }
-SBVPSelectProperty >> currentRepresentation [
+SBSelectProperty >> currentRepresentation [
 
 	^ self representations at: self currentValueIndex
 ]
 
 { #category : #accessing }
-SBVPSelectProperty >> currentValueIndex [
+SBSelectProperty >> currentValueIndex [
 
 	^ currentValueIndex
 ]
 
 { #category : #accessing }
-SBVPSelectProperty >> currentValueIndex: aNumber [
+SBSelectProperty >> currentValueIndex: aNumber [
 
 	currentValueIndex := aNumber.
 	self
@@ -117,7 +117,7 @@ SBVPSelectProperty >> currentValueIndex: aNumber [
 ]
 
 { #category : #accessing }
-SBVPSelectProperty >> doubleClick: anEvent [
+SBSelectProperty >> doubleClick: anEvent [
 
 	| selectedIndex |
 	selectedIndex := UIManager default chooseFrom: self choices title: self title.
@@ -130,7 +130,7 @@ SBVPSelectProperty >> doubleClick: anEvent [
 ]
 
 { #category : #accessing }
-SBVPSelectProperty >> getRepresentationMorphAt: anIndex [
+SBSelectProperty >> getRepresentationMorphAt: anIndex [
 
 	| representation |
 	representation := self representations
@@ -144,7 +144,7 @@ SBVPSelectProperty >> getRepresentationMorphAt: anIndex [
 ]
 
 { #category : #accessing }
-SBVPSelectProperty >> initialize [
+SBSelectProperty >> initialize [
 
 	super initialize.
 	self
@@ -153,37 +153,37 @@ SBVPSelectProperty >> initialize [
 ]
 
 { #category : #accessing }
-SBVPSelectProperty >> representations [
+SBSelectProperty >> representations [
 
 	^ representations
 ]
 
 { #category : #accessing }
-SBVPSelectProperty >> representations: anOrderedCollection [
+SBSelectProperty >> representations: anOrderedCollection [
 
 	representations := anOrderedCollection
 ]
 
 { #category : #accessing }
-SBVPSelectProperty >> title [
+SBSelectProperty >> title [
 
 	^ title
 ]
 
 { #category : #accessing }
-SBVPSelectProperty >> title: aString [
+SBSelectProperty >> title: aString [
 
 	title := aString
 ]
 
 { #category : #accessing }
-SBVPSelectProperty >> wantsBalloon [
+SBSelectProperty >> wantsBalloon [
 
 	^ true
 ]
 
 { #category : #accessing }
-SBVPSelectProperty >> writeSourceOn: aStream [
+SBSelectProperty >> writeSourceOn: aStream [
 
 	aStream store: self contents
 ]

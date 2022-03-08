@@ -1,14 +1,14 @@
 "
-An SBVPPropertyMappingChildren is used to map to and from the children of an SBVisualPrimitive.
+An SBPropertyMappingChildren is used to map to and from the children of an SBDomainBlock.
 "
 Class {
-	#name : #SBVPPropertyMappingChildren,
-	#superclass : #SBVPPropertyMapping,
-	#category : #'Sandblocks-VisualPrimitives'
+	#name : #SBPropertyMappingChildren,
+	#superclass : #SBPropertyMapping,
+	#category : #'Sandblocks-DomainBlocks'
 }
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMappingChildren class >> defaultGetterBlockWith: aSymbol [
+SBPropertyMappingChildren class >> defaultGetterBlockWith: aSymbol [
 
 	^ aSymbol isSymbol
 		ifTrue: [
@@ -19,7 +19,7 @@ SBVPPropertyMappingChildren class >> defaultGetterBlockWith: aSymbol [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMappingChildren class >> defaultSetterBlockWith: aSymbol for: ignored [
+SBPropertyMappingChildren class >> defaultSetterBlockWith: aSymbol for: ignored [
 
 	^ aSymbol isSymbol
 		ifTrue: [
@@ -30,7 +30,7 @@ SBVPPropertyMappingChildren class >> defaultSetterBlockWith: aSymbol for: ignore
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMappingChildren class >> getter: aBlock setter: anotherBlock [
+SBPropertyMappingChildren class >> getter: aBlock setter: anotherBlock [
 
 	| wrappedGetter wrappedSetter |
 	wrappedGetter := [:object |
@@ -42,35 +42,35 @@ SBVPPropertyMappingChildren class >> getter: aBlock setter: anotherBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMappingChildren class >> getter: aBlock setter: anotherBlock patternValue: anObject vpProperty: aSymbol [
+SBPropertyMappingChildren class >> getter: aBlock setter: anotherBlock patternValue: anObject vpProperty: aSymbol [
 
 	anObject
-		ifNotNil: [Error signal: 'SBVPPropertyMappingChildren does not support patternValue as this would lead to patterns recusively having children. This will result in an infinite number of children.']
+		ifNotNil: [Error signal: 'SBPropertyMappingChildren does not support patternValue as this would lead to patterns recusively having children. This will result in an infinite number of children.']
 		ifNil: [^ super getter: aBlock setter: anotherBlock patternValue: anObject vpProperty: aSymbol name: 'children']
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMappingChildren class >> getter: aBlock setter: anotherBlock vpProperty: aSymbol [
+SBPropertyMappingChildren class >> getter: aBlock setter: anotherBlock vpProperty: aSymbol [
 
 	self assert: aSymbol = #children.
 	^ self getter: aBlock setter: anotherBlock
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMappingChildren class >> property: aSymbol [
+SBPropertyMappingChildren class >> property: aSymbol [
 
 	^ super property: aSymbol vpProperty: #children
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMappingChildren class >> property: aSymbol vpProperty: anotherSymbol [
+SBPropertyMappingChildren class >> property: aSymbol vpProperty: anotherSymbol [
 
 	self assert: anotherSymbol = #children.
 	^ self property: aSymbol
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMappingChildren >> initialize [
+SBPropertyMappingChildren >> initialize [
 
 	super initialize.
 	name := 'children'

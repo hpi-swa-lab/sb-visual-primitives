@@ -1,7 +1,7 @@
 Extension { #name : #String }
 
-{ #category : #'*Sandblocks-VisualPrimitives' }
+{ #category : #'*Sandblocks-DomainBlocks' }
 String >> propertyMappingClass [
 
-	^ SBVPPropertyMappingString
+	^ SBPropertyMappingString
 ]

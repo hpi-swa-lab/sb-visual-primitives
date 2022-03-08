@@ -1,55 +1,55 @@
 "
-An SBVPQuery is used to query a part of the input that matches the query's pattern.
+An SBQuery is used to query a part of the input that matches the query's pattern.
 "
 Class {
-	#name : #SBVPQuery,
-	#superclass : #SBVPPatternContainer,
-	#category : #'Sandblocks-VisualPrimitives'
+	#name : #SBQuery,
+	#superclass : #SBPatternContainer,
+	#category : #'Sandblocks-DomainBlocks'
 }
 
 { #category : #'as yet unclassified' }
-SBVPQuery class >> exampleExtractLeafOf: salzstangen [
+SBQuery class >> exampleExtractLeafOf: salzstangen [
 
 	| newMaybeLeaf currentNode |
 	self
-		example: [SBVPQuery]
+		example: [SBQuery]
 		args: [
 			{
-				((SBVPDummyNode key: 9) left: ((SBVPDummyNode key: 10) left: (SBVPDummyNode key: 7))) showAsVisualPrimitive}]
+				((SBDummyNode key: 9) left: ((SBDummyNode key: 10) left: (SBDummyNode key: 7))) showAsDomainBlock}]
 		label: 'example'.
 	currentNode := salzstangen.
 	[
-		(SBVPQuery
-			pattern: (SBVPGroupPattern patterns: {
-				SBVPBindingPattern
+		(SBQuery
+			pattern: (SBGroupPattern patterns: {
+				SBBindingPattern
 					expressionDict: {#identity -> [currentNode]}
-					children: {SBVPBindingPattern writeBackClosure: [:var | newMaybeLeaf := var]}})
+					children: {SBBindingPattern writeBackClosure: [:var | newMaybeLeaf := var]}})
 			strategy: (Dictionary new
 				add: #explicitRootMatching -> false;
 				add: #explicitChildrenMatching -> false;
 				yourself)
-			visualizePatternsAs: SBVPDummyNode) query] whileNotNil: [
+			visualizePatternsAs: SBDummyNode) query] whileNotNil: [
 		currentNode := newMaybeLeaf.
 		Transcript showln: 'HI'].
 	^ currentNode
 ]
 
 { #category : #'as yet unclassified' }
-SBVPQuery class >> exampleTwo: salzstangen [
+SBQuery class >> exampleTwo: salzstangen [
 
 	| gerhard currentSnack |
 	SBExample
-		self: [SBVPQuery]
-		args: [{SBVPDummyNode buildTree: {9 -> {10 -> {7}}}}]
+		self: [SBQuery]
+		args: [{SBDummyNode buildTree: {9 -> {10 -> {7}}}}]
 		label: 'example'.
 	currentSnack := salzstangen.
 	[
-		SBVPQuery
-			pattern: (SBVPGroupPattern patterns: {
-				SBVPBindingPattern
+		SBQuery
+			pattern: (SBGroupPattern patterns: {
+				SBBindingPattern
 					bindingDict: {#identity -> #c}
 					expressionDict: {#topLeftLabel -> ['REPEAT1']}
-					connections: {SBVPBindingPattern bindingDict: {#identity -> #b}}})
+					connections: {SBBindingPattern bindingDict: {#identity -> #b}}})
 			strategy: {#explicitRootMatching -> true} asDictionary] whileNotNil: [
 		Transcript showln: gerhard key.
 		currentSnack := gerhard].
@@ -57,16 +57,16 @@ SBVPQuery class >> exampleTwo: salzstangen [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPQuery class >> input: anSBVPVisualizer strategy: aDict [
+SBQuery class >> input: anSBDomainBlockContainer strategy: aDict [
 	" marker "
 
 	^ self new
-		input: anSBVPVisualizer;
+		input: anSBDomainBlockContainer;
 		strategy: aDict
 ]
 
 { #category : #'as yet unclassified' }
-SBVPQuery class >> matches: aBlock [
+SBQuery class >> matches: aBlock [
 
 	^ (aBlock receiver satisfies: #(#notNil #isBinding))
 		and: [aBlock receiver contents = self name]
@@ -74,11 +74,11 @@ SBVPQuery class >> matches: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPQuery class >> newFor: aBlock [
+SBQuery class >> newFor: aBlock [
 
 	| pattern |
 	pattern := aBlock arguments first.
-	pattern isVisualPrimitive ifFalse: [pattern := pattern evaluate].
+	pattern isDomainBlock ifFalse: [pattern := pattern evaluate].
 	^ aBlock arguments size caseOf: {
 		[1] -> [self pattern: pattern].
 		[2] -> [self pattern: pattern strategy: aBlock arguments second evaluate].
@@ -90,23 +90,23 @@ SBVPQuery class >> newFor: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPQuery class >> pattern: anSBVPVisualizer [
+SBQuery class >> pattern: anSBDomainBlockContainer [
 	" marker "
 
-	^ self new pattern: anSBVPVisualizer
+	^ self new pattern: anSBDomainBlockContainer
 ]
 
 { #category : #'as yet unclassified' }
-SBVPQuery class >> pattern: anSBVPVisualizer strategy: aDict [
+SBQuery class >> pattern: anSBDomainBlockContainer strategy: aDict [
 	" marker "
 
 	^ self new
-		pattern: anSBVPVisualizer;
+		pattern: anSBDomainBlockContainer;
 		strategy: aDict
 ]
 
 { #category : #'as yet unclassified' }
-SBVPQuery class >> pattern: aPattern strategy: aDict visualizePatternsAs: aClass [
+SBQuery class >> pattern: aPattern strategy: aDict visualizePatternsAs: aClass [
 	" marker "
 
 	^ self new
@@ -117,32 +117,32 @@ SBVPQuery class >> pattern: aPattern strategy: aDict visualizePatternsAs: aClass
 ]
 
 { #category : #'as yet unclassified' }
-SBVPQuery >> query [
+SBQuery >> query [
 
 	^ self query: self pattern findOriginRoot
 ]
 
 { #category : #'as yet unclassified' }
-SBVPQuery >> query: anObject [
+SBQuery >> query: anObject [
 
 	| matcher match |
-	matcher := (SBVPPatternMatcher
-		input: anObject asVisualPrimitive
+	matcher := (SBPatternMatcher
+		input: anObject asDomainBlock
 		pattern: self pattern) strategy: self strategy.
 	match := matcher getNextMatch.
 	^ match
 ]
 
 { #category : #'as yet unclassified' }
-SBVPQuery >> toggleImplicitChildTo: aBoolean withBinding: aString [
+SBQuery >> toggleImplicitChildTo: aBoolean withBinding: aString [
 
 	self toggleImplicitChildTo: aBoolean withBinding: aString on: self pattern
 ]
 
 { #category : #'as yet unclassified' }
-SBVPQuery >> writeSourceOn: aStream [
+SBQuery >> writeSourceOn: aStream [
 
-	aStream nextPutAll: '(SBVPQuery pattern: '.
+	aStream nextPutAll: '(SBQuery pattern: '.
 	self pattern writeSourceOn: aStream.
 	
 	self strategy ifNotNil: [

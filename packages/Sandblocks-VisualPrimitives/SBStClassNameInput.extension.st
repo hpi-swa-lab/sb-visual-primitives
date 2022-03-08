@@ -1,6 +1,6 @@
 Extension { #name : #SBStClassNameInput }
 
-{ #category : #'*Sandblocks-VisualPrimitives' }
+{ #category : #'*Sandblocks-DomainBlocks' }
 SBStClassNameInput >> promptClassForVPCase [
 
 	(UIManager default 

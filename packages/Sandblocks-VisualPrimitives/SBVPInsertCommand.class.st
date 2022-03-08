@@ -1,13 +1,13 @@
 "
-An SBVPInsertCommand is used to insert an SBVisualPrimitive into the current hierarchy.
+An SBInsertDomainBlockCommand is used to insert an SBDomainBlock into the current hierarchy.
 
 Instance Variables
-	children:			OrderedCollection of SBVisualPrimitives
-	parent:			SBVisualPrimitive
+	children:			OrderedCollection of SBDomainBlocks
+	parent:			SBDomainBlock
 	siblingIndex:	Number
 
 children
-	- SBVisualPrimitives that will be children of the inserted primitive
+	- SBDomainBlocks that will be children of the inserted primitive
 
 parent
 	- parent primitive of the inserted one
@@ -17,32 +17,32 @@ siblingIndex
 
 "
 Class {
-	#name : #SBVPInsertCommand,
+	#name : #SBInsertDomainBlockCommand,
 	#superclass : #SBInsertCommand,
 	#instVars : [
 		'children',
 		'parent',
 		'siblingIndex'
 	],
-	#category : #'Sandblocks-VisualPrimitives'
+	#category : #'Sandblocks-DomainBlocks'
 }
 
 { #category : #accessing }
-SBVPInsertCommand >> children [
+SBInsertDomainBlockCommand >> children [
 
 	^ children
 ]
 
 { #category : #accessing }
-SBVPInsertCommand >> children: anOrderedCollection [
+SBInsertDomainBlockCommand >> children: anOrderedCollection [
 
 	children := anOrderedCollection
 ]
 
 { #category : #'as yet unclassified' }
-SBVPInsertCommand >> do [
+SBInsertDomainBlockCommand >> do [
 
-	((self parent isKindOf: SBVPGroupPattern) and: [self children notEmpty]) ifTrue: [self parent removeChild: self children first].
+	((self parent isKindOf: SBGroupPattern) and: [self children notEmpty]) ifTrue: [self parent removeChild: self children first].
 	self children do: [:child | self morph addChild: child].
 	self parent ifNotNil: [
 		self parent
@@ -54,7 +54,7 @@ SBVPInsertCommand >> do [
 		container := self parent owner.
 		index := self container submorphCount].
 	
-	(self parent isKindOf: SBVPGroupPattern) ifFalse: [super do].
+	(self parent isKindOf: SBGroupPattern) ifFalse: [super do].
 	
 	self morph allChildrenDo: [:child | self container addMorphBack: child].
 	self morph parentCase ifNotNil: #buildImplicitChildrenMatchingPattern.
@@ -62,14 +62,14 @@ SBVPInsertCommand >> do [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPInsertCommand >> initialize [
+SBInsertDomainBlockCommand >> initialize [
 
 	super initialize.
 	self children: OrderedCollection new
 ]
 
 { #category : #'as yet unclassified' }
-SBVPInsertCommand >> insertSiblingIndex [
+SBInsertDomainBlockCommand >> insertSiblingIndex [
 
 	^ self siblingIndex
 		ifNotNil: [self siblingIndex - 1]
@@ -77,31 +77,31 @@ SBVPInsertCommand >> insertSiblingIndex [
 ]
 
 { #category : #accessing }
-SBVPInsertCommand >> parent [
+SBInsertDomainBlockCommand >> parent [
 
 	^ parent
 ]
 
 { #category : #accessing }
-SBVPInsertCommand >> parent: anSBBlock [
+SBInsertDomainBlockCommand >> parent: anSBBlock [
 
 	parent := anSBBlock
 ]
 
 { #category : #accessing }
-SBVPInsertCommand >> siblingIndex [
+SBInsertDomainBlockCommand >> siblingIndex [
 
 	^ siblingIndex
 ]
 
 { #category : #accessing }
-SBVPInsertCommand >> siblingIndex: aNumber [
+SBInsertDomainBlockCommand >> siblingIndex: aNumber [
 
 	siblingIndex := aNumber
 ]
 
 { #category : #'as yet unclassified' }
-SBVPInsertCommand >> undo [
+SBInsertDomainBlockCommand >> undo [
 
 	| case root |
 	case := self morph patternContainer.

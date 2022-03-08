@@ -1,78 +1,78 @@
 Class {
-	#name : #SBVPSpecialShapeFixture,
-	#superclass : #SBVPDummyNode,
-	#category : #'Sandblocks-VisualPrimitives-Fixtures'
+	#name : #SBSpecialShapeFixture,
+	#superclass : #SBDummyNode,
+	#category : #'Sandblocks-DomainBlocks-Fixtures'
 }
 
 { #category : #'as yet unclassified' }
-SBVPSpecialShapeFixture class >> exampleBuildHeapSpecialShape: aTree [
+SBSpecialShapeFixture class >> exampleBuildHeapSpecialShape: aTree [
 
 	self
-		example: [SBVPSpecialShapeFixture]
+		example: [SBSpecialShapeFixture]
 		args: [
 			{
-				((SBVPSpecialShapeFixture key: 9) left: ((SBVPSpecialShapeFixture key: 10)
-					left: ((SBVPSpecialShapeFixture key: 3)
-						left: ((SBVPSpecialShapeFixture key: 1)
-							left: (SBVPSpecialShapeFixture key: 0);
-							right: (SBVPSpecialShapeFixture key: 1));
-						right: ((SBVPSpecialShapeFixture key: 2) left: (SBVPSpecialShapeFixture key: 5)));
-					right: ((SBVPSpecialShapeFixture key: 7)
-						left: ((SBVPSpecialShapeFixture key: 5)
-							left: (SBVPSpecialShapeFixture key: 5);
-							right: (SBVPSpecialShapeFixture key: 5));
-						right: ((SBVPSpecialShapeFixture key: 2) left: (SBVPSpecialShapeFixture key: 8))))) showAsVisualPrimitive}]
+				((SBSpecialShapeFixture key: 9) left: ((SBSpecialShapeFixture key: 10)
+					left: ((SBSpecialShapeFixture key: 3)
+						left: ((SBSpecialShapeFixture key: 1)
+							left: (SBSpecialShapeFixture key: 0);
+							right: (SBSpecialShapeFixture key: 1));
+						right: ((SBSpecialShapeFixture key: 2) left: (SBSpecialShapeFixture key: 5)));
+					right: ((SBSpecialShapeFixture key: 7)
+						left: ((SBSpecialShapeFixture key: 5)
+							left: (SBSpecialShapeFixture key: 5);
+							right: (SBSpecialShapeFixture key: 5));
+						right: ((SBSpecialShapeFixture key: 2) left: (SBSpecialShapeFixture key: 8))))) showAsDomainBlock}]
 		label: 'example'.
-	^ (SBVPTransformation
-		input: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern
+	^ (SBTransformation
+		input: (SBGroupPattern patterns: {
+			SBBindingPattern
 				bindingDict: {#identity -> #a}
 				children: {
-					SBVPEllipsisPattern
+					SBEllipsisPattern
 						bindingDict: {#identity -> #b}
-						visualizingClass: SBVPSpecialShapeFixture.
-					SBVPBindingPattern
+						visualizingClass: SBSpecialShapeFixture.
+					SBBindingPattern
 						bindingDict: {#identity -> #boi}
 						children: {
-							SBVPEllipsisPattern
+							SBEllipsisPattern
 								bindingDict: {#identity -> #e}
-								visualizingClass: SBVPSpecialShapeFixture}
-						visualizingClass: SBVPSpecialShapeFixture.
-					SBVPEllipsisPattern
+								visualizingClass: SBSpecialShapeFixture}
+						visualizingClass: SBSpecialShapeFixture.
+					SBEllipsisPattern
 						bindingDict: {#identity -> #d}
-						visualizingClass: SBVPSpecialShapeFixture}
-				visualizingClass: SBVPSpecialShapeFixture.
-			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) key < (bindings at: #boi) key]})
-		output: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern
+						visualizingClass: SBSpecialShapeFixture}
+				visualizingClass: SBSpecialShapeFixture.
+			SBConstraintPattern constraint: [:bindings | (bindings at: #a) key < (bindings at: #boi) key]})
+		output: (SBGroupPattern patterns: {
+			SBBindingPattern
 				bindingDict: {#identity -> #boi}
 				children: {
-					SBVPEllipsisPattern
+					SBEllipsisPattern
 						bindingDict: {#identity -> #b}
-						visualizingClass: SBVPSpecialShapeFixture.
-					SBVPBindingPattern
+						visualizingClass: SBSpecialShapeFixture.
+					SBBindingPattern
 						bindingDict: {#identity -> #a}
 						children: {
-							SBVPEllipsisPattern
+							SBEllipsisPattern
 								bindingDict: {#identity -> #e}
-								visualizingClass: SBVPSpecialShapeFixture}
-						visualizingClass: SBVPSpecialShapeFixture.
-					SBVPEllipsisPattern
+								visualizingClass: SBSpecialShapeFixture}
+						visualizingClass: SBSpecialShapeFixture.
+					SBEllipsisPattern
 						bindingDict: {#identity -> #d}
-						visualizingClass: SBVPSpecialShapeFixture}
-				visualizingClass: SBVPSpecialShapeFixture})
+						visualizingClass: SBSpecialShapeFixture}
+				visualizingClass: SBSpecialShapeFixture})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> false;
 			add: #explicitChildrenMatching -> false;
 			yourself)
-		visualizePatternsAs: SBVPSpecialShapeFixture) replaceAllMatches: aTree
+		visualizePatternsAs: SBSpecialShapeFixture) replaceAllMatches: aTree
 ]
 
 { #category : #'as yet unclassified' }
-SBVPSpecialShapeFixture class >> visualPrimitiveMapping [
+SBSpecialShapeFixture class >> domainBlockMapping [
 
 	^ {
-		SBVPPropertyMapping
+		SBPropertyMapping
 			getter: [:object |
 				CircleMorph new
 					color: (Color r: 0.5 g: 0.5 b: (object key ifNotNil: [:key | key asInteger / 255] ifNil: [0]));
@@ -81,6 +81,6 @@ SBVPSpecialShapeFixture class >> visualPrimitiveMapping [
 			patternValue: (CircleMorph new color: (Color r: 0.5 g: 0.5 b: 0.1))
 			vpProperty: #shape
 			name: 'shape'.
-		SBVPPropertyMappingNumber property: #key vpProperty: #innerLabel.
+		SBPropertyMappingNumber property: #key vpProperty: #innerLabel.
 		self childrenMappingEntry}
 ]

@@ -1,15 +1,15 @@
 "
-An SBVPPropertyMappingString is used to map from a property that's a String to a vpProperty and back. The Morph that will be displayed is an SBTextBubble.
+An SBPropertyMappingString is used to map from a property that's a String to a vpProperty and back. The Morph that will be displayed is an SBTextBubble.
 
 "
 Class {
-	#name : #SBVPPropertyMappingString,
-	#superclass : #SBVPPropertyMapping,
-	#category : #'Sandblocks-VisualPrimitives'
+	#name : #SBPropertyMappingString,
+	#superclass : #SBPropertyMapping,
+	#category : #'Sandblocks-DomainBlocks'
 }
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMappingString class >> defaultSetterBlockWith: aSymbol for: anotherSymbol [
+SBPropertyMappingString class >> defaultSetterBlockWith: aSymbol for: anotherSymbol [
 
 	^ aSymbol isSymbol
 		ifTrue: [[:object :vp | (vp propertyAt: anotherSymbol) ifNotNil: [object perform: aSymbol asSimpleSetter with: (vp propertyAt: anotherSymbol) asString]]]
@@ -19,13 +19,13 @@ SBVPPropertyMappingString class >> defaultSetterBlockWith: aSymbol for: anotherS
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMappingString >> getMorphForValue: anObject [
+SBPropertyMappingString >> getMorphForValue: anObject [
 
 	^ anObject ifNotNil: [(self isConstant ifTrue: [SBStringMorph] ifFalse: [SBTextBubble]) new contents: anObject asString]
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMappingString >> suggestionConstant [
+SBPropertyMappingString >> suggestionConstant [
 
 	^ 'CONSTANT'
 ]

@@ -1,5 +1,5 @@
 "
-An SBVPDeleteCommand is a Command to remove an SBVisualPrimitive. It's removed from its world and hirachy. The Morphs in the primitive's children will be abandoned, too.
+An SBDeleteDomainBlockCommand is a Command to remove an SBDomainBlock. It's removed from its world and hirachy. The Morphs in the primitive's children will be abandoned, too.
 
 Instance Variables
 	oldParent:			SBBlock
@@ -13,17 +13,17 @@ oldSiblingIndex
 
 "
 Class {
-	#name : #SBVPDeleteCommand,
+	#name : #SBDeleteDomainBlockCommand,
 	#superclass : #SBDeleteCommand,
 	#instVars : [
 		'oldParent',
 		'oldSiblingIndex'
 	],
-	#category : #'Sandblocks-VisualPrimitives'
+	#category : #'Sandblocks-DomainBlocks'
 }
 
 { #category : #'do-undo' }
-SBVPDeleteCommand >> do [
+SBDeleteDomainBlockCommand >> do [
 
 	oldOwner := target owner.
 	super do.
@@ -37,35 +37,35 @@ SBVPDeleteCommand >> do [
 ]
 
 { #category : #accessing }
-SBVPDeleteCommand >> oldParent [
+SBDeleteDomainBlockCommand >> oldParent [
 
 	^ oldParent
 ]
 
 { #category : #accessing }
-SBVPDeleteCommand >> oldParent: anObject [
+SBDeleteDomainBlockCommand >> oldParent: anObject [
 
 	oldParent := anObject
 ]
 
 { #category : #accessing }
-SBVPDeleteCommand >> oldSiblingIndex [
+SBDeleteDomainBlockCommand >> oldSiblingIndex [
 
 	^ oldSiblingIndex
 ]
 
 { #category : #accessing }
-SBVPDeleteCommand >> oldSiblingIndex: aNumber [
+SBDeleteDomainBlockCommand >> oldSiblingIndex: aNumber [
 
 	oldSiblingIndex := aNumber
 ]
 
 { #category : #'do-undo' }
-SBVPDeleteCommand >> undo [
+SBDeleteDomainBlockCommand >> undo [
 
 	self oldParent ifNotNil: [self oldParent addChild: target afterIndex: self oldSiblingIndex - 1].
 	
-	(self oldParent isKindOf: SBVPGroupPattern) ifFalse: [
+	(self oldParent isKindOf: SBGroupPattern) ifFalse: [
 		target allChildrenDo: [:block | oldOwner addMorphBack: block].
 		super undo].
 	self oldParent parentCase ifNotNil: #buildImplicitChildrenMatchingPattern.

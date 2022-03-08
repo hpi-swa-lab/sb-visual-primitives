@@ -9,7 +9,7 @@ Class {
 	#instVars : [
 		'layoutData'
 	],
-	#category : #'Sandblocks-VisualPrimitives'
+	#category : #'Sandblocks-DomainBlocks'
 }
 
 { #category : #accessing }

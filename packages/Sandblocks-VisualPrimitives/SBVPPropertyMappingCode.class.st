@@ -1,17 +1,17 @@
 Class {
-	#name : #SBVPPropertyMappingCode,
-	#superclass : #SBVPPropertyMapping,
-	#category : #'Sandblocks-VisualPrimitives'
+	#name : #SBPropertyMappingCode,
+	#superclass : #SBPropertyMapping,
+	#category : #'Sandblocks-DomainBlocks'
 }
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMappingCode >> getLabelContents: anObject [
+SBPropertyMappingCode >> getLabelContents: anObject [
 
 	^ Compiler evaluate: anObject firstSubmorph sourceString
 ]
 
 { #category : #'as yet unclassified' }
-SBVPPropertyMappingCode >> getMorphForValue: aClosure [
+SBPropertyMappingCode >> getMorphForValue: aClosure [
 
 	^ aClosure asSandblock
 ]

@@ -1,1 +1,1 @@
-Package { #name : #'Sandblocks-VisualPrimitives' }
+Package { #name : #'Sandblocks-DomainBlocks' }

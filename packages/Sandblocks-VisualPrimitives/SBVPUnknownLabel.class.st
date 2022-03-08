@@ -1,33 +1,33 @@
 "
-An SBVPUnknownLabel is the Unknown for an empty SBVisualPrimitive's label. It suggests to become a binding, variable or constant.
+An SBUnknownLabel is the Unknown for an empty SBDomainBlock's label. It suggests to become a binding, variable or constant.
 
 "
 Class {
-	#name : #SBVPUnknownLabel,
+	#name : #SBUnknownLabel,
 	#superclass : #SBUnknown,
-	#category : #'Sandblocks-VisualPrimitives'
+	#category : #'Sandblocks-DomainBlocks'
 }
 
 { #category : #'as yet unclassified' }
-SBVPUnknownLabel >> deleteBeforeCursor [
+SBUnknownLabel >> deleteBeforeCursor [
 
 	self sandblockEditor do: (SBDeleteCommand new target: self)
 ]
 
 { #category : #'as yet unclassified' }
-SBVPUnknownLabel >> printOn: aStream [
+SBUnknownLabel >> printOn: aStream [
 
 	aStream nextPutAll: 'unknown label'
 ]
 
 { #category : #'as yet unclassified' }
-SBVPUnknownLabel >> suggestAlways [
+SBUnknownLabel >> suggestAlways [
 
 	^ true
 ]
 
 { #category : #'as yet unclassified' }
-SBVPUnknownLabel >> suggestions [
+SBUnknownLabel >> suggestions [
 
 	^ self parentSandblock labelSuggestionsFor: self
 ]

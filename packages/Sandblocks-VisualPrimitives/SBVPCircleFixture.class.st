@@ -1,11 +1,11 @@
 Class {
-	#name : #SBVPCircleFixture,
-	#superclass : #SBVPDummyNode,
-	#category : #'Sandblocks-VisualPrimitives-Fixtures'
+	#name : #SBCircleFixture,
+	#superclass : #SBDummyNode,
+	#category : #'Sandblocks-DomainBlocks-Fixtures'
 }
 
 { #category : #'as yet unclassified' }
-SBVPCircleFixture class >> visualPrimitiveMapping [
+SBCircleFixture class >> domainBlockMapping [
 
 	^ {#shape -> CircleMorph new. #innerLabel -> #key. self childrenMappingEntry}
 ]

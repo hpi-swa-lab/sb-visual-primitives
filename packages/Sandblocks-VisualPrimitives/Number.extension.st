@@ -1,7 +1,7 @@
 Extension { #name : #Number }
 
-{ #category : #'*Sandblocks-VisualPrimitives' }
+{ #category : #'*Sandblocks-DomainBlocks' }
 Number >> propertyMappingClass [
 
-	^ SBVPPropertyMappingNumber
+	^ SBPropertyMappingNumber
 ]

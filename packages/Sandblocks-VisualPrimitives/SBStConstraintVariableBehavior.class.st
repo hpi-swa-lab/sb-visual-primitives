@@ -5,13 +5,13 @@ An SBStConstraintVariableBehavior is xxxxxxxxx.
 Class {
 	#name : #SBStConstraintVariableBehavior,
 	#superclass : #SBStDeclarationBehavior,
-	#category : #'Sandblocks-VisualPrimitives'
+	#category : #'Sandblocks-DomainBlocks'
 }
 
 { #category : #'as yet unclassified' }
 SBStConstraintVariableBehavior class >> checkCastFor: aBlock parent: aMorph [
 
-	^ (aBlock firstOwnerSuchThat: [:owner | owner isKindOf: SBVPConstraintPattern])
+	^ (aBlock firstOwnerSuchThat: [:owner | owner isKindOf: SBConstraintPattern])
 		ifNil: [false]
 		ifNotNil: [:constraintPattern |
 			constraintPattern patternContainer
@@ -24,7 +24,7 @@ SBStConstraintVariableBehavior >> guessedClass [
 
 	| someClass |
 	someClass := self block containingArtefact typeFor: self block.
-	^ (name firstOwnerSuchThat: [:owner | owner isKindOf: SBVPConstraintPattern])
+	^ (name firstOwnerSuchThat: [:owner | owner isKindOf: SBConstraintPattern])
 		ifNil: [someClass]
 		ifNotNil: [:constraintPattern |
 			constraintPattern patternContainer
@@ -87,7 +87,7 @@ SBStConstraintVariableBehavior >> writeSourceOn: aStream [
 
 	aStream
 		nextPut: $(;
-		nextPutAll: SBVPConstraintPattern constraintInputName;
+		nextPutAll: SBConstraintPattern constraintInputName;
 		nextPutAll: ' at: #';
 		nextPutAll: name contents;
 		nextPut: $)

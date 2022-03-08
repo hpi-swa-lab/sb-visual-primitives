@@ -4,7 +4,7 @@ An SBPropertyInspector shows the properties of an SBBlock. It can be opened via 
 Class {
 	#name : #SBPropertyInspector,
 	#superclass : #SBBlock,
-	#category : #'Sandblocks-VisualPrimitives'
+	#category : #'Sandblocks-DomainBlocks'
 }
 
 { #category : #'as yet unclassified' }

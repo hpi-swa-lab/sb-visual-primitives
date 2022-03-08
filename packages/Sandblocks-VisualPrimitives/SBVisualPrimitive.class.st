@@ -1,12 +1,12 @@
 "
-An SBVisualPrimitive is the visual representation of an object. It can also be used to display various patterns. When originating from an object, this object's class visualPrimitiveMapping will be used as a directive on how to map from object properties to properties of the visual primitive (vpProperty). 
-See SBVPPropertyMappings for the different ways of mapping.
+An SBDomainBlock is the visual representation of an object. It can also be used to display various patterns. When originating from an object, this object's class domainBlockMapping will be used as a directive on how to map from object properties to properties of the visual primitive (vpProperty). 
+See SBPropertyMappings for the different ways of mapping.
 
 Instance Variables
 	blockDict:		Dictionary
-	children:			OrderedCollection of SBVisualPrimitives
+	children:			OrderedCollection of SBDomainBlocks
 	labelDict:		Dictionary
-	parent:			SBVisualPrimitive
+	parent:			SBDomainBlock
 	sourceObject:	Object
 
 blockDict
@@ -14,7 +14,7 @@ blockDict
 	- stores the blocks that the labels or shape blocks are inserted into
 
 children
-	- the connected SBVisualPrimitives
+	- the connected SBDomainBlocks
 
 labelDict
 	- (#labelPosition -> SBBlock)
@@ -25,11 +25,11 @@ parent
 
 sourceObject
 	- the object the primitive is build for
-	- may be nil if the SBVisualPrimitive is a pattern
+	- may be nil if the SBDomainBlock is a pattern
 
 "
 Class {
-	#name : #SBVisualPrimitive,
+	#name : #SBDomainBlock,
 	#superclass : #SBStSubstitution,
 	#instVars : [
 		'blockDict',
@@ -37,11 +37,11 @@ Class {
 		'parent',
 		'sourceObject'
 	],
-	#category : #'Sandblocks-VisualPrimitives'
+	#category : #'Sandblocks-DomainBlocks'
 }
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive class >> buildTree: aCollection [
+SBDomainBlock class >> buildTree: aCollection [
 
 	^ aCollection collect: [:element |
 		element isVariableBinding
@@ -50,40 +50,40 @@ SBVisualPrimitive class >> buildTree: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive class >> matches: aBlock [
+SBDomainBlock class >> matches: aBlock [
 
 	^ false
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive class >> new: aLabel [
+SBDomainBlock class >> new: aLabel [
 
 	^ self new label: aLabel
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive class >> newFromObject: anObject [
+SBDomainBlock class >> newFromObject: anObject [
 
 	| vp |
 	vp := self new.
 	vp sourceObject: anObject.
-	vp addPropertyMappings: anObject class visualPrimitiveMapping.
+	vp addPropertyMappings: anObject class domainBlockMapping.
 	^ vp
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive class >> newFromObject: anObject in: aMorph [
+SBDomainBlock class >> newFromObject: anObject in: aMorph [
 
 	| vp |
 	vp := self new.
 	aMorph addMorphBack: vp.
 	vp sourceObject: anObject.
-	vp addPropertyMappings: anObject class visualPrimitiveMapping.
+	vp addPropertyMappings: anObject class domainBlockMapping.
 	^ vp
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive class >> registerShortcuts: aProvider [
+SBDomainBlock class >> registerShortcuts: aProvider [
 
 	aProvider
 		registerShortcut: Character space do: #addNewChild;
@@ -91,7 +91,7 @@ SBVisualPrimitive class >> registerShortcuts: aProvider [
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive class >> selector: aString receiverMatches: aMessage [
+SBDomainBlock class >> selector: aString receiverMatches: aMessage [
 
 	(aMessage isSandblock and: [(aMessage isMessageSend and: [aMessage receiver notNil]) or: [self matchesCascades and: [aMessage isCascade]]]) ifFalse: [^ false].
 	
@@ -99,21 +99,21 @@ SBVisualPrimitive class >> selector: aString receiverMatches: aMessage [
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> addChild: aVisualPrimitive [
+SBDomainBlock >> addChild: aDomainBlock [
 
-	self addChild: aVisualPrimitive afterIndex: self children size
+	self addChild: aDomainBlock afterIndex: self children size
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> addChild: aVisualPrimitive afterIndex: aNumber [
+SBDomainBlock >> addChild: aDomainBlock afterIndex: aNumber [
 
-	aVisualPrimitive parent ifNotNil: [aVisualPrimitive parent removeChild: aVisualPrimitive].
-	self children add: aVisualPrimitive afterIndex: aNumber.
-	aVisualPrimitive parent: self
+	aDomainBlock parent ifNotNil: [aDomainBlock parent removeChild: aDomainBlock].
+	self children add: aDomainBlock afterIndex: aNumber.
+	aDomainBlock parent: self
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> addConnectorLinesIn: aMorph [
+SBDomainBlock >> addConnectorLinesIn: aMorph [
 
 	self children do: [:child | | connector |
 		connector := (SBConnectorLine connect: self align: #bottom to: child align: #top)
@@ -125,7 +125,7 @@ SBVisualPrimitive >> addConnectorLinesIn: aMorph [
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> addLabel [
+SBDomainBlock >> addLabel [
 	<action>
 	<actionValidIf: #supportsLabels>
 
@@ -143,10 +143,10 @@ SBVisualPrimitive >> addLabel [
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> addNewChild [
+SBDomainBlock >> addNewChild [
 	<action>
 
-	self sandblockEditor do: (SBVPInsertCommand new
+	self sandblockEditor do: (SBInsertDomainBlockCommand new
 		index: self owner submorphCount + 1;
 		parent: self;
 		container: self owner;
@@ -156,10 +156,10 @@ SBVisualPrimitive >> addNewChild [
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> addNewParent [
+SBDomainBlock >> addNewParent [
 	<action>
 
-	self sandblockEditor do: (SBVPInsertCommand new
+	self sandblockEditor do: (SBInsertDomainBlockCommand new
 		index: self owner submorphCount + 1;
 		parent: self parent;
 		container: self owner;
@@ -171,10 +171,10 @@ SBVisualPrimitive >> addNewParent [
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> addPropertyMapping: anSBVPPropertyMapping [
+SBDomainBlock >> addPropertyMapping: anSBPropertyMapping [
 
 	| value propertyMapping newChild |
-	propertyMapping := anSBVPPropertyMapping asPropertyMapping.
+	propertyMapping := anSBPropertyMapping asPropertyMapping.
 	value := self valueFromPropertyMapping: propertyMapping.
 	
 	propertyMapping vpProperty
@@ -184,83 +184,83 @@ SBVisualPrimitive >> addPropertyMapping: anSBVPPropertyMapping [
 				self children: OrderedCollection new.
 				value do: [:child |
 					newChild := self owner
-						ifNil: [child asVisualPrimitive]
-						ifNotNil: [SBVisualPrimitive newFromObject: child in: self owner].
+						ifNil: [child asDomainBlock]
+						ifNotNil: [SBDomainBlock newFromObject: child in: self owner].
 					self addChild: newChild]]}
 		otherwise: [(self labelPositions includes: propertyMapping vpProperty) ifTrue: [(self blockDict at: propertyMapping vpProperty) addVPLabel: (propertyMapping getMorphFor: self sourceObject)]]
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> addPropertyMappings: aCollection [
+SBDomainBlock >> addPropertyMappings: aCollection [
 
 	aCollection do: [:mappingEntry | self addPropertyMapping: mappingEntry]
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> addToWorld: aWorld [
+SBDomainBlock >> addToWorld: aWorld [
 
 	^ self subclassResponsibility
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> afterAddLabel: aBlock [
+SBDomainBlock >> afterAddLabel: aBlock [
 
 	
 ]
 
 { #category : #nil }
-SBVisualPrimitive >> allChildrenDo: aBlock [
+SBDomainBlock >> allChildrenDo: aBlock [
 
 	aBlock value: self.
 	self children do: [:child | child allChildrenDo: aBlock]
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> asVisualPrimitive [
+SBDomainBlock >> asDomainBlock [
 
 	^ self
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> blockDict [
+SBDomainBlock >> blockDict [
 
 	^ blockDict
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> blockDict: aDict [
+SBDomainBlock >> blockDict: aDict [
 
 	blockDict := aDict
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> blockPositions [
+SBDomainBlock >> blockPositions [
 
 	^ self topLabelPositions, self middleBlockPositions, self bottomLabelPositions
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> bottomLabelPositions [
+SBDomainBlock >> bottomLabelPositions [
 
 	^ {#bottomLeftLabel. #bottomCenterLabel. #bottomRightLabel}
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> buildNewInstance [
+SBDomainBlock >> buildNewInstance [
 
 	^ self sourceObject
-		ifNotNil: [self sourceObject class new asVisualPrimitive]
+		ifNotNil: [self sourceObject class new asDomainBlock]
 		ifNil: [self class new]
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> buildObject [
+SBDomainBlock >> buildObject [
 
 	| anObject |
 	anObject := self sourceObject copy.
-	anObject class visualPrimitiveMapping do: [:propertyMapping |
+	anObject class domainBlockMapping do: [:propertyMapping |
 		(propertyMapping isPropertyMapping
-			ifFalse: [SBVPPropertyMapping fromAssociation: propertyMapping]
+			ifFalse: [SBPropertyMapping fromAssociation: propertyMapping]
 			ifTrue: [propertyMapping]) setter
 			value: anObject
 			value: self].
@@ -269,29 +269,29 @@ SBVisualPrimitive >> buildObject [
 ]
 
 { #category : #nil }
-SBVisualPrimitive >> centerChild [
+SBDomainBlock >> centerChild [
 
 	^ self children ifEmpty: [nil] ifNotEmpty: [self children at: self children size + 1 / 2]
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> children [
+SBDomainBlock >> children [
 
 	^ children
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> children: aCollection [
+SBDomainBlock >> children: aCollection [
 
 	children := aCollection asOrderedCollection.
 	children do: [:child | child parent: self]
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> constantSuggestionsFor: aSBVPUnknownLabel [
+SBDomainBlock >> constantSuggestionsFor: aSBUnknownLabel [
 
 	| aVPProperty suggestionConstant constantString suggestionConstantBlock |
-	aVPProperty := self labelPositionOf: aSBVPUnknownLabel.
+	aVPProperty := self labelPositionOf: aSBUnknownLabel.
 	suggestionConstant := self suggestionConstantAt: aVPProperty.
 	suggestionConstantBlock := self suggestionConstantBlockAt: aVPProperty.
 	constantString := String streamContents: [:stream |
@@ -303,21 +303,21 @@ SBVisualPrimitive >> constantSuggestionsFor: aSBVPUnknownLabel [
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> defaultShape [
+SBDomainBlock >> defaultShape [
 
 	^ CircleMorph new layoutInset: 4
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> deleteBlock [
+SBDomainBlock >> deleteBlock [
 
-	self sandblockEditor do: (SBVPDeleteCommand new
+	self sandblockEditor do: (SBDeleteDomainBlockCommand new
 		target: self;
 		yourself)
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> getLabelMorph: anObject [
+SBDomainBlock >> getLabelMorph: anObject [
 
 	^ (anObject isString or: [anObject isNumber])
 		ifTrue: [SBTextBubble new contents: anObject asString]
@@ -325,7 +325,7 @@ SBVisualPrimitive >> getLabelMorph: anObject [
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> initialize [
+SBDomainBlock >> initialize [
 
 	super initialize.
 	
@@ -355,7 +355,7 @@ SBVisualPrimitive >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> initializeLabelBlocks [
+SBDomainBlock >> initializeLabelBlocks [
 
 	self blockPositions do: [:blockPosition |
 		self blockDict at: blockPosition put: (SBColumn new
@@ -367,13 +367,13 @@ SBVisualPrimitive >> initializeLabelBlocks [
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> innerLabel [
+SBDomainBlock >> innerLabel [
 
 	^ (self blockDict at: #innerLabel ifAbsent: [nil]) firstSubmorphOrNil
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> innerLabel: aMorph [
+SBDomainBlock >> innerLabel: aMorph [
 
 	self shape
 		removeAllMorphs;
@@ -381,68 +381,68 @@ SBVisualPrimitive >> innerLabel: aMorph [
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> isExpression [
+SBDomainBlock >> isExpression [
 
 	^ false
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> isTreeLayoutRoot [
+SBDomainBlock >> isTreeLayoutRoot [
 
 	^ self parent isNil
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> isVisualPrimitive [
+SBDomainBlock >> isDomainBlock [
 
 	^ true
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> label [
+SBDomainBlock >> label [
 
 	^ self innerLabel ifNotNil: [:label | label contents] ifNil: [nil]
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> label: anObject [
+SBDomainBlock >> label: anObject [
 
 	^ self innerLabel: (SBTextBubble new contents: anObject asString)
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> labelContentAt: aSymbol [
+SBDomainBlock >> labelContentAt: aSymbol [
 
 	^ (self blockDict at: aSymbol) firstSubmorph contents
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> labelPositionOf: aMorph [
+SBDomainBlock >> labelPositionOf: aMorph [
 
 	self blockDict keysAndValuesDo: [:position :block | (aMorph hasOwner: block) ifTrue: [^ position]].
 	^ nil
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> labelPositions [
+SBDomainBlock >> labelPositions [
 
 	^ self topLabelPositions, self middleLabelPositions, self bottomLabelPositions
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> labelSuggestionsFor: aSBVPUnknownLabel [
+SBDomainBlock >> labelSuggestionsFor: aSBUnknownLabel [
 
-	^ {self constantSuggestionsFor: aSBVPUnknownLabel}
+	^ {self constantSuggestionsFor: aSBUnknownLabel}
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> layoutInset [
+SBDomainBlock >> layoutInset [
 
 	^ 0
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> leftSibling [
+SBDomainBlock >> leftSibling [
 
 	^ self parent ifNotNil: [:parent | | index |
 		index := parent children indexOf: self.
@@ -450,21 +450,21 @@ SBVisualPrimitive >> leftSibling [
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> middleBlockPositions [
+SBDomainBlock >> middleBlockPositions [
 
 	^ {#leftLabel. #shape. #rightLabel}
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> middleLabelPositions [
+SBDomainBlock >> middleLabelPositions [
 
 	^ {#leftLabel. #innerLabel. #rightLabel}
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> missingProperties [
+SBDomainBlock >> missingProperties [
 
-	^ self visualPrimitiveMappings select: [:mapping |
+	^ self domainBlockMappings select: [:mapping |
 		(self labelPositions includes: mapping vpProperty)
 			ifTrue: [
 				(self blockDict
@@ -475,7 +475,7 @@ SBVisualPrimitive >> missingProperties [
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> morphAt: aSymbol [
+SBDomainBlock >> morphAt: aSymbol [
 
 	(self labelPositions includes: aSymbol) ifTrue: [^ self blockDict at: aSymbol ifPresent: [:block | block firstSubmorphOrNil] ifAbsent: [nil]].
 	aSymbol = #children ifTrue: [^ self children].
@@ -483,7 +483,7 @@ SBVisualPrimitive >> morphAt: aSymbol [
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> moveCursorDown [
+SBDomainBlock >> moveCursorDown [
 	<action>
 
 	self floating
@@ -492,7 +492,7 @@ SBVisualPrimitive >> moveCursorDown [
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> moveCursorLeft [
+SBDomainBlock >> moveCursorLeft [
 	<action>
 
 	self floating
@@ -501,7 +501,7 @@ SBVisualPrimitive >> moveCursorLeft [
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> moveCursorRight [
+SBDomainBlock >> moveCursorRight [
 	<action>
 
 	self floating
@@ -510,7 +510,7 @@ SBVisualPrimitive >> moveCursorRight [
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> moveCursorUp [
+SBDomainBlock >> moveCursorUp [
 	<action>
 
 	self floating
@@ -519,55 +519,55 @@ SBVisualPrimitive >> moveCursorUp [
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> newLabelBlockAt: aVPProperty [
+SBDomainBlock >> newLabelBlockAt: aVPProperty [
 
 	^ self suggestionConstantBlockAt: aVPProperty
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> newUnknown [
+SBDomainBlock >> newUnknown [
 
-	^ SBVPUnknownLabel new grammarHandler: SBStGrammarHandler new
+	^ SBUnknownLabel new grammarHandler: SBStGrammarHandler new
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> objectInterface [
+SBDomainBlock >> objectInterface [
 
 	^ self parent objectInterfaceNear: self at: #replace
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> objectInterfaceNear: aBlock at: aSymbol [
+SBDomainBlock >> objectInterfaceNear: aBlock at: aSymbol [
 
-	^ {[:o | o isKindOf: SBVisualPrimitive]}
+	^ {[:o | o isKindOf: SBDomainBlock]}
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> parent [
+SBDomainBlock >> parent [
 
 	^ parent
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> parent: aVisualPrimitive [
+SBDomainBlock >> parent: aDomainBlock [
 
-	parent := aVisualPrimitive
+	parent := aDomainBlock
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> parentCase [
+SBDomainBlock >> parentCase [
 
 	^ nil
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> parentQuery [
+SBDomainBlock >> parentQuery [
 
 	^ nil
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> pasteReplace [
+SBDomainBlock >> pasteReplace [
 	<action>
 
 	| position editor |
@@ -588,8 +588,8 @@ SBVisualPrimitive >> pasteReplace [
 				ifFalse: [
 					index = 1 ifTrue: [
 						editor do: (SBCombinedCommand newWith: {
-							SBVPDeleteCommand new target: self.
-							SBVPInsertCommand new
+							SBDeleteDomainBlockCommand new target: self.
+							SBInsertDomainBlockCommand new
 								index: self owner submorphCount + 1;
 								parent: self parent;
 								container: self owner;
@@ -601,19 +601,19 @@ SBVisualPrimitive >> pasteReplace [
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> patternContainer [
+SBDomainBlock >> patternContainer [
 
 	^ nil
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> prefersNoBorder [
+SBDomainBlock >> prefersNoBorder [
 
 	^ true
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> printOn: aStream [
+SBDomainBlock >> printOn: aStream [
 
 	super printOn: aStream.
 	aStream
@@ -622,7 +622,7 @@ SBVisualPrimitive >> printOn: aStream [
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> propertyAt: aSymbol [
+SBDomainBlock >> propertyAt: aSymbol [
 
 	(self labelPositions includes: aSymbol) ifTrue: [
 		^ self blockDict
@@ -634,20 +634,20 @@ SBVisualPrimitive >> propertyAt: aSymbol [
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> removeChild: aVisualPrimitive [
+SBDomainBlock >> removeChild: aDomainBlock [
 
-	self children remove: aVisualPrimitive.
-	aVisualPrimitive parent: nil
+	self children remove: aDomainBlock.
+	aDomainBlock parent: nil
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> removeLabelAt: aSymbol [
+SBDomainBlock >> removeLabelAt: aSymbol [
 
 	(self blockDict at: aSymbol) removeAllMorphs
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> rightSibling [
+SBDomainBlock >> rightSibling [
 
 	^ self parent ifNotNil: [:parent | | index |
 		index := parent children indexOf: self.
@@ -655,13 +655,13 @@ SBVisualPrimitive >> rightSibling [
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> root [
+SBDomainBlock >> root [
 
 	^ self parent ifNil: [self] ifNotNil: [self parent root]
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> setLabelAt: aSymbol to: anObject [
+SBDomainBlock >> setLabelAt: aSymbol to: anObject [
 
 	| morphy positionBlock |
 	morphy := self getLabelMorph: anObject.
@@ -673,13 +673,13 @@ SBVisualPrimitive >> setLabelAt: aSymbol to: anObject [
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> shape [
+SBDomainBlock >> shape [
 
 	^ (self blockDict at: #shape) firstSubmorphOrNil
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> shape: aMorph [
+SBDomainBlock >> shape: aMorph [
 
 	| innerBlockWrapper innerBlock innerLabel |
 	aMorph layoutPolicy ifNil: [
@@ -698,86 +698,86 @@ SBVisualPrimitive >> shape: aMorph [
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> siblingIndex [
+SBDomainBlock >> siblingIndex [
 
 	^ self parent ifNil: [0] ifNotNil: [self parent children indexOf: self]
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> sourceObject [
+SBDomainBlock >> sourceObject [
 
 	^ sourceObject
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> sourceObject: anObject [
+SBDomainBlock >> sourceObject: anObject [
 
 	sourceObject := anObject
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> suggestionConstantAt: aVPProperty [
+SBDomainBlock >> suggestionConstantAt: aVPProperty [
 
-	| aSBVPPropertyMapping |
-	aSBVPPropertyMapping := self vpMappingAt: aVPProperty.
-	^ aSBVPPropertyMapping ifNotNil: #suggestionConstant ifNil: [#a]
+	| aSBPropertyMapping |
+	aSBPropertyMapping := self vpMappingAt: aVPProperty.
+	^ aSBPropertyMapping ifNotNil: #suggestionConstant ifNil: [#a]
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> suggestionConstantBlockAt: aVPProperty [
+SBDomainBlock >> suggestionConstantBlockAt: aVPProperty [
 
-	| suggestionConstant aSBVPPropertyMapping |
-	aSBVPPropertyMapping := self vpMappingAt: aVPProperty.
+	| suggestionConstant aSBPropertyMapping |
+	aSBPropertyMapping := self vpMappingAt: aVPProperty.
 	suggestionConstant := self suggestionConstantAt: aVPProperty.
-	^ aSBVPPropertyMapping
-		ifNotNil: [aSBVPPropertyMapping getMorphForValue: suggestionConstant]
+	^ aSBPropertyMapping
+		ifNotNil: [aSBPropertyMapping getMorphForValue: suggestionConstant]
 		ifNil: [#a]
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> supportsLabels [
+SBDomainBlock >> supportsLabels [
 
 	^ true
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> topLabelPositions [
+SBDomainBlock >> topLabelPositions [
 
 	^ {#topLeftLabel. #topCenterLabel. #topRightLabel}
 ]
 
 { #category : #accessing }
-SBVisualPrimitive >> valueFromPropertyMapping: aPropertyMapping [
+SBDomainBlock >> valueFromPropertyMapping: aPropertyMapping [
 
 	^ aPropertyMapping value: self sourceObject
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> visualPrimitiveMappings [
+SBDomainBlock >> domainBlockMappings [
 
-	^ self sourceObject class visualPrimitiveMapping collect: [:mappingOrAssoc |
+	^ self sourceObject class domainBlockMapping collect: [:mappingOrAssoc |
 		mappingOrAssoc isPropertyMapping
 			ifTrue: [mappingOrAssoc]
-			ifFalse: [SBVPPropertyMapping fromAssociation: mappingOrAssoc]]
+			ifFalse: [SBPropertyMapping fromAssociation: mappingOrAssoc]]
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> vpMappingAt: aVPProperty [
+SBDomainBlock >> vpMappingAt: aVPProperty [
 
-	^ self visualPrimitiveMappings
+	^ self domainBlockMappings
 		detect: [:mapping | mapping key = aVPProperty]
 		ifFound: [:mapping | mapping asPropertyMapping]
 		ifNone: [nil]
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> vpMappingOf: aBlock [
+SBDomainBlock >> vpMappingOf: aBlock [
 
 	^ self vpMappingAt: (self labelPositionOf: aBlock)
 ]
 
 { #category : #'as yet unclassified' }
-SBVisualPrimitive >> writeSourceOn: aStream [
+SBDomainBlock >> writeSourceOn: aStream [
 
 	
 ]

@@ -1,6 +1,6 @@
 Extension { #name : #Array }
 
-{ #category : #'*Sandblocks-VisualPrimitives' }
+{ #category : #'*Sandblocks-DomainBlocks' }
 Array >> writeSourceOn: aStream [
 
 	aStream nextPut: ${.

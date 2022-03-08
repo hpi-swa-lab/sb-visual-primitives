@@ -1,39 +1,39 @@
 Class {
-	#name : #SBVPGameCardHand,
+	#name : #SBGameCardHand,
 	#superclass : #Object,
 	#instVars : [
 		'cards'
 	],
-	#category : #'Sandblocks-VisualPrimitives-Fixtures'
+	#category : #'Sandblocks-DomainBlocks-Fixtures'
 }
 
 { #category : #'as yet unclassified' }
-SBVPGameCardHand class >> playCardFrom: aHand toBeat: aCard [
+SBGameCardHand class >> playCardFrom: aHand toBeat: aCard [
 
-	SBVPTransformation
-		input: (SBVPGroupPattern patterns: {})
-		output: (SBVPGroupPattern patterns: {})
+	SBTransformation
+		input: (SBGroupPattern patterns: {})
+		output: (SBGroupPattern patterns: {})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> true;
 			add: #explicitChildrenMatching -> true;
 			yourself)
-		visualizePatternsAs: SBVPGameCardHand
+		visualizePatternsAs: SBGameCardHand
 ]
 
 { #category : #'as yet unclassified' }
-SBVPGameCardHand class >> visualPrimitiveMapping [
+SBGameCardHand class >> domainBlockMapping [
 
 	^ {#shape vpConstant: SBIcon iconHandOUp. #children vpChildFor: #cards}
 ]
 
 { #category : #accessing }
-SBVPGameCardHand >> cards [
+SBGameCardHand >> cards [
 
 	^ cards
 ]
 
 { #category : #accessing }
-SBVPGameCardHand >> cards: anObject [
+SBGameCardHand >> cards: anObject [
 
 	cards := anObject
 ]

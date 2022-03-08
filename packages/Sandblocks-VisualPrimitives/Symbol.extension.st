@@ -1,85 +1,85 @@
 Extension { #name : #Symbol }
 
-{ #category : #'*Sandblocks-VisualPrimitives' }
+{ #category : #'*Sandblocks-DomainBlocks' }
 Symbol >> vpChildFor: aSymbol [
 
-	^ SBVPPropertyMappingChildren property: aSymbol vpProperty: self
+	^ SBPropertyMappingChildren property: aSymbol vpProperty: self
 ]
 
-{ #category : #'*Sandblocks-VisualPrimitives' }
+{ #category : #'*Sandblocks-DomainBlocks' }
 Symbol >> vpConstant: anObject [
 
-	^ SBVPPropertyMapping constant: anObject vpProperty: self
+	^ SBPropertyMapping constant: anObject vpProperty: self
 ]
 
-{ #category : #'*Sandblocks-VisualPrimitives' }
+{ #category : #'*Sandblocks-DomainBlocks' }
 Symbol >> vpConstantNumber: aNumber [
 
-	^ SBVPPropertyMappingNumber constant: aNumber vpProperty: self
+	^ SBPropertyMappingNumber constant: aNumber vpProperty: self
 ]
 
-{ #category : #'*Sandblocks-VisualPrimitives' }
+{ #category : #'*Sandblocks-DomainBlocks' }
 Symbol >> vpConstantString: aString [
 
-	^ SBVPPropertyMappingString constant: aString vpProperty: self
+	^ SBPropertyMappingString constant: aString vpProperty: self
 ]
 
-{ #category : #'*Sandblocks-VisualPrimitives' }
+{ #category : #'*Sandblocks-DomainBlocks' }
 Symbol >> vpFor: aSymbol [
 
 	^ self vpChildFor: aSymbol
 ]
 
-{ #category : #'*Sandblocks-VisualPrimitives' }
+{ #category : #'*Sandblocks-DomainBlocks' }
 Symbol >> vpNumberFor: aSymbol [
 
-	^ SBVPPropertyMappingNumber property: aSymbol vpProperty: self
+	^ SBPropertyMappingNumber property: aSymbol vpProperty: self
 ]
 
-{ #category : #'*Sandblocks-VisualPrimitives' }
+{ #category : #'*Sandblocks-DomainBlocks' }
 Symbol >> vpNumberFor: aSymbol patternValue: aNumber [
 
-	^ SBVPPropertyMappingNumber property: aSymbol vpProperty: self patternValue: aNumber
+	^ SBPropertyMappingNumber property: aSymbol vpProperty: self patternValue: aNumber
 ]
 
-{ #category : #'*Sandblocks-VisualPrimitives' }
+{ #category : #'*Sandblocks-DomainBlocks' }
 Symbol >> vpSelect: anOrderedCollection displayAs: anotherOrderedCollection at: aVPProperty [
 
 	self assert: anOrderedCollection size = anotherOrderedCollection size.
 	
-	^ SBVPSelectProperty
+	^ SBSelectProperty
 		property: self
 		vpProperty: aVPProperty
 		choices: anOrderedCollection
 		representations: anotherOrderedCollection
 ]
 
-{ #category : #'*Sandblocks-VisualPrimitives' }
+{ #category : #'*Sandblocks-DomainBlocks' }
 Symbol >> vpSelectFrom: anOrderedCollection displayAs: anotherOrderedCollection for: aSymbol [
 
 	self assert: anOrderedCollection size = anotherOrderedCollection size.
 	
-	^ SBVPPropertyMappingSelect
+	^ SBPropertyMappingSelect
 		property: aSymbol
 		vpProperty: self
 		choices: anOrderedCollection
 		representations: anotherOrderedCollection
 ]
 
-{ #category : #'*Sandblocks-VisualPrimitives' }
+{ #category : #'*Sandblocks-DomainBlocks' }
 Symbol >> vpSelectFrom: anOrderedCollection for: aSymbol [
 
-	^ SBVPPropertyMappingSelect property: aSymbol vpProperty: self choices: anOrderedCollection
+	^ SBPropertyMappingSelect property: aSymbol vpProperty: self choices: anOrderedCollection
 ]
 
-{ #category : #'*Sandblocks-VisualPrimitives' }
+{ #category : #'*Sandblocks-DomainBlocks' }
 Symbol >> vpStringFor: aSymbol [
 
-	^ SBVPPropertyMappingString property: aSymbol vpProperty: self
+	^ SBPropertyMappingString property: aSymbol vpProperty: self
 ]
 
-{ #category : #'*Sandblocks-VisualPrimitives' }
+{ #category : #'*Sandblocks-DomainBlocks' }
 Symbol >> vpStringFor: aSymbol patternValue: aString [
 
-	^ SBVPPropertyMappingString property: aSymbol vpProperty: self patternValue: aString.
+	^ SBPropertyMappingString property: aSymbol vpProperty: self patternValue: aString.
 ]

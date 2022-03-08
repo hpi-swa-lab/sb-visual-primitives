@@ -1,5 +1,5 @@
 Class {
-	#name : #SBVPDummyNode,
+	#name : #SBDummyNode,
 	#superclass : #Object,
 	#instVars : [
 		'left',
@@ -7,17 +7,17 @@ Class {
 		'parent',
 		'key'
 	],
-	#category : #'Sandblocks-VisualPrimitives-Fixtures'
+	#category : #'Sandblocks-DomainBlocks-Fixtures'
 }
 
 { #category : #'as yet unclassified' }
-SBVPDummyNode class >> buildTree: aCollection [
+SBDummyNode class >> buildTree: aCollection [
 
 	^ (self buildTreePrivate: aCollection) first
 ]
 
 { #category : #'as yet unclassified' }
-SBVPDummyNode class >> buildTreePrivate: aCollection [
+SBDummyNode class >> buildTreePrivate: aCollection [
 
 	^ aCollection collect: [:element |
 		element isVariableBinding
@@ -26,9 +26,9 @@ SBVPDummyNode class >> buildTreePrivate: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPDummyNode class >> childrenMappingEntry [
+SBDummyNode class >> childrenMappingEntry [
 
-	^ SBVPPropertyMapping
+	^ SBPropertyMapping
 		getter: [:object | {object left. object right} reject: [:child | child isNil]]
 		setter: [:object :vp |
 			vp children size >= 1
@@ -42,14 +42,14 @@ SBVPDummyNode class >> childrenMappingEntry [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPDummyNode class >> exampleRootWithTwoChildren [
+SBDummyNode class >> exampleRootWithTwoChildren [
 
 	| n1 n2 root |
-	root := SBVPDummyNode new.
+	root := SBDummyNode new.
 	root key: 'Carl-Friedrich'.
-	n1 := SBVPDummyNode new.
+	n1 := SBDummyNode new.
 	n1 key: 'peter'.
-	n2 := SBVPDummyNode new.
+	n2 := SBDummyNode new.
 	n2 key: 'n2'.
 	root
 		left: n1;
@@ -58,13 +58,13 @@ SBVPDummyNode class >> exampleRootWithTwoChildren [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPDummyNode class >> key: anObject [
+SBDummyNode class >> key: anObject [
 
 	^ self new key: anObject
 ]
 
 { #category : #'as yet unclassified' }
-SBVPDummyNode class >> visualPrimitiveMapping [
+SBDummyNode class >> domainBlockMapping [
 
 	^ {
 		#shape vpConstant: (RectangleMorph new
@@ -81,224 +81,224 @@ SBVPDummyNode class >> visualPrimitiveMapping [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPDummyNode >> children: aCollection [
+SBDummyNode >> children: aCollection [
 
 	self left: (aCollection size >= 1 ifTrue: [aCollection first]).
 	self right: (aCollection size >= 2 ifTrue: [aCollection second])
 ]
 
 { #category : #'as yet unclassified' }
-SBVPDummyNode >> exampleHeapTransformation [
+SBDummyNode >> exampleHeapTransformation [
 
-	^ SBVPTransformation
-		input: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern
+	^ SBTransformation
+		input: (SBGroupPattern patterns: {
+			SBBindingPattern
 				bindingDict: {#identity -> #a}
 				children: {
-					SBVPEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBVPDummyNode.
-					SBVPBindingPattern
+					SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBDummyNode.
+					SBBindingPattern
 						bindingDict: {#identity -> #boi}
-						children: {SBVPEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBVPDummyNode}
-						visualizingClass: SBVPDummyNode.
-					SBVPEllipsisPattern bindingDict: {#identity -> #d} visualizingClass: SBVPDummyNode}
-				visualizingClass: SBVPDummyNode.
-			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) key < (bindings at: #boi) key]})
-		output: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern
+						children: {SBEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBDummyNode}
+						visualizingClass: SBDummyNode.
+					SBEllipsisPattern bindingDict: {#identity -> #d} visualizingClass: SBDummyNode}
+				visualizingClass: SBDummyNode.
+			SBConstraintPattern constraint: [:bindings | (bindings at: #a) key < (bindings at: #boi) key]})
+		output: (SBGroupPattern patterns: {
+			SBBindingPattern
 				bindingDict: {#identity -> #boi}
 				children: {
-					SBVPEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBVPDummyNode.
-					SBVPBindingPattern
+					SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBDummyNode.
+					SBBindingPattern
 						bindingDict: {#identity -> #a}
-						children: {SBVPEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBVPDummyNode}
-						visualizingClass: SBVPDummyNode.
-					SBVPEllipsisPattern bindingDict: {#identity -> #d} visualizingClass: SBVPDummyNode}
-				visualizingClass: SBVPDummyNode})
+						children: {SBEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBDummyNode}
+						visualizingClass: SBDummyNode.
+					SBEllipsisPattern bindingDict: {#identity -> #d} visualizingClass: SBDummyNode}
+				visualizingClass: SBDummyNode})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> false;
 			add: #explicitChildrenMatching -> false;
 			yourself)
-		visualizePatternsAs: SBVPDummyNode
+		visualizePatternsAs: SBDummyNode
 ]
 
 { #category : #'as yet unclassified' }
-SBVPDummyNode >> exampleMultipleBindings: aTree [
+SBDummyNode >> exampleMultipleBindings: aTree [
 
 	self
-		example: [SBVPDummyNode new]
+		example: [SBDummyNode new]
 		args: [
 			{
-				((SBVPDummyNode key: 9) left: ((SBVPDummyNode key: 10)
-					left: ((SBVPDummyNode key: 3)
-						left: ((SBVPDummyNode key: 1)
-							left: (SBVPDummyNode key: 0);
-							right: (SBVPDummyNode key: 1));
-						right: ((SBVPDummyNode key: 2) left: (SBVPDummyNode key: 5)));
-					right: ((SBVPDummyNode key: 7)
-						left: ((SBVPDummyNode key: 5)
-							left: (SBVPDummyNode key: 5);
-							right: (SBVPDummyNode key: 5));
-						right: ((SBVPDummyNode key: 2) left: (SBVPDummyNode key: 8))))) showAsVisualPrimitive}]
+				((SBDummyNode key: 9) left: ((SBDummyNode key: 10)
+					left: ((SBDummyNode key: 3)
+						left: ((SBDummyNode key: 1)
+							left: (SBDummyNode key: 0);
+							right: (SBDummyNode key: 1));
+						right: ((SBDummyNode key: 2) left: (SBDummyNode key: 5)));
+					right: ((SBDummyNode key: 7)
+						left: ((SBDummyNode key: 5)
+							left: (SBDummyNode key: 5);
+							right: (SBDummyNode key: 5));
+						right: ((SBDummyNode key: 2) left: (SBDummyNode key: 8))))) showAsDomainBlock}]
 		label: 'example'.
-	^ (SBVPTransformation
-		input: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern
+	^ (SBTransformation
+		input: (SBGroupPattern patterns: {
+			SBBindingPattern
 				bindingDict: {#identity -> #a}
 				children: {
-					SBVPEllipsisPattern bindingDict: {#identity -> #aa} visualizingClass: SBVPDummyNode.
-					SBVPBindingPattern
+					SBEllipsisPattern bindingDict: {#identity -> #aa} visualizingClass: SBDummyNode.
+					SBBindingPattern
 						bindingDict: {#identity -> #boi}
-						children: {SBVPEllipsisPattern bindingDict: {#identity -> #ac} visualizingClass: SBVPDummyNode}
-						visualizingClass: SBVPDummyNode.
-					SBVPEllipsisPattern bindingDict: {#identity -> #ab} visualizingClass: SBVPDummyNode}
-				visualizingClass: SBVPDummyNode.
-			SBVPConstraintPattern constraint: [:bindings | false].
-			SBVPBindingPattern
+						children: {SBEllipsisPattern bindingDict: {#identity -> #ac} visualizingClass: SBDummyNode}
+						visualizingClass: SBDummyNode.
+					SBEllipsisPattern bindingDict: {#identity -> #ab} visualizingClass: SBDummyNode}
+				visualizingClass: SBDummyNode.
+			SBConstraintPattern constraint: [:bindings | false].
+			SBBindingPattern
 				bindingDict: {#identity -> #a}
 				children: {}
-				visualizingClass: SBVPDummyNode})
-		output: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern
+				visualizingClass: SBDummyNode})
+		output: (SBGroupPattern patterns: {
+			SBBindingPattern
 				bindingDict: {#identity -> #boi}
 				children: {
-					SBVPEllipsisPattern bindingDict: {#identity -> #aa} visualizingClass: SBVPDummyNode.
-					SBVPBindingPattern
+					SBEllipsisPattern bindingDict: {#identity -> #aa} visualizingClass: SBDummyNode.
+					SBBindingPattern
 						bindingDict: {#identity -> #a}
-						children: {SBVPEllipsisPattern bindingDict: {#identity -> #ac} visualizingClass: SBVPDummyNode}
-						visualizingClass: SBVPDummyNode.
-					SBVPEllipsisPattern bindingDict: {#identity -> #ab} visualizingClass: SBVPDummyNode}
-				visualizingClass: SBVPDummyNode})
+						children: {SBEllipsisPattern bindingDict: {#identity -> #ac} visualizingClass: SBDummyNode}
+						visualizingClass: SBDummyNode.
+					SBEllipsisPattern bindingDict: {#identity -> #ab} visualizingClass: SBDummyNode}
+				visualizingClass: SBDummyNode})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> false;
 			add: #explicitChildrenMatching -> false;
 			yourself)
-		visualizePatternsAs: SBVPDummyNode) replaceAllMatches: aTree
+		visualizePatternsAs: SBDummyNode) replaceAllMatches: aTree
 ]
 
 { #category : #'as yet unclassified' }
-SBVPDummyNode >> exampleMultipleTransformations: aTree [
+SBDummyNode >> exampleMultipleTransformations: aTree [
 
 	| maxHeap |
 	self
-		example: [SBVPDummyNode new]
+		example: [SBDummyNode new]
 		args: [
 			{
-				((SBVPDummyNode key: 9) left: ((SBVPDummyNode key: 10)
-					left: ((SBVPDummyNode key: 3)
-						left: ((SBVPDummyNode key: 1)
-							left: (SBVPDummyNode key: 0);
-							right: (SBVPDummyNode key: 1));
-						right: ((SBVPDummyNode key: 2) left: (SBVPDummyNode key: 5)));
-					right: ((SBVPDummyNode key: 7)
-						left: ((SBVPDummyNode key: 5)
-							left: (SBVPDummyNode key: 5);
-							right: (SBVPDummyNode key: 5));
-						right: ((SBVPDummyNode key: 2) left: (SBVPDummyNode key: 8))))) showAsVisualPrimitive}]
+				((SBDummyNode key: 9) left: ((SBDummyNode key: 10)
+					left: ((SBDummyNode key: 3)
+						left: ((SBDummyNode key: 1)
+							left: (SBDummyNode key: 0);
+							right: (SBDummyNode key: 1));
+						right: ((SBDummyNode key: 2) left: (SBDummyNode key: 5)));
+					right: ((SBDummyNode key: 7)
+						left: ((SBDummyNode key: 5)
+							left: (SBDummyNode key: 5);
+							right: (SBDummyNode key: 5));
+						right: ((SBDummyNode key: 2) left: (SBDummyNode key: 8))))) showAsDomainBlock}]
 		label: 'example'.
 	maxHeap := self exampleHeapTransformation replaceAllMatches: aTree.
-	^ (SBVPTransformation
-		input: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern
+	^ (SBTransformation
+		input: (SBGroupPattern patterns: {
+			SBBindingPattern
 				bindingDict: {#identity -> #a}
 				children: {
-					SBVPEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBVPDummyNode.
-					SBVPBindingPattern
+					SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBDummyNode.
+					SBBindingPattern
 						bindingDict: {#identity -> #boi}
-						children: {SBVPEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBVPDummyNode}
-						visualizingClass: SBVPDummyNode.
-					SBVPEllipsisPattern bindingDict: {#identity -> #d} visualizingClass: SBVPDummyNode}
-				visualizingClass: SBVPDummyNode.
-			SBVPConstraintPattern constraint: [:bindings | (bindings at: #a) key > (bindings at: #boi) key]})
-		output: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern
+						children: {SBEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBDummyNode}
+						visualizingClass: SBDummyNode.
+					SBEllipsisPattern bindingDict: {#identity -> #d} visualizingClass: SBDummyNode}
+				visualizingClass: SBDummyNode.
+			SBConstraintPattern constraint: [:bindings | (bindings at: #a) key > (bindings at: #boi) key]})
+		output: (SBGroupPattern patterns: {
+			SBBindingPattern
 				bindingDict: {#identity -> #boi}
 				children: {
-					SBVPEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBVPDummyNode.
-					SBVPBindingPattern
+					SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBDummyNode.
+					SBBindingPattern
 						bindingDict: {#identity -> #a}
-						children: {SBVPEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBVPDummyNode}
-						visualizingClass: SBVPDummyNode.
-					SBVPEllipsisPattern bindingDict: {#identity -> #d} visualizingClass: SBVPDummyNode}
-				visualizingClass: SBVPDummyNode})
+						children: {SBEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBDummyNode}
+						visualizingClass: SBDummyNode.
+					SBEllipsisPattern bindingDict: {#identity -> #d} visualizingClass: SBDummyNode}
+				visualizingClass: SBDummyNode})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> false;
 			add: #explicitChildrenMatching -> false;
 			yourself)
-		visualizePatternsAs: SBVPDummyNode) replaceAllMatches: maxHeap
+		visualizePatternsAs: SBDummyNode) replaceAllMatches: maxHeap
 ]
 
 { #category : #'as yet unclassified' }
-SBVPDummyNode >> exampleTransformWithMessage: aTree [
+SBDummyNode >> exampleTransformWithMessage: aTree [
 
 	self
-		example: [SBVPDummyNode new]
+		example: [SBDummyNode new]
 		args: [
 			{
-				((SBVPDummyNode key: 9) left: ((SBVPDummyNode key: 10)
-					left: ((SBVPDummyNode key: 3)
-						left: ((SBVPDummyNode key: 1)
-							left: (SBVPDummyNode key: 0);
-							right: (SBVPDummyNode key: 1));
-						right: ((SBVPDummyNode key: 2) left: (SBVPDummyNode key: 5)));
-					right: ((SBVPDummyNode key: 7)
-						left: ((SBVPDummyNode key: 5)
-							left: (SBVPDummyNode key: 5);
-							right: (SBVPDummyNode key: 5));
-						right: ((SBVPDummyNode key: 2) left: (SBVPDummyNode key: 8))))) showAsVisualPrimitive}]
+				((SBDummyNode key: 9) left: ((SBDummyNode key: 10)
+					left: ((SBDummyNode key: 3)
+						left: ((SBDummyNode key: 1)
+							left: (SBDummyNode key: 0);
+							right: (SBDummyNode key: 1));
+						right: ((SBDummyNode key: 2) left: (SBDummyNode key: 5)));
+					right: ((SBDummyNode key: 7)
+						left: ((SBDummyNode key: 5)
+							left: (SBDummyNode key: 5);
+							right: (SBDummyNode key: 5));
+						right: ((SBDummyNode key: 2) left: (SBDummyNode key: 8))))) showAsDomainBlock}]
 		label: 'example'.
 	^ self exampleHeapTransformation replaceAllMatches: aTree
 ]
 
 { #category : #accessing }
-SBVPDummyNode >> key [
+SBDummyNode >> key [
 
 	^ key
 ]
 
 { #category : #accessing }
-SBVPDummyNode >> key: aValue [
+SBDummyNode >> key: aValue [
 
 	key := aValue
 ]
 
 { #category : #accessing }
-SBVPDummyNode >> left [
+SBDummyNode >> left [
 
 	^ left
 ]
 
 { #category : #accessing }
-SBVPDummyNode >> left: aNode [
+SBDummyNode >> left: aNode [
 
 	left := aNode
 ]
 
 { #category : #accessing }
-SBVPDummyNode >> parent [
+SBDummyNode >> parent [
 
 	^ parent
 ]
 
 { #category : #accessing }
-SBVPDummyNode >> parent: aNode [
+SBDummyNode >> parent: aNode [
 
 	parent := aNode
 ]
 
 { #category : #accessing }
-SBVPDummyNode >> right [
+SBDummyNode >> right [
 
 	^ right
 ]
 
 { #category : #accessing }
-SBVPDummyNode >> right: aNode [
+SBDummyNode >> right: aNode [
 
 	right := aNode
 ]
 
 { #category : #accessing }
-SBVPDummyNode >> writeSourceOn: aStream [
+SBDummyNode >> writeSourceOn: aStream [
 
 	aStream
 		nextPutAll: '((';

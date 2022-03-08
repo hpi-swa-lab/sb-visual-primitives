@@ -1,15 +1,15 @@
 "
-An SBVPRelInsertCommand is used to insert new patterns into an SBVPGroupPattern.
+An SBRelInsertDomainBlockCommand is used to insert new patterns into an SBGroupPattern.
 
 "
 Class {
-	#name : #SBVPRelInsertCommand,
+	#name : #SBRelInsertDomainBlockCommand,
 	#superclass : #SBRelInsertCommand,
-	#category : #'Sandblocks-VisualPrimitives'
+	#category : #'Sandblocks-DomainBlocks'
 }
 
 { #category : #'as yet unclassified' }
-SBVPRelInsertCommand >> do [
+SBRelInsertDomainBlockCommand >> do [
 
 	| result |
 	result := super do.
@@ -18,7 +18,7 @@ SBVPRelInsertCommand >> do [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPRelInsertCommand >> morphIndexInChildren [
+SBRelInsertDomainBlockCommand >> morphIndexInChildren [
 
 	^ self adjacent
 		ifNil: [self before ifTrue: [0] ifFalse: [self container children size]]
@@ -32,21 +32,21 @@ SBVPRelInsertCommand >> morphIndexInChildren [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPRelInsertCommand >> suggestions [
+SBRelInsertDomainBlockCommand >> suggestions [
 
 	| suggestions outputPattern |
 	suggestions := {
 		(SBInsertSuggestionItem selector: 'addNewBindingPattern' label: 'choice')
-			morph: SBVPBindingPattern new
+			morph: SBBindingPattern new
 			previewOnly: false.
 		(SBInsertSuggestionItem selector: 'addNewConstraintPattern' label: 'choice')
-			morph: (SBVPConstraintPattern constraint: [:bindings | ])
+			morph: (SBConstraintPattern constraint: [:bindings | ])
 			previewOnly: false.
 		(SBInsertSuggestionItem selector: 'addNewAndPattern' label: 'choice')
-			morph: SBVPGroupPattern new
+			morph: SBGroupPattern new
 			previewOnly: false.
 		(SBInsertSuggestionItem selector: 'addNewOrPattern' label: 'choice')
-			morph: SBVPOrGroupPattern new
+			morph: SBOrGroupPattern new
 			previewOnly: false}.
 	outputPattern := self container patternContainer outputPattern.
 	outputPattern = self container ifTrue: [^ {suggestions first}].
@@ -54,7 +54,7 @@ SBVPRelInsertCommand >> suggestions [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPRelInsertCommand >> undo [
+SBRelInsertDomainBlockCommand >> undo [
 
 	self container removeChild: self morph.
 	super undo.

@@ -1,5 +1,5 @@
 "
-An SBVPWildcardPattern is xxxxxxxxx.
+An SBWildcardPattern is xxxxxxxxx.
 
 Instance Variables
 	searchStack:		LinkedList
@@ -13,23 +13,23 @@ visitedPrimitives
 
 "
 Class {
-	#name : #SBVPWildcardPattern,
-	#superclass : #SBVPBindingPattern,
+	#name : #SBWildcardPattern,
+	#superclass : #SBBindingPattern,
 	#instVars : [
 		'searchStack',
 		'visitedPrimitives'
 	],
-	#category : #'Sandblocks-VisualPrimitives'
+	#category : #'Sandblocks-DomainBlocks'
 }
 
 { #category : #accessing }
-SBVPWildcardPattern >> bindingFor: aVisualPrimitive [
+SBWildcardPattern >> bindingFor: aDomainBlock [
 
 	^ {#root -> self searchStack last. #leaf -> self currentTop} asDictionary
 ]
 
 { #category : #'as yet unclassified' }
-SBVPWildcardPattern >> buildFromBinding: anArray [
+SBWildcardPattern >> buildFromBinding: anArray [
 
 	| binding |
 	binding := anArray at: self bindingIndex.
@@ -37,109 +37,109 @@ SBVPWildcardPattern >> buildFromBinding: anArray [
 ]
 
 { #category : #'as yet unclassified' }
-SBVPWildcardPattern >> buildFromBinding: anArray currentPrimitive: aVisualPrimitive [
+SBWildcardPattern >> buildFromBinding: anArray currentPrimitive: aDomainBlock [
 
 	| output binding leaf |
 	binding := anArray at: self bindingIndex.
 	leaf := binding at: #leaf.
 	
-	output := aVisualPrimitive copy.
-	aVisualPrimitive = leaf
+	output := aDomainBlock copy.
+	aDomainBlock = leaf
 		ifTrue: [output children: (self buildChildrenFromBinding: anArray)]
-		ifFalse: [output children: (aVisualPrimitive children collect: [:primitive | self buildFromBinding: anArray currentPrimitive: primitive])].
+		ifFalse: [output children: (aDomainBlock children collect: [:primitive | self buildFromBinding: anArray currentPrimitive: primitive])].
 	^ output
 ]
 
 { #category : #accessing }
-SBVPWildcardPattern >> currentTop [
+SBWildcardPattern >> currentTop [
 
 	^ self searchStack first
 ]
 
 { #category : #accessing }
-SBVPWildcardPattern >> exampleExtractLeaf: aTree [
+SBWildcardPattern >> exampleExtractLeaf: aTree [
 
 	self
-		example: [SBVPWildcardPattern new]
+		example: [SBWildcardPattern new]
 		args: [
 			{
-				((SBVPDummyNode key: 1) left: ((SBVPDummyNode key: 2) left: ((SBVPDummyNode key: 3) left: ((SBVPDummyNode key: 4) left: (SBVPDummyNode key: 5))))) showAsVisualPrimitive}]
+				((SBDummyNode key: 1) left: ((SBDummyNode key: 2) left: ((SBDummyNode key: 3) left: ((SBDummyNode key: 4) left: (SBDummyNode key: 5))))) showAsDomainBlock}]
 		label: 'example'.
-	^ (SBVPTransformation
-		input: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern
+	^ (SBTransformation
+		input: (SBGroupPattern patterns: {
+			SBBindingPattern
 				bindingDict: {#identity -> #root}
 				children: {
-					SBVPWildcardPattern
+					SBWildcardPattern
 						bindingDict: {#identity -> #pathToLeaf}
-						children: {SBVPBindingPattern bindingDict: {#identity -> #leaf} visualizingClass: SBVPDummyNode}
-						visualizingClass: SBVPDummyNode}
-				visualizingClass: SBVPDummyNode})
-		output: (SBVPGroupPattern patterns: {SBVPBindingPattern bindingDict: {#identity -> #leaf} visualizingClass: SBVPDummyNode})
+						children: {SBBindingPattern bindingDict: {#identity -> #leaf} visualizingClass: SBDummyNode}
+						visualizingClass: SBDummyNode}
+				visualizingClass: SBDummyNode})
+		output: (SBGroupPattern patterns: {SBBindingPattern bindingDict: {#identity -> #leaf} visualizingClass: SBDummyNode})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> true;
 			add: #explicitChildrenMatching -> true;
 			yourself)
-		visualizePatternsAs: SBVPDummyNode) replaceAllMatches: aTree
+		visualizePatternsAs: SBDummyNode) replaceAllMatches: aTree
 ]
 
 { #category : #'as yet unclassified' }
-SBVPWildcardPattern >> exampleExtractNodeWithTwoChildren: aTree [
+SBWildcardPattern >> exampleExtractNodeWithTwoChildren: aTree [
 
 	self
-		example: [SBVPWildcardPattern new]
+		example: [SBWildcardPattern new]
 		args: [
 			{
-				((SBVPDummyNode key: 1) left: ((SBVPDummyNode key: 2) left: ((SBVPDummyNode key: 3) left: ((SBVPDummyNode key: 4)
-					left: (SBVPDummyNode key: 5);
-					right: (SBVPDummyNode key: 6))))) showAsVisualPrimitive}]
+				((SBDummyNode key: 1) left: ((SBDummyNode key: 2) left: ((SBDummyNode key: 3) left: ((SBDummyNode key: 4)
+					left: (SBDummyNode key: 5);
+					right: (SBDummyNode key: 6))))) showAsDomainBlock}]
 		label: 'example'.
 	
-	^ (SBVPTransformation
-		input: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern
+	^ (SBTransformation
+		input: (SBGroupPattern patterns: {
+			SBBindingPattern
 				bindingDict: {#identity -> #root}
 				children: {
-					SBVPWildcardPattern
+					SBWildcardPattern
 						bindingDict: {#identity -> #pathToNode}
 						children: {
-							SBVPBindingPattern
+							SBBindingPattern
 								bindingDict: {#identity -> #node}
 								children: {
-									SBVPEllipsisPattern
+									SBEllipsisPattern
 										bindingDict: {#identity -> #children}
-										visualizingClass: SBVPDummyNode}
-								visualizingClass: SBVPDummyNode}
-						visualizingClass: SBVPDummyNode}
-				visualizingClass: SBVPDummyNode.
-			SBVPConstraintPattern constraint: [:bindings | (bindings at: #children) size = 2]})
-		output: (SBVPGroupPattern patterns: {
-			SBVPBindingPattern
+										visualizingClass: SBDummyNode}
+								visualizingClass: SBDummyNode}
+						visualizingClass: SBDummyNode}
+				visualizingClass: SBDummyNode.
+			SBConstraintPattern constraint: [:bindings | (bindings at: #children) size = 2]})
+		output: (SBGroupPattern patterns: {
+			SBBindingPattern
 				bindingDict: {#identity -> #node}
 				children: {
-					SBVPEllipsisPattern
+					SBEllipsisPattern
 						bindingDict: {#identity -> #children}
-						visualizingClass: SBVPDummyNode}
-				visualizingClass: SBVPDummyNode})
+						visualizingClass: SBDummyNode}
+				visualizingClass: SBDummyNode})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> true;
 			add: #explicitChildrenMatching -> true;
 			yourself)
-		visualizePatternsAs: SBVPDummyNode) replaceAllMatches: aTree
+		visualizePatternsAs: SBDummyNode) replaceAllMatches: aTree
 ]
 
 { #category : #'as yet unclassified' }
-SBVPWildcardPattern >> getCurrentPrimitive: aVisualPrimitive [
+SBWildcardPattern >> getCurrentPrimitive: aDomainBlock [
 
-	^ self searchStack ifEmpty: [aVisualPrimitive] ifNotEmpty: [self currentTop]
+	^ self searchStack ifEmpty: [aDomainBlock] ifNotEmpty: [self currentTop]
 ]
 
 { #category : #accessing }
-SBVPWildcardPattern >> getNext: aVisualPrimitive [
+SBWildcardPattern >> getNext: aDomainBlock [
 
-	(super getNext: aVisualPrimitive) ifTrue: [^ true].
+	(super getNext: aDomainBlock) ifTrue: [^ true].
 	self searchStack isEmpty ifTrue: [
-		self pushToStack: aVisualPrimitive.
+		self pushToStack: aDomainBlock.
 		^ true].
 	[self searchStack notEmpty] whileTrue: [
 		self currentTop children do: [:child |
@@ -152,7 +152,7 @@ SBVPWildcardPattern >> getNext: aVisualPrimitive [
 ]
 
 { #category : #accessing }
-SBVPWildcardPattern >> initialize [
+SBWildcardPattern >> initialize [
 
 	super initialize.
 	self
@@ -162,48 +162,48 @@ SBVPWildcardPattern >> initialize [
 ]
 
 { #category : #accessing }
-SBVPWildcardPattern >> pushToStack: aVisualPrimitive [
+SBWildcardPattern >> pushToStack: aDomainBlock [
 
-	self searchStack addFirst: aVisualPrimitive.
-	self visitedPrimitives add: aVisualPrimitive
+	self searchStack addFirst: aDomainBlock.
+	self visitedPrimitives add: aDomainBlock
 ]
 
 { #category : #'as yet unclassified' }
-SBVPWildcardPattern >> reset [
+SBWildcardPattern >> reset [
 
 	super reset.
 	self searchStack: LinkedList new
 ]
 
 { #category : #accessing }
-SBVPWildcardPattern >> searchStack [
+SBWildcardPattern >> searchStack [
 
 	^ searchStack
 ]
 
 { #category : #accessing }
-SBVPWildcardPattern >> searchStack: aLinkedList [
+SBWildcardPattern >> searchStack: aLinkedList [
 
 	searchStack := aLinkedList
 ]
 
 { #category : #accessing }
-SBVPWildcardPattern >> setBindingFor: aVisualPrimitive in: aCollection [
+SBWildcardPattern >> setBindingFor: aDomainBlock in: aCollection [
 
-	self assert: (self searchStack isEmpty or: [self searchStack last = aVisualPrimitive]).
+	self assert: (self searchStack isEmpty or: [self searchStack last = aDomainBlock]).
 	
-	self searchStack isEmpty ifTrue: [self pushToStack: aVisualPrimitive].
+	self searchStack isEmpty ifTrue: [self pushToStack: aDomainBlock].
 	^ super setBindingFor: self currentTop in: aCollection
 ]
 
 { #category : #accessing }
-SBVPWildcardPattern >> visitedPrimitives [
+SBWildcardPattern >> visitedPrimitives [
 
 	^ visitedPrimitives
 ]
 
 { #category : #accessing }
-SBVPWildcardPattern >> visitedPrimitives: aSet [
+SBWildcardPattern >> visitedPrimitives: aSet [
 
 	visitedPrimitives := aSet
 ]
