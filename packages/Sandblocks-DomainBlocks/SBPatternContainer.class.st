@@ -240,13 +240,6 @@ SBPatternContainer >> pattern: anSBBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBPatternContainer >> patternRoot [
-
-	self flag: #tooOptimistic.
-	^ self pattern children first
-]
-
-{ #category : #'as yet unclassified' }
 SBPatternContainer >> patternRoots [
 
 	^ self pattern children isEmpty
@@ -277,11 +270,17 @@ SBPatternContainer >> strategyButtonFor: aSymbol [
 ]
 
 { #category : #'as yet unclassified' }
+SBPatternContainer >> toggleImplicitChildTo: aBoolean withBinding: aString [
+
+	self toggleImplicitChildTo: aBoolean withBinding: aString on: self pattern
+]
+
+{ #category : #'as yet unclassified' }
 SBPatternContainer >> toggleImplicitChildTo: aBoolean withBinding: aString on: aSBPattern [
 
-	aSBPattern allChildrenDo: [:pattern |
-		pattern bindingIndex = aString ifTrue: [
-			pattern isImplicitChild: aBoolean.
+	aSBPattern allChildrenDo: [:child |
+		child bindingIndex = aString ifTrue: [
+			child isImplicitChild: aBoolean.
 			^ self]]
 ]
 

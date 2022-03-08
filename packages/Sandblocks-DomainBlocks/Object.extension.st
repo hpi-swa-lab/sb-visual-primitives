@@ -7,13 +7,25 @@ Object >> asDomainBlock [
 ]
 
 { #category : #'*Sandblocks-DomainBlocks' }
-Object >> isPropertyMapping [
+Object class >> domainBlockMapping [
+
+	^ {}
+]
+
+{ #category : #'*Sandblocks-DomainBlocks' }
+Object >> isBindingPattern [
 
 	^ false
 ]
 
 { #category : #'*Sandblocks-DomainBlocks' }
 Object >> isDomainBlock [
+
+	^ false
+]
+
+{ #category : #'*Sandblocks-DomainBlocks' }
+Object >> isPropertyMapping [
 
 	^ false
 ]
@@ -28,10 +40,4 @@ Object >> propertyMappingClass [
 Object >> showAsDomainBlock [
 	"marker"
 	^ self
-]
-
-{ #category : #'*Sandblocks-DomainBlocks' }
-Object class >> domainBlockMapping [
-
-	^ {}
 ]

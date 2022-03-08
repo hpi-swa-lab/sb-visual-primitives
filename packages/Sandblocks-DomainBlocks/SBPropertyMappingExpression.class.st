@@ -48,13 +48,3 @@ SBPropertyMappingExpression >> value: ignored [
 
 	^ self getter value
 ]
-
-{ #category : #accessing }
-SBPropertyMappingExpression >> writeValue: value on: aStream [
-
-	aStream writeSourceOn: value.
-	self assert: false.
-	"This shouldn't be called ever"
-	self flag: #BOB
-	"<- Allan wanted this."
-]

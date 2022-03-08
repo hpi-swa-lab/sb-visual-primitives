@@ -131,9 +131,9 @@ SBEllipsisPattern >> isImplicitChild: aBoolean [
 		ifNil: [self newUnknown]
 		ifNotNil: [self bindingLabelBlockFrom: self bindingIndex].
 	self setLabelAt: self identityLabelPosition to: bindingInputBlock.
-	setColor := [:color |
-		self childSandblocksDo: [:block | block color: color].
-		self firstSubmorph class = SBRow ifFalse: [self firstSubmorph color: color]].
+	setColor := [:newColor |
+		self childSandblocksDo: [:block | block color: newColor].
+		self firstSubmorph class = SBRow ifFalse: [self firstSubmorph color: newColor]].
 	self isImplicitChild
 		ifTrue: [setColor value: Color gray]
 		ifFalse: [setColor value: Color black].

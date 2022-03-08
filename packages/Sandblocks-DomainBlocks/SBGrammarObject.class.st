@@ -12,17 +12,6 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBGrammarObject class >> fromJsonObject: aJsonObject [
-
-	SBGrammarObject new
-		type: (aJsonObject at: 'type');
-		members: ((aJsonObject at: 'members') do: [:member | SBGrammarObject fromJsonObject: member]);
-		content: (SBGrammarObject fromJsonObject: (aJsonObject at: 'content'));
-		objectName: (aJsonObject at: 'name');
-		objectValue: (aJsonObject at: 'value')
-]
-
-{ #category : #'as yet unclassified' }
 SBGrammarObject class >> domainBlockMapping [
 
 	^ {
@@ -39,6 +28,17 @@ SBGrammarObject class >> domainBlockMapping [
 						ifTrue: [object members: children]
 						ifFalse: [object content: children first]]]
 			vpProperty: #children}
+]
+
+{ #category : #'as yet unclassified' }
+SBGrammarObject class >> fromJsonObject: aJsonObject [
+
+	SBGrammarObject new
+		type: (aJsonObject at: 'type');
+		members: ((aJsonObject at: 'members') do: [:member | SBGrammarObject fromJsonObject: member]);
+		content: (SBGrammarObject fromJsonObject: (aJsonObject at: 'content'));
+		objectName: (aJsonObject at: 'name');
+		objectValue: (aJsonObject at: 'value')
 ]
 
 { #category : #accessing }

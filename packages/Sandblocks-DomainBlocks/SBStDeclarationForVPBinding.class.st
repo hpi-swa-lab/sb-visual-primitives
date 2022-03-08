@@ -12,7 +12,7 @@ Class {
 SBStDeclarationForVPBinding class >> checkCastFor: aBlock parent: aMorph [
 
 	| case |
-	case := (aMorph containingSandblock isKindOf: SBBindingPattern)
+	case := aMorph containingSandblock isBindingPattern
 		ifTrue: [aMorph containingSandblock patternContainer]
 		ifFalse: [^ false].
 	^ case notNil and: [aBlock hasOwner: case pattern]
@@ -99,12 +99,10 @@ SBStDeclarationForVPBinding >> symbolsFor: aColorPolicy [
 { #category : #accessing }
 SBStDeclarationForVPBinding >> valid [
 
-	self block containingBlock
-		ifNil: [^ false]
-		ifNotNil: [:b | b parentSandblock ifNil: [^ false]].
-	^ (self block containingBlock parentSandblock
-		binding: self contents
-		for: self block
-		class: (self block containingArtefact ifNotNil: #relatedClass)
-		ifPresent: [:binding | binding isMethodLocal ifTrue: [binding] ifFalse: [nil]]) isNil
+	^ ((self block containingBlock ifNotNil: #parentSandblock) ifNotNil: [:parent |
+		parent
+			binding: self contents
+			for: self block
+			class: (self block containingArtefact ifNotNil: #relatedClass)
+			ifPresent: [:binding | binding isMethodLocal ifTrue: [binding]]]) isNil
 ]

@@ -5,6 +5,9 @@ An SBOrGroupPattern is xxxxxxxxx.
 Class {
 	#name : #SBOrGroupPattern,
 	#superclass : #SBGroupPattern,
+	#instVars : [
+		'matchingPattern'
+	],
 	#category : #'Sandblocks-DomainBlocks'
 }
 
@@ -66,11 +69,23 @@ SBOrGroupPattern >> getNext: aDomainBlock [
 { #category : #'as yet unclassified' }
 SBOrGroupPattern >> matches: aDomainBlock withBinding: aCollection [
 
-	^ boundPattern matches: aDomainBlock withBinding: aCollection
+	^ self matchingPattern matches: aDomainBlock withBinding: aCollection
+]
+
+{ #category : #accessing }
+SBOrGroupPattern >> matchingPattern [
+
+	^ matchingPattern
+]
+
+{ #category : #accessing }
+SBOrGroupPattern >> matchingPattern: anObject [
+
+	matchingPattern := anObject.
 ]
 
 { #category : #'as yet unclassified' }
-SBOrGroupPattern >> seperatorString [
+SBOrGroupPattern >> separatorString [
 
 	^ ' or '
 ]
@@ -86,7 +101,7 @@ SBOrGroupPattern >> setBindingFor: aDomainBlock in: aCollection [
 			aCollection addAll: originalCollection.
 			pattern setBindingFor: aDomainBlock in: aCollection]
 		ifFound: [:pattern |
-			boundPattern := pattern.
+			self matchingPattern: pattern.
 			true]
 		ifNone: [false]
 ]

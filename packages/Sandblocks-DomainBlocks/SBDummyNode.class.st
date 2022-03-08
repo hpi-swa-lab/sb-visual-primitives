@@ -42,28 +42,6 @@ SBDummyNode class >> childrenMappingEntry [
 ]
 
 { #category : #'as yet unclassified' }
-SBDummyNode class >> exampleRootWithTwoChildren [
-
-	| n1 n2 root |
-	root := SBDummyNode new.
-	root key: 'Carl-Friedrich'.
-	n1 := SBDummyNode new.
-	n1 key: 'peter'.
-	n2 := SBDummyNode new.
-	n2 key: 'n2'.
-	root
-		left: n1;
-		right: n2.
-	^ root
-]
-
-{ #category : #'as yet unclassified' }
-SBDummyNode class >> key: anObject [
-
-	^ self new key: anObject
-]
-
-{ #category : #'as yet unclassified' }
 SBDummyNode class >> domainBlockMapping [
 
 	^ {
@@ -78,6 +56,12 @@ SBDummyNode class >> domainBlockMapping [
 		#identityLabelPosition vpConstant: #bottomCenterLabel.
 		#innerLabel vpNumberFor: #key.
 		self childrenMappingEntry}
+]
+
+{ #category : #'as yet unclassified' }
+SBDummyNode class >> key: anObject [
+
+	^ self new key: anObject
 ]
 
 { #category : #'as yet unclassified' }

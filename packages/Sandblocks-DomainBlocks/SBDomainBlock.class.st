@@ -185,7 +185,7 @@ SBDomainBlock >> addPropertyMapping: anSBPropertyMapping [
 				value do: [:child |
 					newChild := self owner
 						ifNil: [child asDomainBlock]
-						ifNotNil: [SBDomainBlock newFromObject: child in: self owner].
+						ifNotNil: [SBBindingPattern newFromObject: child in: self owner].
 					self addChild: newChild]]}
 		otherwise: [(self labelPositions includes: propertyMapping vpProperty) ifTrue: [(self blockDict at: propertyMapping vpProperty) addVPLabel: (propertyMapping getMorphFor: self sourceObject)]]
 ]
@@ -316,6 +316,15 @@ SBDomainBlock >> deleteBlock [
 		yourself)
 ]
 
+{ #category : #'as yet unclassified' }
+SBDomainBlock >> domainBlockMappings [
+
+	^ self sourceObject class domainBlockMapping collect: [:mappingOrAssoc |
+		mappingOrAssoc isPropertyMapping
+			ifTrue: [mappingOrAssoc]
+			ifFalse: [SBPropertyMapping fromAssociation: mappingOrAssoc]]
+]
+
 { #category : #accessing }
 SBDomainBlock >> getLabelMorph: anObject [
 
@@ -381,6 +390,12 @@ SBDomainBlock >> innerLabel: aMorph [
 ]
 
 { #category : #'as yet unclassified' }
+SBDomainBlock >> isDomainBlock [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBDomainBlock >> isExpression [
 
 	^ false
@@ -390,12 +405,6 @@ SBDomainBlock >> isExpression [
 SBDomainBlock >> isTreeLayoutRoot [
 
 	^ self parent isNil
-]
-
-{ #category : #'as yet unclassified' }
-SBDomainBlock >> isDomainBlock [
-
-	^ true
 ]
 
 { #category : #accessing }
@@ -444,9 +453,10 @@ SBDomainBlock >> layoutInset [
 { #category : #'as yet unclassified' }
 SBDomainBlock >> leftSibling [
 
-	^ self parent ifNotNil: [:parent | | index |
-		index := parent children indexOf: self.
-		index > 1 ifTrue: [parent children at: index - 1]]
+	| index |
+	self parent ifNil: [^ nil].
+	index := self parent children indexOf: self.
+	^ index > 1 ifTrue: [self parent children at: index - 1]
 ]
 
 { #category : #'as yet unclassified' }
@@ -649,9 +659,10 @@ SBDomainBlock >> removeLabelAt: aSymbol [
 { #category : #'as yet unclassified' }
 SBDomainBlock >> rightSibling [
 
-	^ self parent ifNotNil: [:parent | | index |
+	| index |
+	self parent ifNil: [^ nil].
 		index := parent children indexOf: self.
-		index < parent children size ifTrue: [parent children at: index + 1]]
+		index < parent children size ifTrue: [parent children at: index + 1]
 ]
 
 { #category : #accessing }
@@ -753,27 +764,12 @@ SBDomainBlock >> valueFromPropertyMapping: aPropertyMapping [
 ]
 
 { #category : #'as yet unclassified' }
-SBDomainBlock >> domainBlockMappings [
-
-	^ self sourceObject class domainBlockMapping collect: [:mappingOrAssoc |
-		mappingOrAssoc isPropertyMapping
-			ifTrue: [mappingOrAssoc]
-			ifFalse: [SBPropertyMapping fromAssociation: mappingOrAssoc]]
-]
-
-{ #category : #'as yet unclassified' }
 SBDomainBlock >> vpMappingAt: aVPProperty [
 
 	^ self domainBlockMappings
 		detect: [:mapping | mapping key = aVPProperty]
 		ifFound: [:mapping | mapping asPropertyMapping]
 		ifNone: [nil]
-]
-
-{ #category : #'as yet unclassified' }
-SBDomainBlock >> vpMappingOf: aBlock [
-
-	^ self vpMappingAt: (self labelPositionOf: aBlock)
 ]
 
 { #category : #'as yet unclassified' }

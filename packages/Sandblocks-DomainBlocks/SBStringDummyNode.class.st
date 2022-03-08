@@ -5,6 +5,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBStringDummyNode class >> domainBlockMapping [
+
+	^ {SBPropertyMappingString property: #key vpProperty: #innerLabel. self childrenMappingEntry}
+]
+
+{ #category : #'as yet unclassified' }
 SBStringDummyNode class >> exampleBuildHeapStrings: aTree [
 
 	self
@@ -66,12 +72,6 @@ SBStringDummyNode class >> exampleBuildHeapStrings: aTree [
 			add: #explicitChildrenMatching -> true;
 			yourself)
 		visualizePatternsAs: SBStringDummyNode) replaceAllMatches: aTree
-]
-
-{ #category : #'as yet unclassified' }
-SBStringDummyNode class >> domainBlockMapping [
-
-	^ {SBPropertyMappingString property: #key vpProperty: #innerLabel. self childrenMappingEntry}
 ]
 
 { #category : #'as yet unclassified' }

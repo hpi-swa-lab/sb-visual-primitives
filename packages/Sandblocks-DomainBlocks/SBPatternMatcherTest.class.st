@@ -197,22 +197,20 @@ SBPatternMatcherTest >> examplePatternTwoWildcardList [
 ]
 
 { #category : #'as yet unclassified' }
-SBPatternMatcherTest >> exampleWithConstants: salzstangen [
+SBPatternMatcherTest >> exampleWithConstants: anObject [
 
-	| case |
-	case := SBTransformation
+	^ (SBTransformation
 		input: (SBGroupPattern patterns: {
-			SBBindingPattern expressionDict: {#identity -> [salzstangen]} children: {
+			SBBindingPattern expressionDict: {#identity -> [anObject]} children: {
 				SBBindingPattern
 					bindingDict: {#identity -> #a}
 					children: {SBEllipsisPattern bindingDict: {#identity -> #b}}}})
 		output: (SBGroupPattern patterns: {
 			SBBindingPattern bindingDict: {#identity -> #a} children: {
 				SBBindingPattern
-					expressionDict: {#identity -> [salzstangen]}
+					expressionDict: {#identity -> [anObject]}
 					children: {SBEllipsisPattern bindingDict: {#identity -> #b}}}})
-		strategy: {#explicitRootMatching -> false} asDictionary.
-	^ case replaceAllMatches: salzstangen
+		strategy: {#explicitRootMatching -> false} asDictionary) replaceAllMatches
 ]
 
 { #category : #'as yet unclassified' }
@@ -222,9 +220,9 @@ SBPatternMatcherTest >> getLabelList: aPrimitive [
 	list := OrderedCollection new.
 	currentPrimitive := aPrimitive.
 	[currentPrimitive children notEmpty] whileTrue: [
-		list add: (currentPrimitive propertyAt: #innerLabel).
+		list add: (currentPrimitive propertyAt: #innerLabel) asInteger.
 		currentPrimitive := currentPrimitive children first].
-	list add: (currentPrimitive propertyAt: #innerLabel).
+	list add: (currentPrimitive propertyAt: #innerLabel) asInteger.
 	^ list
 ]
 
@@ -232,8 +230,8 @@ SBPatternMatcherTest >> getLabelList: aPrimitive [
 SBPatternMatcherTest >> getLabelTree: aPrimitive [
 
 	^ aPrimitive children
-		ifEmpty: [aPrimitive propertyAt: #innerLabel]
-		ifNotEmpty: [(aPrimitive propertyAt: #innerLabel) -> (aPrimitive children collect: [:child | self getLabelTree: child]) asArray]
+		ifEmpty: [(aPrimitive propertyAt: #innerLabel) asInteger]
+		ifNotEmpty: [((aPrimitive propertyAt: #innerLabel) asInteger) -> (aPrimitive children collect: [:child | self getLabelTree: child]) asArray]
 ]
 
 { #category : #'as yet unclassified' }
@@ -350,8 +348,8 @@ SBPatternMatcherTest >> testSortTreeOutput [
 	| root output |
 	root := SBDummyNode buildTree: {0 -> {1 -> {3 -> {5. 4}. 2 -> {6. 7}}}}.
 	output := (SBTransformation
-		input: SBPatternMatcherTest new examplePatternSortTree
-		output: SBPatternMatcherTest new examplePatternSortTreeOutput) replaceAllMatches: root.
+		input: self examplePatternSortTree
+		output: self examplePatternSortTreeOutput) replaceAllMatches: root.
 	self
 		assert: {0 -> {1 -> {2 -> {6. 7}. 3 -> {4. 5}}}}
 		equals: {self getLabelTree: output asDomainBlock}

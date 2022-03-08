@@ -49,12 +49,6 @@ SBPropertyMappingSelect class >> property: aSymbol vpProperty: anotherSymbol cho
 		yourself
 ]
 
-{ #category : #'as yet unclassified' }
-SBPropertyMappingSelect class >> representationsOf: aCollection [
-
-	^ aCollection
-]
-
 { #category : #accessing }
 SBPropertyMappingSelect >> choices [
 

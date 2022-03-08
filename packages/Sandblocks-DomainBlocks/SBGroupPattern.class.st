@@ -92,15 +92,15 @@ SBGroupPattern >> addNewParent [
 ]
 
 { #category : #accessing }
-SBGroupPattern >> addSeperatorsAround: aPattern [
+SBGroupPattern >> addSeparatorsAround: aPattern [
 
 	(aPattern submorphAfter
 		ifNil: [false]
-		ifNotNil: [(aPattern submorphAfter isKindOf: SBTextBubble) not]) ifTrue: [self row addMorph: (SBTextBubble new contents: self seperatorString) after: aPattern].
+		ifNotNil: [(aPattern submorphAfter isKindOf: SBTextBubble) not]) ifTrue: [self row addMorph: (SBTextBubble new contents: self separatorString) after: aPattern].
 	
 	(aPattern submorphBefore
 		ifNil: [false]
-		ifNotNil: [(aPattern submorphBefore isKindOf: SBTextBubble) not]) ifTrue: [self row addMorph: (SBTextBubble new contents: self seperatorString) inFrontOf: aPattern]
+		ifNotNil: [(aPattern submorphBefore isKindOf: SBTextBubble) not]) ifTrue: [self row addMorph: (SBTextBubble new contents: self separatorString) inFrontOf: aPattern]
 ]
 
 { #category : #'as yet unclassified' }
@@ -250,7 +250,7 @@ SBGroupPattern >> openPatternAsChild: aPattern [
 			self row addMorph: aPattern atIndex: insertPosition.
 			addedBlock := aPattern].
 	
-	self addSeperatorsAround: addedBlock
+	self addSeparatorsAround: addedBlock
 ]
 
 { #category : #'as yet unclassified' }
@@ -293,7 +293,7 @@ SBGroupPattern >> row [
 ]
 
 { #category : #accessing }
-SBGroupPattern >> seperatorString [
+SBGroupPattern >> separatorString [
 
 	^ ' and '
 ]

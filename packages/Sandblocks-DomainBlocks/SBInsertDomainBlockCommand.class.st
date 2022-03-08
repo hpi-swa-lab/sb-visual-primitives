@@ -42,7 +42,7 @@ SBInsertDomainBlockCommand >> children: anOrderedCollection [
 { #category : #'as yet unclassified' }
 SBInsertDomainBlockCommand >> do [
 
-	((self parent isKindOf: SBGroupPattern) and: [self children notEmpty]) ifTrue: [self parent removeChild: self children first].
+	((self parent isBindingPattern not) and: [self children notEmpty]) ifTrue: [self parent removeChild: self children first].
 	self children do: [:child | self morph addChild: child].
 	self parent ifNotNil: [
 		self parent
@@ -54,10 +54,10 @@ SBInsertDomainBlockCommand >> do [
 		container := self parent owner.
 		index := self container submorphCount].
 	
-	(self parent isKindOf: SBGroupPattern) ifFalse: [super do].
+	self parent isBindingPattern ifTrue: [super do].
 	
 	self morph allChildrenDo: [:child | self container addMorphBack: child].
-	self morph parentCase ifNotNil: #buildImplicitChildrenMatchingPattern.
+	self morph patternContainer ifNotNil: #buildImplicitChildrenMatchingPattern.
 	^ self morph
 ]
 
@@ -103,9 +103,8 @@ SBInsertDomainBlockCommand >> siblingIndex: aNumber [
 { #category : #'as yet unclassified' }
 SBInsertDomainBlockCommand >> undo [
 
-	| case root |
+	| case |
 	case := self morph patternContainer.
-	root := self morph root.
 	self parent
 		ifNotNil: [
 			self parent removeChild: self morph.

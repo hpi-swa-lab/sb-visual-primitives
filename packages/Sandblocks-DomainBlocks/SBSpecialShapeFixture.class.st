@@ -5,6 +5,23 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBSpecialShapeFixture class >> domainBlockMapping [
+
+	^ {
+		SBPropertyMapping
+			getter: [:object |
+				CircleMorph new
+					color: (Color r: 0.5 g: 0.5 b: (object key ifNotNil: [:key | key asInteger / 255] ifNil: [0]));
+					yourself]
+			setter: [:object :vp | object key: ((vp propertyAt: #shape) color blue * 255) rounded]
+			patternValue: (CircleMorph new color: (Color r: 0.5 g: 0.5 b: 0.1))
+			vpProperty: #shape
+			name: 'shape'.
+		SBPropertyMappingNumber property: #key vpProperty: #innerLabel.
+		self childrenMappingEntry}
+]
+
+{ #category : #'as yet unclassified' }
 SBSpecialShapeFixture class >> exampleBuildHeapSpecialShape: aTree [
 
 	self
@@ -66,21 +83,4 @@ SBSpecialShapeFixture class >> exampleBuildHeapSpecialShape: aTree [
 			add: #explicitChildrenMatching -> false;
 			yourself)
 		visualizePatternsAs: SBSpecialShapeFixture) replaceAllMatches: aTree
-]
-
-{ #category : #'as yet unclassified' }
-SBSpecialShapeFixture class >> domainBlockMapping [
-
-	^ {
-		SBPropertyMapping
-			getter: [:object |
-				CircleMorph new
-					color: (Color r: 0.5 g: 0.5 b: (object key ifNotNil: [:key | key asInteger / 255] ifNil: [0]));
-					yourself]
-			setter: [:object :vp | object key: ((vp propertyAt: #shape) color blue * 255) rounded]
-			patternValue: (CircleMorph new color: (Color r: 0.5 g: 0.5 b: 0.1))
-			vpProperty: #shape
-			name: 'shape'.
-		SBPropertyMappingNumber property: #key vpProperty: #innerLabel.
-		self childrenMappingEntry}
 ]

@@ -42,8 +42,7 @@ SBDomainBlockContainer class >> code: aCode showCode: aBoolean [
 { #category : #'as yet unclassified' }
 SBDomainBlockContainer class >> matches: aBlock [
 
-	(super matches: aBlock) ifFalse: [^ false].
-	^ ((aBlock receiver satisfies: #(#notNil #isBinding)) and: [aBlock receiver contents = self name and: ['code:showCode:' = aBlock selector]]) or: [{'showAsDomainBlock'} includes: aBlock selector]
+	^ ((super matches: aBlock) and: [aBlock receiver satisfies: #(#notNil #isBinding)] and: [aBlock receiver contents = self name] and: ['code:showCode:' = aBlock selector]) or: [{'showAsDomainBlock'} includes: aBlock selector]
 ]
 
 { #category : #'as yet unclassified' }
@@ -77,7 +76,7 @@ SBDomainBlockContainer >> code [
 { #category : #accessing }
 SBDomainBlockContainer >> code: aCodeBlock showCode: aBoolean [
 
-	| aSandblock vp |
+	| aSandblock |
 	self code removeAllMorphs.
 	self visual removeAllMorphs.
 	aSandblock := aCodeBlock asSandblock.
@@ -85,7 +84,7 @@ SBDomainBlockContainer >> code: aCodeBlock showCode: aBoolean [
 	self showCode: aBoolean.
 	aBoolean ifFalse: [aSandblock hide].
 	
-	vp := SBDomainBlock
+	SBDomainBlock
 		newFromObject: (aSandblock evaluate isBlock
 			ifTrue: [aSandblock evaluate value]
 			ifFalse: [aSandblock evaluate])
@@ -329,12 +328,6 @@ SBDomainBlockContainer >> tryWriteSourceOrStore: anObject on: aStream [
 SBDomainBlockContainer >> visual [
 
 	^ visual
-]
-
-{ #category : #accessing }
-SBDomainBlockContainer >> domainBlockFrom: anObject [
-
-	^ SBDomainBlock newFromObject: anObject in: self visual
 ]
 
 { #category : #accessing }

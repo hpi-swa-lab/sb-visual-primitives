@@ -96,12 +96,6 @@ SBSelectProperty >> currentChoice [
 ]
 
 { #category : #accessing }
-SBSelectProperty >> currentRepresentation [
-
-	^ self representations at: self currentValueIndex
-]
-
-{ #category : #accessing }
 SBSelectProperty >> currentValueIndex [
 
 	^ currentValueIndex

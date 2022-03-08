@@ -230,7 +230,7 @@ SBConnectDecorator >> step [
 	newIsMouseClose ~= self isMouseClose ifTrue: [
 		self morph changed.
 		self isMouseClose: newIsMouseClose].
-	self connectionPoints do: [:connectionPoint | connectionPoint visible: (newIsMouseClose or: self isConnecting)]
+	self connectionPoints do: [:connectionPoint | connectionPoint visible: (newIsMouseClose or: [self isConnecting])]
 ]
 
 { #category : #stepping }

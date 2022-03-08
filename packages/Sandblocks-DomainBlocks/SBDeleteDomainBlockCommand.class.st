@@ -32,7 +32,7 @@ SBDeleteDomainBlockCommand >> do [
 	self oldSiblingIndex: target siblingIndex.
 	self oldParent ifNotNil: [self oldParent removeChild: target].
 	target allChildrenDo: [:block | block abandon].
-	self oldParent parentCase ifNotNil: #buildImplicitChildrenMatchingPattern.
+	self oldParent patternContainer ifNotNil: #buildImplicitChildrenMatchingPattern.
 	^ self oldParent
 ]
 
@@ -65,9 +65,9 @@ SBDeleteDomainBlockCommand >> undo [
 
 	self oldParent ifNotNil: [self oldParent addChild: target afterIndex: self oldSiblingIndex - 1].
 	
-	(self oldParent isKindOf: SBGroupPattern) ifFalse: [
+	(self oldParent isBindingPattern) ifTrue: [
 		target allChildrenDo: [:block | oldOwner addMorphBack: block].
 		super undo].
-	self oldParent parentCase ifNotNil: #buildImplicitChildrenMatchingPattern.
+	self oldParent patternContainer ifNotNil: #buildImplicitChildrenMatchingPattern.
 	^ target
 ]

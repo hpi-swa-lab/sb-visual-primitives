@@ -33,7 +33,7 @@ SBTreeLayoutPolicy >> apportion: aPattern defaultAncestor: aDefaultAncestor [
 		sor := self modOf: aPattern.
 		sil := self modOf: vil.
 		sol := self modOf: vol.
-		[(self nextRight: vil) notNil and: (self nextLeft: vir) notNil] whileTrue: [
+		[(self nextRight: vil) notNil and: [(self nextLeft: vir) notNil]] whileTrue: [
 			vil := self nextRight: vil.
 			vir := self nextLeft: vir.
 			vol := self nextLeft: vol.

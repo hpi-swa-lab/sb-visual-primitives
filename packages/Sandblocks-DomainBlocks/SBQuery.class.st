@@ -134,12 +134,6 @@ SBQuery >> query: anObject [
 ]
 
 { #category : #'as yet unclassified' }
-SBQuery >> toggleImplicitChildTo: aBoolean withBinding: aString [
-
-	self toggleImplicitChildTo: aBoolean withBinding: aString on: self pattern
-]
-
-{ #category : #'as yet unclassified' }
 SBQuery >> writeSourceOn: aStream [
 
 	aStream nextPutAll: '(SBQuery pattern: '.

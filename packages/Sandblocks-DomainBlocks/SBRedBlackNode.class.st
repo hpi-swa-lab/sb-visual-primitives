@@ -41,26 +41,6 @@ SBRedBlackNode class >> childrenMappingEntry [
 		name: 'children'
 ]
 
-{ #category : #'as yet unclassified' }
-SBRedBlackNode class >> exampleRootWithTwoChildren [
-
-	| n1 n2 root |
-	root := SBRedBlackNode new.
-	root key: 4.
-	n1 := SBRedBlackNode new.
-	n1 key: 1.
-	n2 := SBRedBlackNode new.
-	n2 key: 2.
-	root children: {n1. n2}.
-	^ root
-]
-
-{ #category : #'as yet unclassified' }
-SBRedBlackNode class >> key: anObject [
-
-	^ self new key: anObject
-]
-
 { #category : #nil }
 SBRedBlackNode class >> domainBlockMapping [
 
@@ -72,6 +52,12 @@ SBRedBlackNode class >> domainBlockMapping [
 		#children vpChildFor: #children.
 		#innerLabel vpNumberFor: #key.
 		#identityLabelPosition vpConstant: #leftLabel}
+]
+
+{ #category : #'as yet unclassified' }
+SBRedBlackNode class >> key: anObject [
+
+	^ self new key: anObject
 ]
 
 { #category : #nil }

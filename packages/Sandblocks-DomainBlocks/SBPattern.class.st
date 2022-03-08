@@ -114,27 +114,11 @@ SBPattern >> nextIdentifier [
 ]
 
 { #category : #'as yet unclassified' }
-SBPattern >> parentCase [
-
-	| case |
-	case := self root parentSandblock.
-	^ ((case isKindOf: SBTransformation) or: [case isKindOf: SBQuery])
-		ifTrue: [case]
-		ifFalse: [nil]
-]
-
-{ #category : #'as yet unclassified' }
-SBPattern >> parentQuery [
-
-	| case |
-	case := self root parentSandblock.
-	^ (case isKindOf: SBQuery) ifTrue: [case] ifFalse: [nil]
-]
-
-{ #category : #'as yet unclassified' }
 SBPattern >> patternContainer [
 
-	^ self parentCase ifNotNil: [self parentCase] ifNil: [self parentQuery]
+	| case |
+	case := self root parentSandblock.
+	^ (case isKindOf: SBPatternContainer) ifTrue: [case]
 ]
 
 { #category : #'as yet unclassified' }

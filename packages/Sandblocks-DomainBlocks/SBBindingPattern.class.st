@@ -216,7 +216,7 @@ SBBindingPattern >> addImplicitChildren: aDict [
 		implicitChild := SBEllipsisPattern bindingDict: {self class identityName -> (implicitChildrenIndices at: implicitChildrenCount + 1)}.
 		self addChild: implicitChild afterIndex: index + implicitChildrenCount.
 		implicitChild isImplicitChild: true.
-		self owner ifNotNil: [:owner | owner addMorphBack: implicitChild].
+		self owner ifNotNil: [:morph | morph addMorphBack: implicitChild].
 		implicitChildrenCount := implicitChildrenCount + 1].
 	
 	oldChildren := self children copy.
@@ -282,7 +282,7 @@ SBBindingPattern >> bindingIndex: anObject [
 { #category : #'as yet unclassified' }
 SBBindingPattern >> bindingIndexAutoCast [
 
-	^ [:name :owner | | case |
+	^ [:name :morph| | case |
 		case := self patternContainer.
 		(case notNil and: [name hasOwner: case pattern])
 			ifTrue: [name behaviorClass: SBStDeclarationForVPBinding]
@@ -339,7 +339,7 @@ SBBindingPattern >> buildImplicitChildren: aDict [
 		implicitChild := SBEllipsisPattern bindingDict: {self class identityName -> identifier}.
 		self addChild: implicitChild afterIndex: index + implicitChildren size.
 		implicitChild isImplicitChild: true.
-		self owner ifNotNil: [:owner | owner addMorphBack: implicitChild].
+		self owner ifNotNil: [:morph | morph addMorphBack: implicitChild].
 		implicitChildren add: identifier.
 		nextIndex := nextIndex + 1].
 	
@@ -403,12 +403,6 @@ SBBindingPattern >> constant [
 ]
 
 { #category : #'as yet unclassified' }
-SBBindingPattern >> constant: aBlock [
-
-	constant := aBlock
-]
-
-{ #category : #'as yet unclassified' }
 SBBindingPattern >> convertToEllipsisPattern [
 	<action>
 
@@ -435,6 +429,21 @@ SBBindingPattern >> convertToPatternClass: aClass [
 SBBindingPattern >> couldMatch: aDomainBlock [
 
 	^ self childrenInCurrentMatch = aDomainBlock children size and: [self constant isNil or: [self constant value = aDomainBlock sourceObject]]
+]
+
+{ #category : #'as yet unclassified' }
+SBBindingPattern >> domainBlockMapping [
+
+	^ self visualizingClass ifNil: [{}] ifNotNil: #domainBlockMapping
+]
+
+{ #category : #'as yet unclassified' }
+SBBindingPattern >> domainBlockMappings [
+
+	^ self domainBlockMapping collect: [:mappingOrAssoc |
+		mappingOrAssoc isPropertyMapping
+			ifTrue: [mappingOrAssoc]
+			ifFalse: [SBPropertyMapping fromAssociation: mappingOrAssoc]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -524,9 +533,15 @@ SBBindingPattern >> initialize [
 ]
 
 { #category : #'as yet unclassified' }
+SBBindingPattern >> isBindingPattern [
+	
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
 SBBindingPattern >> isTreeLayoutRoot [
 
-	^ self parent isKindOf: SBGroupPattern
+	^ self parent isBindingPattern not
 ]
 
 { #category : #'as yet unclassified' }
@@ -706,21 +721,6 @@ SBBindingPattern >> supportsLabels [
 SBBindingPattern >> valueFromPropertyMapping: aPropertyMapping [
 
 	^ aPropertyMapping patternValue
-]
-
-{ #category : #'as yet unclassified' }
-SBBindingPattern >> domainBlockMapping [
-
-	^ self visualizingClass ifNil: {} ifNotNil: #domainBlockMapping
-]
-
-{ #category : #'as yet unclassified' }
-SBBindingPattern >> domainBlockMappings [
-
-	^ self domainBlockMapping collect: [:mappingOrAssoc |
-		mappingOrAssoc isPropertyMapping
-			ifTrue: [mappingOrAssoc]
-			ifFalse: [SBPropertyMapping fromAssociation: mappingOrAssoc]]
 ]
 
 { #category : #accessing }

@@ -64,12 +64,6 @@ SBConstraintPattern >> allChildrenDo: aBlock [
 	
 ]
 
-{ #category : #'as yet unclassified' }
-SBConstraintPattern >> attachTreeDecorator [
-
-	
-]
-
 { #category : #accessing }
 SBConstraintPattern >> collectBindingsInto: aCollection [
 	"we do not define bindings"

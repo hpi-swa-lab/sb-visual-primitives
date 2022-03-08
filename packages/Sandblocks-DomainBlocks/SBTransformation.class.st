@@ -94,14 +94,15 @@ SBTransformation class >> suggestion [
 { #category : #'as yet unclassified' }
 SBTransformation >> buildImplicitChildrenMatchingPattern [
 
-	(self pattern notNil and: [self outputPattern notNil]) ifTrue: [
-		self pattern removeImplicitChildren.
-		self outputPattern removeImplicitChildren.
-		
-		self explicitChildrenMatching ifFalse: [ | additionalNodes |
-			additionalNodes := Dictionary new.
-			self pattern buildImplicitChildren: additionalNodes.
-			self outputPattern addImplicitChildren: additionalNodes]]
+	(self pattern isNil or: [self outputPattern isNil]) ifTrue: [^ self].
+	
+	self pattern removeImplicitChildren.
+	self outputPattern removeImplicitChildren.
+	
+	self explicitChildrenMatching ifFalse: [ | additionalNodes |
+		additionalNodes := Dictionary new.
+		self pattern buildImplicitChildren: additionalNodes.
+		self outputPattern addImplicitChildren: additionalNodes]
 ]
 
 { #category : #'as yet unclassified' }
@@ -430,19 +431,17 @@ SBTransformation >> exampleTransformWithExpression: aTree [
 { #category : #examples }
 SBTransformation >> exampleWithConstants: aDummyNode [
 
-	| salzstangen |
+	| currentNode |
 	self
 		example: [SBTransformation new]
-		args: [
-			{
-				((SBDummyNode key: 9) left: ((SBDummyNode key: 10) left: (SBDummyNode key: 8))) showAsDomainBlock}]
+		args: [{((SBDummyNode key: 9) left: ((SBDummyNode key: 10) left: (SBDummyNode key: 8))) showAsDomainBlock}]
 		label: 'example'.
 	
-	salzstangen := aDummyNode.
+	currentNode := aDummyNode.
 	^ (SBTransformation
 		input: (SBGroupPattern patterns: {
 			SBBindingPattern
-				expressionDict: {#identity -> [salzstangen]}
+				expressionDict: {#identity -> [currentNode]}
 				children: {
 					SBBindingPattern
 						bindingDict: {#identity -> #a}
@@ -454,7 +453,7 @@ SBTransformation >> exampleWithConstants: aDummyNode [
 				bindingDict: {#identity -> #a}
 				children: {
 					SBBindingPattern
-						expressionDict: {#identity -> [salzstangen]}
+						expressionDict: {#identity -> [currentNode]}
 						children: {SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBDummyNode}
 						visualizingClass: SBDummyNode}
 				visualizingClass: SBDummyNode})
@@ -462,7 +461,7 @@ SBTransformation >> exampleWithConstants: aDummyNode [
 			add: #explicitRootMatching -> false;
 			add: #explicitChildrenMatching -> true;
 			yourself)
-		visualizePatternsAs: SBDummyNode) replaceAllMatches: aDummyNode
+		visualizePatternsAs: SBDummyNode) replaceAllMatches
 ]
 
 { #category : #'as yet unclassified' }
@@ -533,7 +532,7 @@ SBTransformation >> replaceAllMatches: anObject [
 { #category : #'as yet unclassified' }
 SBTransformation >> toggleImplicitChildTo: aBoolean withBinding: aString [
 
-	super toggleImplicitChildTo: aBoolean withBinding: aString on: self outputPattern.
+	super toggleImplicitChildTo: aBoolean withBinding: aString.
 	self toggleImplicitChildTo: aBoolean withBinding: aString on: self outputPattern
 ]
 
