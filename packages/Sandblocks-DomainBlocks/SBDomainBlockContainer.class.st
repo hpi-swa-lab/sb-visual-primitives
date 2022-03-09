@@ -42,7 +42,10 @@ SBDomainBlockContainer class >> code: aCode showCode: aBoolean [
 { #category : #'as yet unclassified' }
 SBDomainBlockContainer class >> matches: aBlock [
 
-	^ ((super matches: aBlock) and: [aBlock receiver satisfies: #(#notNil #isBinding)] and: [aBlock receiver contents = self name] and: ['code:showCode:' = aBlock selector]) or: [{'showAsDomainBlock'} includes: aBlock selector]
+	^ ((super matches: aBlock)
+		and: [aBlock receiver satisfies: #(#notNil #isBinding)]
+		and: [aBlock receiver contents = self name]
+		and: ['code:showCode:' = aBlock selector]) or: [{'showAsDomainBlock'} includes: aBlock selector]
 ]
 
 { #category : #'as yet unclassified' }

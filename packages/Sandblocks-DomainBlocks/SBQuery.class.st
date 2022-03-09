@@ -13,9 +13,7 @@ SBQuery class >> exampleExtractLeafOf: salzstangen [
 	| newMaybeLeaf currentNode |
 	self
 		example: [SBQuery]
-		args: [
-			{
-				((SBDummyNode key: 9) left: ((SBDummyNode key: 10) left: (SBDummyNode key: 7))) showAsDomainBlock}]
+		args: [{((SBDummyNode key: 9) left: ((SBDummyNode key: 10) left: (SBDummyNode key: 7))) showAsDomainBlock}]
 		label: 'example'.
 	currentNode := salzstangen.
 	[
@@ -38,10 +36,7 @@ SBQuery class >> exampleExtractLeafOf: salzstangen [
 SBQuery class >> exampleTwo: salzstangen [
 
 	| gerhard currentSnack |
-	SBExample
-		self: [SBQuery]
-		args: [{SBDummyNode buildTree: {9 -> {10 -> {7}}}}]
-		label: 'example'.
+	SBExample self: [SBQuery] args: [{SBDummyNode buildTree: {9 -> {10 -> {7}}}}] label: 'example'.
 	currentSnack := salzstangen.
 	[
 		SBQuery
@@ -126,9 +121,7 @@ SBQuery >> query [
 SBQuery >> query: anObject [
 
 	| matcher match |
-	matcher := (SBPatternMatcher
-		input: anObject asDomainBlock
-		pattern: self pattern) strategy: self strategy.
+	matcher := (SBPatternMatcher input: anObject asDomainBlock pattern: self pattern) strategy: self strategy.
 	match := matcher getNextMatch.
 	^ match
 ]

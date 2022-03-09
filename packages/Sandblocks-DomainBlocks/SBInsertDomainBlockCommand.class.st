@@ -42,7 +42,7 @@ SBInsertDomainBlockCommand >> children: anOrderedCollection [
 { #category : #'as yet unclassified' }
 SBInsertDomainBlockCommand >> do [
 
-	((self parent isBindingPattern not) and: [self children notEmpty]) ifTrue: [self parent removeChild: self children first].
+	(self parent isBindingPattern not and: [self children notEmpty]) ifTrue: [self parent removeChild: self children first].
 	self children do: [:child | self morph addChild: child].
 	self parent ifNotNil: [
 		self parent

@@ -207,10 +207,7 @@ SBTransformation >> exampleEllipsisPatternWithLabel: aDummyNode [
 				children: {
 					SBBindingPattern
 						bindingDict: {#identity -> #b}
-						children: {
-							SBEllipsisPattern
-								bindingDict: {#identity -> #bChildren}
-								visualizingClass: SBDummyNode}
+						children: {SBEllipsisPattern bindingDict: {#identity -> #bChildren} visualizingClass: SBDummyNode}
 						visualizingClass: SBDummyNode.
 					SBBindingPattern bindingDict: {#identity -> #c} visualizingClass: SBDummyNode}
 				visualizingClass: SBDummyNode})
@@ -236,10 +233,7 @@ SBTransformation >> exampleInsertWithExpression: aTree [
 		output: (SBGroupPattern patterns: {
 			SBBindingPattern
 				bindingDict: {#identity -> #a}
-				children: {
-					SBBindingPattern
-						expressionDict: {#identity -> [newNode]}
-						visualizingClass: SBDummyNode}
+				children: {SBBindingPattern expressionDict: {#identity -> [newNode]} visualizingClass: SBDummyNode}
 				visualizingClass: SBDummyNode})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> true;
@@ -269,9 +263,7 @@ SBTransformation >> exampleMissingBindingsAreMarked: aTree [
 			SBBindingPattern
 				bindingDict: {#identity -> #boi}
 				children: {
-					SBBindingPattern
-						bindingDict: {#identity -> #notFound}
-						visualizingClass: SBDummyNode.
+					SBBindingPattern bindingDict: {#identity -> #notFound} visualizingClass: SBDummyNode.
 					SBBindingPattern
 						bindingDict: {#identity -> #a}
 						children: {SBEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBDummyNode}
@@ -546,9 +538,7 @@ SBTransformation >> value [
 SBTransformation >> value: anObject [
 
 	| matcher match |
-	matcher := (SBPatternMatcher
-		input: anObject asDomainBlock
-		pattern: self pattern) strategy: self strategy.
+	matcher := (SBPatternMatcher input: anObject asDomainBlock pattern: self pattern) strategy: self strategy.
 	match := matcher getNextMatch.
 	^ match
 		ifNil: [anObject]

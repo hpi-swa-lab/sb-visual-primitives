@@ -661,8 +661,8 @@ SBDomainBlock >> rightSibling [
 
 	| index |
 	self parent ifNil: [^ nil].
-		index := parent children indexOf: self.
-		index < parent children size ifTrue: [parent children at: index + 1]
+	index := parent children indexOf: self.
+	index < parent children size ifTrue: [parent children at: index + 1]
 ]
 
 { #category : #accessing }

@@ -105,10 +105,7 @@ SBWildcardPattern >> exampleExtractNodeWithTwoChildren: aTree [
 						children: {
 							SBBindingPattern
 								bindingDict: {#identity -> #node}
-								children: {
-									SBEllipsisPattern
-										bindingDict: {#identity -> #children}
-										visualizingClass: SBDummyNode}
+								children: {SBEllipsisPattern bindingDict: {#identity -> #children} visualizingClass: SBDummyNode}
 								visualizingClass: SBDummyNode}
 						visualizingClass: SBDummyNode}
 				visualizingClass: SBDummyNode.
@@ -116,10 +113,7 @@ SBWildcardPattern >> exampleExtractNodeWithTwoChildren: aTree [
 		output: (SBGroupPattern patterns: {
 			SBBindingPattern
 				bindingDict: {#identity -> #node}
-				children: {
-					SBEllipsisPattern
-						bindingDict: {#identity -> #children}
-						visualizingClass: SBDummyNode}
+				children: {SBEllipsisPattern bindingDict: {#identity -> #children} visualizingClass: SBDummyNode}
 				visualizingClass: SBDummyNode})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> true;

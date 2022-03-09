@@ -79,9 +79,9 @@ SBOrGroupPattern >> matchingPattern [
 ]
 
 { #category : #accessing }
-SBOrGroupPattern >> matchingPattern: anObject [
+SBOrGroupPattern >> matchingPattern: aPattern [
 
-	matchingPattern := anObject.
+	matchingPattern := aPattern
 ]
 
 { #category : #'as yet unclassified' }

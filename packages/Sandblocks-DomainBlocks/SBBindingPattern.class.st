@@ -282,7 +282,7 @@ SBBindingPattern >> bindingIndex: anObject [
 { #category : #'as yet unclassified' }
 SBBindingPattern >> bindingIndexAutoCast [
 
-	^ [:name :morph| | case |
+	^ [:name :morph | | case |
 		case := self patternContainer.
 		(case notNil and: [name hasOwner: case pattern])
 			ifTrue: [name behaviorClass: SBStDeclarationForVPBinding]
@@ -534,7 +534,7 @@ SBBindingPattern >> initialize [
 
 { #category : #'as yet unclassified' }
 SBBindingPattern >> isBindingPattern [
-	
+
 	^ true
 ]
 

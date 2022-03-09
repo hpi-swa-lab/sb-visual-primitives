@@ -137,10 +137,7 @@ SBDummyNode >> exampleMultipleBindings: aTree [
 					SBEllipsisPattern bindingDict: {#identity -> #ab} visualizingClass: SBDummyNode}
 				visualizingClass: SBDummyNode.
 			SBConstraintPattern constraint: [:bindings | false].
-			SBBindingPattern
-				bindingDict: {#identity -> #a}
-				children: {}
-				visualizingClass: SBDummyNode})
+			SBBindingPattern bindingDict: {#identity -> #a} children: {} visualizingClass: SBDummyNode})
 		output: (SBGroupPattern patterns: {
 			SBBindingPattern
 				bindingDict: {#identity -> #boi}

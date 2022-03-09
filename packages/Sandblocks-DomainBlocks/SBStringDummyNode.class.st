@@ -34,38 +34,24 @@ SBStringDummyNode class >> exampleBuildHeapStrings: aTree [
 			SBBindingPattern
 				bindingDict: {#identity -> #a}
 				children: {
-					SBEllipsisPattern
-						bindingDict: {#identity -> #b}
-						visualizingClass: SBStringDummyNode.
+					SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBStringDummyNode.
 					SBBindingPattern
 						bindingDict: {#identity -> #toSort}
-						children: {
-							SBEllipsisPattern
-								bindingDict: {#identity -> #e}
-								visualizingClass: SBStringDummyNode}
+						children: {SBEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBStringDummyNode}
 						visualizingClass: SBStringDummyNode.
-					SBEllipsisPattern
-						bindingDict: {#identity -> #d}
-						visualizingClass: SBStringDummyNode}
+					SBEllipsisPattern bindingDict: {#identity -> #d} visualizingClass: SBStringDummyNode}
 				visualizingClass: SBStringDummyNode.
 			SBConstraintPattern constraint: [:bindings | (bindings at: #a) key < (bindings at: #toSort) key]})
 		output: (SBGroupPattern patterns: {
 			SBBindingPattern
 				bindingDict: {#identity -> #toSort}
 				children: {
-					SBEllipsisPattern
-						bindingDict: {#identity -> #b}
-						visualizingClass: SBStringDummyNode.
+					SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBStringDummyNode.
 					SBBindingPattern
 						bindingDict: {#identity -> #a}
-						children: {
-							SBEllipsisPattern
-								bindingDict: {#identity -> #e}
-								visualizingClass: SBStringDummyNode}
+						children: {SBEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBStringDummyNode}
 						visualizingClass: SBStringDummyNode.
-					SBEllipsisPattern
-						bindingDict: {#identity -> #d}
-						visualizingClass: SBStringDummyNode}
+					SBEllipsisPattern bindingDict: {#identity -> #d} visualizingClass: SBStringDummyNode}
 				visualizingClass: SBStringDummyNode})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> false;
@@ -98,38 +84,24 @@ SBStringDummyNode >> exampleBuildHeapStrings: aTree [
 			SBBindingPattern
 				bindingDict: {#identity -> #a}
 				children: {
-					SBEllipsisPattern
-						bindingDict: {#identity -> #b}
-						visualizingClass: SBStringDummyNode.
+					SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBStringDummyNode.
 					SBBindingPattern
 						bindingDict: {#identity -> #toSort}
-						children: {
-							SBEllipsisPattern
-								bindingDict: {#identity -> #e}
-								visualizingClass: SBStringDummyNode}
+						children: {SBEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBStringDummyNode}
 						visualizingClass: SBStringDummyNode.
-					SBEllipsisPattern
-						bindingDict: {#identity -> #d}
-						visualizingClass: SBStringDummyNode}
+					SBEllipsisPattern bindingDict: {#identity -> #d} visualizingClass: SBStringDummyNode}
 				visualizingClass: SBStringDummyNode.
 			SBConstraintPattern constraint: [:bindings | (bindings at: #a) key < toSort key]})
 		output: (SBGroupPattern patterns: {
 			SBBindingPattern
 				bindingDict: {#identity -> #toSort}
 				children: {
-					SBEllipsisPattern
-						bindingDict: {#identity -> #b}
-						visualizingClass: SBStringDummyNode.
+					SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBStringDummyNode.
 					SBBindingPattern
 						bindingDict: {#identity -> #a}
-						children: {
-							SBEllipsisPattern
-								bindingDict: {#identity -> #e}
-								visualizingClass: SBStringDummyNode}
+						children: {SBEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBStringDummyNode}
 						visualizingClass: SBStringDummyNode.
-					SBEllipsisPattern
-						bindingDict: {#identity -> #d}
-						visualizingClass: SBStringDummyNode}
+					SBEllipsisPattern bindingDict: {#identity -> #d} visualizingClass: SBStringDummyNode}
 				visualizingClass: SBStringDummyNode})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> false;

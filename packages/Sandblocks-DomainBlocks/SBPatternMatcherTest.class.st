@@ -231,7 +231,7 @@ SBPatternMatcherTest >> getLabelTree: aPrimitive [
 
 	^ aPrimitive children
 		ifEmpty: [(aPrimitive propertyAt: #innerLabel) asInteger]
-		ifNotEmpty: [((aPrimitive propertyAt: #innerLabel) asInteger) -> (aPrimitive children collect: [:child | self getLabelTree: child]) asArray]
+		ifNotEmpty: [(aPrimitive propertyAt: #innerLabel) asInteger -> (aPrimitive children collect: [:child | self getLabelTree: child]) asArray]
 ]
 
 { #category : #'as yet unclassified' }
@@ -334,9 +334,7 @@ SBPatternMatcherTest >> testSingleNodeMatch [
 
 	| matcher primitives |
 	primitives := (self buildList: {10}) asDomainBlock.
-	matcher := SBPatternMatcher
-		input: primitives
-		pattern: self examplePatternSingleNode.
+	matcher := SBPatternMatcher input: primitives pattern: self examplePatternSingleNode.
 	self
 		assert: {#a -> 10}
 		equals: (matcher getAllMatches collect: [:match | {#a -> (match at: #a) sourceObject key}]) first

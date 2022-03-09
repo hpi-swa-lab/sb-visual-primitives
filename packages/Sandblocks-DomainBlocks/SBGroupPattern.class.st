@@ -156,10 +156,7 @@ SBGroupPattern >> fixedNumberOfChildren [
 { #category : #'as yet unclassified' }
 SBGroupPattern >> getNext: aDomainBlock [
 
-	self children do: [:pattern |
-		(pattern getNext: aDomainBlock)
-			ifFalse: [pattern reset]
-			ifTrue: [^ true]].
+	self children do: [:pattern | (pattern getNext: aDomainBlock) ifFalse: [pattern reset] ifTrue: [^ true]].
 	^ false
 ]
 

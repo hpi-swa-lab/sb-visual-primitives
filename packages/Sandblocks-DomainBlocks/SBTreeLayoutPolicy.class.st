@@ -82,7 +82,7 @@ SBTreeLayoutPolicy >> depthOf: aPattern [
 	^ (self layoutDataAt: aPattern) third
 ]
 
-{ #category : #layouting }
+{ #category : #accessing }
 SBTreeLayoutPolicy >> distance: aPattern [
 
 	^ aPattern fullBounds width + self inset
@@ -101,10 +101,12 @@ SBTreeLayoutPolicy >> executeShifts: aPattern [
 		shift := shift + (self shiftOf: child) + change]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBTreeLayoutPolicy >> findRootIn: aMorph [
 
-	^ aMorph submorphs detect: [:submorph | (submorph respondsTo: #isTreeLayoutRoot) and: [submorph isTreeLayoutRoot]]
+	^ aMorph submorphs
+		detect: [:submorph | (submorph respondsTo: #isTreeLayoutRoot) and: [submorph isTreeLayoutRoot]]
+		ifNone: [nil]
 ]
 
 { #category : #layouting }
@@ -136,7 +138,7 @@ SBTreeLayoutPolicy >> initialize [
 	layoutData := Dictionary new
 ]
 
-{ #category : #layouting }
+{ #category : #accessing }
 SBTreeLayoutPolicy >> inset [
 
 	^ 10
@@ -148,11 +150,12 @@ SBTreeLayoutPolicy >> layout: aMorph in: aRectangle [
 	| root |
 	(aMorph submorphsSatisfying: #isConnector) do: #abandon.
 	root := self findRootIn: aMorph.
-	self
-		resetAll;
-		firstWalk: root;
-		secondWalk: root modSum: 0 layerHeights: (self maximumHeight: root) + self inset.
-	root addConnectorLinesIn: aMorph
+	root ifNotNil: [
+		self
+			resetAll;
+			firstWalk: root;
+			secondWalk: root modSum: 0 layerHeights: (self maximumHeight: root) + self inset.
+		root addConnectorLinesIn: aMorph]
 ]
 
 { #category : #accessing }
@@ -194,11 +197,13 @@ SBTreeLayoutPolicy >> maximumHeight: aPattern [
 SBTreeLayoutPolicy >> minExtentOf: aMorph in: aRectangle [
 
 	| root |
-	root := self findRootIn: aMorph.
-	^ (self
-		resetAll;
-		firstWalk: root;
-		secondWalkExtent: root modSum: 0 layerHeights: (self maximumHeight: root) + self inset) extent
+	^ aMorph submorphs isEmpty ifTrue: [0 @ 0] ifFalse: [
+		root := self findRootIn: aMorph.
+		root ifNil: [0 @ 0] ifNotNil: [
+			(self
+				resetAll;
+				firstWalk: root;
+				secondWalkExtent: root modSum: 0 layerHeights: (self maximumHeight: root) + self inset) extent]]
 ]
 
 { #category : #accessing }
@@ -249,7 +254,6 @@ SBTreeLayoutPolicy >> secondWalk: aPattern modSum: aValue layerHeights: anotherV
 	aPattern
 		fullBounds;
 		center: (self xOf: aPattern) + aValue - ((self distance: aPattern) / 2) @ (anotherValue * (self depthOf: aPattern)).
-	"	self addConnectorLineToWorld."
 	aPattern children do: [:child | self secondWalk: child modSum: aValue + (self modOf: aPattern) layerHeights: anotherValue]
 ]
 
