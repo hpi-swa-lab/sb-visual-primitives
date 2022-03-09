@@ -185,7 +185,7 @@ SBDomainBlock >> addPropertyMapping: anSBPropertyMapping [
 				value do: [:child |
 					newChild := self owner
 						ifNil: [child asDomainBlock]
-						ifNotNil: [SBBindingPattern newFromObject: child in: self owner].
+						ifNotNil: [SBDomainBlock newFromObject: child in: self owner].
 					self addChild: newChild]]}
 		otherwise: [(self labelPositions includes: propertyMapping vpProperty) ifTrue: [(self blockDict at: propertyMapping vpProperty) addVPLabel: (propertyMapping getMorphFor: self sourceObject)]]
 ]
