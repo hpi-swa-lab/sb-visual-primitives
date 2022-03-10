@@ -111,13 +111,13 @@ SBQuery class >> pattern: aPattern strategy: aDict visualizePatternsAs: aClass [
 		yourself
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBQuery >> query [
 
 	^ self query: self pattern findOriginRoot
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBQuery >> query: anObject [
 
 	| matcher match |
@@ -126,7 +126,7 @@ SBQuery >> query: anObject [
 	^ match
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 SBQuery >> writeSourceOn: aStream [
 
 	aStream nextPutAll: '(SBQuery pattern: '.

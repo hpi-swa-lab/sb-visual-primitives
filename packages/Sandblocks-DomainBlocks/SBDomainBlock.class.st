@@ -98,13 +98,13 @@ SBDomainBlock class >> selector: aString receiverMatches: aMessage [
 	^ (aMessage receiver satisfies: #(#notNil #isBinding)) and: [self name = aMessage receiver contents and: [aMessage selector = aString]]
 ]
 
-{ #category : #accessing }
+{ #category : #'as yet unclassified' }
 SBDomainBlock >> addChild: aDomainBlock [
 
 	self addChild: aDomainBlock afterIndex: self children size
 ]
 
-{ #category : #accessing }
+{ #category : #'as yet unclassified' }
 SBDomainBlock >> addChild: aDomainBlock afterIndex: aNumber [
 
 	aDomainBlock parent ifNotNil: [aDomainBlock parent removeChild: aDomainBlock].
@@ -112,7 +112,7 @@ SBDomainBlock >> addChild: aDomainBlock afterIndex: aNumber [
 	aDomainBlock parent: self
 ]
 
-{ #category : #accessing }
+{ #category : #'as yet unclassified' }
 SBDomainBlock >> addConnectorLinesIn: aMorph [
 
 	self children do: [:child | | connector |
@@ -170,7 +170,7 @@ SBDomainBlock >> addNewParent [
 		yourself)
 ]
 
-{ #category : #accessing }
+{ #category : #'as yet unclassified' }
 SBDomainBlock >> addPropertyMapping: anSBPropertyMapping [
 
 	| value propertyMapping newChild |
@@ -190,7 +190,7 @@ SBDomainBlock >> addPropertyMapping: anSBPropertyMapping [
 		otherwise: [(self labelPositions includes: propertyMapping vpProperty) ifTrue: [(self blockDict at: propertyMapping vpProperty) addVPLabel: (propertyMapping getMorphFor: self sourceObject)]]
 ]
 
-{ #category : #accessing }
+{ #category : #'as yet unclassified' }
 SBDomainBlock >> addPropertyMappings: aCollection [
 
 	aCollection do: [:mappingEntry | self addPropertyMapping: mappingEntry]
@@ -208,14 +208,14 @@ SBDomainBlock >> afterAddLabel: aBlock [
 	
 ]
 
-{ #category : #nil }
+{ #category : #'as yet unclassified' }
 SBDomainBlock >> allChildrenDo: aBlock [
 
 	aBlock value: self.
 	self children do: [:child | child allChildrenDo: aBlock]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'*Sandblocks-DomainBlocks' }
 SBDomainBlock >> asDomainBlock [
 
 	^ self
@@ -268,7 +268,7 @@ SBDomainBlock >> buildObject [
 	^ anObject
 ]
 
-{ #category : #nil }
+{ #category : #'as yet unclassified' }
 SBDomainBlock >> centerChild [
 
 	^ self children ifEmpty: [nil] ifNotEmpty: [self children at: self children size + 1 / 2]
@@ -308,7 +308,7 @@ SBDomainBlock >> defaultShape [
 	^ CircleMorph new layoutInset: 4
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBDomainBlock >> deleteBlock [
 
 	self sandblockEditor do: (SBDeleteDomainBlockCommand new
@@ -333,7 +333,7 @@ SBDomainBlock >> getLabelMorph: anObject [
 		ifFalse: [anObject]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 SBDomainBlock >> initialize [
 
 	super initialize.
@@ -389,13 +389,13 @@ SBDomainBlock >> innerLabel: aMorph [
 		addMorphBack: aMorph
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'*Sandblocks-DomainBlocks' }
 SBDomainBlock >> isDomainBlock [
 
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBDomainBlock >> isExpression [
 
 	^ false
@@ -444,7 +444,7 @@ SBDomainBlock >> labelSuggestionsFor: aSBUnknownLabel [
 	^ {self constantSuggestionsFor: aSBUnknownLabel}
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #layout }
 SBDomainBlock >> layoutInset [
 
 	^ 0
@@ -546,7 +546,7 @@ SBDomainBlock >> objectInterface [
 	^ self parent objectInterfaceNear: self at: #replace
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'object interface' }
 SBDomainBlock >> objectInterfaceNear: aBlock at: aSymbol [
 
 	^ {[:o | o isKindOf: SBDomainBlock]}
@@ -576,7 +576,7 @@ SBDomainBlock >> parentQuery [
 	^ nil
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBDomainBlock >> pasteReplace [
 	<action>
 
@@ -616,13 +616,13 @@ SBDomainBlock >> patternContainer [
 	^ nil
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'colors and color policies' }
 SBDomainBlock >> prefersNoBorder [
 
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 SBDomainBlock >> printOn: aStream [
 
 	super printOn: aStream.
@@ -643,14 +643,14 @@ SBDomainBlock >> propertyAt: aSymbol [
 	aSymbol = #shape ifTrue: [^ self shape]
 ]
 
-{ #category : #accessing }
+{ #category : #'as yet unclassified' }
 SBDomainBlock >> removeChild: aDomainBlock [
 
 	self children remove: aDomainBlock.
 	aDomainBlock parent: nil
 ]
 
-{ #category : #accessing }
+{ #category : #'as yet unclassified' }
 SBDomainBlock >> removeLabelAt: aSymbol [
 
 	(self blockDict at: aSymbol) removeAllMorphs
@@ -772,7 +772,7 @@ SBDomainBlock >> vpMappingAt: aVPProperty [
 		ifNone: [nil]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 SBDomainBlock >> writeSourceOn: aStream [
 
 	

@@ -166,7 +166,7 @@ SBTransformation >> exampleDeleteNodeInside: aTree [
 		visualizePatternsAs: SBDummyNode) replaceAllMatches: aTree
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #examples }
 SBTransformation >> exampleEllipsisPatternWithLabel: aDummyNode [
 
 	self
@@ -242,7 +242,7 @@ SBTransformation >> exampleInsertWithExpression: aTree [
 		visualizePatternsAs: SBStringDummyNode) replaceAllMatches: aTree
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #examples }
 SBTransformation >> exampleMissingBindingsAreMarked: aTree [
 	"Notice how bindings are marked if they are not found in the input."
 
@@ -465,7 +465,7 @@ SBTransformation >> input: aPattern output: anotherPattern [
 	self buildImplicitChildrenMatchingPattern
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #callbacks }
 SBTransformation >> noteNewOwner: aMorph [
 
 	| wasBuilt |
@@ -477,13 +477,13 @@ SBTransformation >> noteNewOwner: aMorph [
 			addMorphBack: self outputPattern]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBTransformation >> outputPattern [
 
 	^ outputPattern
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBTransformation >> outputPattern: aPattern [
 
 	outputPattern := aPattern
@@ -528,13 +528,13 @@ SBTransformation >> toggleImplicitChildTo: aBoolean withBinding: aString [
 	self toggleImplicitChildTo: aBoolean withBinding: aString on: self outputPattern
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBTransformation >> value [
 
 	^ self value: self pattern findOriginRoot
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBTransformation >> value: anObject [
 
 	| matcher match |
@@ -545,7 +545,7 @@ SBTransformation >> value: anObject [
 		ifNotNil: [(matcher build: self outputPattern fromBinding: match) buildObject]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 SBTransformation >> writeSourceOn: aStream [
 
 	aStream nextPutAll: '(SBTransformation input: '.

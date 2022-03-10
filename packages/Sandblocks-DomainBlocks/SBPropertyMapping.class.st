@@ -174,7 +174,7 @@ SBPropertyMapping >> getter: aBlockClosure [
 	getter := aBlockClosure
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'initialize-release' }
 SBPropertyMapping >> initialize [
 
 	super initialize.
@@ -199,7 +199,7 @@ SBPropertyMapping >> isPropertyMapping [
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBPropertyMapping >> key [
 
 	^ self vpProperty
@@ -247,7 +247,7 @@ SBPropertyMapping >> suggestionConstant [
 	^ #a
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBPropertyMapping >> value: anObject [
 
 	^ self getter value: anObject

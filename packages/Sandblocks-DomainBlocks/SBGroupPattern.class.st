@@ -40,7 +40,7 @@ SBGroupPattern class >> patterns: aCollection [
 	^ self new children: aCollection
 ]
 
-{ #category : #accessing }
+{ #category : #'as yet unclassified' }
 SBGroupPattern >> addChild: aPattern afterIndex: aNumber [
 
 	super addChild: aPattern afterIndex: aNumber.
@@ -91,7 +91,7 @@ SBGroupPattern >> addNewParent [
 	
 ]
 
-{ #category : #accessing }
+{ #category : #'as yet unclassified' }
 SBGroupPattern >> addSeparatorsAround: aPattern [
 
 	(aPattern submorphAfter
@@ -130,13 +130,13 @@ SBGroupPattern >> buildImplicitChildren: anArray [
 	self children do: [:pattern | pattern buildImplicitChildren: anArray]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'insert/delete' }
 SBGroupPattern >> canDeleteChild: aBlock [
 
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'insert/delete' }
 SBGroupPattern >> deleteCommandFor: aBlock [
 
 	| primitive |
@@ -160,7 +160,7 @@ SBGroupPattern >> getNext: aDomainBlock [
 	^ false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 SBGroupPattern >> initialize [
 
 	super initialize.
@@ -180,7 +180,7 @@ SBGroupPattern >> initialize [
 			cellPositioning: #center)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'insert/delete' }
 SBGroupPattern >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 
 	| insertCommand |
@@ -216,7 +216,7 @@ SBGroupPattern >> matches: aDomainBlock withBinding: aCollection [
 	^ self children allSatisfy: [:pattern | pattern matches: aDomainBlock withBinding: aCollection]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #callbacks }
 SBGroupPattern >> noteNewOwner: aMorph [
 
 	super noteNewOwner: aMorph.
@@ -224,7 +224,7 @@ SBGroupPattern >> noteNewOwner: aMorph [
 	self resetVisualization
 ]
 
-{ #category : #accessing }
+{ #category : #'as yet unclassified' }
 SBGroupPattern >> openPatternAsChild: aPattern [
 
 	| isBindingPattern insertPosition addedBlock |
@@ -263,7 +263,7 @@ SBGroupPattern >> removeChild: aPattern [
 	self resetVisualization
 ]
 
-{ #category : #accessing }
+{ #category : #'as yet unclassified' }
 SBGroupPattern >> removeImplicitChildren [
 
 	self children do: [:child | child removeImplicitChildren]
@@ -301,7 +301,7 @@ SBGroupPattern >> setBindingFor: aDomainBlock in: aCollection [
 	^ self children allSatisfy: [:pattern | pattern setBindingFor: aDomainBlock in: aCollection]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 SBGroupPattern >> writeSourceOn: aStream [
 
 	aStream nextPutAll: '(', self class name, ' patterns: {'.

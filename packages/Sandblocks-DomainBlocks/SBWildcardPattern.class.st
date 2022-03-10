@@ -56,7 +56,7 @@ SBWildcardPattern >> currentTop [
 	^ self searchStack first
 ]
 
-{ #category : #accessing }
+{ #category : #'as yet unclassified' }
 SBWildcardPattern >> exampleExtractLeaf: aTree [
 
 	self
@@ -145,7 +145,7 @@ SBWildcardPattern >> getNext: aDomainBlock [
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : #initialization }
 SBWildcardPattern >> initialize [
 
 	super initialize.

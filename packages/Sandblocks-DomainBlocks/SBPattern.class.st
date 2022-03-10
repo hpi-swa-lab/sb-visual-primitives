@@ -35,14 +35,14 @@ SBPattern >> collectBindingsInto: aCollection [
 	self children do: [:child | child collectBindingsInto: aCollection]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBPattern >> findConstant [
 
 	self children do: [:child | child findConstant ifNotNil: [:constant | ^ constant]].
 	^ nil
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBPattern >> findOriginRoot [
 
 	^ self findConstant asDomainBlock root sourceObject
@@ -55,19 +55,19 @@ SBPattern >> getNext: aDomainBlock [
 	^ false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBPattern >> identifierForIndex: aNumber [
 
 	^ ('', (Character alphabet at: aNumber - 1 // Character alphabet size + 1)) asSymbol
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBPattern >> implicitPrefix [
 
 	^ 'i_'
 ]
 
-{ #category : #accessing }
+{ #category : #initialization }
 SBPattern >> initialize [
 
 	super initialize.
@@ -92,7 +92,7 @@ SBPattern >> matches: aDomainBlock withBinding: aCollection [
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBPattern >> nextIdentifier [
 
 	| invalidIdentifiers currentAttempt possibleIdentifer |
@@ -113,7 +113,7 @@ SBPattern >> nextIdentifier [
 	^ possibleIdentifer
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBPattern >> patternContainer [
 
 	| case |
@@ -136,7 +136,7 @@ SBPattern >> reset [
 	
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBPattern >> setBindingFor: aDomainBlock in: aCollection [
 
 	^ true

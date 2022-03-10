@@ -50,7 +50,7 @@ SBEllipsisPattern >> buildImplicitChildren: anArray [
 	
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBEllipsisPattern >> children: aCollection [
 
 	self assert: aCollection isEmpty description: 'Ellipses should not have children'.
@@ -89,7 +89,7 @@ SBEllipsisPattern >> currentSize: aNumber [
 	currentSize := aNumber
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'event handling' }
 SBEllipsisPattern >> doubleClick: anEvent [
 
 	self isImplicitChild: self isImplicitChild not
@@ -102,13 +102,13 @@ SBEllipsisPattern >> getNext: aDomainBlock [
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBEllipsisPattern >> indexOffset [
 
 	^ self currentSize - 1
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 SBEllipsisPattern >> initialize [
 
 	super initialize.
@@ -118,7 +118,7 @@ SBEllipsisPattern >> initialize [
 		cellPositioning: #center
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBEllipsisPattern >> isImplicitChild: aBoolean [
 
 	| setColor previousImplicit prevBindingIndex bindingInputBlock |

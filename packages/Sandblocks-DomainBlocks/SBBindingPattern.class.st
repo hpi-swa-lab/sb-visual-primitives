@@ -205,29 +205,34 @@ SBBindingPattern class >> writeBackClosure: aClosure children: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
+SBBindingPattern >> addImplicitChildWithIdentifier: aString at: aNumber [
+
+	| implicitChild |
+	implicitChild := SBEllipsisPattern bindingDict: {self class identityName -> aString}.
+	self addChild: implicitChild afterIndex: aNumber.
+	implicitChild isImplicitChild: true.
+	self owner ifNotNil: [:morph | morph addMorphBack: implicitChild]
+]
+
+{ #category : #'as yet unclassified' }
 SBBindingPattern >> addImplicitChildren: aDict [
 
 	| addImplicitChild implicitChildrenIndices implicitChildrenCount oldChildren |
 	self children do: [:child | child addImplicitChildren: aDict].
 	implicitChildrenIndices := aDict at: self bindingIndex ifAbsent: [^ self].
 	implicitChildrenCount := 0.
-	addImplicitChild := [:index | | implicitChild |
+	
+	addImplicitChild := [:index |
 		implicitChildrenCount >= implicitChildrenIndices size ifTrue: [^ self].
-		implicitChild := SBEllipsisPattern bindingDict: {self class identityName -> (implicitChildrenIndices at: implicitChildrenCount + 1)}.
-		self addChild: implicitChild afterIndex: index + implicitChildrenCount.
-		implicitChild isImplicitChild: true.
-		self owner ifNotNil: [:morph | morph addMorphBack: implicitChild].
+		self
+			addImplicitChildWithIdentifier: (implicitChildrenIndices at: implicitChildrenCount + 1)
+			at: index + implicitChildrenCount.
 		implicitChildrenCount := implicitChildrenCount + 1].
 	
-	oldChildren := self children copy.
 	(self children isEmpty or: [self children first wantsImplicitNeighbors]) ifTrue: [addImplicitChild value: 0].
 	
-	oldChildren withIndexDo: [:child :index |
-		(child wantsImplicitNeighbors and: [
-			oldChildren
-				at: index + 1
-				ifPresent: [:nextChild | nextChild wantsImplicitNeighbors]
-				ifAbsent: [true]]) ifTrue: [addImplicitChild value: index]].
+	oldChildren := self children copy.
+	oldChildren := self updateChildren: oldChildren with: addImplicitChild.
 	
 	[implicitChildrenCount < implicitChildrenIndices size] whileTrue: [addImplicitChild value: oldChildren size]
 ]
@@ -247,31 +252,31 @@ SBBindingPattern >> afterAddLabel: aBlock [
 		queueUpdateSuggestionsFocused: true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBindingPattern >> bindingDict [
 
 	^ bindingDict
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBindingPattern >> bindingDict: aDict [
 
 	bindingDict := aDict
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBindingPattern >> bindingFor: aDomainBlock [
 
 	^ self getCurrentPrimitive: aDomainBlock
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBindingPattern >> bindingIndex [
 
 	^ self bindingDict at: self class identityName ifAbsent: nil
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBindingPattern >> bindingIndex: anObject [
 
 	self labelBindingDict at: self class identityName put: (anObject isSandblock
@@ -295,7 +300,7 @@ SBBindingPattern >> bindingIndexWithImplicitPrefix: aBoolean [
 	^ self bindingIndex
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBindingPattern >> bindingLabelBlockFrom: aString [
 
 	^ SBStName new
@@ -326,35 +331,20 @@ SBBindingPattern >> buildFromBinding: aDict [
 { #category : #'as yet unclassified' }
 SBBindingPattern >> buildImplicitChildren: aDict [
 
-	| implicitChildren nextIndex oldChildren addImplicitChild |
+	| addImplicitChild implicitChildren oldChildren |
 	implicitChildren := OrderedCollection new.
-	nextIndex := ((aDict collect: [:subArray | subArray size])
-		ifEmpty: [0]
-		ifNotEmpty: #sum) + 1.
-	
 	oldChildren := self children copy.
 	
-	addImplicitChild := [:index | | implicitChild identifier |
+	addImplicitChild := [:index | | identifier |
 		identifier := self root nextIdentifier.
-		implicitChild := SBEllipsisPattern bindingDict: {self class identityName -> identifier}.
-		self addChild: implicitChild afterIndex: index + implicitChildren size.
-		implicitChild isImplicitChild: true.
-		self owner ifNotNil: [:morph | morph addMorphBack: implicitChild].
-		implicitChildren add: identifier.
-		nextIndex := nextIndex + 1].
+		self addImplicitChildWithIdentifier: identifier at: index + implicitChildren size.
+		implicitChildren add: identifier].
 	
 	(self children isEmpty or: [self children first wantsImplicitNeighbors]) ifTrue: [addImplicitChild value: 0].
 	
-	oldChildren withIndexDo: [:child :index |
-		(child wantsImplicitNeighbors and: [
-			oldChildren
-				at: index + 1
-				ifPresent: [:nextChild | nextChild wantsImplicitNeighbors]
-				ifAbsent: [true]]) ifTrue: [addImplicitChild value: index]].
-	
 	aDict at: self bindingIndex put: implicitChildren asArray.
 	
-	oldChildren do: [:child | child buildImplicitChildren: aDict]
+	(self updateChildren: oldChildren with: addImplicitChild) do: [:child | child buildImplicitChildren: aDict]
 ]
 
 { #category : #'as yet unclassified' }
@@ -363,13 +353,13 @@ SBBindingPattern >> buildNewInstance [
 	^ SBBindingPattern new
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBindingPattern >> canDeleteChild: aBlock [
 
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBBindingPattern >> changeVisualizingClass [
 	<action>
 
@@ -381,7 +371,7 @@ SBBindingPattern >> changeVisualizingClass [
 			value: class)]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBindingPattern >> childrenInCurrentMatch [
 
 	| offsetSum |
@@ -396,13 +386,13 @@ SBBindingPattern >> collectBindingsInto: aCollection [
 	self blockDict keysAndValuesDo: [:position :value | (value firstSubmorphOrNil satisfies: #(#notNil #isSandblock #isName #isBlockBinding)) ifTrue: [aCollection add: value firstSubmorph]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBindingPattern >> constant [
 
 	^ self expressionDict at: self class identityName ifAbsent: nil
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBBindingPattern >> convertToEllipsisPattern [
 	<action>
 
@@ -431,13 +421,13 @@ SBBindingPattern >> couldMatch: aDomainBlock [
 	^ self childrenInCurrentMatch = aDomainBlock children size and: [self constant isNil or: [self constant value = aDomainBlock sourceObject]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBindingPattern >> domainBlockMapping [
 
 	^ self visualizingClass ifNil: [{}] ifNotNil: #domainBlockMapping
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBindingPattern >> domainBlockMappings [
 
 	^ self domainBlockMapping collect: [:mappingOrAssoc |
@@ -446,7 +436,7 @@ SBBindingPattern >> domainBlockMappings [
 			ifFalse: [SBPropertyMapping fromAssociation: mappingOrAssoc]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #drawing }
 SBBindingPattern >> drawOn: aCanvas [
 
 	self writeBackClosure ifNotNil: [aCanvas frameOval: (self bounds outsetBy: 5) width: 2 color: Color black].
@@ -454,25 +444,25 @@ SBBindingPattern >> drawOn: aCanvas [
 	aCanvas frameRectangle: (self bounds outsetBy: 1) width: 2 color: color
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBindingPattern >> enoughChildren: aDomainBlock [
 
 	^ self childrenInCurrentMatch <= aDomainBlock children size
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBindingPattern >> expressionDict [
 
 	^ expressionDict
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBindingPattern >> expressionDict: aDict [
 
 	expressionDict := aDict
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBindingPattern >> expressionMappings [
 
 	^ self labelExpressionDict associations collect: [:association |
@@ -482,13 +472,13 @@ SBBindingPattern >> expressionMappings [
 			originalMapping: (self originalPropertyMappingAt: association key)]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBindingPattern >> findConstant [
 
 	^ self constant value ifNil: [super findConstant]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBindingPattern >> getCurrentPrimitive: aDomainBlock [
 
 	^ aDomainBlock
@@ -518,13 +508,13 @@ SBBindingPattern >> identityLabelPosition [
 		ifNone: [#innerLabel]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBindingPattern >> indexOffset [
 
 	^ 0
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBindingPattern >> initialize [
 
 	super initialize.
@@ -532,13 +522,13 @@ SBBindingPattern >> initialize [
 	self expressionDict: Dictionary new
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'*Sandblocks-DomainBlocks' }
 SBBindingPattern >> isBindingPattern [
 
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBindingPattern >> isTreeLayoutRoot [
 
 	^ self parent isBindingPattern not
@@ -553,7 +543,7 @@ SBBindingPattern >> labelBindingChanged [
 			put: ((self labelContentAt: labelPosition) as: bindingName class)]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBindingPattern >> labelBindingDict [
 
 	^ self bindingDict copy
@@ -569,7 +559,7 @@ SBBindingPattern >> labelExpressionDict [
 		yourself
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBindingPattern >> labelSuggestionsFor: aSBUnknownLabel [
 
 	^ {
@@ -594,26 +584,26 @@ SBBindingPattern >> matches: aDomainBlock withBinding: aCollection [
 		wasSuccessful]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBindingPattern >> newEmptyChildNear: aBlock before: aBoolean [
 
 	^ self newUnknown
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBindingPattern >> newLabelBlockAt: aVPProperty [
 
 	^ self newUnknown
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #callbacks }
 SBBindingPattern >> noteNewOwner: newOwner [
 
 	super noteNewOwner: newOwner.
 	self patternContainer ifNotNil: [self rebuild]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBindingPattern >> originalPropertyMappingAt: aVPProperty [
 
 	^ self domainBlockMapping
@@ -622,7 +612,7 @@ SBBindingPattern >> originalPropertyMappingAt: aVPProperty [
 		ifNone: [nil]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBindingPattern >> preferredColor [
 
 	^ self color
@@ -662,7 +652,7 @@ SBBindingPattern >> resetChildren [
 	self children do: [:child | child reset]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBindingPattern >> searchRootFor: aDomainBlock at: anIndex [
 
 	^ self indexOffset < 0
@@ -670,7 +660,7 @@ SBBindingPattern >> searchRootFor: aDomainBlock at: anIndex [
 		ifFalse: [aDomainBlock children at: anIndex]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBindingPattern >> setBindingFor: aDomainBlock in: aDict [
 
 	| currentPrimitive setBinding |
@@ -686,7 +676,7 @@ SBBindingPattern >> setBindingFor: aDomainBlock in: aDict [
 	^ (self couldMatch: currentPrimitive) and: [self setChildBindingFor: currentPrimitive in: aDict]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBindingPattern >> setChildBindingFor: aDomainBlock in: aDict [
 
 	| offset |
@@ -699,13 +689,13 @@ SBBindingPattern >> setChildBindingFor: aDomainBlock in: aDict [
 		wasSuccessful]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBindingPattern >> setLabelBindingsFor: aDomainBlock in: aDict using: aBlockClosure [
 
 	self labelBindingDict keysAndValuesDo: [:labelPosition :bindingName | aBlockClosure value: bindingName value: (aDomainBlock propertyAt: labelPosition)]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBindingPattern >> staticDomainBlockMapping [
 
 	^ self domainBlockMappings select: [:mapping | mapping patternValue notNil]
@@ -718,6 +708,18 @@ SBBindingPattern >> supportsLabels [
 ]
 
 { #category : #'as yet unclassified' }
+SBBindingPattern >> updateChildren: aCollection with: aBlockClosure [
+
+	aCollection withIndexDo: [:child :index |
+		(child wantsImplicitNeighbors and: [
+			aCollection
+				at: index + 1
+				ifPresent: [:nextChild | nextChild wantsImplicitNeighbors]
+				ifAbsent: [true]]) ifTrue: [aBlockClosure value: index]].
+	^ aCollection
+]
+
+{ #category : #accessing }
 SBBindingPattern >> valueFromPropertyMapping: aPropertyMapping [
 
 	^ aPropertyMapping patternValue
@@ -780,7 +782,7 @@ SBBindingPattern >> writeDict: aDict on: aStream using: aBlock [
 	aStream nextPut: $}
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 SBBindingPattern >> writeSourceOn: aStream [
 
 	| bindings expressions staticMapping |

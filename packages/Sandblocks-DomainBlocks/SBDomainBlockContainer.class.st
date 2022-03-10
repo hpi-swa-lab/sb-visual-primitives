@@ -76,7 +76,7 @@ SBDomainBlockContainer >> code [
 	^ code
 ]
 
-{ #category : #accessing }
+{ #category : #'as yet unclassified' }
 SBDomainBlockContainer >> code: aCodeBlock showCode: aBoolean [
 
 	| aSandblock |
@@ -118,7 +118,7 @@ SBDomainBlockContainer >> evaluate [
 	^ self code evaluate
 ]
 
-{ #category : #accessing }
+{ #category : #examples }
 SBDomainBlockContainer >> exampleCircleAllLabels [
 
 	SBDomainBlockContainer
@@ -136,7 +136,7 @@ SBDomainBlockContainer >> exampleCircleAllLabels [
 		showCode: true
 ]
 
-{ #category : #accessing }
+{ #category : #examples }
 SBDomainBlockContainer >> exampleGameCard [
 
 	SBDomainBlockContainer
@@ -149,7 +149,7 @@ SBDomainBlockContainer >> exampleGameCard [
 		showCode: true
 ]
 
-{ #category : #accessing }
+{ #category : #examples }
 SBDomainBlockContainer >> exampleGameCardHand [
 
 	| c1 c2 c3 |
@@ -174,7 +174,7 @@ SBDomainBlockContainer >> exampleGameCardHand [
 		showCode: true
 ]
 
-{ #category : #accessing }
+{ #category : #examples }
 SBDomainBlockContainer >> exampleRectangleTopLabel [
 
 	SBDomainBlockContainer
@@ -192,7 +192,7 @@ SBDomainBlockContainer >> exampleRectangleTopLabel [
 		showCode: true
 ]
 
-{ #category : #accessing }
+{ #category : #examples }
 SBDomainBlockContainer >> exampleSimpleCircle [
 
 	SBDomainBlockContainer
@@ -210,7 +210,7 @@ SBDomainBlockContainer >> exampleSimpleCircle [
 		showCode: true
 ]
 
-{ #category : #accessing }
+{ #category : #examples }
 SBDomainBlockContainer >> exampleSimpleRectangle [
 
 	SBDomainBlockContainer
@@ -228,7 +228,7 @@ SBDomainBlockContainer >> exampleSimpleRectangle [
 		showCode: true
 ]
 
-{ #category : #accessing }
+{ #category : #examples }
 SBDomainBlockContainer >> exampleSimpleTomGrammar [
 
 	SBDomainBlockContainer
@@ -254,7 +254,7 @@ SBDomainBlockContainer >> exampleSimpleTomGrammar [
 		showCode: false
 ]
 
-{ #category : #accessing }
+{ #category : #examples }
 SBDomainBlockContainer >> exampleSpecialShape [
 
 	SBDomainBlockContainer

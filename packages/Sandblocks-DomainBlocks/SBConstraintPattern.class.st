@@ -52,7 +52,7 @@ SBConstraintPattern class >> newFor: aBlock [
 	^ self new constraint: constraintBlock evaluate
 ]
 
-{ #category : #accessing }
+{ #category : #'as yet unclassified' }
 SBConstraintPattern >> addToWorld: aWorld [
 
 	aWorld addMorphBack: self
@@ -89,7 +89,7 @@ SBConstraintPattern >> constraint: aBlockClosure [
 		unknown label: 'expr']
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'insert/delete' }
 SBConstraintPattern >> deleteCommandFor: aBlock [
 
 	^ self submorphCount = 1
@@ -97,13 +97,13 @@ SBConstraintPattern >> deleteCommandFor: aBlock [
 		ifFalse: [super deleteCommandFor: aBlock]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'testing hierarchy' }
 SBConstraintPattern >> fixedNumberOfChildren [
 
 	^ false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 SBConstraintPattern >> initialize [
 
 	super initialize.
@@ -113,19 +113,19 @@ SBConstraintPattern >> initialize [
 		layoutInset: 4
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBConstraintPattern >> isBlockBody [
 
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBConstraintPattern >> isSelectable [
 
 	^ false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #layout }
 SBConstraintPattern >> layoutCommands [
 
 	^ SBAlgebraCommand container
@@ -166,7 +166,7 @@ SBConstraintPattern >> wantsMethodBody [
 	^ false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 SBConstraintPattern >> writeSourceOn: aStream [
 
 	aStream
