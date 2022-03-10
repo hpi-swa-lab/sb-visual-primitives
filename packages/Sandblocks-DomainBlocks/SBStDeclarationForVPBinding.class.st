@@ -62,6 +62,12 @@ SBStDeclarationForVPBinding >> isBlockBinding [
 	^ true
 ]
 
+{ #category : #'as yet unclassified' }
+SBStDeclarationForVPBinding >> isExpression [
+
+	^ false
+]
+
 { #category : #accessing }
 SBStDeclarationForVPBinding >> isMethodLocal [
 

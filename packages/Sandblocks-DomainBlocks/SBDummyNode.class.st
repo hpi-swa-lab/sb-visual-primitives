@@ -72,6 +72,41 @@ SBDummyNode >> children: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
+SBDummyNode >> exampleColorAccentDecorator [
+
+	"To see the color accents use the 'colorDifferences' action on the transformation or turn on the setting in the preferences."
+	^ SBTransformation
+		input: (SBGroupPattern patterns: {
+			SBBindingPattern
+				bindingDict: {#identity -> #a}
+				children: {
+					SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBDummyNode.
+					SBBindingPattern
+						bindingDict: {#identity -> #boi}
+						children: {SBEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBDummyNode}
+						visualizingClass: SBDummyNode.
+					SBEllipsisPattern bindingDict: {#identity -> #d} visualizingClass: SBDummyNode}
+				visualizingClass: SBDummyNode.
+			SBConstraintPattern constraint: [:bindings | (bindings at: #a) key < (bindings at: #boi) key]})
+		output: (SBGroupPattern patterns: {
+			SBBindingPattern
+				bindingDict: {#identity -> #boi}
+				children: {
+					SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBDummyNode.
+					SBBindingPattern
+						bindingDict: {#identity -> #a}
+						children: {SBEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBDummyNode}
+						visualizingClass: SBDummyNode.
+					SBEllipsisPattern bindingDict: {#identity -> #d} visualizingClass: SBDummyNode}
+				visualizingClass: SBDummyNode})
+		strategy: (Dictionary new
+			add: #explicitRootMatching -> false;
+			add: #explicitChildrenMatching -> false;
+			yourself)
+		visualizePatternsAs: SBDummyNode
+]
+
+{ #category : #'as yet unclassified' }
 SBDummyNode >> exampleHeapTransformation [
 
 	^ SBTransformation

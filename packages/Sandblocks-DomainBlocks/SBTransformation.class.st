@@ -18,8 +18,24 @@ Class {
 	#instVars : [
 		'outputPattern'
 	],
+	#classVars : [
+		'ColorizeDifferences'
+	],
 	#category : #'Sandblocks-DomainBlocks'
 }
+
+{ #category : #accessing }
+SBTransformation class >> colorizeDifferences [
+
+	<preference: 'Colorize changes of transformations' category: 'Sandblocks-DomainBlocks' description: 'This option enables automatic highlighting of same bindings during transformation. This might make it easier to see the changes a transformation does. This is only an alpha feature.' type: #Boolean>
+	
+	^ ColorizeDifferences ifNil:[false]
+]
+
+{ #category : #accessing }
+SBTransformation class >> colorizeDifferences: aBoolean [
+	ColorizeDifferences := aBoolean
+]
 
 { #category : #'as yet unclassified' }
 SBTransformation class >> input: aPattern output: anotherPattern [
@@ -107,26 +123,23 @@ SBTransformation >> buildImplicitChildrenMatchingPattern [
 
 { #category : #'as yet unclassified' }
 SBTransformation >> colorDifferences [
-
-	| inputRoot outputRoot inputBindingDict outputBindingDict colors |
-	inputRoot := self pattern connections first.
-	outputRoot := self outputPattern connections first.
+<action>
+	| inputBindingDict outputBindingDict colors |
 	
-	inputBindingDict := self findAllBindings: inputRoot.
-	outputBindingDict := self findAllBindings: outputRoot.
+	inputBindingDict := self findAllBindingsAsDict: self pattern.
+	outputBindingDict := self findAllBindingsAsDict: self outputPattern.
 	
-	colors := Color wheel: inputBindingDict size saturation: 1.0 brightness: 1.0.
-	
-	inputBindingDict keysDo: [:bindingKey | | inputNode outputNode |
-		inputNode := inputBindingDict at: bindingKey.
-		outputNode := outputBindingDict at: bindingKey ifAbsent: [nil].
-		outputNode isNil ifTrue: [] ifFalse: [
-			inputNode connections withIndexDo: [:connection :index | | outputConnection c |
-				outputConnection := outputNode connections at: index ifAbsent: [nil].
-				c := colors at: connection label.
-				connection label = (outputConnection ifNotNil: #label) ifFalse: [
-					connection color: c.
-					(outputBindingDict at: connection label ifAbsent: [nil]) ifNotNil: [:o | o color: c]]]]]
+	colors :=  (Color h: 50 s: 1.0 v: 1.0) wheel: inputBindingDict size.
+	inputBindingDict withIndexDo: [:inputBinding :index | | bindingKey outputBinding |
+		bindingKey := inputBindingDict keyAtValue: inputBinding.
+		outputBinding := outputBindingDict at: bindingKey ifAbsent: [nil].
+		outputBinding isNil ifTrue: [
+			inputBinding attachDecorator: (SBColorAccentDecorator new color: Color red; message: 'This DB will be deleted.').
+			] ifFalse: [|color|
+			color := colors at: index.
+			inputBinding attachDecorator: (SBColorAccentDecorator new color: color).
+			outputBinding attachDecorator: (SBColorAccentDecorator new color: color).
+			]]
 ]
 
 { #category : #examples }
@@ -457,6 +470,17 @@ SBTransformation >> exampleWithConstants: aDummyNode [
 ]
 
 { #category : #'as yet unclassified' }
+SBTransformation >> hideColorDifferences [
+<action>
+	| inputBindingDict outputBindingDict |
+	
+	inputBindingDict := self findAllBindingsAsDict: self pattern.
+	outputBindingDict := self findAllBindingsAsDict: self outputPattern.
+	inputBindingDict do: [:binding | binding detachDecorators: SBColorAccentDecorator].
+	outputBindingDict do: [:binding | binding detachDecorators: SBColorAccentDecorator].
+]
+
+{ #category : #'as yet unclassified' }
 SBTransformation >> input: aPattern output: anotherPattern [
 
 	self
@@ -474,7 +498,8 @@ SBTransformation >> noteNewOwner: aMorph [
 	(wasBuilt not and: [self classNameInput notNil]) ifTrue: [
 		self pattern owner
 			addMorphBack: SBIcon iconArrowRight;
-			addMorphBack: self outputPattern]
+			addMorphBack: self outputPattern].
+	self class colorizeDifferences ifTrue:[self colorDifferences].
 ]
 
 { #category : #accessing }

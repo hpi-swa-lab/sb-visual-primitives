@@ -176,6 +176,12 @@ SBPatternContainer >> findAllBindings: aPattern [
 	^ bindings
 ]
 
+{ #category : #'as yet unclassified' }
+SBPatternContainer >> findAllBindingsAsDict: aPattern [
+
+	^ Dictionary new addAll: ((self findAllBindings: aPattern) asOrderedCollection collect: [:aSBStName | aSBStName contents -> aSBStName]); yourself
+]
+
 { #category : #accessing }
 SBPatternContainer >> informationRow [
 
