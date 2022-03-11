@@ -32,6 +32,12 @@ SBConstraintPattern class >> constraintInputName [
 ]
 
 { #category : #'as yet unclassified' }
+SBConstraintPattern class >> default [
+
+	^ SBConstraintPattern new constraint: [:bindings | ]
+]
+
+{ #category : #'as yet unclassified' }
 SBConstraintPattern class >> matches: aBlock [
 
 	^ self selector: #constraint: receiverMatches: aBlock
@@ -82,7 +88,6 @@ SBConstraintPattern >> buildImplicitChildren: aDict [
 { #category : #'as yet unclassified' }
 SBConstraintPattern >> children [
 
-	self halt.
 	^ {}
 ]
 

@@ -47,13 +47,13 @@ SBRelInsertDomainBlockCommand >> suggestions [
 			morph: SBBindingPattern new
 			previewOnly: false.
 		(SBInsertSuggestionItem selector: 'addNewConstraintPattern' label: 'choice')
-			morph: (SBConstraintPattern constraint: [:bindings | ])
+			morph: SBConstraintPattern default
 			previewOnly: false.
 		(SBInsertSuggestionItem selector: 'addNewAndPattern' label: 'choice')
-			morph: SBGroupPattern new
+			morph: SBGroupPattern default
 			previewOnly: false.
 		(SBInsertSuggestionItem selector: 'addNewOrPattern' label: 'choice')
-			morph: SBOrGroupPattern new
+			morph: SBOrGroupPattern default
 			previewOnly: false}.
 	outputPattern := self container patternContainer outputPattern.
 	outputPattern = self container ifTrue: [^ {suggestions first}].

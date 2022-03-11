@@ -25,6 +25,12 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBGroupPattern class >> default [
+
+	^ self patterns: {SBBindingPattern new. SBConstraintPattern default}
+]
+
+{ #category : #'as yet unclassified' }
 SBGroupPattern class >> matches: aBlock [
 
 	^ self selector: #patterns: receiverMatches: aBlock
@@ -66,9 +72,16 @@ SBGroupPattern >> addImplicitChildren: anArray [
 ]
 
 { #category : #'as yet unclassified' }
+SBGroupPattern >> addNewAndPattern [
+
+	self insertNewPattern: SBGroupPattern default
+]
+
+{ #category : #'as yet unclassified' }
 SBGroupPattern >> addNewBindingPattern [
 
-	self addChild: SBBindingPattern new
+	self flag: #todo. "position of bindingPattern is wrong. Corrects itself when another pattern is deleted"
+	self insertNewPattern: SBBindingPattern new
 ]
 
 { #category : #'as yet unclassified' }
@@ -76,7 +89,7 @@ SBGroupPattern >> addNewChild [
 	<action>
 
 	| selectedIndex options |
-	options := {#addNewBindingPattern. #addNewConstraintPattern}.
+	options := {#addNewBindingPattern. #addNewConstraintPattern. #addNewAndPattern. #addNewOrPattern}.
 	selectedIndex := UIManager default chooseFrom: options.
 	self perform: (options at: selectedIndex ifAbsent: [])
 ]
@@ -84,16 +97,13 @@ SBGroupPattern >> addNewChild [
 { #category : #'as yet unclassified' }
 SBGroupPattern >> addNewConstraintPattern [
 
-	| newPattern |
-	newPattern := SBConstraintPattern constraint: [:bindings | true].
-	
-	self sandblockEditor do: (SBInsertDomainBlockCommand new
-		index: self owner submorphCount + 1;
-		parent: self;
-		container: self owner;
-		morph: newPattern;
-		shouldMergeWithNext: false;
-		yourself)
+	self insertNewPattern: SBConstraintPattern default
+]
+
+{ #category : #'as yet unclassified' }
+SBGroupPattern >> addNewOrPattern [
+
+	self insertNewPattern: SBOrGroupPattern default
 ]
 
 { #category : #'as yet unclassified' }
@@ -261,6 +271,18 @@ SBGroupPattern >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 	^ self isOutputPattern not
 		ifTrue: [insertCommand]
 		ifFalse: [self row submorphs isEmpty ifTrue: [insertCommand] ifFalse: [nil]]
+]
+
+{ #category : #'as yet unclassified' }
+SBGroupPattern >> insertNewPattern: newPattern [
+
+	self sandblockEditor do: (SBInsertDomainBlockCommand new
+		index: self owner submorphCount + 1;
+		parent: self;
+		container: self owner;
+		morph: newPattern;
+		shouldMergeWithNext: false;
+		yourself)
 ]
 
 { #category : #'as yet unclassified' }
