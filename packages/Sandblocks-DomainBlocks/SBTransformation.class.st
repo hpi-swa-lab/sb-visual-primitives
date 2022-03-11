@@ -111,8 +111,8 @@ SBTransformation >> colorDifferences [
 	<action>
 
 	| inputBindingDict outputBindingDict colors |
-	inputBindingDict := self findAllBindingsAsDict: self pattern.
-	outputBindingDict := self findAllBindingsAsDict: self outputPattern.
+	inputBindingDict := self findAllIdentityBindingsAsDict: self pattern.
+	outputBindingDict := self findAllIdentityBindingsAsDict: self outputPattern.
 	
 	colors := (Color h: 50 s: 1.0 v: 1.0) wheel: inputBindingDict size.
 	inputBindingDict withIndexDo: [:inputBinding :index | | bindingKey outputBinding |
@@ -466,8 +466,8 @@ SBTransformation >> hideColorDifferences [
 	<action>
 
 	| inputBindingDict outputBindingDict |
-	inputBindingDict := self findAllBindingsAsDict: self pattern.
-	outputBindingDict := self findAllBindingsAsDict: self outputPattern.
+	inputBindingDict := self findAllIdentityBindingsAsDict: self pattern.
+	outputBindingDict := self findAllIdentityBindingsAsDict: self outputPattern.
 	inputBindingDict do: [:binding | binding detachDecorators: SBColorAccentDecorator].
 	outputBindingDict do: [:binding | binding detachDecorators: SBColorAccentDecorator]
 ]

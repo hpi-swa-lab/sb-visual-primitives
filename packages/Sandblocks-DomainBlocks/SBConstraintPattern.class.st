@@ -94,6 +94,13 @@ SBConstraintPattern >> collectBindingsInto: aCollection [
 ]
 
 { #category : #accessing }
+SBConstraintPattern >> collectIdentityBindingsInto: aCollection [
+	"we do not define bindings"
+
+	
+]
+
+{ #category : #accessing }
 SBConstraintPattern >> constraint [
 
 	^ constraint

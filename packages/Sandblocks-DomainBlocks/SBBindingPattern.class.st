@@ -383,6 +383,13 @@ SBBindingPattern >> childrenInCurrentMatch [
 SBBindingPattern >> collectBindingsInto: aCollection [
 
 	self children do: [:child | child collectBindingsInto: aCollection].
+	self blockDict keysAndValuesDo: [:position :value | (value firstSubmorphOrNil satisfies: #(#notNil #isSandblock #isName #isBlockBinding)) ifTrue: [aCollection add: value firstSubmorph]]
+]
+
+{ #category : #'as yet unclassified' }
+SBBindingPattern >> collectIdentityBindingsInto: aCollection [
+
+	self children do: [:child | child collectBindingsInto: aCollection].
 	(self blockDict at: self identityLabelPosition ifAbsent: [nil]) firstSubmorphOrNil ifNotNil: [:bindingIndex | aCollection add: bindingIndex]
 ]
 

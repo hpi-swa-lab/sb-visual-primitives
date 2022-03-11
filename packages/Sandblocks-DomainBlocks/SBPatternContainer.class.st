@@ -170,17 +170,18 @@ SBPatternContainer >> findAllBindings: aPattern [
 
 	| bindings |
 	bindings := Set new.
-	
 	aPattern collectBindingsInto: bindings.
-	
 	^ bindings
 ]
 
 { #category : #'as yet unclassified' }
-SBPatternContainer >> findAllBindingsAsDict: aPattern [
+SBPatternContainer >> findAllIdentityBindingsAsDict: aPattern [
 
+	| bindings |
+	bindings := Set new.
+	aPattern collectIdentityBindingsInto: bindings.
 	^ Dictionary new
-		addAll: ((self findAllBindings: aPattern) asOrderedCollection collect: [:aSBStName | aSBStName contents -> aSBStName]);
+		addAll: (bindings asOrderedCollection collect: [:aSBStName | aSBStName contents -> aSBStName]);
 		yourself
 ]
 

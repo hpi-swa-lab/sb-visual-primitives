@@ -168,6 +168,12 @@ SBGroupPattern >> collectBindingsInto: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
+SBGroupPattern >> collectIdentityBindingsInto: aCollection [
+
+	self children do: [:child | child collectIdentityBindingsInto: aCollection]
+]
+
+{ #category : #'as yet unclassified' }
 SBGroupPattern >> deleteBlock [
 
 	self sandblockEditor do: (SBDeleteDomainBlockCommand new
