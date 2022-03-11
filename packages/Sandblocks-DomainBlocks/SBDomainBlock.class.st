@@ -56,12 +56,6 @@ SBDomainBlock class >> matches: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBDomainBlock class >> new: aLabel [
-
-	^ self new label: aLabel
-]
-
-{ #category : #'as yet unclassified' }
 SBDomainBlock class >> newFromObject: anObject [
 
 	| vp |
@@ -359,8 +353,7 @@ SBDomainBlock >> initialize [
 				hResizing: #spaceFill};
 		changeTableLayout;
 		shrinkWrap;
-		children: OrderedCollection new;
-		color: Color transparent
+		children: OrderedCollection new
 ]
 
 { #category : #'as yet unclassified' }

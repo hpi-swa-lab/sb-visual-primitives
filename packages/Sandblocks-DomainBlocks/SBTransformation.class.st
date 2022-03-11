@@ -122,7 +122,7 @@ SBTransformation >> colorDifferences [
 			ifTrue: [
 				inputBinding attachDecorator: (SBColorAccentDecorator new
 					color: Color red;
-					message: 'This DB will be deleted.')]
+					message: 'This domain block will be deleted.')]
 			ifFalse: [ | color |
 				color := colors at: index.
 				inputBinding attachDecorator: (SBColorAccentDecorator new color: color).

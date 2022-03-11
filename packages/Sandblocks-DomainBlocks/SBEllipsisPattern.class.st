@@ -12,7 +12,8 @@ Class {
 	#name : #SBEllipsisPattern,
 	#superclass : #SBBindingPattern,
 	#instVars : [
-		'currentSize'
+		'currentSize',
+		'isImplicitChild'
 	],
 	#category : #'Sandblocks-DomainBlocks'
 }
@@ -112,10 +113,17 @@ SBEllipsisPattern >> indexOffset [
 SBEllipsisPattern >> initialize [
 
 	super initialize.
-	self currentSize: 0.
+	isImplicitChild := false.
 	self
+		currentSize: 0;
 		addMorph: SBIcon iconEllipsisH large;
 		cellPositioning: #center
+]
+
+{ #category : #accessing }
+SBEllipsisPattern >> isImplicitChild [
+
+	^ isImplicitChild
 ]
 
 { #category : #accessing }
@@ -123,7 +131,7 @@ SBEllipsisPattern >> isImplicitChild: aBoolean [
 
 	| setColor previousImplicit prevBindingIndex bindingInputBlock |
 	previousImplicit := self isImplicitChild.
-	super isImplicitChild: aBoolean.
+	isImplicitChild := aBoolean.
 	previousImplicit = self isImplicitChild ifTrue: [^ self].
 	prevBindingIndex := self bindingIndex.
 	self bindingIndex: (self bindingIndexWithImplicitPrefix: aBoolean).

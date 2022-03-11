@@ -35,7 +35,7 @@ writeBackClosureString
 "
 Class {
 	#name : #SBBindingPattern,
-	#superclass : #SBPattern,
+	#superclass : #SBDomainBlock,
 	#instVars : [
 		'bindingDict',
 		'expressionDict',
@@ -382,7 +382,7 @@ SBBindingPattern >> childrenInCurrentMatch [
 { #category : #'as yet unclassified' }
 SBBindingPattern >> collectBindingsInto: aCollection [
 
-	super collectBindingsInto: aCollection.
+	self children do: [:child | child collectBindingsInto: aCollection].
 	(self blockDict at: self identityLabelPosition ifAbsent: [nil]) firstSubmorphOrNil ifNotNil: [:bindingIndex | aCollection add: bindingIndex]
 ]
 
@@ -475,7 +475,15 @@ SBBindingPattern >> expressionMappings [
 { #category : #accessing }
 SBBindingPattern >> findConstant [
 
-	^ self constant value ifNil: [super findConstant]
+	^ self constant value ifNil: [
+		self children do: [:child | child findConstant ifNotNil: [:constant | ^ constant]].
+		nil]
+]
+
+{ #category : #'as yet unclassified' }
+SBBindingPattern >> findOriginRoot [
+
+	^ self findConstant asDomainBlock root sourceObject
 ]
 
 { #category : #accessing }
@@ -486,6 +494,7 @@ SBBindingPattern >> getCurrentPrimitive: aDomainBlock [
 
 { #category : #'as yet unclassified' }
 SBBindingPattern >> getNext: aDomainBlock [
+	"updates the visual primitive the pattern will bind to and returns whether a new binding was found. Whether the binding is correct needs to be checked with matches: withBinding:."
 
 	| currentPrimitive |
 	currentPrimitive := self getCurrentPrimitive: aDomainBlock.
@@ -500,12 +509,25 @@ SBBindingPattern >> getNext: aDomainBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBBindingPattern >> identifierForIndex: aNumber [
+
+	self halt.
+	^ ('', (Character alphabet at: aNumber - 1 // Character alphabet size + 1)) asSymbol
+]
+
+{ #category : #'as yet unclassified' }
 SBBindingPattern >> identityLabelPosition [
 
 	^ self staticDomainBlockMapping
 		detect: [:mapping | mapping key = #identityLabelPosition]
 		ifFound: [:mapping | mapping patternValue]
 		ifNone: [#innerLabel]
+]
+
+{ #category : #'as yet unclassified' }
+SBBindingPattern >> implicitPrefix [
+
+	^ 'i_'
 ]
 
 { #category : #accessing }
@@ -526,6 +548,12 @@ SBBindingPattern >> initialize [
 SBBindingPattern >> isBindingPattern [
 
 	^ true
+]
+
+{ #category : #accessing }
+SBBindingPattern >> isImplicitChild [
+
+	^ false
 ]
 
 { #category : #accessing }
@@ -596,6 +624,28 @@ SBBindingPattern >> newLabelBlockAt: aVPProperty [
 	^ self newUnknown
 ]
 
+{ #category : #'as yet unclassified' }
+SBBindingPattern >> nextIdentifier [
+
+	| invalidIdentifiers currentAttempt possibleIdentifer |
+	self halt.
+	invalidIdentifiers := Array streamContents: [:stream |
+		self allChildrenDo: [:pattern | | element |
+			element := pattern bindingIndex.
+			element := element ifNotNil: [
+				(pattern bindingIndex beginsWith: self implicitPrefix)
+					ifTrue: [element from: self implicitPrefix size + 1]
+					ifFalse: [element]].
+			stream nextPut: element]].
+	
+	currentAttempt := 1.
+	[
+		possibleIdentifer := self identifierForIndex: currentAttempt.
+		invalidIdentifiers includes: possibleIdentifer] whileTrue: [currentAttempt := currentAttempt + 1].
+	
+	^ possibleIdentifer
+]
+
 { #category : #callbacks }
 SBBindingPattern >> noteNewOwner: newOwner [
 
@@ -610,6 +660,14 @@ SBBindingPattern >> originalPropertyMappingAt: aVPProperty [
 		detect: [:mapping | mapping key = aVPProperty]
 		ifFound: [:mapping | mapping asPropertyMapping]
 		ifNone: [nil]
+]
+
+{ #category : #accessing }
+SBBindingPattern >> patternContainer [
+
+	| case |
+	case := self root parentSandblock.
+	^ (case isKindOf: SBPatternContainer) ifTrue: [case]
 ]
 
 { #category : #accessing }
@@ -638,6 +696,14 @@ SBBindingPattern >> rebuild [
 	(self constant isNil and: [self bindingIndex isNil]) ifTrue: [ | unknown |
 		self setLabelAt: self identityLabelPosition to: (unknown := self newUnknown).
 		self sandblockEditor ifNotNil: [unknown startInput]]
+]
+
+{ #category : #'as yet unclassified' }
+SBBindingPattern >> removeImplicitChildren [
+
+	self children select: #isImplicitChild thenDo: #abandon.
+	self children: (self children reject: #isImplicitChild).
+	self children do: #removeImplicitChildren
 ]
 
 { #category : #'as yet unclassified' }
@@ -736,6 +802,12 @@ SBBindingPattern >> visualizingClass: aClass [
 
 	visualizingClass := aClass.
 	self owner ifNotNil: [self rebuild]
+]
+
+{ #category : #accessing }
+SBBindingPattern >> wantsImplicitNeighbors [
+
+	^ true
 ]
 
 { #category : #'as yet unclassified' }

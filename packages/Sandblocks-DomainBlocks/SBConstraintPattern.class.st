@@ -10,9 +10,10 @@ constraint
 "
 Class {
 	#name : #SBConstraintPattern,
-	#superclass : #SBPattern,
+	#superclass : #SBStSubstitution,
 	#instVars : [
-		'constraint'
+		'constraint',
+		'parent'
 	],
 	#category : #'Sandblocks-DomainBlocks'
 }
@@ -53,6 +54,14 @@ SBConstraintPattern class >> newFor: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBConstraintPattern class >> selector: aString receiverMatches: aMessage [
+
+	(aMessage isSandblock and: [(aMessage isMessageSend and: [aMessage receiver notNil]) or: [self matchesCascades and: [aMessage isCascade]]]) ifFalse: [^ false].
+	
+	^ (aMessage receiver satisfies: #(#notNil #isBinding)) and: [self name = aMessage receiver contents and: [aMessage selector = aString]]
+]
+
+{ #category : #'as yet unclassified' }
 SBConstraintPattern >> addToWorld: aWorld [
 
 	aWorld addMorphBack: self
@@ -62,6 +71,19 @@ SBConstraintPattern >> addToWorld: aWorld [
 SBConstraintPattern >> allChildrenDo: aBlock [
 
 	
+]
+
+{ #category : #'as yet unclassified' }
+SBConstraintPattern >> buildImplicitChildren: aDict [
+
+	
+]
+
+{ #category : #'as yet unclassified' }
+SBConstraintPattern >> children [
+
+	self halt.
+	^ {}
 ]
 
 { #category : #accessing }
@@ -89,6 +111,14 @@ SBConstraintPattern >> constraint: aBlockClosure [
 		unknown label: 'expr']
 ]
 
+{ #category : #'as yet unclassified' }
+SBConstraintPattern >> deleteBlock [
+
+	self sandblockEditor do: (SBDeleteDomainBlockCommand new
+		target: self;
+		yourself)
+]
+
 { #category : #'insert/delete' }
 SBConstraintPattern >> deleteCommandFor: aBlock [
 
@@ -99,6 +129,12 @@ SBConstraintPattern >> deleteCommandFor: aBlock [
 
 { #category : #'testing hierarchy' }
 SBConstraintPattern >> fixedNumberOfChildren [
+
+	^ false
+]
+
+{ #category : #'pattern matching' }
+SBConstraintPattern >> getNext: aDomainBlock [
 
 	^ false
 ]
@@ -117,6 +153,26 @@ SBConstraintPattern >> initialize [
 SBConstraintPattern >> isBlockBody [
 
 	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBConstraintPattern >> isDomainBlock [
+
+	self flag: #todo.
+	"Should actually be false"
+	^ true
+]
+
+{ #category : #accessing }
+SBConstraintPattern >> isExpression [
+
+	^ false
+]
+
+{ #category : #accessing }
+SBConstraintPattern >> isImplicitChild [
+
+	^ false
 ]
 
 { #category : #testing }
@@ -152,6 +208,56 @@ SBConstraintPattern >> matches: aDomainBlock withBinding: aDict [
 SBConstraintPattern >> newUnknown [
 
 	^ SBUnknown new grammarHandler: SBStGrammarHandler new
+]
+
+{ #category : #accessing }
+SBConstraintPattern >> parent [
+
+	^ parent
+]
+
+{ #category : #accessing }
+SBConstraintPattern >> parent: anObject [
+
+	parent := anObject
+]
+
+{ #category : #'as yet unclassified' }
+SBConstraintPattern >> patternContainer [
+
+	| case |
+	case := self root parentSandblock.
+	^ (case isKindOf: SBPatternContainer) ifTrue: [case]
+]
+
+{ #category : #'pattern matching' }
+SBConstraintPattern >> removeImplicitChildren [
+
+	
+]
+
+{ #category : #'pattern matching' }
+SBConstraintPattern >> reset [
+
+	
+]
+
+{ #category : #'as yet unclassified' }
+SBConstraintPattern >> root [
+
+	^ self parent ifNil: [self] ifNotNil: [self parent root]
+]
+
+{ #category : #'pattern matching' }
+SBConstraintPattern >> setBindingFor: aDomainBlock in: aCollection [
+
+	^ true
+]
+
+{ #category : #'as yet unclassified' }
+SBConstraintPattern >> siblingIndex [
+
+	^ self parent ifNil: [0] ifNotNil: [self parent children indexOf: self]
 ]
 
 { #category : #accessing }
