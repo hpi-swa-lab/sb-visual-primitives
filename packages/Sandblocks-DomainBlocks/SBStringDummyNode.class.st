@@ -57,7 +57,8 @@ SBStringDummyNode class >> exampleBuildHeapStrings: aTree [
 			add: #explicitRootMatching -> false;
 			add: #explicitChildrenMatching -> true;
 			yourself)
-		visualizePatternsAs: SBStringDummyNode) replaceAllMatches: aTree
+		visualizePatternsAs: SBStringDummyNode
+		replaceCount: Float infinity) value: aTree
 ]
 
 { #category : #'as yet unclassified' }
@@ -91,7 +92,7 @@ SBStringDummyNode >> exampleBuildHeapStrings: aTree [
 						visualizingClass: SBStringDummyNode.
 					SBEllipsisPattern bindingDict: {#identity -> #d} visualizingClass: SBStringDummyNode}
 				visualizingClass: SBStringDummyNode.
-			SBConstraintPattern constraint: [:bindings | (bindings at: #a) key < toSort key]})
+			SBConstraintPattern constraint: [:bindings | (bindings at: #a) key < (bindings at: #toSort) key]})
 		output: (SBGroupPattern patterns: {
 			SBBindingPattern
 				bindingDict: {#identity -> #toSort}
@@ -107,7 +108,8 @@ SBStringDummyNode >> exampleBuildHeapStrings: aTree [
 			add: #explicitRootMatching -> false;
 			add: #explicitChildrenMatching -> true;
 			yourself)
-		visualizePatternsAs: SBStringDummyNode) replaceAllMatches: aTree
+		visualizePatternsAs: SBStringDummyNode
+		replaceCount: Float infinity) value: aTree
 ]
 
 { #category : #'as yet unclassified' }

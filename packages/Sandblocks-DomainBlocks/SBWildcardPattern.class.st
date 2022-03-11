@@ -80,7 +80,8 @@ SBWildcardPattern >> exampleExtractLeaf: aTree [
 			add: #explicitRootMatching -> true;
 			add: #explicitChildrenMatching -> true;
 			yourself)
-		visualizePatternsAs: SBDummyNode) replaceAllMatches: aTree
+		visualizePatternsAs: SBDummyNode
+		replaceCount: Float infinity) value: aTree
 ]
 
 { #category : #'as yet unclassified' }
@@ -119,7 +120,8 @@ SBWildcardPattern >> exampleExtractNodeWithTwoChildren: aTree [
 			add: #explicitRootMatching -> true;
 			add: #explicitChildrenMatching -> true;
 			yourself)
-		visualizePatternsAs: SBDummyNode) replaceAllMatches: aTree
+		visualizePatternsAs: SBDummyNode
+		replaceCount: Float infinity) value: aTree
 ]
 
 { #category : #'as yet unclassified' }

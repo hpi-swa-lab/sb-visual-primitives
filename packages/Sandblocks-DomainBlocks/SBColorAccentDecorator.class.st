@@ -11,24 +11,26 @@ Class {
 { #category : #callbacks }
 SBColorAccentDecorator >> attached: aMorph [
 
-	self message ifNotNil: [
-	aMorph balloonText: self message].
+	self message ifNotNil: [aMorph balloonText: self message].
 	aMorph borderWidth: self borderWidth.
 	super attached: aMorph
 ]
 
 { #category : #drawing }
 SBColorAccentDecorator >> borderWidth [
+
 	^ 3
 ]
 
 { #category : #accessing }
 SBColorAccentDecorator >> color [
+
 	^ color
 ]
 
 { #category : #accessing }
 SBColorAccentDecorator >> color: aColor [
+
 	color := aColor
 ]
 
@@ -42,11 +44,13 @@ SBColorAccentDecorator >> detached: aMorph [
 
 { #category : #accessing }
 SBColorAccentDecorator >> message [
+
 	^ message
 ]
 
 { #category : #accessing }
 SBColorAccentDecorator >> message: aString [
+
 	message := aString
 ]
 

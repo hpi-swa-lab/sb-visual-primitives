@@ -111,7 +111,8 @@ SBGrammarObject >> exampleGrammarRuleMergeWithExpression: aGrammarObject [
 			add: #explicitRootMatching -> false;
 			add: #explicitChildrenMatching -> true;
 			yourself)
-		visualizePatternsAs: SBGrammarObject) replaceAllMatches: aGrammarObject
+		visualizePatternsAs: SBGrammarObject
+		replaceCount: Float infinity) value: aGrammarObject
 ]
 
 { #category : #'as yet unclassified' }

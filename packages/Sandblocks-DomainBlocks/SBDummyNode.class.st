@@ -73,8 +73,8 @@ SBDummyNode >> children: aCollection [
 
 { #category : #'as yet unclassified' }
 SBDummyNode >> exampleColorAccentDecorator [
-
 	"To see the color accents use the 'colorDifferences' action on the transformation or turn on the setting in the preferences."
+
 	^ SBTransformation
 		input: (SBGroupPattern patterns: {
 			SBBindingPattern
@@ -104,6 +104,7 @@ SBDummyNode >> exampleColorAccentDecorator [
 			add: #explicitChildrenMatching -> false;
 			yourself)
 		visualizePatternsAs: SBDummyNode
+		replaceCount: Float infinity
 ]
 
 { #category : #'as yet unclassified' }
@@ -138,6 +139,7 @@ SBDummyNode >> exampleHeapTransformation [
 			add: #explicitChildrenMatching -> false;
 			yourself)
 		visualizePatternsAs: SBDummyNode
+		replaceCount: Float infinity
 ]
 
 { #category : #'as yet unclassified' }
@@ -188,7 +190,8 @@ SBDummyNode >> exampleMultipleBindings: aTree [
 			add: #explicitRootMatching -> false;
 			add: #explicitChildrenMatching -> false;
 			yourself)
-		visualizePatternsAs: SBDummyNode) replaceAllMatches: aTree
+		visualizePatternsAs: SBDummyNode
+		replaceCount: Float infinity) value: aTree
 ]
 
 { #category : #'as yet unclassified' }
@@ -211,7 +214,7 @@ SBDummyNode >> exampleMultipleTransformations: aTree [
 							right: (SBDummyNode key: 5));
 						right: ((SBDummyNode key: 2) left: (SBDummyNode key: 8))))) showAsDomainBlock}]
 		label: 'example'.
-	maxHeap := self exampleHeapTransformation replaceAllMatches: aTree.
+	maxHeap := self exampleHeapTransformation value: aTree.
 	^ (SBTransformation
 		input: (SBGroupPattern patterns: {
 			SBBindingPattern
@@ -240,7 +243,8 @@ SBDummyNode >> exampleMultipleTransformations: aTree [
 			add: #explicitRootMatching -> false;
 			add: #explicitChildrenMatching -> false;
 			yourself)
-		visualizePatternsAs: SBDummyNode) replaceAllMatches: maxHeap
+		visualizePatternsAs: SBDummyNode
+		replaceCount: Float infinity) value: maxHeap
 ]
 
 { #category : #'as yet unclassified' }
@@ -262,7 +266,7 @@ SBDummyNode >> exampleTransformWithMessage: aTree [
 							right: (SBDummyNode key: 5));
 						right: ((SBDummyNode key: 2) left: (SBDummyNode key: 8))))) showAsDomainBlock}]
 		label: 'example'.
-	^ self exampleHeapTransformation replaceAllMatches: aTree
+	^ self exampleHeapTransformation value: aTree
 ]
 
 { #category : #accessing }

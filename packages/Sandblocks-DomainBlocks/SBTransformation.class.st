@@ -16,7 +16,8 @@ Class {
 	#name : #SBTransformation,
 	#superclass : #SBPatternContainer,
 	#instVars : [
-		'outputPattern'
+		'outputPattern',
+		'replaceCount'
 	],
 	#classVars : [
 		'ColorizeDifferences'
@@ -26,41 +27,26 @@ Class {
 
 { #category : #accessing }
 SBTransformation class >> colorizeDifferences [
-
 	<preference: 'Colorize changes of transformations' category: 'Sandblocks-DomainBlocks' description: 'This option enables automatic highlighting of same bindings during transformation. This might make it easier to see the changes a transformation does. This is only an alpha feature.' type: #Boolean>
-	
-	^ ColorizeDifferences ifNil:[false]
+
+	^ ColorizeDifferences ifNil: [false]
 ]
 
 { #category : #accessing }
 SBTransformation class >> colorizeDifferences: aBoolean [
+
 	ColorizeDifferences := aBoolean
 ]
 
 { #category : #'as yet unclassified' }
-SBTransformation class >> input: aPattern output: anotherPattern [
-	" marker "
-
-	^ self new input: aPattern output: anotherPattern
-]
-
-{ #category : #'as yet unclassified' }
-SBTransformation class >> input: aPattern output: anotherPattern strategy: aDict [
-	" marker "
-
-	^ self new
-		input: aPattern output: anotherPattern;
-		strategy: aDict
-]
-
-{ #category : #'as yet unclassified' }
-SBTransformation class >> input: aPattern output: anotherPattern strategy: aDict visualizePatternsAs: aClass [
+SBTransformation class >> input: aPattern output: anotherPattern strategy: aDict visualizePatternsAs: aClass replaceCount: aNumber [
 	" marker "
 
 	^ self new
 		defaultVisualizationClass: aClass;
 		input: aPattern output: anotherPattern;
-		strategy: aDict
+		strategy: aDict;
+		replaceCount: aNumber
 ]
 
 { #category : #'as yet unclassified' }
@@ -68,7 +54,7 @@ SBTransformation class >> matches: aBlock [
 
 	^ (aBlock receiver satisfies: #(#notNil #isBinding))
 		and: [aBlock receiver contents = self name]
-		and: [{#input:output:. #input:output:strategy:. #input:output:strategy:visualizePatternsAs:} anySatisfy: [:selector | self selector: selector receiverMatches: aBlock]]
+		and: [self selector: #input:output:strategy:visualizePatternsAs:replaceCount: receiverMatches: aBlock]
 ]
 
 { #category : #'as yet unclassified' }
@@ -80,18 +66,12 @@ SBTransformation class >> newFor: aBlock [
 	output := aBlock arguments second.
 	output isDomainBlock ifFalse: [output := output evaluate].
 	
-	^ aBlock arguments size > 2
-		ifTrue: [ | strategy |
-			strategy := aBlock arguments third evaluate.
-			aBlock arguments size > 3
-				ifTrue: [
-					self
-						input: input
-						output: output
-						strategy: strategy
-						visualizePatternsAs: aBlock arguments fourth evaluate]
-				ifFalse: [self input: input output: output strategy: strategy]]
-		ifFalse: [self input: input output: output]
+	^ self
+		input: input
+		output: output
+		strategy: aBlock arguments third evaluate
+		visualizePatternsAs: aBlock arguments fourth evaluate
+		replaceCount: aBlock arguments fifth evaluate
 ]
 
 { #category : #'as yet unclassified' }
@@ -99,7 +79,12 @@ SBTransformation class >> suggestion [
 	"Used for the projection"
 
 	^ [:block | | case |
-		case := self input: SBGroupPattern new output: SBGroupPattern new.
+		case := self
+			input: SBGroupPattern new
+			output: SBGroupPattern new
+			strategy: Dictionary new
+			visualizePatternsAs: nil
+			replaceCount: Float infinity.
 		block sandblockEditor do: (SBReplaceCommand new
 			target: block;
 			replacer: case;
@@ -123,23 +108,25 @@ SBTransformation >> buildImplicitChildrenMatchingPattern [
 
 { #category : #'as yet unclassified' }
 SBTransformation >> colorDifferences [
-<action>
+	<action>
+
 	| inputBindingDict outputBindingDict colors |
-	
 	inputBindingDict := self findAllBindingsAsDict: self pattern.
 	outputBindingDict := self findAllBindingsAsDict: self outputPattern.
 	
-	colors :=  (Color h: 50 s: 1.0 v: 1.0) wheel: inputBindingDict size.
+	colors := (Color h: 50 s: 1.0 v: 1.0) wheel: inputBindingDict size.
 	inputBindingDict withIndexDo: [:inputBinding :index | | bindingKey outputBinding |
 		bindingKey := inputBindingDict keyAtValue: inputBinding.
 		outputBinding := outputBindingDict at: bindingKey ifAbsent: [nil].
-		outputBinding isNil ifTrue: [
-			inputBinding attachDecorator: (SBColorAccentDecorator new color: Color red; message: 'This DB will be deleted.').
-			] ifFalse: [|color|
-			color := colors at: index.
-			inputBinding attachDecorator: (SBColorAccentDecorator new color: color).
-			outputBinding attachDecorator: (SBColorAccentDecorator new color: color).
-			]]
+		outputBinding isNil
+			ifTrue: [
+				inputBinding attachDecorator: (SBColorAccentDecorator new
+					color: Color red;
+					message: 'This DB will be deleted.')]
+			ifFalse: [ | color |
+				color := colors at: index.
+				inputBinding attachDecorator: (SBColorAccentDecorator new color: color).
+				outputBinding attachDecorator: (SBColorAccentDecorator new color: color)]]
 ]
 
 { #category : #examples }
@@ -176,7 +163,8 @@ SBTransformation >> exampleDeleteNodeInside: aTree [
 			add: #explicitRootMatching -> false;
 			add: #explicitChildrenMatching -> false;
 			yourself)
-		visualizePatternsAs: SBDummyNode) replaceAllMatches: aTree
+		visualizePatternsAs: SBDummyNode
+		replaceCount: Float infinity) value: aTree
 ]
 
 { #category : #examples }
@@ -228,7 +216,8 @@ SBTransformation >> exampleEllipsisPatternWithLabel: aDummyNode [
 			add: #explicitRootMatching -> true;
 			add: #explicitChildrenMatching -> false;
 			yourself)
-		visualizePatternsAs: SBDummyNode) replaceAllMatches: aDummyNode
+		visualizePatternsAs: SBDummyNode
+		replaceCount: Float infinity) value: aDummyNode
 ]
 
 { #category : #examples }
@@ -252,7 +241,8 @@ SBTransformation >> exampleInsertWithExpression: aTree [
 			add: #explicitRootMatching -> true;
 			add: #explicitChildrenMatching -> true;
 			yourself)
-		visualizePatternsAs: SBStringDummyNode) replaceAllMatches: aTree
+		visualizePatternsAs: SBStringDummyNode
+		replaceCount: Float infinity) value: aTree
 ]
 
 { #category : #examples }
@@ -287,7 +277,8 @@ SBTransformation >> exampleMissingBindingsAreMarked: aTree [
 			add: #explicitRootMatching -> false;
 			add: #explicitChildrenMatching -> false;
 			yourself)
-		visualizePatternsAs: SBDummyNode) replaceAllMatches: aTree
+		visualizePatternsAs: SBDummyNode
+		replaceCount: Float infinity) value: aTree
 ]
 
 { #category : #examples }
@@ -348,7 +339,8 @@ SBTransformation >> exampleTransformInputAsOftenAsPossible: aTree [
 			add: #explicitRootMatching -> false;
 			add: #explicitChildrenMatching -> false;
 			yourself)
-		visualizePatternsAs: SBDummyNode) replaceAllMatches: aTree
+		visualizePatternsAs: SBDummyNode
+		replaceCount: Float infinity) value: aTree
 ]
 
 { #category : #examples }
@@ -381,7 +373,8 @@ for a match) and implicit (may or may not be there)"
 			add: #explicitRootMatching -> true;
 			add: #explicitChildrenMatching -> true;
 			yourself)
-		visualizePatternsAs: SBDummyNode) replaceAllMatches: aTree
+		visualizePatternsAs: SBDummyNode
+		replaceCount: Float infinity) value: aTree
 ]
 
 { #category : #examples }
@@ -402,9 +395,8 @@ SBTransformation >> exampleTransformWithConstant: aTree [
 			add: #explicitRootMatching -> false;
 			add: #explicitChildrenMatching -> true;
 			yourself)
-		visualizePatternsAs: SBDummyNode)
-		replace: 1
-		matches: aTree
+		visualizePatternsAs: SBDummyNode
+		replaceCount: 1) value: aTree
 ]
 
 { #category : #examples }
@@ -428,9 +420,8 @@ SBTransformation >> exampleTransformWithExpression: aTree [
 			add: #explicitRootMatching -> true;
 			add: #explicitChildrenMatching -> true;
 			yourself)
-		visualizePatternsAs: SBDummyNode)
-		replace: 1
-		matches: aTree
+		visualizePatternsAs: SBDummyNode
+		replaceCount: 1) value: aTree
 ]
 
 { #category : #examples }
@@ -466,18 +457,26 @@ SBTransformation >> exampleWithConstants: aDummyNode [
 			add: #explicitRootMatching -> false;
 			add: #explicitChildrenMatching -> true;
 			yourself)
-		visualizePatternsAs: SBDummyNode) replaceAllMatches
+		visualizePatternsAs: SBDummyNode
+		replaceCount: Float infinity) value
 ]
 
 { #category : #'as yet unclassified' }
 SBTransformation >> hideColorDifferences [
-<action>
+	<action>
+
 	| inputBindingDict outputBindingDict |
-	
 	inputBindingDict := self findAllBindingsAsDict: self pattern.
 	outputBindingDict := self findAllBindingsAsDict: self outputPattern.
 	inputBindingDict do: [:binding | binding detachDecorators: SBColorAccentDecorator].
-	outputBindingDict do: [:binding | binding detachDecorators: SBColorAccentDecorator].
+	outputBindingDict do: [:binding | binding detachDecorators: SBColorAccentDecorator]
+]
+
+{ #category : #'as yet unclassified' }
+SBTransformation >> initialize [
+
+	super initialize.
+	self replaceCount: Float infinity
 ]
 
 { #category : #'as yet unclassified' }
@@ -489,6 +488,14 @@ SBTransformation >> input: aPattern output: anotherPattern [
 	self buildImplicitChildrenMatchingPattern
 ]
 
+{ #category : #'as yet unclassified' }
+SBTransformation >> newRepeatCountMorphFor: aNumber [
+
+	aNumber isInfinite
+		ifTrue: [^ SBIcon iconInfinity color: Color red muchDarker]
+		ifFalse: [^ SBStNumber new value: aNumber]
+]
+
 { #category : #callbacks }
 SBTransformation >> noteNewOwner: aMorph [
 
@@ -497,9 +504,13 @@ SBTransformation >> noteNewOwner: aMorph [
 	super noteNewOwner: aMorph.
 	(wasBuilt not and: [self classNameInput notNil]) ifTrue: [
 		self pattern owner
-			addMorphBack: SBIcon iconArrowRight;
+			addMorphBack: (SBColumn new
+				cellPositioning: #center;
+				cellGap: 6;
+				addMorphBack: (self newRepeatCountMorphFor: replaceCount);
+				addMorphBack: SBIcon iconSyncAlt large);
 			addMorphBack: self outputPattern].
-	self class colorizeDifferences ifTrue:[self colorDifferences].
+	self class colorizeDifferences ifTrue: [self colorDifferences]
 ]
 
 { #category : #accessing }
@@ -514,36 +525,27 @@ SBTransformation >> outputPattern: aPattern [
 	outputPattern := aPattern
 ]
 
-{ #category : #'as yet unclassified' }
-SBTransformation >> replace: aNumber matches: anObject [
+{ #category : #accessing }
+SBTransformation >> replaceCount [
 
-	| matcher currentPrimitive match iteration |
-	currentPrimitive := anObject asDomainBlock.
-	matcher := (SBPatternMatcher input: currentPrimitive pattern: self pattern) strategy: self strategy.
-	iteration := 0.
-	[(match := matcher getNextMatch) notNil and: [(iteration := iteration + 1) <= aNumber]] whileTrue: [
-		currentPrimitive := matcher build: self outputPattern fromBinding: match.
-		matcher input: currentPrimitive].
-	^ currentPrimitive buildObject
+	^ self replaceCountInput
+		ifNotNil: [:replaceCountInput |
+			(replaceCountInput isSandblock and: [replaceCountInput isNumberBlock])
+				ifTrue: [replaceCountInput value]
+				ifFalse: [Float infinity]]
+		ifNil: [replaceCount]
 ]
 
-{ #category : #'as yet unclassified' }
-SBTransformation >> replaceAllMatches [
+{ #category : #accessing }
+SBTransformation >> replaceCount: aNumber [
 
-	^ self replaceAllMatches: self pattern findOriginRoot
+	replaceCount := aNumber
 ]
 
-{ #category : #'as yet unclassified' }
-SBTransformation >> replaceAllMatches: anObject [
+{ #category : #accessing }
+SBTransformation >> replaceCountInput [
 
-	| matcher currentPrimitive match |
-	currentPrimitive := anObject asDomainBlock.
-	
-	matcher := (SBPatternMatcher input: currentPrimitive pattern: self pattern) strategy: self strategy.
-	[match := matcher getNextMatch] whileNotNil: [
-		currentPrimitive := matcher build: self outputPattern fromBinding: match.
-		matcher input: currentPrimitive].
-	^ currentPrimitive buildObject
+	^ self pattern owner ifNotNil: [:owner | owner submorphs second firstSubmorph]
 ]
 
 { #category : #'as yet unclassified' }
@@ -551,6 +553,19 @@ SBTransformation >> toggleImplicitChildTo: aBoolean withBinding: aString [
 
 	super toggleImplicitChildTo: aBoolean withBinding: aString.
 	self toggleImplicitChildTo: aBoolean withBinding: aString on: self outputPattern
+]
+
+{ #category : #actions }
+SBTransformation >> toggleInfiniteRepeats [
+	<action>
+
+	self sandblockEditor do: (SBReplaceCommand new
+		target: self replaceCountInput;
+		replacer: (self replaceCount isInfinite
+			ifTrue: [self newRepeatCountMorphFor: 1]
+			ifFalse: [self newRepeatCountMorphFor: Float infinity]);
+		shouldMergeWithNext: true;
+		yourself)
 ]
 
 { #category : #accessing }
@@ -562,12 +577,14 @@ SBTransformation >> value [
 { #category : #accessing }
 SBTransformation >> value: anObject [
 
-	| matcher match |
-	matcher := (SBPatternMatcher input: anObject asDomainBlock pattern: self pattern) strategy: self strategy.
-	match := matcher getNextMatch.
-	^ match
-		ifNil: [anObject]
-		ifNotNil: [(matcher build: self outputPattern fromBinding: match) buildObject]
+	| matcher currentPrimitive match iteration |
+	currentPrimitive := anObject asDomainBlock.
+	matcher := (SBPatternMatcher input: currentPrimitive pattern: self pattern) strategy: self strategy.
+	iteration := 0.
+	[(match := matcher getNextMatch) notNil and: [(iteration := iteration + 1) <= self replaceCount]] whileTrue: [
+		currentPrimitive := matcher build: self outputPattern fromBinding: match.
+		matcher input: currentPrimitive].
+	^ currentPrimitive buildObject
 ]
 
 { #category : #printing }
@@ -578,13 +595,14 @@ SBTransformation >> writeSourceOn: aStream [
 	aStream nextPutAll: ' output: '.
 	self outputPattern writeSourceOn: aStream.
 	
-	self strategy ifNotNil: [
-		aStream nextPutAll: ' strategy: '.
-		self strategy storeOn: aStream].
+	aStream nextPutAll: ' strategy: '.
+	self strategy storeOn: aStream.
 	
-	self defaultVisualizationClass ifNotNil: [
-		aStream nextPutAll: ' visualizePatternsAs: '.
-		self defaultVisualizationClass storeOn: aStream].
+	aStream nextPutAll: ' visualizePatternsAs: '.
+	self defaultVisualizationClass storeOn: aStream.
+	
+	aStream nextPutAll: ' replaceCount: '.
+	self replaceCount storeOn: aStream.
 	
 	aStream nextPut: $)
 ]

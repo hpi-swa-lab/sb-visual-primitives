@@ -210,7 +210,9 @@ SBPatternMatcherTest >> exampleWithConstants: anObject [
 				SBBindingPattern
 					expressionDict: {#identity -> [anObject]}
 					children: {SBEllipsisPattern bindingDict: {#identity -> #b}}}})
-		strategy: {#explicitRootMatching -> false} asDictionary) replaceAllMatches
+		strategy: {#explicitRootMatching -> false} asDictionary
+		visualizePatternsAs: SBDummyNode
+		replaceCount: Float infinity) value
 ]
 
 { #category : #'as yet unclassified' }
@@ -347,7 +349,10 @@ SBPatternMatcherTest >> testSortTreeOutput [
 	root := SBDummyNode buildTree: {0 -> {1 -> {3 -> {5. 4}. 2 -> {6. 7}}}}.
 	output := (SBTransformation
 		input: self examplePatternSortTree
-		output: self examplePatternSortTreeOutput) replaceAllMatches: root.
+		output: self examplePatternSortTreeOutput
+		strategy: Dictionary new
+		visualizePatternsAs: SBDummyNode
+		replaceCount: Float infinity) value: root.
 	self
 		assert: {0 -> {1 -> {2 -> {6. 7}. 3 -> {4. 5}}}}
 		equals: {self getLabelTree: output asDomainBlock}

@@ -82,5 +82,6 @@ SBSpecialShapeFixture class >> exampleBuildHeapSpecialShape: aTree [
 			add: #explicitRootMatching -> false;
 			add: #explicitChildrenMatching -> false;
 			yourself)
-		visualizePatternsAs: SBSpecialShapeFixture) replaceAllMatches: aTree
+		visualizePatternsAs: SBSpecialShapeFixture
+		replaceCount: Float infinity) value: aTree
 ]

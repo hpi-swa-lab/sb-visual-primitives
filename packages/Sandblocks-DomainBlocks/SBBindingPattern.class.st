@@ -383,8 +383,7 @@ SBBindingPattern >> childrenInCurrentMatch [
 SBBindingPattern >> collectBindingsInto: aCollection [
 
 	super collectBindingsInto: aCollection.
-	(self blockDict at: self identityLabelPosition ifAbsent:[nil]) firstSubmorphOrNil ifNotNil: [:bindingIndex | aCollection add: bindingIndex].
-	
+	(self blockDict at: self identityLabelPosition ifAbsent: [nil]) firstSubmorphOrNil ifNotNil: [:bindingIndex | aCollection add: bindingIndex]
 ]
 
 { #category : #accessing }

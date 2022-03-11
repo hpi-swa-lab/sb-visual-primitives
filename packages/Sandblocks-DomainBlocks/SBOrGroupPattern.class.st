@@ -54,7 +54,8 @@ SBOrGroupPattern class >> example: aDummyNode [
 			add: #explicitRootMatching -> false;
 			add: #explicitChildrenMatching -> true;
 			yourself)
-		visualizePatternsAs: SBDummyNode) replaceAllMatches: aDummyNode
+		visualizePatternsAs: SBDummyNode
+		replaceCount: Float infinity) value: aDummyNode
 ]
 
 { #category : #'as yet unclassified' }

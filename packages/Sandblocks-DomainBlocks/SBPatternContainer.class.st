@@ -179,7 +179,9 @@ SBPatternContainer >> findAllBindings: aPattern [
 { #category : #'as yet unclassified' }
 SBPatternContainer >> findAllBindingsAsDict: aPattern [
 
-	^ Dictionary new addAll: ((self findAllBindings: aPattern) asOrderedCollection collect: [:aSBStName | aSBStName contents -> aSBStName]); yourself
+	^ Dictionary new
+		addAll: ((self findAllBindings: aPattern) asOrderedCollection collect: [:aSBStName | aSBStName contents -> aSBStName]);
+		yourself
 ]
 
 { #category : #accessing }
