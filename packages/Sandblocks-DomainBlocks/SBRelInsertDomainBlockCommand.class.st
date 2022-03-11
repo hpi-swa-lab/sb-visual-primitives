@@ -9,9 +9,16 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
+SBRelInsertDomainBlockCommand >> continueAfterInsert: aCharacter [
+
+	^ false
+]
+
+{ #category : #'as yet unclassified' }
 SBRelInsertDomainBlockCommand >> do [
 
 	| result |
+	self morph isUnknown ifTrue: [^ nil].
 	result := super do.
 	self container addChild: self morph afterIndex: self morphIndexInChildren.
 	^ result
