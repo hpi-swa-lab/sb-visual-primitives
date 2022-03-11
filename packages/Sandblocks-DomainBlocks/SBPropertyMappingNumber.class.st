@@ -19,6 +19,12 @@ SBPropertyMappingNumber class >> defaultSetterBlockWith: aSymbol for: anotherSym
 ]
 
 { #category : #'as yet unclassified' }
+SBPropertyMappingNumber >> getLabelContents: anObject [
+
+	^ (super getLabelContents: anObject) asNumber
+]
+
+{ #category : #'as yet unclassified' }
 SBPropertyMappingNumber >> getMorphForValue: anObject [
 
 	^ SBStNumber new contents: anObject asString

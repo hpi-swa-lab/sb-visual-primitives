@@ -432,6 +432,12 @@ SBGroupPattern >> setBindingFor: aDomainBlock in: aCollection [
 	^ self children allSatisfy: [:pattern | pattern setBindingFor: aDomainBlock in: aCollection]
 ]
 
+{ #category : #'as yet unclassified' }
+SBGroupPattern >> siblingIndex [
+
+	^ self parent ifNil: [0] ifNotNil: [self parent children indexOf: self]
+]
+
 { #category : #printing }
 SBGroupPattern >> writeSourceOn: aStream [
 

@@ -145,9 +145,7 @@ SBPropertyMapping >> asPropertyMapping [
 { #category : #accessing }
 SBPropertyMapping >> getLabelContents: anObject [
 
-	^ (anObject isString or: [anObject isNumber])
-		ifTrue: [anObject]
-		ifFalse: [[anObject firstSubmorph contents] on: Error do: [nil]]
+	^ [anObject firstSubmorph contents] on: Error do: [nil]
 ]
 
 { #category : #'as yet unclassified' }

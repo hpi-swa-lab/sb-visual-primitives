@@ -35,19 +35,18 @@ SBOrGroupPattern class >> example: aDummyNode [
 		input: (SBOrGroupPattern patterns: {
 			SBBindingPattern
 				bindingDict: {#identity -> #a}
-				expressionDict: {#innerLabel -> ['10']}
+				expressionDict: {#innerLabel -> [10]}
 				children: {SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBDummyNode}
 				visualizingClass: SBDummyNode.
-			SBGroupPattern patterns: {
-				SBBindingPattern
-					bindingDict: {#innerLabel -> #k. #identity -> #a}
-					children: {SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBDummyNode}
-					visualizingClass: SBDummyNode.
-				SBConstraintPattern constraint: [:bindings | (bindings at: #k) = 3]}})
+			SBBindingPattern
+				bindingDict: {#identity -> #a}
+				expressionDict: {#innerLabel -> [3]}
+				children: {SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBDummyNode}
+				visualizingClass: SBDummyNode})
 		output: (SBGroupPattern patterns: {
 			SBBindingPattern
 				bindingDict: {#identity -> #a}
-				expressionDict: {#innerLabel -> ['42']}
+				expressionDict: {#innerLabel -> [42]}
 				children: {SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBDummyNode}
 				visualizingClass: SBDummyNode})
 		strategy: (Dictionary new
@@ -61,10 +60,10 @@ SBOrGroupPattern class >> example: aDummyNode [
 { #category : #'as yet unclassified' }
 SBOrGroupPattern >> getNext: aDomainBlock [
 
-	| gotNext |
-	gotNext := false.
-	self children do: [:pattern | (pattern getNext: aDomainBlock) ifTrue: [gotNext := true]].
-	^ gotNext
+	self children do: [:pattern | (pattern getNext: aDomainBlock) ifTrue: [^ true]].
+	self matchingPattern siblingIndex = self children size ifTrue: [^ false].
+	self matchingPattern: (self children at: self matchingPattern siblingIndex + 1).
+	^ true
 ]
 
 { #category : #'as yet unclassified' }
@@ -76,13 +75,19 @@ SBOrGroupPattern >> matches: aDomainBlock withBinding: aCollection [
 { #category : #accessing }
 SBOrGroupPattern >> matchingPattern [
 
-	^ matchingPattern
+	^ matchingPattern ifNil: [self children first]
 ]
 
 { #category : #accessing }
 SBOrGroupPattern >> matchingPattern: aPattern [
 
 	matchingPattern := aPattern
+]
+
+{ #category : #'as yet unclassified' }
+SBOrGroupPattern >> reset [
+
+	self matchingPattern: nil
 ]
 
 { #category : #'as yet unclassified' }
@@ -94,15 +99,5 @@ SBOrGroupPattern >> separatorString [
 { #category : #'as yet unclassified' }
 SBOrGroupPattern >> setBindingFor: aDomainBlock in: aCollection [
 
-	| originalCollection |
-	originalCollection := aCollection copy.
-	^ self children
-		detect: [:pattern |
-			aCollection removeAll.
-			aCollection addAll: originalCollection.
-			pattern setBindingFor: aDomainBlock in: aCollection]
-		ifFound: [:pattern |
-			self matchingPattern: pattern.
-			true]
-		ifNone: [false]
+	^ self matchingPattern setBindingFor: aDomainBlock in: aCollection
 ]
