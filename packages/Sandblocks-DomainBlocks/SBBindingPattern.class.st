@@ -509,13 +509,6 @@ SBBindingPattern >> getNext: aDomainBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBBindingPattern >> identifierForIndex: aNumber [
-
-	self halt.
-	^ ('', (Character alphabet at: aNumber - 1 // Character alphabet size + 1)) asSymbol
-]
-
-{ #category : #'as yet unclassified' }
 SBBindingPattern >> identityLabelPosition [
 
 	^ self staticDomainBlockMapping
@@ -622,28 +615,6 @@ SBBindingPattern >> newEmptyChildNear: aBlock before: aBoolean [
 SBBindingPattern >> newLabelBlockAt: aVPProperty [
 
 	^ self newUnknown
-]
-
-{ #category : #'as yet unclassified' }
-SBBindingPattern >> nextIdentifier [
-
-	| invalidIdentifiers currentAttempt possibleIdentifer |
-	self halt.
-	invalidIdentifiers := Array streamContents: [:stream |
-		self allChildrenDo: [:pattern | | element |
-			element := pattern bindingIndex.
-			element := element ifNotNil: [
-				(pattern bindingIndex beginsWith: self implicitPrefix)
-					ifTrue: [element from: self implicitPrefix size + 1]
-					ifFalse: [element]].
-			stream nextPut: element]].
-	
-	currentAttempt := 1.
-	[
-		possibleIdentifer := self identifierForIndex: currentAttempt.
-		invalidIdentifiers includes: possibleIdentifer] whileTrue: [currentAttempt := currentAttempt + 1].
-	
-	^ possibleIdentifer
 ]
 
 { #category : #callbacks }
