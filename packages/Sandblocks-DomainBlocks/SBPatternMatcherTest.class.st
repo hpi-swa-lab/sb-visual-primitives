@@ -1,3 +1,7 @@
+"
+A SBPatternMatcherTest is xxxxxxxxx.
+
+"
 Class {
 	#name : #SBPatternMatcherTest,
 	#superclass : #TestCase,

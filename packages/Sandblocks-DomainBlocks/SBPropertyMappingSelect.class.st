@@ -11,6 +11,7 @@ choices
 representations
 	- contains the visualizations of the choices
 	- if there are no visualizations, choices are shown as Strings
+
 "
 Class {
 	#name : #SBPropertyMappingSelect,

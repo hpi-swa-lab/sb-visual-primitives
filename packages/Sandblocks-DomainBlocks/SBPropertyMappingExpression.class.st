@@ -6,6 +6,7 @@ Instance Variables
 
 originalMapping
 	- contains the original property mapping
+
 "
 Class {
 	#name : #SBPropertyMappingExpression,

@@ -2,7 +2,7 @@
 An SBPatternMatcher is used for pattern matching. It tries to match the defined pattern in the SBTransformation to the input.
 
 Instance Variables
-	pattern:					Pattern
+	pattern:					SBGroupPattern
 	performedMatch:		Boolean
 	searchStack:			LinkedList
 	strategy:					Dictionary
@@ -46,9 +46,9 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBPatternMatcher class >> input: aDomainBlock pattern: aPattern [
+SBPatternMatcher class >> input: aDomainBlock pattern: anSBGroupPattern [
 
-	^ self new input: aDomainBlock pattern: aPattern
+	^ self new input: aDomainBlock pattern: anSBGroupPattern
 ]
 
 { #category : #'as yet unclassified' }
@@ -150,10 +150,10 @@ SBPatternMatcher >> input: aDomainBlock [
 ]
 
 { #category : #'as yet unclassified' }
-SBPatternMatcher >> input: aDomainBlock pattern: aPattern [
+SBPatternMatcher >> input: aDomainBlock pattern: anSBGroupPattern [
 
 	self
-		pattern: aPattern;
+		pattern: anSBGroupPattern;
 		currentPrimitive: aDomainBlock;
 		performedMatch: false
 ]
@@ -165,9 +165,9 @@ SBPatternMatcher >> pattern [
 ]
 
 { #category : #accessing }
-SBPatternMatcher >> pattern: aPattern [
+SBPatternMatcher >> pattern: anSBGroupPattern [
 
-	pattern := aPattern
+	pattern := anSBGroupPattern
 ]
 
 { #category : #accessing }

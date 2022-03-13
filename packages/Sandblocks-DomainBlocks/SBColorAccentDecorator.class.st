@@ -1,9 +1,23 @@
+"
+A SBColorAccentDecorator is xxxxxxxxx.
+
+Instance Variables
+	color:			Color
+	message:	String
+
+color
+	- xxxxx
+
+message
+	- xxxxx
+
+"
 Class {
 	#name : #SBColorAccentDecorator,
 	#superclass : #SBBlockDecorator,
 	#instVars : [
-		'message',
-		'color'
+		'color',
+		'message'
 	],
 	#category : #'Sandblocks-DomainBlocks'
 }

@@ -3,6 +3,7 @@ An SBPropertyMapping hold information on how the properties of an object are to 
 
 Instance Variables
 	getter:			BlockClosure
+	isConstant:		Boolean
 	name:			String
 	patternValue:	Object
 	setter:			BlockClosure
@@ -12,6 +13,9 @@ getter
 	- should look like this: [:object | ... ]
 	- the result from evaluating the getter should be a String, Number or Morph
 	- the result is what will be displayed in the SBDomainBlock
+
+isConstant
+	- indicates whether the property is a constant
 
 name
 	- this is the name of the property as a String
@@ -186,9 +190,9 @@ SBPropertyMapping >> isConstant [
 ]
 
 { #category : #accessing }
-SBPropertyMapping >> isConstant: anObject [
+SBPropertyMapping >> isConstant: aBoolean [
 
-	isConstant := anObject
+	isConstant := aBoolean
 ]
 
 { #category : #accessing }

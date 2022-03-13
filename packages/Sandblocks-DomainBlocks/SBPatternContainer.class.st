@@ -1,5 +1,5 @@
 "
-An SBPatternContainer is the visual representation of a pattern matching rule with SBDomainBlocks. It consists of an input and an output pattern (see SBPattern). For the pattern matching see SBPatternMatcher. You can choose a default class that determines the domainBlockMapping for the SBBindingPatterns.
+An SBPatternContainer is the visual representation of a pattern matching rule with SBDomainBlocks. It consists of an input and an output pattern (SBGroupPatterns). For the pattern matching see SBPatternMatcher. You can choose a default class that determines the domainBlockMapping for the SBBindingPatterns.
 
 By applying the case on an input object, the input pattern gets matched on this object and the matched part gets transformed to match the output pattern.
 
@@ -7,7 +7,7 @@ Instance Variables
 	classNameInput:				SBStClassNameInput
 	defaultVisualizationClass:	Class
 	informationRow:				SBRow
-	pattern:							SBBlock (SBPattern)
+	pattern:							SBGroupPattern
 	strategy:							Dictionary
 
 classNameInput
@@ -20,8 +20,7 @@ informationRow
 	- container for all other components
 
 pattern
-	- the input pattern that is matched on
-	- can be every kind of SBPattern
+	- the input SBGroupPattern that is matched on
 
 strategy
 	- a dict to specify the matching strategy
@@ -243,9 +242,9 @@ SBPatternContainer >> pattern [
 ]
 
 { #category : #accessing }
-SBPatternContainer >> pattern: anSBBlock [
+SBPatternContainer >> pattern: anSBGroupPattern [
 
-	pattern := anSBBlock
+	pattern := anSBGroupPattern
 ]
 
 { #category : #'as yet unclassified' }

@@ -2,25 +2,20 @@
 An SBBindingPattern is used to represent a single object visual. It's children are visualized as well recursively.
 
 Instance Variables
-	bindingIndex:					Object
-	constant:						SBBlock
-	labelBindingDict:				Dictionary
-	labelExpressionDict:			Dictionary
+	bindingDict:						Dictionary
+	expressionDict:				Dictionary
 	visualizingClass:				Class
 	writeBackClosure:			BlockClosure
 	writeBackClosureString:		String
-
-bindingIndex
-	- the primitive's binding 
 	
 constant
 	- stores value of sourceObject if it's a constant
 	- can be nil if there is no underlying sourceObject
 
-labelBindingDict
+bindingDict
 	- dictionary of label positions and their bindings
 
-labelExpressionDict
+expressionDict
 	- dictionary of label positions and their values
 
 visualizingClass

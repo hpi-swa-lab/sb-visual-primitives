@@ -3,9 +3,13 @@ An SBEllipsisPattern is used to represent any children of an object. It is an ab
 
 Instance Variables
 	currentSize:		Number
+	isImplicitChild: 		Boolean
 
 currentSize
 	- indicates the current number of children it represents
+
+isImplicitChild
+	- indicates whether the SBEllipsisPattern is implicit
 
 "
 Class {

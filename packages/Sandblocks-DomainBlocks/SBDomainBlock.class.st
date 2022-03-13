@@ -5,8 +5,7 @@ See SBPropertyMappings for the different ways of mapping.
 Instance Variables
 	blockDict:		Dictionary
 	children:			OrderedCollection of SBDomainBlocks
-	labelDict:		Dictionary
-	parent:			SBDomainBlock
+	parent:			Object
 	sourceObject:	Object
 
 blockDict
@@ -15,9 +14,6 @@ blockDict
 
 children
 	- the connected SBDomainBlocks
-
-labelDict
-	- (#labelPosition -> SBBlock)
 
 parent
 	- the parent primitive
@@ -552,9 +548,9 @@ SBDomainBlock >> parent [
 ]
 
 { #category : #accessing }
-SBDomainBlock >> parent: aDomainBlock [
+SBDomainBlock >> parent: anObject [
 
-	parent := aDomainBlock
+	parent := anObject
 ]
 
 { #category : #accessing }

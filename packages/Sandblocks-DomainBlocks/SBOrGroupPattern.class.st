@@ -1,5 +1,11 @@
 "
-An SBOrGroupPattern is xxxxxxxxx.
+An SBOrGroupPattern is an SBGroupPattern with the separator 'or'.
+
+Instance Variables
+	matchingPattern:	Object
+
+matchingPattern
+	- represents the current matching pattern
 
 "
 Class {

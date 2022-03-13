@@ -1,5 +1,6 @@
 "
 An SBPropertyMappingChildren is used to map to and from the children of an SBDomainBlock.
+
 "
 Class {
 	#name : #SBPropertyMappingChildren,

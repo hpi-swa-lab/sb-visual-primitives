@@ -1,25 +1,34 @@
 "
-An SBGroupPattern creates and contains SBBindingPatterns and SBConstraintPatterns. The patterns are seperated with an 'and'.
+An SBGroupPattern creates and contains SBBindingPatterns, SBConstraintPatterns and SBOrGroupPatterns. The patterns are seperated with an 'and'.
 
 Instance Variables
-	row:					SBRow
+	children:				OrderedCollection of SBDomainBlocks, SBConstraintPatterns and/or SBOrGroupPatterns
 	isOutputPattern: 	Boolean
+	parent:				Object
+	row:					SBRow
 
-row
-	- container for SBBindingPatterns, SBConstraintPatterns and the seperator strings
+children
+	- contains the patterns
 
 isOutputPattern
 	- indicates whether this SBGGroupPattern is an output pattern
+
+parent
+	- the parent primitive
+	- also indicates the hierarchy of patterns 
+
+row
+	- container for SBBindingPatterns, SBConstraintPatterns and the seperator strings
 
 "
 Class {
 	#name : #SBGroupPattern,
 	#superclass : #SBStSubstitution,
 	#instVars : [
-		'row',
-		'isOutputPattern',
 		'children',
-		'parent'
+		'isOutputPattern',
+		'parent',
+		'row'
 	],
 	#category : #'Sandblocks-DomainBlocks'
 }
@@ -80,7 +89,8 @@ SBGroupPattern >> addNewAndPattern [
 { #category : #'as yet unclassified' }
 SBGroupPattern >> addNewBindingPattern [
 
-	self flag: #todo. "position of bindingPattern is wrong. Corrects itself when another pattern is deleted"
+	self flag: #todo.
+	"position of bindingPattern is wrong. Corrects itself when another pattern is deleted"
 	self insertNewPattern: SBBindingPattern new
 ]
 

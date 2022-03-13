@@ -1,15 +1,18 @@
 "
-An SBTransformation is the visual representation of a pattern matching rule with SBDomainBlocks. It consists of an input and an output pattern (see SBPattern). For the pattern matching see SBPatternMatcher. You can choose a default class that determines the domainBlockMapping for the SBBindingPatterns.
+An SBTransformation is the visual representation of a pattern matching rule with SBDomainBlocks. It consists of an input and an output pattern (SBGroupPatterns). For the pattern matching see SBPatternMatcher. You can choose a default class that determines the domainBlockMapping for the SBBindingPatterns.
 
 By applying the case on an input object, the input pattern gets matched on this object and the matched part gets transformed to match the output pattern.
 
 Instance Variables
-	outputPattern:		SBBlock (SBPattern)
+	outputPattern:		SBGroupPattern
+	replaceCount:		Number
 
 outputPattern
-	- this is the result of the transformation
-	if true, the root of every SBBindingPattern only matches the root of the input
-	if false, the pattern can also match somewhere else in the input without further specification
+	- this is the result of the transformation visualized as a pattern
+
+replaceCount
+	- indicates the number of matching runs
+	- default is Infinity (find all matches)
 
 "
 Class {
@@ -520,9 +523,9 @@ SBTransformation >> outputPattern [
 ]
 
 { #category : #accessing }
-SBTransformation >> outputPattern: aPattern [
+SBTransformation >> outputPattern: anSBGroupPattern [
 
-	outputPattern := aPattern
+	outputPattern := anSBGroupPattern
 ]
 
 { #category : #accessing }

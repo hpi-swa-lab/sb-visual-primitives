@@ -1,3 +1,7 @@
+"
+A SBPropertyMappingCode is xxxxxxxxx.
+
+"
 Class {
 	#name : #SBPropertyMappingCode,
 	#superclass : #SBPropertyMapping,
