@@ -289,7 +289,7 @@ SBPatternContainer >> toggleImplicitChildTo: aBoolean withBinding: aString on: a
 
 	aSBPattern allChildrenDo: [:child |
 		child bindingIndex = aString ifTrue: [
-			child isImplicitChild: aBoolean.
+			(child isKindOf: SBEllipsisPattern) ifTrue: [child isImplicitChild: aBoolean].
 			^ self]]
 ]
 

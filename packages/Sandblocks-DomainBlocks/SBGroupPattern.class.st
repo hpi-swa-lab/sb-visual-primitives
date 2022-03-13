@@ -274,13 +274,13 @@ SBGroupPattern >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 ]
 
 { #category : #'as yet unclassified' }
-SBGroupPattern >> insertNewPattern: newPattern [
+SBGroupPattern >> insertNewPattern: aPattern [
 
 	self sandblockEditor do: (SBInsertDomainBlockCommand new
 		index: self owner submorphCount + 1;
 		parent: self;
 		container: self owner;
-		morph: newPattern;
+		morph: aPattern;
 		shouldMergeWithNext: false;
 		yourself)
 ]

@@ -501,7 +501,7 @@ SBBindingPattern >> getCurrentPrimitive: aDomainBlock [
 
 { #category : #'as yet unclassified' }
 SBBindingPattern >> getNext: aDomainBlock [
-	"updates the visual primitive the pattern will bind to and returns whether a new binding was found. Whether the binding is correct needs to be checked with matches: withBinding:."
+	"Updates the visual primitive the pattern will bind to and returns whether a new binding was found. Whether the binding is correct needs to be checked with matches: withBinding:."
 
 	| currentPrimitive |
 	currentPrimitive := self getCurrentPrimitive: aDomainBlock.
