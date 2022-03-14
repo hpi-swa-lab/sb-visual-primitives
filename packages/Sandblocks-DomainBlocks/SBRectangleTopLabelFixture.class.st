@@ -7,5 +7,16 @@ Class {
 { #category : #'as yet unclassified' }
 SBRectangleTopLabelFixture class >> domainBlockMapping [
 
-	^ super domainBlockMapping, {SBPropertyMappingString property: #key vpProperty: #innerLabel}
+	^ {
+		#shape vpConstant: (RectangleMorph new
+			color: (Color r: 0.0 g: 1 b: 0.502);
+			changeTableLayout;
+			listCentering: #center;
+			wrapCentering: #center;
+			shrinkWrap;
+			layoutInset: 8;
+			yourself).
+		#identityLabelPosition vpConstant: #bottomCenterLabel.
+		#innerLabel vpStringFor: #key.
+		self childrenMappingEntry}
 ]

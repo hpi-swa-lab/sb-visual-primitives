@@ -20,7 +20,22 @@ SBGameCardHand >> cards [
 ]
 
 { #category : #accessing }
-SBGameCardHand >> cards: anObject [
+SBGameCardHand >> cards: anOrderedCollection [
 
-	cards := anObject
+	cards := anOrderedCollection
+]
+
+{ #category : #accessing }
+SBGameCardHand >> writeSourceOn: aStream [
+
+	aStream
+		nextPutAll: '(';
+		nextPutAll: self className;
+		nextPutAll: ' new cards: {'.
+	
+	self cards do: [:card |
+		card writeSourceOn: aStream.
+		aStream nextPut: $.].
+	
+	aStream nextPutAll: '})'
 ]

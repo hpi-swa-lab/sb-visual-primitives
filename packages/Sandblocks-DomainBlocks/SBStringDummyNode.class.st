@@ -7,7 +7,7 @@ Class {
 { #category : #'as yet unclassified' }
 SBStringDummyNode class >> domainBlockMapping [
 
-	^ {SBPropertyMappingString property: #key vpProperty: #innerLabel. self childrenMappingEntry}
+	^ {#innerLabel vpStringFor: #key. self childrenMappingEntry}
 ]
 
 { #category : #'as yet unclassified' }

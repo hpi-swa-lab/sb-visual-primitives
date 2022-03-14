@@ -4,14 +4,14 @@ Extension { #name : #SBStASTNode }
 SBStASTNode >> visualize [
 	<action>
 
-	| domainblockcontainer objectClass |
-	domainblockcontainer := [(SBDomainBlockContainer code: self copy showCode: false) isImplicit: true]
+	| domainBlockContainer objectClass |
+	domainBlockContainer := [(SBDomainBlockContainer code: self copy) isImplicit: true]
 		on: Error
 		do: [^ false].
 	
 	self sandblockEditor do: (SBReplaceCommand new
 		target: self;
-		replacer: domainblockcontainer;
+		replacer: domainBlockContainer;
 		shouldMergeWithNext: false;
 		yourself).
 	
@@ -23,6 +23,6 @@ SBStASTNode >> visualize [
 			arguments: #()
 			class: objectClass class;
 		body: SBStBlockBody new);
-			  showBelow: domainblockcontainer closeOnDeselect: true.
+			  showBelow: domainBlockContainer closeOnDeselect: true.
 		self inform: 'The class ', objectClass name asString, ' does not implement domainBlockMapping which is required to visualize its instance. Please do so'.]
 ]

@@ -17,7 +17,7 @@ SBSpecialShapeFixture class >> domainBlockMapping [
 			patternValue: (CircleMorph new color: (Color r: 0.5 g: 0.5 b: 0.1))
 			vpProperty: #shape
 			name: 'shape'.
-		SBPropertyMappingNumber property: #key vpProperty: #innerLabel.
+		#innerLabel vpNumberFor: #key.
 		self childrenMappingEntry}
 ]
 
