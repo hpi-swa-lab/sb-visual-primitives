@@ -790,15 +790,15 @@ SBBindingPattern >> writeBackClosure [
 ]
 
 { #category : #'as yet unclassified' }
-SBBindingPattern >> writeBackClosure: anObject [
+SBBindingPattern >> writeBackClosure: aClosure [
 
-	writeBackClosure := anObject isSandblock
+	writeBackClosure := aClosure isSandblock
 		ifTrue: [ | variableBlock |
-			variableBlock := anObject statements first receiver copy.
+			variableBlock := aClosure statements first receiver copy.
 			self innerLabel: variableBlock.
-			self writeBackClosureString: anObject sourceString.
-			anObject evaluate]
-		ifFalse: [anObject]
+			self writeBackClosureString: aClosure sourceString.
+			aClosure evaluate]
+		ifFalse: [aClosure]
 ]
 
 { #category : #'as yet unclassified' }

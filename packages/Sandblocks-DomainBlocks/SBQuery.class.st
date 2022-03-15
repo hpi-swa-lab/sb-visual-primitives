@@ -8,47 +8,26 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBQuery class >> exampleExtractLeafOf: salzstangen [
+SBQuery class >> exampleExtractLeafOf: aNode [
 
-	| newMaybeLeaf currentNode |
+	| newLeaf currentNode |
 	self
 		example: [SBQuery]
 		args: [{((SBDummyNode key: 9) left: ((SBDummyNode key: 10) left: (SBDummyNode key: 7))) showAsDomainBlock}]
 		label: 'example'.
-	currentNode := salzstangen.
+	currentNode := aNode.
 	[
 		(SBQuery
 			pattern: (SBGroupPattern patterns: {
 				SBBindingPattern
 					expressionDict: {#identity -> [currentNode]}
-					children: {SBBindingPattern writeBackClosure: [:var | newMaybeLeaf := var]}})
+					children: {SBBindingPattern writeBackClosure: [:var | newLeaf := var]}})
 			strategy: (Dictionary new
 				add: #explicitRootMatching -> false;
 				add: #explicitChildrenMatching -> false;
 				yourself)
-			visualizePatternsAs: SBDummyNode) query] whileNotNil: [
-		currentNode := newMaybeLeaf.
-		Transcript showln: 'HI'].
+			visualizePatternsAs: SBDummyNode) query] whileNotNil: [currentNode := newLeaf].
 	^ currentNode
-]
-
-{ #category : #'as yet unclassified' }
-SBQuery class >> exampleTwo: salzstangen [
-
-	| gerhard currentSnack |
-	SBExample self: [SBQuery] args: [{SBDummyNode buildTree: {9 -> {10 -> {7}}}}] label: 'example'.
-	currentSnack := salzstangen.
-	[
-		SBQuery
-			pattern: (SBGroupPattern patterns: {
-				SBBindingPattern
-					bindingDict: {#identity -> #c}
-					expressionDict: {#topLeftLabel -> ['REPEAT1']}
-					connections: {SBBindingPattern bindingDict: {#identity -> #b}}})
-			strategy: {#explicitRootMatching -> true} asDictionary] whileNotNil: [
-		Transcript showln: gerhard key.
-		currentSnack := gerhard].
-	^ gerhard
 ]
 
 { #category : #'as yet unclassified' }
@@ -101,11 +80,11 @@ SBQuery class >> pattern: anSBDomainBlockContainer strategy: aDict [
 ]
 
 { #category : #'as yet unclassified' }
-SBQuery class >> pattern: aPattern strategy: aDict visualizePatternsAs: aClass [
+SBQuery class >> pattern: anSBDomainBlockContainer strategy: aDict visualizePatternsAs: aClass [
 	" marker "
 
 	^ self new
-		pattern: aPattern;
+		pattern: anSBDomainBlockContainer;
 		strategy: aDict;
 		defaultVisualizationClass: aClass;
 		yourself
