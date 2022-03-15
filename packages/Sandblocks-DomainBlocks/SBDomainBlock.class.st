@@ -4,7 +4,7 @@ See SBPropertyMappings for the different ways of mapping.
 
 Instance Variables
 	blockDict:		Dictionary
-	children:			OrderedCollection of SBDomainBlocks
+	patternChildren:			OrderedCollection of SBDomainBlocks
 	parent:			Object
 	sourceObject:	Object
 
@@ -12,7 +12,7 @@ blockDict
 	- (#blockPosition -> SBBlock)
 	- stores the blocks that the labels or shape blocks are inserted into
 
-children
+patternChildren
 	- the connected SBDomainBlocks
 
 parent
@@ -29,7 +29,7 @@ Class {
 	#superclass : #SBStSubstitution,
 	#instVars : [
 		'blockDict',
-		'children',
+		'patternChildren',
 		'sourceObject'
 	],
 	#category : #'Sandblocks-DomainBlocks'
@@ -40,7 +40,7 @@ SBDomainBlock class >> buildTree: aCollection [
 
 	^ aCollection collect: [:element |
 		element isVariableBinding
-			ifTrue: [(self new: element key) children: (self buildTree: element value)]
+			ifTrue: [(self new: element key) patternChildren: (self buildTree: element value)]
 			ifFalse: [self new: element]]
 ]
 
@@ -90,20 +90,20 @@ SBDomainBlock class >> selector: aString receiverMatches: aMessage [
 { #category : #'as yet unclassified' }
 SBDomainBlock >> addChild: aDomainBlock [
 
-	self addChild: aDomainBlock afterIndex: self children size
+	self addChild: aDomainBlock afterIndex: self patternChildren size
 ]
 
 { #category : #'as yet unclassified' }
 SBDomainBlock >> addChild: aDomainBlock afterIndex: aNumber [
 
 	aDomainBlock parent ifNotNil: [aDomainBlock parent removeChild: aDomainBlock].
-	self children add: aDomainBlock afterIndex: aNumber
+	self patternChildren add: aDomainBlock afterIndex: aNumber
 ]
 
 { #category : #'as yet unclassified' }
 SBDomainBlock >> addConnectorLinesIn: aMorph [
 
-	self children do: [:child | | connector |
+	self patternChildren do: [:child | | connector |
 		connector := (SBConnectorLine connect: self align: #bottom to: child align: #top)
 			connectorType: #line;
 			lineWidth: 1;
@@ -152,7 +152,7 @@ SBDomainBlock >> addNewParent [
 		parent: self patternParent;
 		container: self owner;
 		siblingIndex: self siblingIndex;
-		children: {self};
+		patternChildren: {self};
 		morph: self buildNewInstance;
 		shouldMergeWithNext: false;
 		yourself)
@@ -168,8 +168,8 @@ SBDomainBlock >> addPropertyMapping: anSBPropertyMapping [
 	propertyMapping vpProperty
 		caseOf: {
 			[#shape] -> [self shape: (propertyMapping getMorphForValue: value)].
-			[#children] -> [
-				self children: OrderedCollection new.
+			[#patternChildren] -> [
+				self patternChildren: OrderedCollection new.
 				value do: [:child |
 					newChild := self owner
 						ifNil: [child asDomainBlock]
@@ -200,7 +200,7 @@ SBDomainBlock >> afterAddLabel: aBlock [
 SBDomainBlock >> allChildrenDo: aBlock [
 
 	aBlock value: self.
-	self children do: [:child | child allChildrenDo: aBlock]
+	self patternChildren do: [:child | child allChildrenDo: aBlock]
 ]
 
 { #category : #'*Sandblocks-DomainBlocks' }
@@ -259,19 +259,19 @@ SBDomainBlock >> buildObject [
 { #category : #'as yet unclassified' }
 SBDomainBlock >> centerChild [
 
-	^ self children ifEmpty: [nil] ifNotEmpty: [self children at: self children size + 1 / 2]
+	^ self patternChildren ifEmpty: [nil] ifNotEmpty: [self patternChildren at: self patternChildren size + 1 / 2]
 ]
 
 { #category : #accessing }
-SBDomainBlock >> children [
+SBDomainBlock >> patternChildren [
 
-	^ children
+	^ patternChildren
 ]
 
 { #category : #accessing }
-SBDomainBlock >> children: aCollection [
+SBDomainBlock >> patternChildren: aCollection [
 
-	children := aCollection asOrderedCollection
+	patternChildren := aCollection asOrderedCollection
 ]
 
 { #category : #'as yet unclassified' }
@@ -346,7 +346,7 @@ SBDomainBlock >> initialize [
 				hResizing: #spaceFill};
 		changeTableLayout;
 		shrinkWrap;
-		children: OrderedCollection new
+		patternChildren: OrderedCollection new
 ]
 
 { #category : #'as yet unclassified' }
@@ -441,8 +441,8 @@ SBDomainBlock >> leftSibling [
 
 	| index |
 	self parent ifNil: [^ nil].
-	index := self parent children indexOf: self.
-	^ index > 1 ifTrue: [self parent children at: index - 1]
+	index := self parent patternChildren indexOf: self.
+	^ index > 1 ifTrue: [self parent patternChildren at: index - 1]
 ]
 
 { #category : #'as yet unclassified' }
@@ -474,7 +474,7 @@ SBDomainBlock >> missingProperties [
 SBDomainBlock >> morphAt: aSymbol [
 
 	(self labelPositions includes: aSymbol) ifTrue: [^ self blockDict at: aSymbol ifPresent: [:block | block firstSubmorphOrNil] ifAbsent: [nil]].
-	aSymbol = #children ifTrue: [^ self children].
+	aSymbol = #patternChildren ifTrue: [^ self patternChildren].
 	aSymbol = #shape ifTrue: [^ self shape]
 ]
 
@@ -626,14 +626,14 @@ SBDomainBlock >> propertyAt: aSymbol [
 			at: aSymbol
 			ifPresent: [:block | (self vpMappingAt: aSymbol) getLabelContents: block]
 			ifAbsent: [nil]].
-	aSymbol = #children ifTrue: [^ self children collect: #buildObject].
+	aSymbol = #patternChildren ifTrue: [^ self patternChildren collect: #buildObject].
 	aSymbol = #shape ifTrue: [^ self shape]
 ]
 
 { #category : #'as yet unclassified' }
 SBDomainBlock >> removeChild: aDomainBlock [
 
-	self children remove: aDomainBlock
+	self patternChildren remove: aDomainBlock
 ]
 
 { #category : #'as yet unclassified' }
@@ -647,8 +647,8 @@ SBDomainBlock >> rightSibling [
 
 	| index |
 	self parent ifNil: [^ nil].
-	index := parent children indexOf: self.
-	index < parent children size ifTrue: [parent children at: index + 1]
+	index := parent patternChildren indexOf: self.
+	index < parent patternChildren size ifTrue: [parent patternChildren at: index + 1]
 ]
 
 { #category : #accessing }
@@ -691,7 +691,7 @@ SBDomainBlock >> shape: aMorph [
 { #category : #'as yet unclassified' }
 SBDomainBlock >> siblingIndex [
 
-	^ self parent ifNil: [0] ifNotNil: [self parent children indexOf: self]
+	^ self parent ifNil: [0] ifNotNil: [self parent patternChildren indexOf: self]
 ]
 
 { #category : #accessing }

@@ -2,25 +2,25 @@
 An SBInsertDomainBlockCommand is used to insert an SBDomainBlock into the current hierarchy.
 
 Instance Variables
-	children:			OrderedCollection of SBDomainBlocks
+	patternChildren:			OrderedCollection of SBDomainBlocks
 	parent:			SBDomainBlock
 	siblingIndex:	Number
 
-children
-	- SBDomainBlocks that will be children of the inserted primitive
+patternChildren
+	- SBDomainBlocks that will be patternChildren of the inserted primitive
 
 parent
 	- parent primitive of the inserted one
 
 siblingIndex
-	- position index of the inserted primitive in the parent's children 
+	- position index of the inserted primitive in the parent's patternChildren 
 
 "
 Class {
 	#name : #SBInsertDomainBlockCommand,
 	#superclass : #SBInsertCommand,
 	#instVars : [
-		'children',
+		'patternChildren',
 		'parent',
 		'siblingIndex'
 	],
@@ -28,26 +28,26 @@ Class {
 }
 
 { #category : #accessing }
-SBInsertDomainBlockCommand >> children [
+SBInsertDomainBlockCommand >> patternChildren [
 
-	^ children
+	^ patternChildren
 ]
 
 { #category : #accessing }
-SBInsertDomainBlockCommand >> children: anOrderedCollection [
+SBInsertDomainBlockCommand >> patternChildren: anOrderedCollection [
 
-	children := anOrderedCollection
+	patternChildren := anOrderedCollection
 ]
 
 { #category : #'as yet unclassified' }
 SBInsertDomainBlockCommand >> do [
 
-	(self parent isBindingPattern not and: [self children notEmpty]) ifTrue: [self parent removeChild: self children first].
-	self children do: [:child | self morph addChild: child].
+	(self parent isBindingPattern not and: [self patternChildren notEmpty]) ifTrue: [self parent removeChild: self patternChildren first].
+	self patternChildren do: [:child | self morph addChild: child].
 	self parent ifNotNil: [
 		self parent
 			addChild: self morph
-			afterIndex: (self siblingIndex ifNotNil: [self siblingIndex - 1] ifNil: [self parent children size]).
+			afterIndex: (self siblingIndex ifNotNil: [self siblingIndex - 1] ifNil: [self parent patternChildren size]).
 		
 		" When adding a new root binding pattern, the row gets deleted and a new one is used.
 		That is why we have to reset the container and index. "
@@ -65,7 +65,7 @@ SBInsertDomainBlockCommand >> do [
 SBInsertDomainBlockCommand >> initialize [
 
 	super initialize.
-	self children: OrderedCollection new
+	self patternChildren: OrderedCollection new
 ]
 
 { #category : #'as yet unclassified' }
@@ -73,7 +73,7 @@ SBInsertDomainBlockCommand >> insertSiblingIndex [
 
 	^ self siblingIndex
 		ifNotNil: [self siblingIndex - 1]
-		ifNil: [self parent children size]
+		ifNil: [self parent patternChildren size]
 ]
 
 { #category : #accessing }
@@ -112,9 +112,9 @@ SBInsertDomainBlockCommand >> undo [
 			" When adding a new root binding pattern, the row gets deleted and a new one is used.
 			That is why we have to reset the container. "
 			container := self parent owner.
-			self children reverseDo: [:child | self parent addChild: child afterIndex: self insertSiblingIndex]]
-		ifNil: [self children do: [:child | self morph removeChild: child]].
-	self morph children do: [:child | child abandon].
+			self patternChildren reverseDo: [:child | self parent addChild: child afterIndex: self insertSiblingIndex]]
+		ifNil: [self patternChildren do: [:child | self morph removeChild: child]].
+	self morph patternChildren do: [:child | child abandon].
 	
 	super undo.
 	case ifNotNil: #buildImplicitChildrenMatchingPattern.

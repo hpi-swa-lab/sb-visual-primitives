@@ -89,7 +89,7 @@ SBConstraintPattern >> buildImplicitChildren: aDict [
 ]
 
 { #category : #'as yet unclassified' }
-SBConstraintPattern >> children [
+SBConstraintPattern >> patternChildren [
 
 	^ {}
 ]
@@ -256,7 +256,7 @@ SBConstraintPattern >> setBindingFor: aDomainBlock in: aCollection [
 { #category : #'as yet unclassified' }
 SBConstraintPattern >> siblingIndex [
 
-	^ self parent ifNil: [0] ifNotNil: [self parent children indexOf: self]
+	^ self parent ifNil: [0] ifNotNil: [self parent patternChildren indexOf: self]
 ]
 
 { #category : #accessing }

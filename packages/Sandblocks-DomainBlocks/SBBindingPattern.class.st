@@ -1,5 +1,5 @@
 "
-An SBBindingPattern is used to represent a single object visual. It's children are visualized as well recursively.
+An SBBindingPattern is used to represent a single object visual. It's patternChildren are visualized as well recursively.
 
 Instance Variables
 	bindingDict:						Dictionary
@@ -48,19 +48,19 @@ SBBindingPattern class >> bindingDict: aDict [
 ]
 
 { #category : #'as yet unclassified' }
-SBBindingPattern class >> bindingDict: aDict children: aCollection [
+SBBindingPattern class >> bindingDict: aDict patternChildren: aCollection [
 
 	^ self new
 		bindingDict: aDict asDictionary;
-		children: aCollection
+		patternChildren: aCollection
 ]
 
 { #category : #'as yet unclassified' }
-SBBindingPattern class >> bindingDict: aDict children: aCollection visualizingClass: aClass [
+SBBindingPattern class >> bindingDict: aDict patternChildren: aCollection visualizingClass: aClass [
 
 	^ self new
 		bindingDict: aDict asDictionary;
-		children: aCollection;
+		patternChildren: aCollection;
 		visualizingClass: aClass
 ]
 
@@ -73,21 +73,21 @@ SBBindingPattern class >> bindingDict: aDict expressionDict: anotherDict [
 ]
 
 { #category : #'as yet unclassified' }
-SBBindingPattern class >> bindingDict: aDict expressionDict: anotherDict children: aCollection [
+SBBindingPattern class >> bindingDict: aDict expressionDict: anotherDict patternChildren: aCollection [
 
 	^ self new
 		bindingDict: aDict asDictionary;
 		expressionDict: anotherDict asDictionary;
-		children: aCollection
+		patternChildren: aCollection
 ]
 
 { #category : #'as yet unclassified' }
-SBBindingPattern class >> bindingDict: aDict expressionDict: anotherDict children: aCollection visualizingClass: aClass [
+SBBindingPattern class >> bindingDict: aDict expressionDict: anotherDict patternChildren: aCollection visualizingClass: aClass [
 
 	^ self new
 		bindingDict: aDict asDictionary;
 		expressionDict: anotherDict asDictionary;
-		children: aCollection;
+		patternChildren: aCollection;
 		visualizingClass: aClass
 ]
 
@@ -132,19 +132,19 @@ SBBindingPattern class >> expressionDict: aDict bindingDict: anotherDict visuali
 ]
 
 { #category : #'as yet unclassified' }
-SBBindingPattern class >> expressionDict: aDict children: aCollection [
+SBBindingPattern class >> expressionDict: aDict patternChildren: aCollection [
 
 	^ self new
 		expressionDict: aDict asDictionary;
-		children: aCollection
+		patternChildren: aCollection
 ]
 
 { #category : #'as yet unclassified' }
-SBBindingPattern class >> expressionDict: aDict children: aCollection visualizingClass: aClass [
+SBBindingPattern class >> expressionDict: aDict patternChildren: aCollection visualizingClass: aClass [
 
 	^ self new
 		expressionDict: aDict asDictionary;
-		children: aCollection;
+		patternChildren: aCollection;
 		visualizingClass: aClass
 ]
 
@@ -166,7 +166,7 @@ SBBindingPattern class >> identityName [
 SBBindingPattern class >> matches: aBlock [
 	"match any resonable combination of constructor arguments"
 
-	^ (({#bindingDict:. #expressionDict:. #bindingDict:expressionDict:} gather: [:symbol | {symbol. symbol, #children:}]) gather: [:symbol | {symbol. symbol, #visualizingClass:}]), {#writeBackClosure:. #writeBackClosure:children:} anySatisfy: [:methodName | self selector: methodName receiverMatches: aBlock]
+	^ (({#bindingDict:. #expressionDict:. #bindingDict:expressionDict:} gather: [:symbol | {symbol. symbol, #patternChildren:}]) gather: [:symbol | {symbol. symbol, #visualizingClass:}]), {#writeBackClosure:. #writeBackClosure:patternChildren:} anySatisfy: [:methodName | self selector: methodName receiverMatches: aBlock]
 ]
 
 { #category : #'as yet unclassified' }
@@ -175,7 +175,7 @@ SBBindingPattern class >> newFor: aBlock [
 	| selectors arguments |
 	selectors := aBlock selector findTokens: ':'.
 	arguments := aBlock arguments with: selectors collect: [:argument :selector |
-		selector = 'children' ifTrue: [argument childSandblocks] ifFalse: [
+		selector = 'patternChildren' ifTrue: [argument childSandblocks] ifFalse: [
 			selector = 'writeBackClosure'
 				ifTrue: [argument]
 				ifFalse: [[argument evaluate] on: Error do: [{self identityName -> aBlock sourceString}]]]].
@@ -187,16 +187,16 @@ SBBindingPattern class >> newFor: aBlock [
 SBBindingPattern class >> writeBackClosure: aClosure [
 	"should look like [:var | yourVariable := var]"
 
-	^ self writeBackClosure: aClosure children: {}
+	^ self writeBackClosure: aClosure patternChildren: {}
 ]
 
 { #category : #'as yet unclassified' }
-SBBindingPattern class >> writeBackClosure: aClosure children: aCollection [
+SBBindingPattern class >> writeBackClosure: aClosure patternChildren: aCollection [
 	"should look like [:var | yourVariable := var]"
 
 	^ self new
 		writeBackClosure: aClosure;
-		children: aCollection
+		patternChildren: aCollection
 ]
 
 { #category : #'as yet unclassified' }
@@ -317,7 +317,7 @@ SBBindingPattern >> buildFromBinding: aDict [
 	output := self constant
 		ifNotNil: [self constant value asDomainBlock]
 		ifNil: [(aDict at: self bindingIndex) copy].
-	output children: (self buildChildrenFromBinding: aDict).
+	output patternChildren: (self buildChildrenFromBinding: aDict).
 	output addPropertyMappings: self expressionMappings.
 	self labelBindingDict keysAndValuesDo: [:labelPosition :bindingName | output addPropertyMapping: labelPosition -> (aDict at: bindingName)].
 	^ {output}
@@ -673,7 +673,7 @@ SBBindingPattern >> rebuild [
 SBBindingPattern >> removeImplicitChildren [
 
 	self patternChildren select: #isImplicitChild thenDo: #abandon.
-	self children: (self children reject: #isImplicitChild).
+	self patternChildren: (self patternChildren reject: #isImplicitChild).
 	self patternChildren do: #removeImplicitChildren
 ]
 
@@ -864,8 +864,8 @@ SBBindingPattern >> writeSourceOn: aStream [
 					ifNotNil: [:mapping | mapping writeExpression: value on: aStream]]]].
 	
 	self patternChildren ifNotEmpty: [
-		aStream nextPutAll: ' children: {'.
-		(self children reject: [:child | child isImplicitChild]) do: [:child |
+		aStream nextPutAll: ' patternChildren: {'.
+		(self patternChildren reject: [:child | child isImplicitChild]) do: [:child |
 			child writeSourceOn: aStream.
 			aStream nextPut: $.].
 		aStream nextPut: $}].

@@ -25,8 +25,8 @@ strategy
 			- if false, the pattern can also match somewhere else in the input without further specification
 		- #explicitChildrenMatching -> true
 			- if true, every child has to be specified explicitly
-			- if false, the pattern can also match if the specified children have more siblings than the pattern has
-		- if there are no children specified in the pattern, an SBEllipsisPattern is implicitely added
+			- if false, the pattern can also match if the specified patternChildren have more siblings than the pattern has
+		- if there are no patternChildren specified in the pattern, an SBEllipsisPattern is implicitely added
 
 visitedPrimitives
 	- set of all visited primitives during the pattern matching
@@ -64,7 +64,7 @@ SBPatternMatcher >> build: aPattern fromBinding: anArray currentPrimitive: aDoma
 	subtreeRoot := self searchStack last.
 	^ aDomainBlock = subtreeRoot
 		ifTrue: [(aPattern buildFromBinding: anArray) first]
-		ifFalse: [aDomainBlock copy children: (aDomainBlock children collect: [:primitive | self build: aPattern fromBinding: anArray currentPrimitive: primitive])]
+		ifFalse: [aDomainBlock copy patternChildren: (aDomainBlock patternChildren collect: [:primitive | self build: aPattern fromBinding: anArray currentPrimitive: primitive])]
 ]
 
 { #category : #accessing }
@@ -88,7 +88,7 @@ SBPatternMatcher >> dealWithUndefinedResult [
 	(self strategy at: #explicitRootMatching ifAbsent: [true]) ifTrue: [^ nil].
 	
 	[self searchStack notEmpty] whileTrue: [
-		self currentPrimitive children do: [:aChild |
+		self currentPrimitive patternChildren do: [:aChild |
 			(self visitedPrimitives includes: aChild) ifFalse: [
 				self pattern reset.
 				self performedMatch: false.

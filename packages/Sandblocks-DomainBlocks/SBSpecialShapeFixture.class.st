@@ -44,13 +44,13 @@ SBSpecialShapeFixture class >> exampleBuildHeapSpecialShape: aTree [
 		input: (SBGroupPattern patterns: {
 			SBBindingPattern
 				bindingDict: {#identity -> #a}
-				children: {
+				patternChildren: {
 					SBEllipsisPattern
 						bindingDict: {#identity -> #b}
 						visualizingClass: SBSpecialShapeFixture.
 					SBBindingPattern
 						bindingDict: {#identity -> #boi}
-						children: {
+						patternChildren: {
 							SBEllipsisPattern
 								bindingDict: {#identity -> #e}
 								visualizingClass: SBSpecialShapeFixture}
@@ -63,13 +63,13 @@ SBSpecialShapeFixture class >> exampleBuildHeapSpecialShape: aTree [
 		output: (SBGroupPattern patterns: {
 			SBBindingPattern
 				bindingDict: {#identity -> #boi}
-				children: {
+				patternChildren: {
 					SBEllipsisPattern
 						bindingDict: {#identity -> #b}
 						visualizingClass: SBSpecialShapeFixture.
 					SBBindingPattern
 						bindingDict: {#identity -> #a}
-						children: {
+						patternChildren: {
 							SBEllipsisPattern
 								bindingDict: {#identity -> #e}
 								visualizingClass: SBSpecialShapeFixture}

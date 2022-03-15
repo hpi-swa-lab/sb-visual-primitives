@@ -28,7 +28,7 @@ SBRelInsertDomainBlockCommand >> do [
 SBRelInsertDomainBlockCommand >> morphIndexInChildren [
 
 	^ self adjacent
-		ifNil: [self before ifTrue: [0] ifFalse: [self container children size]]
+		ifNil: [self before ifTrue: [0] ifFalse: [self container patternChildren size]]
 		ifNotNil: [ | indexInRow actualAdjacent |
 			actualAdjacent := self container row
 				submorphThat: [:submorph | (self adjacent hasOwner: submorph) or: [submorph = self adjacent]]

@@ -33,11 +33,11 @@ SBStringDummyNode class >> exampleBuildHeapStrings: aTree [
 		input: (SBGroupPattern patterns: {
 			SBBindingPattern
 				bindingDict: {#identity -> #a}
-				children: {
+				patternChildren: {
 					SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBStringDummyNode.
 					SBBindingPattern
 						bindingDict: {#identity -> #toSort}
-						children: {SBEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBStringDummyNode}
+						patternChildren: {SBEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBStringDummyNode}
 						visualizingClass: SBStringDummyNode.
 					SBEllipsisPattern bindingDict: {#identity -> #d} visualizingClass: SBStringDummyNode}
 				visualizingClass: SBStringDummyNode.
@@ -45,11 +45,11 @@ SBStringDummyNode class >> exampleBuildHeapStrings: aTree [
 		output: (SBGroupPattern patterns: {
 			SBBindingPattern
 				bindingDict: {#identity -> #toSort}
-				children: {
+				patternChildren: {
 					SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBStringDummyNode.
 					SBBindingPattern
 						bindingDict: {#identity -> #a}
-						children: {SBEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBStringDummyNode}
+						patternChildren: {SBEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBStringDummyNode}
 						visualizingClass: SBStringDummyNode.
 					SBEllipsisPattern bindingDict: {#identity -> #d} visualizingClass: SBStringDummyNode}
 				visualizingClass: SBStringDummyNode})
@@ -84,11 +84,11 @@ SBStringDummyNode >> exampleBuildHeapStrings: aTree [
 		input: (SBGroupPattern patterns: {
 			SBBindingPattern
 				bindingDict: {#identity -> #a}
-				children: {
+				patternChildren: {
 					SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBStringDummyNode.
 					SBBindingPattern
 						bindingDict: {#identity -> #toSort}
-						children: {SBEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBStringDummyNode}
+						patternChildren: {SBEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBStringDummyNode}
 						visualizingClass: SBStringDummyNode.
 					SBEllipsisPattern bindingDict: {#identity -> #d} visualizingClass: SBStringDummyNode}
 				visualizingClass: SBStringDummyNode.
@@ -96,11 +96,11 @@ SBStringDummyNode >> exampleBuildHeapStrings: aTree [
 		output: (SBGroupPattern patterns: {
 			SBBindingPattern
 				bindingDict: {#identity -> #toSort}
-				children: {
+				patternChildren: {
 					SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBStringDummyNode.
 					SBBindingPattern
 						bindingDict: {#identity -> #a}
-						children: {SBEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBStringDummyNode}
+						patternChildren: {SBEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBStringDummyNode}
 						visualizingClass: SBStringDummyNode.
 					SBEllipsisPattern bindingDict: {#identity -> #d} visualizingClass: SBStringDummyNode}
 				visualizingClass: SBStringDummyNode})

@@ -2,12 +2,12 @@
 An SBGroupPattern creates and contains SBBindingPatterns, SBConstraintPatterns and SBOrGroupPatterns. The patterns are seperated with an 'and'.
 
 Instance Variables
-	children:				OrderedCollection of SBDomainBlocks, SBConstraintPatterns and/or SBOrGroupPatterns
+	patternChildren:				OrderedCollection of SBDomainBlocks, SBConstraintPatterns and/or SBOrGroupPatterns
 	isOutputPattern: 	Boolean
 	parent:				Object
 	row:					SBRow
 
-children
+patternChildren
 	- contains the patterns
 
 isOutputPattern
@@ -25,7 +25,7 @@ Class {
 	#name : #SBGroupPattern,
 	#superclass : #SBStSubstitution,
 	#instVars : [
-		'children',
+		'patternChildren',
 		'isOutputPattern'
 	],
 	#category : #'Sandblocks-DomainBlocks'
@@ -46,13 +46,13 @@ SBGroupPattern class >> matches: aBlock [
 { #category : #'as yet unclassified' }
 SBGroupPattern class >> newFor: aBlock [
 
-	^ self new children: aBlock arguments first submorphs
+	^ self new patternChildren: aBlock arguments first submorphs
 ]
 
 { #category : #'as yet unclassified' }
 SBGroupPattern class >> patterns: aCollection [
 
-	^ self new children: aCollection
+	^ self new patternChildren: aCollection
 ]
 
 { #category : #'as yet unclassified' }
@@ -67,14 +67,14 @@ SBGroupPattern class >> selector: aString receiverMatches: aMessage [
 SBGroupPattern >> addChild: aDomainBlock afterIndex: aNumber [
 
 	aDomainBlock parent ifNotNil: [aDomainBlock parent removeChild: aDomainBlock].
-	self children add: aDomainBlock afterIndex: aNumber.
+	self patternChildren add: aDomainBlock afterIndex: aNumber.
 	self openPatternAsChild: aDomainBlock
 ]
 
 { #category : #'as yet unclassified' }
 SBGroupPattern >> addImplicitChildren: anArray [
 
-	self children do: [:pattern | pattern addImplicitChildren: anArray]
+	self patternChildren do: [:pattern | pattern addImplicitChildren: anArray]
 ]
 
 { #category : #'as yet unclassified' }
@@ -135,28 +135,28 @@ SBGroupPattern >> addSeparatorsAround: aPattern [
 { #category : #'as yet unclassified' }
 SBGroupPattern >> addToWorld: aWorld [
 
-	self children do: [:pattern | pattern addToWorld: aWorld].
+	self patternChildren do: [:pattern | pattern addToWorld: aWorld].
 	aWorld addMorphBack: self
 ]
 
 { #category : #'as yet unclassified' }
 SBGroupPattern >> allChildrenDo: aBlock [
 
-	self children do: [:child | child allChildrenDo: aBlock]
+	self patternChildren do: [:child | child allChildrenDo: aBlock]
 ]
 
 { #category : #'as yet unclassified' }
 SBGroupPattern >> buildFromBinding: anArray [
 
 	self flag: #TODO.
-	"Support multiple children"
-	^ self children first buildFromBinding: anArray
+	"Support multiple patternChildren"
+	^ self patternChildren first buildFromBinding: anArray
 ]
 
 { #category : #'as yet unclassified' }
 SBGroupPattern >> buildImplicitChildren: anArray [
 
-	self children do: [:pattern | pattern buildImplicitChildren: anArray]
+	self patternChildren do: [:pattern | pattern buildImplicitChildren: anArray]
 ]
 
 { #category : #'insert/delete' }
@@ -166,27 +166,27 @@ SBGroupPattern >> canDeleteChild: aBlock [
 ]
 
 { #category : #accessing }
-SBGroupPattern >> children [
+SBGroupPattern >> patternChildren [
 
-	^ children
+	^ patternChildren
 ]
 
 { #category : #accessing }
-SBGroupPattern >> children: aCollection [
+SBGroupPattern >> patternChildren: aCollection [
 
-	children := aCollection asOrderedCollection
+	patternChildren := aCollection asOrderedCollection
 ]
 
 { #category : #'as yet unclassified' }
 SBGroupPattern >> collectBindingsInto: aCollection [
 
-	self children do: [:child | child collectBindingsInto: aCollection]
+	self patternChildren do: [:child | child collectBindingsInto: aCollection]
 ]
 
 { #category : #'as yet unclassified' }
 SBGroupPattern >> collectIdentityBindingsInto: aCollection [
 
-	self children do: [:child | child collectIdentityBindingsInto: aCollection]
+	self patternChildren do: [:child | child collectIdentityBindingsInto: aCollection]
 ]
 
 { #category : #'as yet unclassified' }
@@ -211,7 +211,7 @@ SBGroupPattern >> deleteCommandFor: aBlock [
 { #category : #'pattern matching' }
 SBGroupPattern >> findConstant [
 
-	self children do: [:child | child findConstant ifNotNil: [:constant | ^ constant]].
+	self patternChildren do: [:child | child findConstant ifNotNil: [:constant | ^ constant]].
 	^ nil
 ]
 
@@ -230,7 +230,7 @@ SBGroupPattern >> fixedNumberOfChildren [
 { #category : #'as yet unclassified' }
 SBGroupPattern >> getNext: aDomainBlock [
 
-	self children do: [:pattern | (pattern getNext: aDomainBlock) ifFalse: [pattern reset] ifTrue: [^ true]].
+	self patternChildren do: [:pattern | (pattern getNext: aDomainBlock) ifFalse: [pattern reset] ifTrue: [^ true]].
 	^ false
 ]
 
@@ -263,7 +263,7 @@ SBGroupPattern >> initialize [
 		layoutInset: 4;
 		cellInset: 3;
 		cellPositioning: #center;
-		children: OrderedCollection new
+		patternChildren: OrderedCollection new
 ]
 
 { #category : #'insert/delete' }
@@ -329,7 +329,7 @@ SBGroupPattern >> label [
 { #category : #'as yet unclassified' }
 SBGroupPattern >> matches: aDomainBlock withBinding: aCollection [
 
-	^ self children allSatisfy: [:pattern | pattern matches: aDomainBlock withBinding: aCollection]
+	^ self patternChildren allSatisfy: [:pattern | pattern matches: aDomainBlock withBinding: aCollection]
 ]
 
 { #category : #'as yet unclassified' }
@@ -406,20 +406,20 @@ SBGroupPattern >> rebuild [
 { #category : #'as yet unclassified' }
 SBGroupPattern >> removeChild: aDomainBlock [
 
-	self children remove: aDomainBlock.
+	self patternChildren remove: aDomainBlock.
 	self resetVisualization
 ]
 
 { #category : #'as yet unclassified' }
 SBGroupPattern >> removeImplicitChildren [
 
-	self children do: [:child | child removeImplicitChildren]
+	self patternChildren do: [:child | child removeImplicitChildren]
 ]
 
 { #category : #'as yet unclassified' }
 SBGroupPattern >> reset [
 
-	self children do: [:pattern | pattern reset]
+	self patternChildren do: [:pattern | pattern reset]
 ]
 
 { #category : #'as yet unclassified' }
@@ -427,7 +427,7 @@ SBGroupPattern >> resetVisualization [
 
 	self patternContainer ifNotNil: [
 		self removeAllMorphs.
-		self children do: [:aPattern | self openPatternAsChild: aPattern]]
+		self patternChildren do: [:aPattern | self openPatternAsChild: aPattern]]
 ]
 
 { #category : #accessing }
@@ -439,20 +439,20 @@ SBGroupPattern >> separatorString [
 { #category : #accessing }
 SBGroupPattern >> setBindingFor: aDomainBlock in: aCollection [
 
-	^ self children allSatisfy: [:pattern | pattern setBindingFor: aDomainBlock in: aCollection]
+	^ self patternChildren allSatisfy: [:pattern | pattern setBindingFor: aDomainBlock in: aCollection]
 ]
 
 { #category : #'as yet unclassified' }
 SBGroupPattern >> siblingIndex [
 
-	^ self parent ifNil: [0] ifNotNil: [self parent children indexOf: self]
+	^ self parent ifNil: [0] ifNotNil: [self parent patternChildren indexOf: self]
 ]
 
 { #category : #printing }
 SBGroupPattern >> writeSourceOn: aStream [
 
 	aStream nextPutAll: '(', self class name, ' patterns: {'.
-	(self children reject: [:pattern | pattern isImplicitChild]) do: [:pattern |
+	(self patternChildren reject: [:pattern | pattern isImplicitChild]) do: [:pattern |
 		pattern writeSourceOn: aStream.
 		aStream nextPut: $.].
 	aStream nextPutAll: '})'

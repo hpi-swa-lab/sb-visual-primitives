@@ -22,12 +22,12 @@ SBGrammarObject class >> domainBlockMapping [
 		
 		SBPropertyMappingChildren
 			getter: [:object | object members ifNil: [{object content} asOrderedCollection]]
-			setter: [:object :children |
-				children size < 1 ifTrue: [] ifFalse: [
-					children size > 1
-						ifTrue: [object members: children]
-						ifFalse: [object content: children first]]]
-			vpProperty: #children}
+			setter: [:object :patternChildren |
+				patternChildren size < 1 ifTrue: [] ifFalse: [
+					patternChildren size > 1
+						ifTrue: [object members: patternChildren]
+						ifFalse: [object content: patternChildren first]]]
+			vpProperty: #patternChildren}
 ]
 
 { #category : #'as yet unclassified' }
@@ -85,7 +85,7 @@ SBGrammarObject >> exampleGrammarRuleMergeWithExpression: aGrammarObject [
 			SBBindingPattern
 				bindingDict: {#identity -> #a}
 				expressionDict: {#topLeftLabel -> [variableType]}
-				children: {
+				patternChildren: {
 					SBBindingPattern
 						bindingDict: {#identity -> #b}
 						expressionDict: {#topLeftLabel -> ['SYMBOL']}
@@ -93,7 +93,7 @@ SBGrammarObject >> exampleGrammarRuleMergeWithExpression: aGrammarObject [
 					SBBindingPattern
 						bindingDict: {#identity -> #c}
 						expressionDict: {#topLeftLabel -> ['REPEAT']}
-						children: {
+						patternChildren: {
 							SBBindingPattern
 								bindingDict: {#identity -> #d}
 								expressionDict: {#topLeftLabel -> ['SYMBOL']}
@@ -105,7 +105,7 @@ SBGrammarObject >> exampleGrammarRuleMergeWithExpression: aGrammarObject [
 			SBBindingPattern
 				bindingDict: {#identity -> #c}
 				expressionDict: {#topLeftLabel -> ['REPEAT1']}
-				children: {SBBindingPattern bindingDict: {#identity -> #b} visualizingClass: SBGrammarObject}
+				patternChildren: {SBBindingPattern bindingDict: {#identity -> #b} visualizingClass: SBGrammarObject}
 				visualizingClass: SBGrammarObject})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> false;

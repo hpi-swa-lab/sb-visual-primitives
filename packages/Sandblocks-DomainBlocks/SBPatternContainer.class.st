@@ -30,8 +30,8 @@ strategy
 			- if false, the pattern can also match somewhere else in the input without further specification
 		- #explicitChildrenMatching -> true
 			- if true, every child has to be specified explicitly
-			- if false, the pattern can also match if the specified children have more siblings than the pattern has
-		- if there are no children specified in the pattern, an SBEllipsisPattern is implicitely added
+			- if false, the pattern can also match if the specified patternChildren have more siblings than the pattern has
+		- if there are no patternChildren specified in the pattern, an SBEllipsisPattern is implicitely added
 
 "
 Class {
@@ -58,7 +58,7 @@ SBPatternContainer class >> buttonSpecifications [
 		self childrenStrategy -> {
 			#index -> 2.
 			#icons -> {true -> SBIcon iconChild. false -> SBIcon iconEyeSlash} asDictionary.
-			#text -> {true -> 'explicit children'. false -> 'implicit children'} asDictionary} asDictionary} asDictionary
+			#text -> {true -> 'explicit patternChildren'. false -> 'implicit patternChildren'} asDictionary} asDictionary} asDictionary
 ]
 
 { #category : #'as yet unclassified' }
@@ -250,9 +250,9 @@ SBPatternContainer >> pattern: anSBGroupPattern [
 { #category : #'as yet unclassified' }
 SBPatternContainer >> patternRoots [
 
-	^ self pattern children isEmpty
+	^ self pattern patternChildren isEmpty
 		ifTrue: [nil]
-		ifFalse: [self pattern children select: [:child | child isKindOf: SBBindingPattern]]
+		ifFalse: [self pattern patternChildren select: [:child | child isKindOf: SBBindingPattern]]
 ]
 
 { #category : #accessing }

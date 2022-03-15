@@ -43,7 +43,7 @@ SBTreeLayoutPolicy >> apportion: aPattern defaultAncestor: aDefaultAncestor [
 			shift := (self xOf: vil) + sil - ((self xOf: vir) + sir) + (self distance: aPattern).
 			
 			shift > 0 ifTrue: [ | a |
-				a := (aPattern parent children includes: (self ancestorOf: vil))
+				a := (aPattern parent patternChildren includes: (self ancestorOf: vil))
 					ifTrue: [self ancestorOf: vil]
 					ifFalse: [newDefaultAncestor].
 				self moveSubtree: aPattern by: shift of: a.
@@ -95,7 +95,7 @@ SBTreeLayoutPolicy >> executeShifts: aPattern [
 	| shift change |
 	shift := 0.
 	change := 0.
-	aPattern children reverseDo: [:child |
+	aPattern patternChildren reverseDo: [:child |
 		self setXOf: child to: (self xOf: child) + shift.
 		self setModOf: child to: (self modOf: child) + shift.
 		change := change + (self changeOf: child).
@@ -116,16 +116,16 @@ SBTreeLayoutPolicy >> firstWalk: aPattern [
 	| left |
 	left := aPattern leftSibling.
 	
-	aPattern children
+	aPattern patternChildren
 		ifEmpty: [self setXOf: aPattern to: (self distance: aPattern) + (left ifNil: [0] ifNotNil: [self xOf: left])]
 		ifNotEmpty: [ | defaultAncestor midpoint dist |
-			defaultAncestor := aPattern children first.
-			aPattern children do: [:child |
+			defaultAncestor := aPattern patternChildren first.
+			aPattern patternChildren do: [:child |
 				self setDepthOf: child to: (self depthOf: aPattern) + 1.
 				self firstWalk: child.
 				defaultAncestor := self apportion: child defaultAncestor: defaultAncestor].
 			self executeShifts: aPattern.
-			midpoint := (self xOf: aPattern children first) - (self distance: aPattern children first) + (self xOf: aPattern children last) / 2.
+			midpoint := (self xOf: aPattern patternChildren first) - (self distance: aPattern patternChildren first) + (self xOf: aPattern patternChildren last) / 2.
 			dist := self distance: aPattern.
 			left ifNil: [self setXOf: aPattern to: midpoint + (dist / 2)] ifNotNil: [
 				self setXOf: aPattern to: (self xOf: left) + dist.
@@ -181,7 +181,7 @@ SBTreeLayoutPolicy >> layoutDataAt: aPattern [
 SBTreeLayoutPolicy >> leftMostSibling: aPattern [
 
 	^ aPattern parent ifNotNil: [ | left |
-		left := aPattern parent children first.
+		left := aPattern parent patternChildren first.
 		left = aPattern ifFalse: [left]]
 ]
 
@@ -190,7 +190,7 @@ SBTreeLayoutPolicy >> maximumHeight: aPattern [
 
 	| height |
 	height := aPattern fullBounds height.
-	aPattern children do: [:child | height := height max: (self maximumHeight: child)].
+	aPattern patternChildren do: [:child | height := height max: (self maximumHeight: child)].
 	^ height
 ]
 
@@ -230,17 +230,17 @@ SBTreeLayoutPolicy >> moveSubtree: aPattern by: aShiftValue of: aParentPattern [
 { #category : #layouting }
 SBTreeLayoutPolicy >> nextLeft: aPattern [
 
-	^ aPattern children
+	^ aPattern patternChildren
 		ifEmpty: [self threadOf: aPattern]
-		ifNotEmpty: [aPattern children first]
+		ifNotEmpty: [aPattern patternChildren first]
 ]
 
 { #category : #layouting }
 SBTreeLayoutPolicy >> nextRight: aPattern [
 
-	^ aPattern children
+	^ aPattern patternChildren
 		ifEmpty: [self threadOf: aPattern]
-		ifNotEmpty: [aPattern children last]
+		ifNotEmpty: [aPattern patternChildren last]
 ]
 
 { #category : #'initialize-release' }
@@ -255,7 +255,7 @@ SBTreeLayoutPolicy >> secondWalk: aPattern modSum: aValue layerHeights: anotherV
 	aPattern
 		fullBounds;
 		center: (self xOf: aPattern) + aValue - ((self distance: aPattern) / 2) @ (anotherValue * (self depthOf: aPattern)).
-	aPattern children do: [:child | self secondWalk: child modSum: aValue + (self modOf: aPattern) layerHeights: anotherValue]
+	aPattern patternChildren do: [:child | self secondWalk: child modSum: aValue + (self modOf: aPattern) layerHeights: anotherValue]
 ]
 
 { #category : #layouting }
@@ -268,7 +268,7 @@ SBTreeLayoutPolicy >> secondWalkExtent: aPattern modSum: aValue layerHeights: an
 	bounds := Rectangle
 		center: (self xOf: aPattern) + aValue - ((self distance: aPattern) / 2) @ (anotherValue * (self depthOf: aPattern))
 		extent: aPattern extent.
-	aPattern children do: [:child | bounds := bounds merge: (self secondWalkExtent: child modSum: aValue + (self modOf: aPattern) layerHeights: anotherValue)].
+	aPattern patternChildren do: [:child | bounds := bounds merge: (self secondWalkExtent: child modSum: aValue + (self modOf: aPattern) layerHeights: anotherValue)].
 	^ bounds
 ]
 

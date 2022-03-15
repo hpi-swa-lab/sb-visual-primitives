@@ -45,8 +45,8 @@ SBWildcardPattern >> buildFromBinding: anArray currentPrimitive: aDomainBlock [
 	
 	output := aDomainBlock copy.
 	aDomainBlock = leaf
-		ifTrue: [output children: (self buildChildrenFromBinding: anArray)]
-		ifFalse: [output children: (aDomainBlock children collect: [:primitive | self buildFromBinding: anArray currentPrimitive: primitive])].
+		ifTrue: [output patternChildren: (self buildChildrenFromBinding: anArray)]
+		ifFalse: [output patternChildren: (aDomainBlock patternChildren collect: [:primitive | self buildFromBinding: anArray currentPrimitive: primitive])].
 	^ output
 ]
 
@@ -69,10 +69,10 @@ SBWildcardPattern >> exampleExtractLeaf: aTree [
 		input: (SBGroupPattern patterns: {
 			SBBindingPattern
 				bindingDict: {#identity -> #root}
-				children: {
+				patternChildren: {
 					SBWildcardPattern
 						bindingDict: {#identity -> #pathToLeaf}
-						children: {SBBindingPattern bindingDict: {#identity -> #leaf} visualizingClass: SBDummyNode}
+						patternChildren: {SBBindingPattern bindingDict: {#identity -> #leaf} visualizingClass: SBDummyNode}
 						visualizingClass: SBDummyNode}
 				visualizingClass: SBDummyNode})
 		output: (SBGroupPattern patterns: {SBBindingPattern bindingDict: {#identity -> #leaf} visualizingClass: SBDummyNode})
@@ -100,21 +100,21 @@ SBWildcardPattern >> exampleExtractNodeWithTwoChildren: aTree [
 		input: (SBGroupPattern patterns: {
 			SBBindingPattern
 				bindingDict: {#identity -> #root}
-				children: {
+				patternChildren: {
 					SBWildcardPattern
 						bindingDict: {#identity -> #pathToNode}
-						children: {
+						patternChildren: {
 							SBBindingPattern
 								bindingDict: {#identity -> #node}
-								children: {SBEllipsisPattern bindingDict: {#identity -> #children} visualizingClass: SBDummyNode}
+								patternChildren: {SBEllipsisPattern bindingDict: {#identity -> #patternChildren} visualizingClass: SBDummyNode}
 								visualizingClass: SBDummyNode}
 						visualizingClass: SBDummyNode}
 				visualizingClass: SBDummyNode.
-			SBConstraintPattern constraint: [:bindings | (bindings at: #children) size = 2]})
+			SBConstraintPattern constraint: [:bindings | (bindings at: #patternChildren) size = 2]})
 		output: (SBGroupPattern patterns: {
 			SBBindingPattern
 				bindingDict: {#identity -> #node}
-				children: {SBEllipsisPattern bindingDict: {#identity -> #children} visualizingClass: SBDummyNode}
+				patternChildren: {SBEllipsisPattern bindingDict: {#identity -> #patternChildren} visualizingClass: SBDummyNode}
 				visualizingClass: SBDummyNode})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> true;
@@ -138,7 +138,7 @@ SBWildcardPattern >> getNext: aDomainBlock [
 		self pushToStack: aDomainBlock.
 		^ true].
 	[self searchStack notEmpty] whileTrue: [
-		self currentTop children do: [:child |
+		self currentTop patternChildren do: [:child |
 			(self visitedPrimitives includes: child) ifFalse: [
 				self pushToStack: child.
 				self resetChildren.

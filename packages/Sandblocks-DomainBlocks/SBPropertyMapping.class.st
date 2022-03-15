@@ -28,7 +28,7 @@ setter
 
 vpProperty
 	- specifies where the mapping will be applied in the visual primitive
-	- can be #shape #children or a labelPosition, e.g. #innerLabel or #topLeftLabel (see SBDomainBlock >> labelPositions) 
+	- can be #shape #patternChildren or a labelPosition, e.g. #innerLabel or #topLeftLabel (see SBDomainBlock >> labelPositions) 
 
 "
 Class {

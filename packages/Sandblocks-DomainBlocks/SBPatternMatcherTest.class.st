@@ -28,11 +28,11 @@ SBPatternMatcherTest >> buildTree: aCollection [
 SBPatternMatcherTest >> examplePatternChildSmallerThanParent [
 
 	^ SBGroupPattern patterns: {
-		SBBindingPattern bindingDict: {#identity -> #a} children: {
+		SBBindingPattern bindingDict: {#identity -> #a} patternChildren: {
 			SBEllipsisPattern bindingDict: {#identity -> #b}.
 			SBBindingPattern
 				bindingDict: {#identity -> #c}
-				children: {SBEllipsisPattern bindingDict: {#identity -> #e}}}.
+				patternChildren: {SBEllipsisPattern bindingDict: {#identity -> #e}}}.
 		SBEllipsisPattern bindingDict: {#identity -> #d}.
 		SBConstraintPattern constraint: [:bindings | (bindings at: #c) key < (bindings at: #a) key]}
 ]
@@ -41,11 +41,11 @@ SBPatternMatcherTest >> examplePatternChildSmallerThanParent [
 SBPatternMatcherTest >> examplePatternChildSmallerThanParentOutput [
 
 	^ SBGroupPattern patterns: {
-		SBBindingPattern bindingDict: {#identity -> #c} children: {
+		SBBindingPattern bindingDict: {#identity -> #c} patternChildren: {
 			SBEllipsisPattern bindingDict: {#identity -> #b}.
 			SBBindingPattern
 				bindingDict: {#identity -> #a}
-				children: {SBEllipsisPattern bindingDict: {#identity -> #e}}.
+				patternChildren: {SBEllipsisPattern bindingDict: {#identity -> #e}}.
 			SBEllipsisPattern bindingDict: {#identity -> #d}}}
 ]
 
@@ -55,7 +55,7 @@ SBPatternMatcherTest >> examplePatternSimpleTree [
 	^ SBGroupPattern patterns: {
 		SBBindingPattern
 			bindingDict: {#identity -> #a}
-			children: {SBBindingPattern bindingDict: {#identity -> #b}. SBBindingPattern bindingDict: {#identity -> #c}}.
+			patternChildren: {SBBindingPattern bindingDict: {#identity -> #b}. SBBindingPattern bindingDict: {#identity -> #c}}.
 		SBConstraintPattern constraint: [:bindings | (bindings at: #a) key = ((bindings at: #b) key + (bindings at: #c) key)]}
 ]
 
@@ -64,7 +64,7 @@ SBPatternMatcherTest >> examplePatternSimpleTreeOutput [
 
 	^ SBBindingPattern
 		bindingDict: {#identity -> #a}
-		children: {SBBindingPattern bindingDict: {#identity -> #c}. SBBindingPattern bindingDict: {#identity -> #b}}
+		patternChildren: {SBBindingPattern bindingDict: {#identity -> #c}. SBBindingPattern bindingDict: {#identity -> #b}}
 ]
 
 { #category : #'as yet unclassified' }
@@ -79,15 +79,15 @@ SBPatternMatcherTest >> examplePatternSingleNode [
 SBPatternMatcherTest >> examplePatternSortTree [
 
 	^ SBGroupPattern patterns: {
-		SBWildcardPattern bindingDict: {#identity -> #f} children: {
+		SBWildcardPattern bindingDict: {#identity -> #f} patternChildren: {
 			SBEllipsisPattern bindingDict: {#identity -> #g}.
-			SBBindingPattern bindingDict: {#identity -> #a} children: {
+			SBBindingPattern bindingDict: {#identity -> #a} patternChildren: {
 				SBBindingPattern
 					bindingDict: {#identity -> #b}
-					children: {SBEllipsisPattern bindingDict: {#identity -> #d}}.
+					patternChildren: {SBEllipsisPattern bindingDict: {#identity -> #d}}.
 				SBBindingPattern
 					bindingDict: {#identity -> #c}
-					children: {SBEllipsisPattern bindingDict: {#identity -> #e}}}.
+					patternChildren: {SBEllipsisPattern bindingDict: {#identity -> #e}}}.
 			SBEllipsisPattern bindingDict: {#identity -> #h}}.
 		SBConstraintPattern constraint: [:bindings | (bindings at: #b) key > (bindings at: #c) key]}
 ]
@@ -96,15 +96,15 @@ SBPatternMatcherTest >> examplePatternSortTree [
 SBPatternMatcherTest >> examplePatternSortTreeOutput [
 
 	^ SBGroupPattern patterns: {
-		SBWildcardPattern bindingDict: {#identity -> #f} children: {
+		SBWildcardPattern bindingDict: {#identity -> #f} patternChildren: {
 			SBEllipsisPattern bindingDict: {#identity -> #g}.
-			SBBindingPattern bindingDict: {#identity -> #a} children: {
+			SBBindingPattern bindingDict: {#identity -> #a} patternChildren: {
 				SBBindingPattern
 					bindingDict: {#identity -> #c}
-					children: {SBEllipsisPattern bindingDict: {#identity -> #e}}.
+					patternChildren: {SBEllipsisPattern bindingDict: {#identity -> #e}}.
 				SBBindingPattern
 					bindingDict: {#identity -> #b}
-					children: {SBEllipsisPattern bindingDict: {#identity -> #d}}}.
+					patternChildren: {SBEllipsisPattern bindingDict: {#identity -> #d}}}.
 			SBEllipsisPattern bindingDict: {#identity -> #h}}}
 ]
 
@@ -112,15 +112,15 @@ SBPatternMatcherTest >> examplePatternSortTreeOutput [
 SBPatternMatcherTest >> examplePatternTreeWithEllipses [
 
 	^ SBGroupPattern patterns: {
-		SBWildcardPattern bindingDict: {#identity -> #d} children: {
+		SBWildcardPattern bindingDict: {#identity -> #d} patternChildren: {
 			SBEllipsisPattern bindingDict: {#identity -> #e}.
-			SBBindingPattern bindingDict: {#identity -> #a} children: {
+			SBBindingPattern bindingDict: {#identity -> #a} patternChildren: {
 				SBBindingPattern
 					bindingDict: {#identity -> #b}
-					children: {SBEllipsisPattern bindingDict: {#identity -> #f}}.
+					patternChildren: {SBEllipsisPattern bindingDict: {#identity -> #f}}.
 				SBBindingPattern
 					bindingDict: {#identity -> #c}
-					children: {SBEllipsisPattern bindingDict: {#identity -> #g}}}.
+					patternChildren: {SBEllipsisPattern bindingDict: {#identity -> #g}}}.
 			SBEllipsisPattern bindingDict: {#identity -> #h}}.
 		SBConstraintPattern constraint: [:bindings | (bindings at: #a) key = ((bindings at: #b) key + (bindings at: #c) key)]}
 ]
@@ -131,7 +131,7 @@ SBPatternMatcherTest >> examplePatternTreeWithLabeledEllipses [
 	^ SBGroupPattern patterns: {
 		SBBindingPattern
 			bindingDict: {#identity -> #a}
-			children: {SBEllipsisPattern bindingDict: {#identity -> #b}. SBBindingPattern bindingDict: {#identity -> #c}}}
+			patternChildren: {SBEllipsisPattern bindingDict: {#identity -> #b}. SBBindingPattern bindingDict: {#identity -> #c}}}
 ]
 
 { #category : #'as yet unclassified' }
@@ -140,7 +140,7 @@ SBPatternMatcherTest >> examplePatternTreeWithLabeledEllipsesOutput [
 	^ SBGroupPattern patterns: {
 		SBBindingPattern
 			bindingDict: {#identity -> #a}
-			children: {SBBindingPattern bindingDict: {#identity -> #c}. SBEllipsisPattern bindingDict: {#identity -> #b}}}
+			patternChildren: {SBBindingPattern bindingDict: {#identity -> #c}. SBEllipsisPattern bindingDict: {#identity -> #b}}}
 ]
 
 { #category : #'as yet unclassified' }
@@ -149,7 +149,7 @@ SBPatternMatcherTest >> examplePatternTwoNodes [
 	^ SBGroupPattern patterns: {
 		SBBindingPattern
 			bindingDict: {#identity -> #a}
-			children: {SBBindingPattern bindingDict: {#identity -> #b}}.
+			patternChildren: {SBBindingPattern bindingDict: {#identity -> #b}}.
 		SBConstraintPattern constraint: [:bindings | (bindings at: #a) key = ((bindings at: #b) key + 10)]}
 ]
 
@@ -157,33 +157,33 @@ SBPatternMatcherTest >> examplePatternTwoNodes [
 SBPatternMatcherTest >> examplePatternTwoNodesWithLabeledWildcard [
 
 	^ SBGroupPattern patterns: {
-		SBBindingPattern bindingDict: {#identity -> #a} children: {
-			SBWildcardPattern bindingDict: {#identity -> #c} children: {
+		SBBindingPattern bindingDict: {#identity -> #a} patternChildren: {
+			SBWildcardPattern bindingDict: {#identity -> #c} patternChildren: {
 				SBBindingPattern
 					bindingDict: {#identity -> #b}
-					children: {SBWildcardPattern bindingDict: {#identity -> #d}}}}.
+					patternChildren: {SBWildcardPattern bindingDict: {#identity -> #d}}}}.
 		SBConstraintPattern constraint: [:bindings | (bindings at: #a) key = ((bindings at: #b) key + 10)]}
 ]
 
 { #category : #'as yet unclassified' }
 SBPatternMatcherTest >> examplePatternTwoNodesWithLabeledWildcardOutput [
 
-	^ SBBindingPattern bindingDict: {#identity -> #a} children: {
-		SBWildcardPattern bindingDict: {#identity -> #d} children: {
+	^ SBBindingPattern bindingDict: {#identity -> #a} patternChildren: {
+		SBWildcardPattern bindingDict: {#identity -> #d} patternChildren: {
 			SBWildcardPattern
 				bindingDict: {#identity -> #c}
-				children: {SBBindingPattern bindingDict: {#identity -> #b}}}}
+				patternChildren: {SBBindingPattern bindingDict: {#identity -> #b}}}}
 ]
 
 { #category : #'as yet unclassified' }
 SBPatternMatcherTest >> examplePatternTwoNodesWithWildcard [
 
 	^ SBGroupPattern patterns: {
-		SBBindingPattern bindingDict: {#identity -> #a} children: {
-			SBWildcardPattern bindingDict: {#identity -> #c} children: {
+		SBBindingPattern bindingDict: {#identity -> #a} patternChildren: {
+			SBWildcardPattern bindingDict: {#identity -> #c} patternChildren: {
 				SBBindingPattern
 					bindingDict: {#identity -> #b}
-					children: {SBWildcardPattern bindingDict: {#identity -> #d}}}}.
+					patternChildren: {SBWildcardPattern bindingDict: {#identity -> #d}}}}.
 		SBConstraintPattern constraint: [:bindings | (bindings at: #a) key = ((bindings at: #b) key + 10)]}
 ]
 
@@ -191,12 +191,12 @@ SBPatternMatcherTest >> examplePatternTwoNodesWithWildcard [
 SBPatternMatcherTest >> examplePatternTwoWildcardList [
 
 	^ SBGroupPattern patterns: {
-		SBWildcardPattern bindingDict: {#identity -> #c} children: {
-			SBBindingPattern bindingDict: {#identity -> #a} children: {
-				SBWildcardPattern bindingDict: {#identity -> #d} children: {
+		SBWildcardPattern bindingDict: {#identity -> #c} patternChildren: {
+			SBBindingPattern bindingDict: {#identity -> #a} patternChildren: {
+				SBWildcardPattern bindingDict: {#identity -> #d} patternChildren: {
 					SBBindingPattern
 						bindingDict: {#identity -> #b}
-						children: {SBWildcardPattern bindingDict: {#identity -> #e}}}}}.
+						patternChildren: {SBWildcardPattern bindingDict: {#identity -> #e}}}}}.
 		SBConstraintPattern constraint: [:bindings | (bindings at: #a) key = ((bindings at: #b) key + 10)]}
 ]
 
@@ -205,15 +205,15 @@ SBPatternMatcherTest >> exampleWithConstants: anObject [
 
 	^ (SBTransformation
 		input: (SBGroupPattern patterns: {
-			SBBindingPattern expressionDict: {#identity -> [anObject]} children: {
+			SBBindingPattern expressionDict: {#identity -> [anObject]} patternChildren: {
 				SBBindingPattern
 					bindingDict: {#identity -> #a}
-					children: {SBEllipsisPattern bindingDict: {#identity -> #b}}}})
+					patternChildren: {SBEllipsisPattern bindingDict: {#identity -> #b}}}})
 		output: (SBGroupPattern patterns: {
-			SBBindingPattern bindingDict: {#identity -> #a} children: {
+			SBBindingPattern bindingDict: {#identity -> #a} patternChildren: {
 				SBBindingPattern
 					expressionDict: {#identity -> [anObject]}
-					children: {SBEllipsisPattern bindingDict: {#identity -> #b}}}})
+					patternChildren: {SBEllipsisPattern bindingDict: {#identity -> #b}}}})
 		strategy: {#explicitRootMatching -> false} asDictionary
 		visualizePatternsAs: SBDummyNode
 		replaceCount: Float infinity) value
@@ -225,9 +225,9 @@ SBPatternMatcherTest >> getLabelList: aPrimitive [
 	| currentPrimitive list |
 	list := OrderedCollection new.
 	currentPrimitive := aPrimitive.
-	[currentPrimitive children notEmpty] whileTrue: [
+	[currentPrimitive patternChildren notEmpty] whileTrue: [
 		list add: (currentPrimitive propertyAt: #innerLabel) asInteger.
-		currentPrimitive := currentPrimitive children first].
+		currentPrimitive := currentPrimitive patternChildren first].
 	list add: (currentPrimitive propertyAt: #innerLabel) asInteger.
 	^ list
 ]
@@ -235,9 +235,9 @@ SBPatternMatcherTest >> getLabelList: aPrimitive [
 { #category : #'as yet unclassified' }
 SBPatternMatcherTest >> getLabelTree: aPrimitive [
 
-	^ aPrimitive children
+	^ aPrimitive patternChildren
 		ifEmpty: [(aPrimitive propertyAt: #innerLabel) asInteger]
-		ifNotEmpty: [(aPrimitive propertyAt: #innerLabel) asInteger -> (aPrimitive children collect: [:child | self getLabelTree: child]) asArray]
+		ifNotEmpty: [(aPrimitive propertyAt: #innerLabel) asInteger -> (aPrimitive patternChildren collect: [:child | self getLabelTree: child]) asArray]
 ]
 
 { #category : #'as yet unclassified' }

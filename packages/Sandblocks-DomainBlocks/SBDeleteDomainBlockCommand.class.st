@@ -1,5 +1,5 @@
 "
-An SBDeleteDomainBlockCommand is a Command to remove an SBDomainBlock. It's removed from its world and hirachy. The Morphs in the primitive's children will be abandoned, too.
+An SBDeleteDomainBlockCommand is a Command to remove an SBDomainBlock. It's removed from its world and hirachy. The Morphs in the primitive's patternChildren will be abandoned, too.
 
 Instance Variables
 	oldParent:			SBBlock
@@ -9,7 +9,7 @@ oldParent
 	- saves the previous parent for do and undo
 
 oldSiblingIndex
-	- previous position index of the deleted primitive in the parent's children
+	- previous position index of the deleted primitive in the parent's patternChildren
 
 "
 Class {

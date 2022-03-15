@@ -21,7 +21,7 @@ SBDummyNode class >> buildTreePrivate: aCollection [
 
 	^ aCollection collect: [:element |
 		element isVariableBinding
-			ifTrue: [(self key: element key) children: (self buildTreePrivate: element value)]
+			ifTrue: [(self key: element key) patternChildren: (self buildTreePrivate: element value)]
 			ifFalse: [self key: element]]
 ]
 
@@ -31,14 +31,14 @@ SBDummyNode class >> childrenMappingEntry [
 	^ SBPropertyMapping
 		getter: [:object | {object left. object right} reject: [:child | child isNil]]
 		setter: [:object :vp |
-			vp children size >= 1
-				ifTrue: [object left: vp children first buildObject]
+			vp patternChildren size >= 1
+				ifTrue: [object left: vp patternChildren first buildObject]
 				ifFalse: [object left: nil].
-			vp children size >= 2
-				ifTrue: [object right: vp children second buildObject]
+			vp patternChildren size >= 2
+				ifTrue: [object right: vp patternChildren second buildObject]
 				ifFalse: [object right: nil]]
-		vpProperty: #children
-		name: 'children'
+		vpProperty: #patternChildren
+		name: 'patternChildren'
 ]
 
 { #category : #'as yet unclassified' }
@@ -65,7 +65,7 @@ SBDummyNode class >> key: anObject [
 ]
 
 { #category : #'as yet unclassified' }
-SBDummyNode >> children: aCollection [
+SBDummyNode >> patternChildren: aCollection [
 
 	self left: (aCollection size >= 1 ifTrue: [aCollection first]).
 	self right: (aCollection size >= 2 ifTrue: [aCollection second])
@@ -79,11 +79,11 @@ SBDummyNode >> exampleColorAccentDecorator [
 		input: (SBGroupPattern patterns: {
 			SBBindingPattern
 				bindingDict: {#identity -> #a}
-				children: {
+				patternChildren: {
 					SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBDummyNode.
 					SBBindingPattern
 						bindingDict: {#identity -> #boi}
-						children: {SBEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBDummyNode}
+						patternChildren: {SBEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBDummyNode}
 						visualizingClass: SBDummyNode.
 					SBEllipsisPattern bindingDict: {#identity -> #d} visualizingClass: SBDummyNode}
 				visualizingClass: SBDummyNode.
@@ -91,11 +91,11 @@ SBDummyNode >> exampleColorAccentDecorator [
 		output: (SBGroupPattern patterns: {
 			SBBindingPattern
 				bindingDict: {#identity -> #boi}
-				children: {
+				patternChildren: {
 					SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBDummyNode.
 					SBBindingPattern
 						bindingDict: {#identity -> #a}
-						children: {SBEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBDummyNode}
+						patternChildren: {SBEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBDummyNode}
 						visualizingClass: SBDummyNode.
 					SBEllipsisPattern bindingDict: {#identity -> #d} visualizingClass: SBDummyNode}
 				visualizingClass: SBDummyNode})
@@ -114,11 +114,11 @@ SBDummyNode >> exampleHeapTransformation [
 		input: (SBGroupPattern patterns: {
 			SBBindingPattern
 				bindingDict: {#identity -> #a}
-				children: {
+				patternChildren: {
 					SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBDummyNode.
 					SBBindingPattern
 						bindingDict: {#identity -> #boi}
-						children: {SBEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBDummyNode}
+						patternChildren: {SBEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBDummyNode}
 						visualizingClass: SBDummyNode.
 					SBEllipsisPattern bindingDict: {#identity -> #d} visualizingClass: SBDummyNode}
 				visualizingClass: SBDummyNode.
@@ -126,11 +126,11 @@ SBDummyNode >> exampleHeapTransformation [
 		output: (SBGroupPattern patterns: {
 			SBBindingPattern
 				bindingDict: {#identity -> #boi}
-				children: {
+				patternChildren: {
 					SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBDummyNode.
 					SBBindingPattern
 						bindingDict: {#identity -> #a}
-						children: {SBEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBDummyNode}
+						patternChildren: {SBEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBDummyNode}
 						visualizingClass: SBDummyNode.
 					SBEllipsisPattern bindingDict: {#identity -> #d} visualizingClass: SBDummyNode}
 				visualizingClass: SBDummyNode})
@@ -165,24 +165,24 @@ SBDummyNode >> exampleMultipleBindings: aTree [
 		input: (SBGroupPattern patterns: {
 			SBBindingPattern
 				bindingDict: {#identity -> #a}
-				children: {
+				patternChildren: {
 					SBEllipsisPattern bindingDict: {#identity -> #aa} visualizingClass: SBDummyNode.
 					SBBindingPattern
 						bindingDict: {#identity -> #boi}
-						children: {SBEllipsisPattern bindingDict: {#identity -> #ac} visualizingClass: SBDummyNode}
+						patternChildren: {SBEllipsisPattern bindingDict: {#identity -> #ac} visualizingClass: SBDummyNode}
 						visualizingClass: SBDummyNode.
 					SBEllipsisPattern bindingDict: {#identity -> #ab} visualizingClass: SBDummyNode}
 				visualizingClass: SBDummyNode.
 			SBConstraintPattern constraint: [:bindings | false].
-			SBBindingPattern bindingDict: {#identity -> #a} children: {} visualizingClass: SBDummyNode})
+			SBBindingPattern bindingDict: {#identity -> #a} patternChildren: {} visualizingClass: SBDummyNode})
 		output: (SBGroupPattern patterns: {
 			SBBindingPattern
 				bindingDict: {#identity -> #boi}
-				children: {
+				patternChildren: {
 					SBEllipsisPattern bindingDict: {#identity -> #aa} visualizingClass: SBDummyNode.
 					SBBindingPattern
 						bindingDict: {#identity -> #a}
-						children: {SBEllipsisPattern bindingDict: {#identity -> #ac} visualizingClass: SBDummyNode}
+						patternChildren: {SBEllipsisPattern bindingDict: {#identity -> #ac} visualizingClass: SBDummyNode}
 						visualizingClass: SBDummyNode.
 					SBEllipsisPattern bindingDict: {#identity -> #ab} visualizingClass: SBDummyNode}
 				visualizingClass: SBDummyNode})
@@ -219,11 +219,11 @@ SBDummyNode >> exampleMultipleTransformations: aTree [
 		input: (SBGroupPattern patterns: {
 			SBBindingPattern
 				bindingDict: {#identity -> #a}
-				children: {
+				patternChildren: {
 					SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBDummyNode.
 					SBBindingPattern
 						bindingDict: {#identity -> #boi}
-						children: {SBEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBDummyNode}
+						patternChildren: {SBEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBDummyNode}
 						visualizingClass: SBDummyNode.
 					SBEllipsisPattern bindingDict: {#identity -> #d} visualizingClass: SBDummyNode}
 				visualizingClass: SBDummyNode.
@@ -231,11 +231,11 @@ SBDummyNode >> exampleMultipleTransformations: aTree [
 		output: (SBGroupPattern patterns: {
 			SBBindingPattern
 				bindingDict: {#identity -> #boi}
-				children: {
+				patternChildren: {
 					SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBDummyNode.
 					SBBindingPattern
 						bindingDict: {#identity -> #a}
-						children: {SBEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBDummyNode}
+						patternChildren: {SBEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBDummyNode}
 						visualizingClass: SBDummyNode.
 					SBEllipsisPattern bindingDict: {#identity -> #d} visualizingClass: SBDummyNode}
 				visualizingClass: SBDummyNode})

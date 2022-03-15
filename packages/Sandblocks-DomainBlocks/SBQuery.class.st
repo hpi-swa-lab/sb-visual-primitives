@@ -21,7 +21,7 @@ SBQuery class >> exampleExtractLeafOf: salzstangen [
 			pattern: (SBGroupPattern patterns: {
 				SBBindingPattern
 					expressionDict: {#identity -> [currentNode]}
-					children: {SBBindingPattern writeBackClosure: [:var | newMaybeLeaf := var]}})
+					patternChildren: {SBBindingPattern writeBackClosure: [:var | newMaybeLeaf := var]}})
 			strategy: (Dictionary new
 				add: #explicitRootMatching -> false;
 				add: #explicitChildrenMatching -> false;

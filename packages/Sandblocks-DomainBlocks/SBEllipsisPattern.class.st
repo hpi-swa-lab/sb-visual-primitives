@@ -1,12 +1,12 @@
 "
-An SBEllipsisPattern is used to represent any children of an object. It is an abstraction to sum up many children and it is used for pattern matching if the number of children doesn't matter.
+An SBEllipsisPattern is used to represent any patternChildren of an object. It is an abstraction to sum up many patternChildren and it is used for pattern matching if the number of patternChildren doesn't matter.
 
 Instance Variables
 	currentSize:		Number
 	isImplicitChild: 		Boolean
 
 currentSize
-	- indicates the current number of children it represents
+	- indicates the current number of patternChildren it represents
 
 isImplicitChild
 	- indicates whether the SBEllipsisPattern is implicit
@@ -56,10 +56,10 @@ SBEllipsisPattern >> buildImplicitChildren: anArray [
 ]
 
 { #category : #accessing }
-SBEllipsisPattern >> children: aCollection [
+SBEllipsisPattern >> patternChildren: aCollection [
 
-	self assert: aCollection isEmpty description: 'Ellipses should not have children'.
-	super children: aCollection
+	self assert: aCollection isEmpty description: 'Ellipses should not have patternChildren'.
+	super patternChildren: aCollection
 ]
 
 { #category : #'as yet unclassified' }
@@ -163,7 +163,7 @@ SBEllipsisPattern >> reset [
 { #category : #'as yet unclassified' }
 SBEllipsisPattern >> searchRootFor: aDomainBlock at: anIndex [
 
-	^ aDomainBlock children copyFrom: anIndex to: anIndex + self indexOffset
+	^ aDomainBlock patternChildren copyFrom: anIndex to: anIndex + self indexOffset
 ]
 
 { #category : #'as yet unclassified' }

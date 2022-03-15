@@ -145,22 +145,22 @@ SBTransformation >> exampleDeleteNodeInside: aTree [
 		label: 'example'.
 	"Nodes that do not appear in the output pattern, are simply left out / deleted."
 	self flag: #bug.
-	"building the implicit children seems to not work."
+	"building the implicit patternChildren seems to not work."
 	^ (SBTransformation
 		input: (SBGroupPattern patterns: {
 			SBBindingPattern
 				bindingDict: {#identity -> #parent}
-				children: {
+				patternChildren: {
 					SBBindingPattern
 						bindingDict: {#identity -> #nodeWeWantToDelete}
-						children: {}
+						patternChildren: {}
 						visualizingClass: SBDummyNode}
 				visualizingClass: SBDummyNode.
 			SBConstraintPattern constraint: [:bindings | (bindings at: #nodeWeWantToDelete) key = 42]})
 		output: (SBGroupPattern patterns: {
 			SBBindingPattern
 				bindingDict: {#identity -> #parent}
-				children: {}
+				patternChildren: {}
 				visualizingClass: SBDummyNode})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> false;
@@ -189,17 +189,17 @@ SBTransformation >> exampleEllipsisPatternWithLabel: aDummyNode [
 		input: (SBGroupPattern patterns: {
 			SBBindingPattern
 				bindingDict: {#identity -> #a}
-				children: {
+				patternChildren: {
 					SBBindingPattern
 						bindingDict: {#identity -> #b}
-						children: {
+						patternChildren: {
 							SBEllipsisPattern
 								bindingDict: {#innerLabel -> #g. #identity -> #bChildren}
 								visualizingClass: SBDummyNode}
 						visualizingClass: SBDummyNode.
 					SBBindingPattern
 						bindingDict: {#identity -> #c}
-						children: {
+						patternChildren: {
 							SBEllipsisPattern
 								bindingDict: {#innerLabel -> #g. #identity -> #cChildren}
 								visualizingClass: SBDummyNode}
@@ -208,10 +208,10 @@ SBTransformation >> exampleEllipsisPatternWithLabel: aDummyNode [
 		output: (SBGroupPattern patterns: {
 			SBBindingPattern
 				bindingDict: {#identity -> #a}
-				children: {
+				patternChildren: {
 					SBBindingPattern
 						bindingDict: {#identity -> #b}
-						children: {SBEllipsisPattern bindingDict: {#identity -> #bChildren} visualizingClass: SBDummyNode}
+						patternChildren: {SBEllipsisPattern bindingDict: {#identity -> #bChildren} visualizingClass: SBDummyNode}
 						visualizingClass: SBDummyNode.
 					SBBindingPattern bindingDict: {#identity -> #c} visualizingClass: SBDummyNode}
 				visualizingClass: SBDummyNode})
@@ -238,7 +238,7 @@ SBTransformation >> exampleInsertWithExpression: aTree [
 		output: (SBGroupPattern patterns: {
 			SBBindingPattern
 				bindingDict: {#identity -> #a}
-				children: {SBBindingPattern expressionDict: {#identity -> [newNode]} visualizingClass: SBDummyNode}
+				patternChildren: {SBBindingPattern expressionDict: {#identity -> [newNode]} visualizingClass: SBDummyNode}
 				visualizingClass: SBDummyNode})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> true;
@@ -256,11 +256,11 @@ SBTransformation >> exampleMissingBindingsAreMarked: aTree [
 		input: (SBGroupPattern patterns: {
 			SBBindingPattern
 				bindingDict: {#identity -> #g}
-				children: {
+				patternChildren: {
 					SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBDummyNode.
 					SBBindingPattern
 						bindingDict: {#identity -> #boi}
-						children: {SBEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBDummyNode}
+						patternChildren: {SBEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBDummyNode}
 						visualizingClass: SBDummyNode.
 					SBEllipsisPattern bindingDict: {#identity -> #d} visualizingClass: SBDummyNode}
 				visualizingClass: SBDummyNode.
@@ -268,11 +268,11 @@ SBTransformation >> exampleMissingBindingsAreMarked: aTree [
 		output: (SBGroupPattern patterns: {
 			SBBindingPattern
 				bindingDict: {#identity -> #boi}
-				children: {
+				patternChildren: {
 					SBBindingPattern bindingDict: {#identity -> #notFound} visualizingClass: SBDummyNode.
 					SBBindingPattern
 						bindingDict: {#identity -> #a}
-						children: {SBEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBDummyNode}
+						patternChildren: {SBEllipsisPattern bindingDict: {#identity -> #e} visualizingClass: SBDummyNode}
 						visualizingClass: SBDummyNode.
 					SBEllipsisPattern bindingDict: {#identity -> #d} visualizingClass: SBDummyNode}
 				visualizingClass: SBDummyNode})
@@ -304,13 +304,13 @@ SBTransformation >> exampleTransformInputAsOftenAsPossible: aTree [
 		input: (SBGroupPattern patterns: {
 			SBBindingPattern
 				bindingDict: {#identity -> #parent}
-				children: {
+				patternChildren: {
 					SBEllipsisPattern
 						bindingDict: {#identity -> #leftSiblings}
 						visualizingClass: SBDummyNode.
 					SBBindingPattern
 						bindingDict: {#identity -> #child}
-						children: {
+						patternChildren: {
 							SBEllipsisPattern
 								bindingDict: {#identity -> #grandchildren}
 								visualizingClass: SBDummyNode}
@@ -323,13 +323,13 @@ SBTransformation >> exampleTransformInputAsOftenAsPossible: aTree [
 		output: (SBGroupPattern patterns: {
 			SBBindingPattern
 				bindingDict: {#identity -> #child}
-				children: {
+				patternChildren: {
 					SBEllipsisPattern
 						bindingDict: {#identity -> #leftSiblings}
 						visualizingClass: SBDummyNode.
 					SBBindingPattern
 						bindingDict: {#identity -> #parent}
-						children: {
+						patternChildren: {
 							SBEllipsisPattern
 								bindingDict: {#identity -> #grandchildren}
 								visualizingClass: SBDummyNode}
@@ -357,20 +357,20 @@ SBTransformation >> exampleTransformInputDifferentStrategies: aTree [
 					left: ((SBDummyNode key: 2) left: (SBDummyNode key: 3));
 					right: ((SBDummyNode key: 4) left: (SBDummyNode key: 5))) showAsDomainBlock}]
 		label: 'example'.
-	"Compare this one to the exampleTransformInputAsOftenAsPossible. Our Pattern Matching supports 'root matching' (anchor the first node at the tree's root) and 'subtree matching' (the first node can by any node in the tree, the remaining matching only happens on that node's subtree). The children can also explicit (must be there 
+	"Compare this one to the exampleTransformInputAsOftenAsPossible. Our Pattern Matching supports 'root matching' (anchor the first node at the tree's root) and 'subtree matching' (the first node can by any node in the tree, the remaining matching only happens on that node's subtree). The patternChildren can also explicit (must be there 
 for a match) and implicit (may or may not be there)"
 	"You can toggle between the strategies using the buttons"
 	^ (SBTransformation
 		input: (SBGroupPattern patterns: {
 			SBBindingPattern
 				bindingDict: {#identity -> #parent}
-				children: {SBBindingPattern bindingDict: {#identity -> #child} visualizingClass: SBDummyNode}
+				patternChildren: {SBBindingPattern bindingDict: {#identity -> #child} visualizingClass: SBDummyNode}
 				visualizingClass: SBDummyNode.
 			SBConstraintPattern constraint: [:bindings | (bindings at: #parent) key < (bindings at: #child) key]})
 		output: (SBGroupPattern patterns: {
 			SBBindingPattern
 				bindingDict: {#identity -> #child}
-				children: {SBBindingPattern bindingDict: {#identity -> #parent} visualizingClass: SBDummyNode}
+				patternChildren: {SBBindingPattern bindingDict: {#identity -> #parent} visualizingClass: SBDummyNode}
 				visualizingClass: SBDummyNode})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> true;
@@ -441,19 +441,19 @@ SBTransformation >> exampleWithConstants: aDummyNode [
 		input: (SBGroupPattern patterns: {
 			SBBindingPattern
 				expressionDict: {#identity -> [currentNode]}
-				children: {
+				patternChildren: {
 					SBBindingPattern
 						bindingDict: {#identity -> #a}
-						children: {SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBDummyNode}
+						patternChildren: {SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBDummyNode}
 						visualizingClass: SBDummyNode}
 				visualizingClass: SBDummyNode})
 		output: (SBGroupPattern patterns: {
 			SBBindingPattern
 				bindingDict: {#identity -> #a}
-				children: {
+				patternChildren: {
 					SBBindingPattern
 						expressionDict: {#identity -> [currentNode]}
-						children: {SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBDummyNode}
+						patternChildren: {SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBDummyNode}
 						visualizingClass: SBDummyNode}
 				visualizingClass: SBDummyNode})
 		strategy: (Dictionary new

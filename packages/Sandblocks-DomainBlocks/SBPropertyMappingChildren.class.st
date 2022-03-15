@@ -1,5 +1,5 @@
 "
-An SBPropertyMappingChildren is used to map to and from the children of an SBDomainBlock.
+An SBPropertyMappingChildren is used to map to and from the patternChildren of an SBDomainBlock.
 
 "
 Class {
@@ -13,9 +13,9 @@ SBPropertyMappingChildren class >> defaultGetterBlockWith: aSymbol [
 
 	^ aSymbol isSymbol
 		ifTrue: [
-			[:object | | children |
-				children := object perform: aSymbol asSimpleGetter.
-				children ifNil: [nil] ifNotNil: [children reject: [:entry | entry isNil]]]]
+			[:object | | patternChildren |
+				patternChildren := object perform: aSymbol asSimpleGetter.
+				patternChildren ifNil: [nil] ifNotNil: [patternChildren reject: [:entry | entry isNil]]]]
 		ifFalse: [[:object | aSymbol]]
 ]
 
@@ -24,9 +24,9 @@ SBPropertyMappingChildren class >> defaultSetterBlockWith: aSymbol for: ignored 
 
 	^ aSymbol isSymbol
 		ifTrue: [
-			[:object :vp | | children |
-				children := vp propertyAt: #children.
-				(children notNil and: [children notEmpty]) ifTrue: [object perform: aSymbol asSimpleSetter with: children]]]
+			[:object :vp | | patternChildren |
+				patternChildren := vp propertyAt: #patternChildren.
+				(patternChildren notNil and: [patternChildren notEmpty]) ifTrue: [object perform: aSymbol asSimpleSetter with: patternChildren]]]
 		ifFalse: [[:object :vp | ]]
 ]
 
@@ -37,36 +37,36 @@ SBPropertyMappingChildren class >> getter: aBlock setter: anotherBlock [
 	wrappedGetter := [:object |
 		(aBlock value: object)
 			ifNil: [{}]
-			ifNotNil: [:children | children reject: [:entry | entry isNil]]].
-	wrappedSetter := [:object :vp | anotherBlock value: object value: (vp propertyAt: #children)].
-	^ super getter: wrappedGetter setter: wrappedSetter vpProperty: #children name: 'children'
+			ifNotNil: [:patternChildren | patternChildren reject: [:entry | entry isNil]]].
+	wrappedSetter := [:object :vp | anotherBlock value: object value: (vp propertyAt: #patternChildren)].
+	^ super getter: wrappedGetter setter: wrappedSetter vpProperty: #patternChildren name: 'patternChildren'
 ]
 
 { #category : #'as yet unclassified' }
 SBPropertyMappingChildren class >> getter: aBlock setter: anotherBlock patternValue: anObject vpProperty: aSymbol [
 
 	anObject
-		ifNotNil: [Error signal: 'SBPropertyMappingChildren does not support patternValue as this would lead to patterns recusively having children. This will result in an infinite number of children.']
-		ifNil: [^ super getter: aBlock setter: anotherBlock patternValue: anObject vpProperty: aSymbol name: 'children']
+		ifNotNil: [Error signal: 'SBPropertyMappingChildren does not support patternValue as this would lead to patterns recusively having patternChildren. This will result in an infinite number of patternChildren.']
+		ifNil: [^ super getter: aBlock setter: anotherBlock patternValue: anObject vpProperty: aSymbol name: 'patternChildren']
 ]
 
 { #category : #'as yet unclassified' }
 SBPropertyMappingChildren class >> getter: aBlock setter: anotherBlock vpProperty: aSymbol [
 
-	self assert: aSymbol = #children.
+	self assert: aSymbol = #patternChildren.
 	^ self getter: aBlock setter: anotherBlock
 ]
 
 { #category : #'as yet unclassified' }
 SBPropertyMappingChildren class >> property: aSymbol [
 
-	^ super property: aSymbol vpProperty: #children
+	^ super property: aSymbol vpProperty: #patternChildren
 ]
 
 { #category : #'as yet unclassified' }
 SBPropertyMappingChildren class >> property: aSymbol vpProperty: anotherSymbol [
 
-	self assert: anotherSymbol = #children.
+	self assert: anotherSymbol = #patternChildren.
 	^ self property: aSymbol
 ]
 
@@ -74,5 +74,5 @@ SBPropertyMappingChildren class >> property: aSymbol vpProperty: anotherSymbol [
 SBPropertyMappingChildren >> initialize [
 
 	super initialize.
-	name := 'children'
+	name := 'patternChildren'
 ]

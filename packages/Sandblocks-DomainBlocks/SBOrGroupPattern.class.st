@@ -42,18 +42,18 @@ SBOrGroupPattern class >> example: aDummyNode [
 			SBBindingPattern
 				bindingDict: {#identity -> #a}
 				expressionDict: {#innerLabel -> [10]}
-				children: {SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBDummyNode}
+				patternChildren: {SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBDummyNode}
 				visualizingClass: SBDummyNode.
 			SBBindingPattern
 				bindingDict: {#identity -> #a}
 				expressionDict: {#innerLabel -> [3]}
-				children: {SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBDummyNode}
+				patternChildren: {SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBDummyNode}
 				visualizingClass: SBDummyNode})
 		output: (SBGroupPattern patterns: {
 			SBBindingPattern
 				bindingDict: {#identity -> #a}
 				expressionDict: {#innerLabel -> [42]}
-				children: {SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBDummyNode}
+				patternChildren: {SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBDummyNode}
 				visualizingClass: SBDummyNode})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> false;
@@ -88,19 +88,19 @@ SBOrGroupPattern class >> exampleNested: aDummyNode [
 			SBBindingPattern
 				bindingDict: {#identity -> #a}
 				expressionDict: {#innerLabel -> [10]}
-				children: {SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBDummyNode}
+				patternChildren: {SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBDummyNode}
 				visualizingClass: SBDummyNode.
 			SBGroupPattern patterns: {
 				SBBindingPattern
 					bindingDict: {#innerLabel -> #k. #identity -> #a}
-					children: {SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBDummyNode}
+					patternChildren: {SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBDummyNode}
 					visualizingClass: SBDummyNode.
 				SBConstraintPattern constraint: [:bindings | (bindings at: #k) = 3]}})
 		output: (SBGroupPattern patterns: {
 			SBBindingPattern
 				bindingDict: {#identity -> #a}
 				expressionDict: {#innerLabel -> [42]}
-				children: {SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBDummyNode}
+				patternChildren: {SBEllipsisPattern bindingDict: {#identity -> #b} visualizingClass: SBDummyNode}
 				visualizingClass: SBDummyNode})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> false;
@@ -113,9 +113,9 @@ SBOrGroupPattern class >> exampleNested: aDummyNode [
 { #category : #'as yet unclassified' }
 SBOrGroupPattern >> getNext: aDomainBlock [
 
-	self children do: [:pattern | (pattern getNext: aDomainBlock) ifTrue: [^ true]].
-	self matchingPattern siblingIndex = self children size ifTrue: [^ false].
-	self matchingPattern: (self children at: self matchingPattern siblingIndex + 1).
+	self patternChildren do: [:pattern | (pattern getNext: aDomainBlock) ifTrue: [^ true]].
+	self matchingPattern siblingIndex = self patternChildren size ifTrue: [^ false].
+	self matchingPattern: (self patternChildren at: self matchingPattern siblingIndex + 1).
 	^ true
 ]
 
@@ -128,7 +128,7 @@ SBOrGroupPattern >> matches: aDomainBlock withBinding: aCollection [
 { #category : #accessing }
 SBOrGroupPattern >> matchingPattern [
 
-	^ matchingPattern ifNil: [self children first]
+	^ matchingPattern ifNil: [self patternChildren first]
 ]
 
 { #category : #accessing }

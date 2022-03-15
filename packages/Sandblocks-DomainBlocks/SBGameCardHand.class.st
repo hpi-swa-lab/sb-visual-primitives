@@ -10,7 +10,7 @@ Class {
 { #category : #'as yet unclassified' }
 SBGameCardHand class >> domainBlockMapping [
 
-	^ {#shape vpConstant: SBIcon iconHandOUp. #children vpChildFor: #cards}
+	^ {#shape vpConstant: SBIcon iconHandOUp. #patternChildren vpChildFor: #cards}
 ]
 
 { #category : #accessing }
