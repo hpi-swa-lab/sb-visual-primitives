@@ -17,3 +17,17 @@ SBBlock >> inspectableProperties [
 
 	^ {#color. #position}
 ]
+
+{ #category : #'*Sandblocks-DomainBlocks' }
+SBBlock >> patternContainer [
+
+	| case |
+	case := self patternRoot parentSandblock.
+	^ (case isKindOf: SBPatternContainer) ifTrue: [case]
+]
+
+{ #category : #'*Sandblocks-DomainBlocks' }
+SBBlock >> patternRoot [
+
+	^ self patternParent ifNil: [self] ifNotNil: [self patternParent patternRoot]
+]

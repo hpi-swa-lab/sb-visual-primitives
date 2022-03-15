@@ -73,7 +73,7 @@ SBQuery class >> newFor: aBlock [
 
 	| pattern |
 	pattern := aBlock arguments first.
-	pattern isDomainBlock ifFalse: [pattern := pattern evaluate].
+	pattern isPatternBlock ifFalse: [pattern := pattern evaluate].
 	^ aBlock arguments size caseOf: {
 		[1] -> [self pattern: pattern].
 		[2] -> [self pattern: pattern strategy: aBlock arguments second evaluate].

@@ -16,8 +16,7 @@ Class {
 	#name : #SBConstraintPattern,
 	#superclass : #SBStSubstitution,
 	#instVars : [
-		'constraint',
-		'parent'
+		'constraint'
 	],
 	#category : #'Sandblocks-DomainBlocks'
 }
@@ -171,14 +170,6 @@ SBConstraintPattern >> isBlockBody [
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
-SBConstraintPattern >> isDomainBlock [
-
-	self flag: #todo.
-	"Should actually be false"
-	^ true
-]
-
 { #category : #accessing }
 SBConstraintPattern >> isExpression [
 
@@ -189,6 +180,12 @@ SBConstraintPattern >> isExpression [
 SBConstraintPattern >> isImplicitChild [
 
 	^ false
+]
+
+{ #category : #accessing }
+SBConstraintPattern >> isPatternBlock [
+
+	^ true
 ]
 
 { #category : #testing }
@@ -226,24 +223,16 @@ SBConstraintPattern >> newUnknown [
 	^ SBUnknown new grammarHandler: SBStGrammarHandler new
 ]
 
-{ #category : #accessing }
-SBConstraintPattern >> parent [
+{ #category : #'pattern hierarchy' }
+SBConstraintPattern >> patternChildren [
 
-	^ parent
+	^ #()
 ]
 
-{ #category : #accessing }
-SBConstraintPattern >> parent: anObject [
+{ #category : #'pattern hierarchy' }
+SBConstraintPattern >> patternParent [
 
-	parent := anObject
-]
-
-{ #category : #'as yet unclassified' }
-SBConstraintPattern >> patternContainer [
-
-	| case |
-	case := self root parentSandblock.
-	^ (case isKindOf: SBPatternContainer) ifTrue: [case]
+	^ self owner
 ]
 
 { #category : #'pattern matching' }
@@ -256,12 +245,6 @@ SBConstraintPattern >> removeImplicitChildren [
 SBConstraintPattern >> reset [
 
 	
-]
-
-{ #category : #'as yet unclassified' }
-SBConstraintPattern >> root [
-
-	^ self parent ifNil: [self] ifNotNil: [self parent root]
 ]
 
 { #category : #'pattern matching' }

@@ -86,14 +86,14 @@ SBStDeclarationForVPBinding >> printBlockOn: aStream [
 SBStDeclarationForVPBinding >> refreshBindingIndex [
 
 	| bindingPattern |
-	bindingPattern := name firstOwnerSuchThat: [:owner | owner isDomainBlock].
+	bindingPattern := name firstOwnerSuchThat: [:owner | owner isBindingPattern].
 	(bindingPattern labelPositionOf: name) = bindingPattern identityLabelPosition ifTrue: [bindingPattern bindingIndex: name contents]
 ]
 
 { #category : #accessing }
 SBStDeclarationForVPBinding >> scope [
 
-	^ {self block root parentSandblock}
+	^ {self block patternRoot parentSandblock}
 ]
 
 { #category : #accessing }

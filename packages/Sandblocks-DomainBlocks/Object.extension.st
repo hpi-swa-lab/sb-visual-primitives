@@ -25,6 +25,12 @@ Object >> isDomainBlock [
 ]
 
 { #category : #'*Sandblocks-DomainBlocks' }
+Object >> isPatternBlock [
+
+	^ false
+]
+
+{ #category : #'*Sandblocks-DomainBlocks' }
 Object >> isPropertyMapping [
 
 	^ false

@@ -30,7 +30,6 @@ Class {
 	#instVars : [
 		'blockDict',
 		'children',
-		'parent',
 		'sourceObject'
 	],
 	#category : #'Sandblocks-DomainBlocks'
@@ -98,8 +97,7 @@ SBDomainBlock >> addChild: aDomainBlock [
 SBDomainBlock >> addChild: aDomainBlock afterIndex: aNumber [
 
 	aDomainBlock parent ifNotNil: [aDomainBlock parent removeChild: aDomainBlock].
-	self children add: aDomainBlock afterIndex: aNumber.
-	aDomainBlock parent: self
+	self children add: aDomainBlock afterIndex: aNumber
 ]
 
 { #category : #'as yet unclassified' }
@@ -151,7 +149,7 @@ SBDomainBlock >> addNewParent [
 
 	self sandblockEditor do: (SBInsertDomainBlockCommand new
 		index: self owner submorphCount + 1;
-		parent: self parent;
+		parent: self patternParent;
 		container: self owner;
 		siblingIndex: self siblingIndex;
 		children: {self};
@@ -273,8 +271,7 @@ SBDomainBlock >> children [
 { #category : #accessing }
 SBDomainBlock >> children: aCollection [
 
-	children := aCollection asOrderedCollection.
-	children do: [:child | child parent: self]
+	children := aCollection asOrderedCollection
 ]
 
 { #category : #'as yet unclassified' }
@@ -542,18 +539,6 @@ SBDomainBlock >> objectInterfaceNear: aBlock at: aSymbol [
 ]
 
 { #category : #accessing }
-SBDomainBlock >> parent [
-
-	^ parent
-]
-
-{ #category : #accessing }
-SBDomainBlock >> parent: anObject [
-
-	parent := anObject
-]
-
-{ #category : #accessing }
 SBDomainBlock >> parentCase [
 
 	^ nil
@@ -590,7 +575,7 @@ SBDomainBlock >> pasteReplace [
 							SBDeleteDomainBlockCommand new target: self.
 							SBInsertDomainBlockCommand new
 								index: self owner submorphCount + 1;
-								parent: self parent;
+								parent: self patternParent;
 								container: self owner;
 								siblingIndex: self siblingIndex;
 								morph: block;
@@ -599,10 +584,23 @@ SBDomainBlock >> pasteReplace [
 		ifWrappingDo: [:block | self wrapSelectionWith: block]
 ]
 
+{ #category : #'pattern hierarchy' }
+SBDomainBlock >> patternChildren [
+
+	^ self outgoingConnections
+]
+
 { #category : #accessing }
 SBDomainBlock >> patternContainer [
 
 	^ nil
+]
+
+{ #category : #'pattern hierarchy' }
+SBDomainBlock >> patternParent [
+
+	self incomingConnectionsDo: [:parentPattern | ^ parentPattern].
+	^ nil.
 ]
 
 { #category : #'colors and color policies' }
@@ -635,8 +633,7 @@ SBDomainBlock >> propertyAt: aSymbol [
 { #category : #'as yet unclassified' }
 SBDomainBlock >> removeChild: aDomainBlock [
 
-	self children remove: aDomainBlock.
-	aDomainBlock parent: nil
+	self children remove: aDomainBlock
 ]
 
 { #category : #'as yet unclassified' }
@@ -652,12 +649,6 @@ SBDomainBlock >> rightSibling [
 	self parent ifNil: [^ nil].
 	index := parent children indexOf: self.
 	index < parent children size ifTrue: [parent children at: index + 1]
-]
-
-{ #category : #accessing }
-SBDomainBlock >> root [
-
-	^ self parent ifNil: [self] ifNotNil: [self parent root]
 ]
 
 { #category : #accessing }

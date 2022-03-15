@@ -65,9 +65,9 @@ SBTransformation class >> newFor: aBlock [
 
 	| input output |
 	input := aBlock arguments first.
-	input isDomainBlock ifFalse: [input := input evaluate].
+	input isPatternBlock ifFalse: [input := input evaluate].
 	output := aBlock arguments second.
-	output isDomainBlock ifFalse: [output := output evaluate].
+	output isPatternBlock ifFalse: [output := output evaluate].
 	
 	^ self
 		input: input

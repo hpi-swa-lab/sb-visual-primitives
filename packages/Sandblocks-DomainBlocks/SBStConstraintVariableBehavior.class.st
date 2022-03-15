@@ -67,7 +67,7 @@ SBStConstraintVariableBehavior >> printBlockOn: aStream [
 { #category : #'as yet unclassified' }
 SBStConstraintVariableBehavior >> scope [
 
-	^ {self block root parentSandblock}
+	^ {self block patternRoot parentSandblock}
 ]
 
 { #category : #'as yet unclassified' }

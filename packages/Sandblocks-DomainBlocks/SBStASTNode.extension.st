@@ -4,14 +4,14 @@ Extension { #name : #SBStASTNode }
 SBStASTNode >> visualize [
 	<action>
 
-	| domainblockcontainer objectClass |
-	domainblockcontainer := [(SBDomainBlockContainer code: self copy) isImplicit: true]
+	| domainBlockContainer objectClass |
+	domainBlockContainer := [(SBDomainBlockContainer code: self copy) isImplicit: true]
 		on: Error
 		do: [^ false].
 	
 	self sandblockEditor do: (SBReplaceCommand new
 		target: self;
-		replacer: domainblockcontainer;
+		replacer: domainBlockContainer;
 		shouldMergeWithNext: false;
 		yourself).
 	
@@ -23,12 +23,12 @@ SBStASTNode >> visualize [
 			addMorphBack: (SBStMethod new
 				selector: 'domainBlockMapping' arguments: #() class: objectClass class;
 				body: (SBStBlockBody new statements: {
-					self grammarHandler newCommentBlock contents: 'Allowed positions are #topLeftLabel, #topCenterLabel, #topRightLabel, leftLabel, #shape, #rightLabel, #bottomLeftLabel, #bottomCenterLabel, #bottomRightLabel.'.
+				self flag: #TODO "Toms Feedback einarbeiten dass die some positions zu unknowns werden".
 					[:b | b return: '{ #shape vpConstant: (RectangleMorph new color: (Color green)).
 			#identityLabelPosition vpConstant: #somePosition.
 			#somePosition vpNumberFor: #someNumberAccessor.
 			#somePosition vpStringFor: #someStringAccessor.
 		}' parseAsSandblock] sbStBuild}));
-			showBelow: domainblockcontainer closeOnDeselect: true.
+			showBelow: domainBlockContainer closeOnDeselect: true.
 		self inform: 'The class ', objectClass name asString, ' does not implement domainBlockMapping which is required to visualize its instance. Please do so']
 ]

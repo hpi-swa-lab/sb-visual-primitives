@@ -225,7 +225,7 @@ SBDomainBlockContainer >> writeCodeOn: aStream [
 
 	| object |
 	aStream nextPut: $(.
-	object := (self visual submorphs detect: [:morph | morph isDomainBlock]) root buildObject.
+	object := (self visual submorphs detect: [:morph | morph isPatternBlock]) patternRoot buildObject.
 	self tryWriteSourceOrStore: object on: aStream.
 	aStream nextPut: $)
 ]
