@@ -25,7 +25,6 @@ Class {
 	#name : #SBGroupPattern,
 	#superclass : #SBStSubstitution,
 	#instVars : [
-		'patternChildren',
 		'isOutputPattern'
 	],
 	#category : #'Sandblocks-DomainBlocks'
@@ -66,8 +65,8 @@ SBGroupPattern class >> selector: aString receiverMatches: aMessage [
 { #category : #'as yet unclassified' }
 SBGroupPattern >> addChild: aDomainBlock afterIndex: aNumber [
 
-	aDomainBlock parent ifNotNil: [aDomainBlock parent removeChild: aDomainBlock].
-	self patternChildren add: aDomainBlock afterIndex: aNumber.
+	self flag: #TODO. "Don't ignore the number anymore"
+	aDomainBlock patternParent ifNotNil: [aDomainBlock patternParent removeChild: aDomainBlock].
 	self openPatternAsChild: aDomainBlock
 ]
 
@@ -165,18 +164,6 @@ SBGroupPattern >> canDeleteChild: aBlock [
 	^ true
 ]
 
-{ #category : #accessing }
-SBGroupPattern >> patternChildren [
-
-	^ patternChildren
-]
-
-{ #category : #accessing }
-SBGroupPattern >> patternChildren: aCollection [
-
-	patternChildren := aCollection asOrderedCollection
-]
-
 { #category : #'as yet unclassified' }
 SBGroupPattern >> collectBindingsInto: aCollection [
 
@@ -203,7 +190,7 @@ SBGroupPattern >> deleteCommandFor: aBlock [
 	| primitive |
 	primitive := aBlock isPatternBlock
 		ifTrue: [aBlock]
-		ifFalse: [aBlock submorphThat: [:morph | morph isPatternBlock and: [morph parent = self]] ifNone: [nil]].
+		ifFalse: [aBlock submorphThat: [:morph | morph isPatternBlock and: [morph patternParent = self]] ifNone: [nil]].
 	
 	^ SBDeleteDomainBlockCommand new target: primitive
 ]
@@ -283,7 +270,7 @@ SBGroupPattern >> insertNewPattern: aPattern [
 
 	self sandblockEditor do: (SBInsertDomainBlockCommand new
 		index: self owner submorphCount + 1;
-		parent: self;
+		patternParent: self;
 		container: self owner;
 		morph: aPattern;
 		shouldMergeWithNext: false;
@@ -353,18 +340,11 @@ SBGroupPattern >> nextIdentifier [
 	^ possibleIdentifer
 ]
 
-{ #category : #callbacks }
-SBGroupPattern >> noteNewOwner: aMorph [
-
-	super noteNewOwner: aMorph.
-	self resetVisualization
-]
-
 { #category : #'as yet unclassified' }
 SBGroupPattern >> openPatternAsChild: aPattern [
 
 	| insertPosition addedBlock |
-	insertPosition := aPattern siblingIndex * 2 - 1.
+	insertPosition := aPattern patternSiblingIndex * 2 - 1.
 	
 	aPattern isBindingPattern
 		ifTrue: [
@@ -385,10 +365,17 @@ SBGroupPattern >> openPatternAsChild: aPattern [
 	self addSeparatorsAround: addedBlock
 ]
 
-{ #category : #'pattern hierarchy' }
+{ #category : #accessing }
 SBGroupPattern >> patternChildren [
 
 	^ self submorphs select: #isPatternBlock
+]
+
+{ #category : #accessing }
+SBGroupPattern >> patternChildren: aCollection [
+
+	self removeAllMorphs.
+	aCollection do: [:aPattern | self openPatternAsChild: aPattern]
 ]
 
 { #category : #'pattern hierarchy' }
@@ -406,8 +393,8 @@ SBGroupPattern >> rebuild [
 { #category : #'as yet unclassified' }
 SBGroupPattern >> removeChild: aDomainBlock [
 
-	self patternChildren remove: aDomainBlock.
-	self resetVisualization
+	
+	self patternChildren: (self patternChildren remove: aDomainBlock)
 ]
 
 { #category : #'as yet unclassified' }
@@ -422,14 +409,6 @@ SBGroupPattern >> reset [
 	self patternChildren do: [:pattern | pattern reset]
 ]
 
-{ #category : #'as yet unclassified' }
-SBGroupPattern >> resetVisualization [
-
-	self patternContainer ifNotNil: [
-		self removeAllMorphs.
-		self patternChildren do: [:aPattern | self openPatternAsChild: aPattern]]
-]
-
 { #category : #accessing }
 SBGroupPattern >> separatorString [
 
@@ -440,12 +419,6 @@ SBGroupPattern >> separatorString [
 SBGroupPattern >> setBindingFor: aDomainBlock in: aCollection [
 
 	^ self patternChildren allSatisfy: [:pattern | pattern setBindingFor: aDomainBlock in: aCollection]
-]
-
-{ #category : #'as yet unclassified' }
-SBGroupPattern >> siblingIndex [
-
-	^ self parent ifNil: [0] ifNotNil: [self parent patternChildren indexOf: self]
 ]
 
 { #category : #printing }

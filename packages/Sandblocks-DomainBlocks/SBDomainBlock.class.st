@@ -96,7 +96,7 @@ SBDomainBlock >> addChild: aDomainBlock [
 { #category : #'as yet unclassified' }
 SBDomainBlock >> addChild: aDomainBlock afterIndex: aNumber [
 
-	aDomainBlock parent ifNotNil: [aDomainBlock parent removeChild: aDomainBlock].
+	aDomainBlock patternParent ifNotNil: [aDomainBlock patternParent removeChild: aDomainBlock].
 	self patternChildren add: aDomainBlock afterIndex: aNumber
 ]
 
@@ -136,7 +136,7 @@ SBDomainBlock >> addNewChild [
 
 	self sandblockEditor do: (SBInsertDomainBlockCommand new
 		index: self owner submorphCount + 1;
-		parent: self;
+		patternParent: self;
 		container: self owner;
 		morph: self buildNewInstance;
 		shouldMergeWithNext: false;
@@ -149,9 +149,9 @@ SBDomainBlock >> addNewParent [
 
 	self sandblockEditor do: (SBInsertDomainBlockCommand new
 		index: self owner submorphCount + 1;
-		parent: self patternParent;
+		patternParent: self patternParent;
 		container: self owner;
-		siblingIndex: self siblingIndex;
+		patternSiblingIndex: self patternSiblingIndex;
 		patternChildren: {self};
 		morph: self buildNewInstance;
 		shouldMergeWithNext: false;
@@ -260,18 +260,6 @@ SBDomainBlock >> buildObject [
 SBDomainBlock >> centerChild [
 
 	^ self patternChildren ifEmpty: [nil] ifNotEmpty: [self patternChildren at: self patternChildren size + 1 / 2]
-]
-
-{ #category : #accessing }
-SBDomainBlock >> patternChildren [
-
-	^ patternChildren
-]
-
-{ #category : #accessing }
-SBDomainBlock >> patternChildren: aCollection [
-
-	patternChildren := aCollection asOrderedCollection
 ]
 
 { #category : #'as yet unclassified' }
@@ -390,7 +378,7 @@ SBDomainBlock >> isExpression [
 { #category : #'as yet unclassified' }
 SBDomainBlock >> isTreeLayoutRoot [
 
-	^ self parent isNil
+	^ self patternParent isNil
 ]
 
 { #category : #accessing }
@@ -440,9 +428,9 @@ SBDomainBlock >> layoutInset [
 SBDomainBlock >> leftSibling [
 
 	| index |
-	self parent ifNil: [^ nil].
-	index := self parent patternChildren indexOf: self.
-	^ index > 1 ifTrue: [self parent patternChildren at: index - 1]
+	self patternParent ifNil: [^ nil].
+	index := self patternSiblingIndex.
+	^ index > 1 ifTrue: [self patternParent patternChildren at: index - 1]
 ]
 
 { #category : #'as yet unclassified' }
@@ -510,7 +498,7 @@ SBDomainBlock >> moveCursorUp [
 	<action>
 
 	self floating
-		ifTrue: [self parent ifNotNil: #select ifNil: [self selectTopToplevel]]
+		ifTrue: [self patternParent ifNotNil: #select ifNil: [self selectTopToplevel]]
 		ifFalse: [self sandblockEditor cursor moveCursorUp]
 ]
 
@@ -529,7 +517,7 @@ SBDomainBlock >> newUnknown [
 { #category : #accessing }
 SBDomainBlock >> objectInterface [
 
-	^ self parent objectInterfaceNear: self at: #replace
+	^ self patternParent objectInterfaceNear: self at: #replace
 ]
 
 { #category : #'object interface' }
@@ -575,19 +563,25 @@ SBDomainBlock >> pasteReplace [
 							SBDeleteDomainBlockCommand new target: self.
 							SBInsertDomainBlockCommand new
 								index: self owner submorphCount + 1;
-								parent: self patternParent;
+								patternParent: self patternParent;
 								container: self owner;
-								siblingIndex: self siblingIndex;
+								patternSiblingIndex: self patternSiblingIndex;
 								morph: block;
 								shouldMergeWithNext: false;
 								yourself})]]]
 		ifWrappingDo: [:block | self wrapSelectionWith: block]
 ]
 
-{ #category : #'pattern hierarchy' }
+{ #category : #accessing }
 SBDomainBlock >> patternChildren [
 
-	^ self outgoingConnections
+	^ self connectedBlocks
+]
+
+{ #category : #accessing }
+SBDomainBlock >> patternChildren: aCollection [
+
+	patternChildren := aCollection asOrderedCollection
 ]
 
 { #category : #accessing }
@@ -646,9 +640,9 @@ SBDomainBlock >> removeLabelAt: aSymbol [
 SBDomainBlock >> rightSibling [
 
 	| index |
-	self parent ifNil: [^ nil].
-	index := parent patternChildren indexOf: self.
-	index < parent patternChildren size ifTrue: [parent patternChildren at: index + 1]
+	self patternParent ifNil: [^ nil].
+	index := self patternSiblingIndex.
+	index < self patternParent patternChildren size ifTrue: [self patternParent patternChildren at: index + 1]
 ]
 
 { #category : #accessing }
@@ -686,12 +680,6 @@ SBDomainBlock >> shape: aMorph [
 	innerBlock := aMorph.
 	innerBlockWrapper addMorphBack: innerBlock.
 	innerLabel ifNotNil: [:label | innerBlock addVPLabel: label]
-]
-
-{ #category : #'as yet unclassified' }
-SBDomainBlock >> siblingIndex [
-
-	^ self parent ifNil: [0] ifNotNil: [self parent patternChildren indexOf: self]
 ]
 
 { #category : #accessing }

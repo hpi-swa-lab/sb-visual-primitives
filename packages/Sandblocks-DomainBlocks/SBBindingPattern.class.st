@@ -48,23 +48,6 @@ SBBindingPattern class >> bindingDict: aDict [
 ]
 
 { #category : #'as yet unclassified' }
-SBBindingPattern class >> bindingDict: aDict patternChildren: aCollection [
-
-	^ self new
-		bindingDict: aDict asDictionary;
-		patternChildren: aCollection
-]
-
-{ #category : #'as yet unclassified' }
-SBBindingPattern class >> bindingDict: aDict patternChildren: aCollection visualizingClass: aClass [
-
-	^ self new
-		bindingDict: aDict asDictionary;
-		patternChildren: aCollection;
-		visualizingClass: aClass
-]
-
-{ #category : #'as yet unclassified' }
 SBBindingPattern class >> bindingDict: aDict expressionDict: anotherDict [
 
 	^ self new
@@ -97,6 +80,23 @@ SBBindingPattern class >> bindingDict: aDict expressionDict: anotherDict visuali
 	^ self new
 		bindingDict: aDict asDictionary;
 		expressionDict: anotherDict asDictionary;
+		visualizingClass: aClass
+]
+
+{ #category : #'as yet unclassified' }
+SBBindingPattern class >> bindingDict: aDict patternChildren: aCollection [
+
+	^ self new
+		bindingDict: aDict asDictionary;
+		patternChildren: aCollection
+]
+
+{ #category : #'as yet unclassified' }
+SBBindingPattern class >> bindingDict: aDict patternChildren: aCollection visualizingClass: aClass [
+
+	^ self new
+		bindingDict: aDict asDictionary;
+		patternChildren: aCollection;
 		visualizingClass: aClass
 ]
 
@@ -409,9 +409,9 @@ SBBindingPattern >> convertToPatternClass: aClass [
 		SBDeleteDomainBlockCommand new target: self.
 		SBInsertDomainBlockCommand new
 			index: self owner submorphCount + 1;
-			parent: self patternParent;
+			patternParent: self patternParent;
 			container: self owner;
-			siblingIndex: self siblingIndex;
+			patternSiblingIndex: self patternSiblingIndex;
 			morph: (aClass bindingDict: {self class identityName -> self bindingIndex} asDictionary);
 			shouldMergeWithNext: false;
 			yourself})
@@ -560,7 +560,7 @@ SBBindingPattern >> isPatternBlock [
 { #category : #accessing }
 SBBindingPattern >> isTreeLayoutRoot [
 
-	^ self parent isBindingPattern not
+	^ self patternParent isBindingPattern not
 ]
 
 { #category : #'as yet unclassified' }

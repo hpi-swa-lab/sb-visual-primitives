@@ -43,7 +43,7 @@ SBTreeLayoutPolicy >> apportion: aPattern defaultAncestor: aDefaultAncestor [
 			shift := (self xOf: vil) + sil - ((self xOf: vir) + sir) + (self distance: aPattern).
 			
 			shift > 0 ifTrue: [ | a |
-				a := (aPattern parent patternChildren includes: (self ancestorOf: vil))
+				a := (aPattern patternParent patternChildren includes: (self ancestorOf: vil))
 					ifTrue: [self ancestorOf: vil]
 					ifFalse: [newDefaultAncestor].
 				self moveSubtree: aPattern by: shift of: a.
@@ -180,8 +180,8 @@ SBTreeLayoutPolicy >> layoutDataAt: aPattern [
 { #category : #layouting }
 SBTreeLayoutPolicy >> leftMostSibling: aPattern [
 
-	^ aPattern parent ifNotNil: [ | left |
-		left := aPattern parent patternChildren first.
+	^ aPattern patternParent ifNotNil: [ | left |
+		left := aPattern patternParent patternChildren first.
 		left = aPattern ifFalse: [left]]
 ]
 
@@ -217,7 +217,7 @@ SBTreeLayoutPolicy >> modOf: aPattern [
 SBTreeLayoutPolicy >> moveSubtree: aPattern by: aShiftValue of: aParentPattern [
 
 	| numberOfSubtrees |
-	numberOfSubtrees := aPattern siblingIndex - aParentPattern siblingIndex.
+	numberOfSubtrees := aPattern patternSiblingIndex - aParentPattern patternSiblingIndex.
 	self setChangeOf: aPattern to: (self changeOf: aPattern) - aShiftValue / numberOfSubtrees.
 	self setShiftOf: aPattern to: (self shiftOf: aPattern) + aShiftValue.
 	self setXOf: aPattern to: (self xOf: aPattern) + aShiftValue.

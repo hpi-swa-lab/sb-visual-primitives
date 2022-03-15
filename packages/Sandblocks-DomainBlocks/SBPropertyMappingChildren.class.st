@@ -53,7 +53,7 @@ SBPropertyMappingChildren class >> getter: aBlock setter: anotherBlock patternVa
 { #category : #'as yet unclassified' }
 SBPropertyMappingChildren class >> getter: aBlock setter: anotherBlock vpProperty: aSymbol [
 
-	self assert: aSymbol = #patternChildren.
+	self assert: aSymbol = #children.
 	^ self getter: aBlock setter: anotherBlock
 ]
 
@@ -66,7 +66,7 @@ SBPropertyMappingChildren class >> property: aSymbol [
 { #category : #'as yet unclassified' }
 SBPropertyMappingChildren class >> property: aSymbol vpProperty: anotherSymbol [
 
-	self assert: anotherSymbol = #patternChildren.
+	self assert: anotherSymbol = #children.
 	^ self property: aSymbol
 ]
 

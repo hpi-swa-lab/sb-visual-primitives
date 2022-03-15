@@ -55,13 +55,6 @@ SBEllipsisPattern >> buildImplicitChildren: anArray [
 	
 ]
 
-{ #category : #accessing }
-SBEllipsisPattern >> patternChildren: aCollection [
-
-	self assert: aCollection isEmpty description: 'Ellipses should not have patternChildren'.
-	super patternChildren: aCollection
-]
-
 { #category : #'as yet unclassified' }
 SBEllipsisPattern >> convertToBindingPattern [
 	<action>
@@ -151,6 +144,13 @@ SBEllipsisPattern >> isImplicitChild: aBoolean [
 		ifFalse: [setColor value: Color black].
 	"If called with isImplicitChild not changing, this leads to an infinite loop."
 	self patternContainer ifNotNil: [:parentCase | parentCase toggleImplicitChildTo: self isImplicitChild withBinding: prevBindingIndex]
+]
+
+{ #category : #accessing }
+SBEllipsisPattern >> patternChildren: aCollection [
+
+	self assert: aCollection isEmpty description: 'Ellipses should not have patternChildren'.
+	super patternChildren: aCollection
 ]
 
 { #category : #'as yet unclassified' }

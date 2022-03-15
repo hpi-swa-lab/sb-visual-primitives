@@ -16,8 +16,8 @@ Class {
 	#name : #SBDeleteDomainBlockCommand,
 	#superclass : #SBDeleteCommand,
 	#instVars : [
-		'oldParent',
-		'oldSiblingIndex'
+		'oldPatternParent',
+		'oldPatternSiblingIndex'
 	],
 	#category : #'Sandblocks-DomainBlocks'
 }
@@ -28,46 +28,46 @@ SBDeleteDomainBlockCommand >> do [
 	oldOwner := target owner.
 	super do.
 	
-	self oldParent: target parent.
-	self oldSiblingIndex: target siblingIndex.
-	self oldParent ifNotNil: [self oldParent removeChild: target].
+	self oldPatternParent: target patternParent.
+	self oldPatternSiblingIndex: target patternSiblingIndex.
+	self oldPatternParent ifNotNil: [self oldPatternParent removeChild: target].
 	target allChildrenDo: [:block | block abandon].
-	self oldParent patternContainer ifNotNil: #buildImplicitChildrenMatchingPattern.
-	^ self oldParent
+	self oldPatternParent patternContainer ifNotNil: #buildImplicitChildrenMatchingPattern.
+	^ self oldPatternParent
 ]
 
 { #category : #accessing }
-SBDeleteDomainBlockCommand >> oldParent [
+SBDeleteDomainBlockCommand >> oldPatternParent [
 
-	^ oldParent
+	^ oldPatternParent
 ]
 
 { #category : #accessing }
-SBDeleteDomainBlockCommand >> oldParent: anObject [
+SBDeleteDomainBlockCommand >> oldPatternParent: anObject [
 
-	oldParent := anObject
+	oldPatternParent := anObject
 ]
 
 { #category : #accessing }
-SBDeleteDomainBlockCommand >> oldSiblingIndex [
+SBDeleteDomainBlockCommand >> oldPatternSiblingIndex [
 
-	^ oldSiblingIndex
+	^ oldPatternSiblingIndex
 ]
 
 { #category : #accessing }
-SBDeleteDomainBlockCommand >> oldSiblingIndex: aNumber [
+SBDeleteDomainBlockCommand >> oldPatternSiblingIndex: aNumber [
 
-	oldSiblingIndex := aNumber
+	oldPatternSiblingIndex := aNumber
 ]
 
 { #category : #'do-undo' }
 SBDeleteDomainBlockCommand >> undo [
 
-	self oldParent ifNotNil: [self oldParent addChild: target afterIndex: self oldSiblingIndex - 1].
+	self oldPatternParent ifNotNil: [self oldPatternParent addChild: target afterIndex: self oldPatternSiblingIndex - 1].
 	
-	self oldParent isBindingPattern ifTrue: [
+	self oldPatternParent isBindingPattern ifTrue: [
 		target allChildrenDo: [:block | oldOwner addMorphBack: block].
 		super undo].
-	self oldParent patternContainer ifNotNil: #buildImplicitChildrenMatchingPattern.
+	self oldPatternParent patternContainer ifNotNil: #buildImplicitChildrenMatchingPattern.
 	^ target
 ]

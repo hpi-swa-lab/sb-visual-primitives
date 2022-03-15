@@ -21,40 +21,28 @@ Class {
 	#superclass : #SBInsertCommand,
 	#instVars : [
 		'patternChildren',
-		'parent',
-		'siblingIndex'
+		'patternParent',
+		'patternSiblingIndex'
 	],
 	#category : #'Sandblocks-DomainBlocks'
 }
 
-{ #category : #accessing }
-SBInsertDomainBlockCommand >> patternChildren [
-
-	^ patternChildren
-]
-
-{ #category : #accessing }
-SBInsertDomainBlockCommand >> patternChildren: anOrderedCollection [
-
-	patternChildren := anOrderedCollection
-]
-
 { #category : #'as yet unclassified' }
 SBInsertDomainBlockCommand >> do [
 
-	(self parent isBindingPattern not and: [self patternChildren notEmpty]) ifTrue: [self parent removeChild: self patternChildren first].
+	(self patternParent isBindingPattern not and: [self patternChildren notEmpty]) ifTrue: [self patternParent removeChild: self patternChildren first].
 	self patternChildren do: [:child | self morph addChild: child].
-	self parent ifNotNil: [
-		self parent
+	self patternParent ifNotNil: [
+		self patternParent
 			addChild: self morph
-			afterIndex: (self siblingIndex ifNotNil: [self siblingIndex - 1] ifNil: [self parent patternChildren size]).
+			afterIndex: (self insertSiblingIndex).
 		
 		" When adding a new root binding pattern, the row gets deleted and a new one is used.
 		That is why we have to reset the container and index. "
-		container := self parent owner.
+		container := self patternParent owner.
 		index := self container submorphCount].
 	
-	self parent isBindingPattern ifTrue: [super do].
+	self patternParent isBindingPattern ifTrue: [super do].
 	
 	self morph allChildrenDo: [:child | self container addMorphBack: child].
 	self morph patternContainer ifNotNil: #buildImplicitChildrenMatchingPattern.
@@ -71,33 +59,45 @@ SBInsertDomainBlockCommand >> initialize [
 { #category : #'as yet unclassified' }
 SBInsertDomainBlockCommand >> insertSiblingIndex [
 
-	^ self siblingIndex
-		ifNotNil: [self siblingIndex - 1]
-		ifNil: [self parent patternChildren size]
+	^ self patternSiblingIndex
+		ifNotNil: [self patternSiblingIndex - 1]
+		ifNil: [self patternParent patternChildren size]
 ]
 
 { #category : #accessing }
-SBInsertDomainBlockCommand >> parent [
+SBInsertDomainBlockCommand >> patternChildren [
 
-	^ parent
+	^ patternChildren
 ]
 
 { #category : #accessing }
-SBInsertDomainBlockCommand >> parent: anSBBlock [
+SBInsertDomainBlockCommand >> patternChildren: anOrderedCollection [
 
-	parent := anSBBlock
+	patternChildren := anOrderedCollection
 ]
 
 { #category : #accessing }
-SBInsertDomainBlockCommand >> siblingIndex [
+SBInsertDomainBlockCommand >> patternParent [
 
-	^ siblingIndex
+	^ patternParent
 ]
 
 { #category : #accessing }
-SBInsertDomainBlockCommand >> siblingIndex: aNumber [
+SBInsertDomainBlockCommand >> patternParent: anSBBlock [
 
-	siblingIndex := aNumber
+	patternParent := anSBBlock
+]
+
+{ #category : #accessing }
+SBInsertDomainBlockCommand >> patternSiblingIndex [
+
+	^ patternSiblingIndex
+]
+
+{ #category : #accessing }
+SBInsertDomainBlockCommand >> patternSiblingIndex: aNumber [
+
+	patternSiblingIndex := aNumber
 ]
 
 { #category : #'as yet unclassified' }
@@ -105,14 +105,14 @@ SBInsertDomainBlockCommand >> undo [
 
 	| case |
 	case := self morph patternContainer.
-	self parent
+	self patternParent
 		ifNotNil: [
-			self parent removeChild: self morph.
+			self patternParent removeChild: self morph.
 			
 			" When adding a new root binding pattern, the row gets deleted and a new one is used.
 			That is why we have to reset the container. "
-			container := self parent owner.
-			self patternChildren reverseDo: [:child | self parent addChild: child afterIndex: self insertSiblingIndex]]
+			container := self patternParent owner.
+			self patternChildren reverseDo: [:child | self patternParent addChild: child afterIndex: self insertSiblingIndex]]
 		ifNil: [self patternChildren do: [:child | self morph removeChild: child]].
 	self morph patternChildren do: [:child | child abandon].
 	

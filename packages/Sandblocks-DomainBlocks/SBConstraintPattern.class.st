@@ -88,12 +88,6 @@ SBConstraintPattern >> buildImplicitChildren: aDict [
 	
 ]
 
-{ #category : #'as yet unclassified' }
-SBConstraintPattern >> patternChildren [
-
-	^ {}
-]
-
 { #category : #accessing }
 SBConstraintPattern >> collectBindingsInto: aCollection [
 	"we do not define bindings"
@@ -223,10 +217,10 @@ SBConstraintPattern >> newUnknown [
 	^ SBUnknown new grammarHandler: SBStGrammarHandler new
 ]
 
-{ #category : #'pattern hierarchy' }
+{ #category : #'as yet unclassified' }
 SBConstraintPattern >> patternChildren [
 
-	^ #()
+	^ {}
 ]
 
 { #category : #'pattern hierarchy' }
@@ -251,12 +245,6 @@ SBConstraintPattern >> reset [
 SBConstraintPattern >> setBindingFor: aDomainBlock in: aCollection [
 
 	^ true
-]
-
-{ #category : #'as yet unclassified' }
-SBConstraintPattern >> siblingIndex [
-
-	^ self parent ifNil: [0] ifNotNil: [self parent patternChildren indexOf: self]
 ]
 
 { #category : #accessing }

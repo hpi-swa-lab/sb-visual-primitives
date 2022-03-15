@@ -28,7 +28,7 @@ SBDummyNode class >> buildTreePrivate: aCollection [
 { #category : #'as yet unclassified' }
 SBDummyNode class >> childrenMappingEntry [
 
-	^ SBPropertyMapping
+	^ SBPropertyMappingChildren
 		getter: [:object | {object left. object right} reject: [:child | child isNil]]
 		setter: [:object :vp |
 			vp patternChildren size >= 1
@@ -37,8 +37,6 @@ SBDummyNode class >> childrenMappingEntry [
 			vp patternChildren size >= 2
 				ifTrue: [object right: vp patternChildren second buildObject]
 				ifFalse: [object right: nil]]
-		vpProperty: #patternChildren
-		name: 'patternChildren'
 ]
 
 { #category : #'as yet unclassified' }
@@ -62,13 +60,6 @@ SBDummyNode class >> domainBlockMapping [
 SBDummyNode class >> key: anObject [
 
 	^ self new key: anObject
-]
-
-{ #category : #'as yet unclassified' }
-SBDummyNode >> patternChildren: aCollection [
-
-	self left: (aCollection size >= 1 ifTrue: [aCollection first]).
-	self right: (aCollection size >= 2 ifTrue: [aCollection second])
 ]
 
 { #category : #'as yet unclassified' }
@@ -303,6 +294,13 @@ SBDummyNode >> parent [
 SBDummyNode >> parent: aNode [
 
 	parent := aNode
+]
+
+{ #category : #'as yet unclassified' }
+SBDummyNode >> patternChildren: aCollection [
+
+	self left: (aCollection size >= 1 ifTrue: [aCollection first]).
+	self right: (aCollection size >= 2 ifTrue: [aCollection second])
 ]
 
 { #category : #accessing }

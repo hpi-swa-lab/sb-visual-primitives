@@ -114,8 +114,8 @@ SBOrGroupPattern class >> exampleNested: aDummyNode [
 SBOrGroupPattern >> getNext: aDomainBlock [
 
 	self patternChildren do: [:pattern | (pattern getNext: aDomainBlock) ifTrue: [^ true]].
-	self matchingPattern siblingIndex = self patternChildren size ifTrue: [^ false].
-	self matchingPattern: (self patternChildren at: self matchingPattern siblingIndex + 1).
+	self matchingPattern patternSiblingIndex = self patternChildren size ifTrue: [^ false].
+	self matchingPattern: (self patternChildren at: self matchingPattern patternSiblingIndex + 1).
 	^ true
 ]
 

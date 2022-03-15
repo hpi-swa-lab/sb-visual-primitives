@@ -2,7 +2,7 @@ Class {
 	#name : #SBRedBlackNode,
 	#superclass : #Object,
 	#instVars : [
-		'patternChildren',
+		'children',
 		'parent',
 		'key',
 		'isRed'
@@ -21,24 +21,8 @@ SBRedBlackNode class >> buildTreePrivate: aCollection [
 
 	^ aCollection collect: [:element |
 		element isVariableBinding
-			ifTrue: [(self key: element key) patternChildren: (self buildTreePrivate: element value)]
+			ifTrue: [(self key: element key) children: (self buildTreePrivate: element value)]
 			ifFalse: [self key: element]]
-]
-
-{ #category : #'as yet unclassified' }
-SBRedBlackNode class >> childrenMappingEntry [
-
-	^ SBPropertyMapping
-		getter: [:object | {object left. object right} reject: [:child | child isNil]]
-		setter: [:object :vp |
-			vp patternChildren size >= 1
-				ifTrue: [object left: vp patternChildren first buildObject]
-				ifFalse: [object left: nil].
-			vp patternChildren size >= 2
-				ifTrue: [object right: vp patternChildren second buildObject]
-				ifFalse: [object right: nil]]
-		vpProperty: #patternChildren
-		name: 'patternChildren'
 ]
 
 { #category : #nil }
@@ -49,7 +33,7 @@ SBRedBlackNode class >> domainBlockMapping [
 			vpSelectFrom: {true. false}
 			displayAs: {CircleMorph new color: Color red. CircleMorph new color: Color black}
 			for: #isRed.
-		#patternChildren vpChildFor: #patternChildren.
+		#children vpChildFor: #children.
 		#innerLabel vpNumberFor: #key.
 		#identityLabelPosition vpConstant: #leftLabel}
 ]
@@ -66,22 +50,22 @@ SBRedBlackNode >> add: aNode [
 	self
 		example: [
 			((SBRedBlackNode key: nil)
-				patternChildren: {};
+				children: {};
 				isRed: true) showAsDomainBlock]
 		args: [{'Hallo'}]
 		label: 'example'
 ]
 
 { #category : #accessing }
-SBRedBlackNode >> patternChildren [
+SBRedBlackNode >> children [
 
-	^ patternChildren
+	^ children
 ]
 
 { #category : #accessing }
-SBRedBlackNode >> patternChildren: aCollection [
+SBRedBlackNode >> children: aCollection [
 
-	patternChildren := aCollection
+	children := aCollection
 ]
 
 { #category : #nil }
@@ -89,7 +73,7 @@ SBRedBlackNode >> initialize [
 
 	super initialize.
 	self isRed: true.
-	self patternChildren: OrderedCollection new
+	self children: OrderedCollection new
 ]
 
 { #category : #accessing }
@@ -137,9 +121,9 @@ SBRedBlackNode >> writeSourceOn: aStream [
 		nextPutAll: ' key: ';
 		store: self key;
 		nextPut: $);
-		nextPutAll: ' patternChildren: {'.
+		nextPutAll: ' children: {'.
 	
-	self patternChildren do: [:child | child writeSourceOn: aStream].
+	self children do: [:child | child writeSourceOn: aStream].
 	aStream
 		nextPutAll: '}; isRed: ';
 		store: self isRed.
