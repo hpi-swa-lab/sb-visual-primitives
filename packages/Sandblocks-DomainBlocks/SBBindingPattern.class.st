@@ -2,11 +2,11 @@
 An SBBindingPattern is used to represent a single object visual. It's patternChildren are visualized as well recursively.
 
 Instance Variables
-	bindingDict:						Dictionary
+	bindingDict:				Dictionary
 	expressionDict:				Dictionary
-	visualizingClass:				Class
+	visualizingClass:			Class
 	writeBackClosure:			BlockClosure
-	writeBackClosureString:		String
+	writeBackClosureString:	String
 	
 constant
 	- stores value of sourceObject if it's a constant
@@ -38,7 +38,7 @@ Class {
 		'writeBackClosure',
 		'writeBackClosureString'
 	],
-	#category : #'Sandblocks-DomainBlocks'
+	#category : #'Sandblocks-DomainBlocks-PatternMatching'
 }
 
 { #category : #'as yet unclassified' }
@@ -214,7 +214,7 @@ SBBindingPattern >> addImplicitChildren: aDict [
 
 	| addImplicitChild implicitChildrenIndices implicitChildrenCount oldChildren |
 	self patternChildren do: [:child | child addImplicitChildren: aDict].
-	implicitChildrenIndices := aDict at: self bindingIndex ifAbsent: [^ self].
+	implicitChildrenIndices := aDict at: self bindingName ifAbsent: [^ self].
 	implicitChildrenCount := 0.
 	
 	addImplicitChild := [:index |
@@ -266,13 +266,22 @@ SBBindingPattern >> bindingFor: aDomainBlock [
 ]
 
 { #category : #accessing }
-SBBindingPattern >> bindingIndex [
+SBBindingPattern >> bindingLabelBlockFrom: aString [
+
+	^ SBStName new
+		autoCast: self bindingNameAutoCast;
+		behavior: SBStDeclarationForBlock new;
+		contents: aString
+]
+
+{ #category : #accessing }
+SBBindingPattern >> bindingName [
 
 	^ self bindingDict at: self class identityName ifAbsent: nil
 ]
 
 { #category : #accessing }
-SBBindingPattern >> bindingIndex: anObject [
+SBBindingPattern >> bindingName: anObject [
 
 	self labelBindingDict at: self class identityName put: (anObject isSandblock
 		ifTrue: [[anObject evaluate] on: Error do: [anObject sourceString]]
@@ -280,28 +289,19 @@ SBBindingPattern >> bindingIndex: anObject [
 ]
 
 { #category : #'as yet unclassified' }
-SBBindingPattern >> bindingIndexAutoCast [
+SBBindingPattern >> bindingNameAutoCast [
 
-	^ [:name :morph | | case |
-		case := self patternContainer.
-		(case notNil and: [name hasOwner: case pattern])
+	^ [:name :morph | | container |
+		container := self patternContainer.
+		(container notNil and: [name hasOwner: container pattern])
 			ifTrue: [name behaviorClass: SBStDeclarationForVPBinding]
 			ifFalse: [name behaviorClass: SBStBinding]]
 ]
 
 { #category : #'as yet unclassified' }
-SBBindingPattern >> bindingIndexWithImplicitPrefix: aBoolean [
+SBBindingPattern >> bindingNameWithImplicitPrefix: aBoolean [
 
-	^ self bindingIndex
-]
-
-{ #category : #accessing }
-SBBindingPattern >> bindingLabelBlockFrom: aString [
-
-	^ SBStName new
-		autoCast: self bindingIndexAutoCast;
-		behavior: SBStDeclarationForBlock new;
-		contents: aString
+	^ self bindingName
 ]
 
 { #category : #'as yet unclassified' }
@@ -316,7 +316,7 @@ SBBindingPattern >> buildFromBinding: aDict [
 	| output |
 	output := self constant
 		ifNotNil: [self constant value asDomainBlock]
-		ifNil: [(aDict at: self bindingIndex) copy].
+		ifNil: [(aDict at: self bindingName) copy].
 	output patternChildren: (self buildChildrenFromBinding: aDict).
 	output addPropertyMappings: self expressionMappings.
 	self labelBindingDict keysAndValuesDo: [:labelPosition :bindingName | output addPropertyMapping: labelPosition -> (aDict at: bindingName)].
@@ -331,13 +331,13 @@ SBBindingPattern >> buildImplicitChildren: aDict [
 	oldChildren := self patternChildren copy.
 	
 	addImplicitChild := [:index | | identifier |
-		identifier := self patternRoot nextIdentifier.
+		identifier := self patternContainer nextIdentifier.
 		self addImplicitChildWithIdentifier: identifier at: index + implicitChildren size.
 		implicitChildren add: identifier].
 	
 	(self patternChildren isEmpty or: [self patternChildren first wantsImplicitNeighbors]) ifTrue: [addImplicitChild value: 0].
 	
-	aDict at: self bindingIndex put: implicitChildren asArray.
+	aDict at: self bindingName put: implicitChildren asArray.
 	
 	(self updateChildren: oldChildren with: addImplicitChild) do: [:child | child buildImplicitChildren: aDict]
 ]
@@ -370,7 +370,9 @@ SBBindingPattern >> changeVisualizingClass [
 SBBindingPattern >> childrenInCurrentMatch [
 
 	| offsetSum |
-	offsetSum := self patternChildren inject: 0 into: [:sum :child | sum + child indexOffset].
+	offsetSum := self patternChildren
+		inject: 0
+		into: [:sum :child | sum + child indexOffset].
 	^ self patternChildren size + offsetSum
 ]
 
@@ -412,9 +414,16 @@ SBBindingPattern >> convertToPatternClass: aClass [
 			patternParent: self patternParent;
 			container: self owner;
 			patternSiblingIndex: self patternSiblingIndex;
-			morph: (aClass bindingDict: {self class identityName -> self bindingIndex} asDictionary);
+			morph: (aClass bindingDict: {self class identityName -> self bindingName} asDictionary);
 			shouldMergeWithNext: false;
 			yourself})
+]
+
+{ #category : #actions }
+SBBindingPattern >> convertToWildcardPattern [
+	<action>
+
+	self convertToPatternClass: SBWildcardPattern
 ]
 
 { #category : #'as yet unclassified' }
@@ -519,12 +528,6 @@ SBBindingPattern >> identityLabelPosition [
 		ifNone: [#innerLabel]
 ]
 
-{ #category : #'as yet unclassified' }
-SBBindingPattern >> implicitPrefix [
-
-	^ 'i_'
-]
-
 { #category : #accessing }
 SBBindingPattern >> indexOffset [
 
@@ -563,15 +566,6 @@ SBBindingPattern >> isTreeLayoutRoot [
 	^ self patternParent isBindingPattern not
 ]
 
-{ #category : #'as yet unclassified' }
-SBBindingPattern >> labelBindingChanged [
-
-	self labelBindingDict copy keysAndValuesDo: [:labelPosition :bindingName |
-		self labelBindingDict
-			at: labelPosition
-			put: ((self labelContentAt: labelPosition) as: bindingName class)]
-]
-
 { #category : #accessing }
 SBBindingPattern >> labelBindingDict [
 
@@ -592,7 +586,7 @@ SBBindingPattern >> labelExpressionDict [
 SBBindingPattern >> labelSuggestionsFor: aSBUnknownLabel [
 
 	^ {
-		SBSuggestionItem selector: self patternRoot nextIdentifier label: 'binding'.
+		SBSuggestionItem selector: self patternContainer nextIdentifier label: 'binding'.
 		
 		(SBBlockSuggestionItem selector: '[myVar]' label: 'variable') builder: ['[myVar]' parseAsSandblock].
 		self constantSuggestionsFor: aSBUnknownLabel}
@@ -629,7 +623,7 @@ SBBindingPattern >> newLabelBlockAt: aVPProperty [
 SBBindingPattern >> noteNewOwner: newOwner [
 
 	super noteNewOwner: newOwner.
-	self patternContainer ifNotNil: [self rebuild]
+	self rebuild
 ]
 
 { #category : #accessing }
@@ -639,6 +633,14 @@ SBBindingPattern >> originalPropertyMappingAt: aVPProperty [
 		detect: [:mapping | mapping key = aVPProperty]
 		ifFound: [:mapping | mapping asPropertyMapping]
 		ifNone: [nil]
+]
+
+{ #category : #'as yet unclassified' }
+SBBindingPattern >> patternParent [
+	
+	self owner ifNil: [^ nil].
+	super patternParent ifNotNil: [:parent | ^ parent].
+	^ self owner owner isPatternBlock ifTrue: [self owner owner]
 ]
 
 { #category : #accessing }
@@ -654,17 +656,13 @@ SBBindingPattern >> rebuild [
 	self shape: self defaultShape.
 	self addPropertyMappings: self staticDomainBlockMapping.
 	self addPropertyMappings: self expressionMappings.
-	self labelBindingDict keysAndValuesDo: [:labelPosition :bindingName |
-		(self setLabelAt: labelPosition to: (self bindingLabelBlockFrom: bindingName))
-			when: #contentsChanged
-			send: #labelBindingChanged
-			to: self].
+	self labelBindingDict keysAndValuesDo: [:labelPosition :bindingName | self setLabelAt: labelPosition to: (self bindingLabelBlockFrom: bindingName)].
 	self constant ifNotNil: [self setLabelAt: self identityLabelPosition to: self constant asSandblock].
-	self bindingIndex ifNotNil: [
+	self bindingName ifNotNil: [
 		self
 			setLabelAt: self identityLabelPosition
-			to: (self bindingLabelBlockFrom: self bindingIndex asString)].
-	(self constant isNil and: [self bindingIndex isNil]) ifTrue: [ | unknown |
+			to: (self bindingLabelBlockFrom: self bindingName asString)].
+	(self constant isNil and: [self bindingName isNil]) ifTrue: [ | unknown |
 		self setLabelAt: self identityLabelPosition to: (unknown := self newUnknown).
 		self sandblockEditor ifNotNil: [unknown startInput]]
 ]
@@ -707,7 +705,7 @@ SBBindingPattern >> setBindingFor: aDomainBlock in: aDict [
 			ifPresent: [:previousValue | previousValue = binding ifFalse: [^ false]]
 			ifAbsent: [aDict at: bindingName put: binding]].
 	currentPrimitive := self getCurrentPrimitive: aDomainBlock.
-	self bindingIndex ifNotNil: [setBinding value: self bindingIndex value: (self bindingFor: aDomainBlock)].
+	self bindingName ifNotNil: [setBinding value: self bindingName value: (self bindingFor: aDomainBlock)].
 	self setLabelBindingsFor: aDomainBlock in: aDict using: setBinding.
 	self writeBackClosure ifNotNil: [self writeBackClosure value: currentPrimitive sourceObject].
 	^ (self couldMatch: currentPrimitive) and: [self setChildBindingFor: currentPrimitive in: aDict]

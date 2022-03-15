@@ -2,11 +2,11 @@
 An SBPatternMatcher is used for pattern matching. It tries to match the defined pattern in the SBTransformation to the input.
 
 Instance Variables
-	pattern:					SBGroupPattern
+	pattern:				SBGroupPattern
 	performedMatch:		Boolean
 	searchStack:			LinkedList
-	strategy:					Dictionary
-	visitedPrimitives:		Set
+	strategy:				Dictionary
+	visited:					Set
 
 pattern
 	- the defined pattern that is used for pattern matching
@@ -15,7 +15,7 @@ performedMatch
 	- indicates whether the pattern matched on input
 
 searchStack
-	- stack that contains all possible matchable primitives
+	- the current stack of the depth-first search searching for a possible ""root"" when using implicit RootMatching
 
 strategy
 	- a dict to specify the matching strategy
@@ -28,8 +28,8 @@ strategy
 			- if false, the pattern can also match if the specified patternChildren have more siblings than the pattern has
 		- if there are no patternChildren specified in the pattern, an SBEllipsisPattern is implicitely added
 
-visitedPrimitives
-	- set of all visited primitives during the pattern matching
+visited
+	- the domain blocks that have already been found by the depth-first search searching for a possible ""root"" when using implicit RootMatching
 
 "
 Class {
@@ -40,9 +40,9 @@ Class {
 		'performedMatch',
 		'searchStack',
 		'strategy',
-		'visitedPrimitives'
+		'visited'
 	],
-	#category : #'Sandblocks-DomainBlocks'
+	#category : #'Sandblocks-DomainBlocks-PatternMatching'
 }
 
 { #category : #'as yet unclassified' }
@@ -78,8 +78,8 @@ SBPatternMatcher >> currentPrimitive: aDomainBlock [
 
 	self searchStack: LinkedList new.
 	self searchStack addLast: aDomainBlock.
-	self visitedPrimitives: Set new.
-	self visitedPrimitives add: aDomainBlock
+	self visited: Set new.
+	self visited add: aDomainBlock
 ]
 
 { #category : #accessing }
@@ -89,11 +89,11 @@ SBPatternMatcher >> dealWithUndefinedResult [
 	
 	[self searchStack notEmpty] whileTrue: [
 		self currentPrimitive patternChildren do: [:aChild |
-			(self visitedPrimitives includes: aChild) ifFalse: [
+			(self visited includes: aChild) ifFalse: [
 				self pattern reset.
 				self performedMatch: false.
 				self searchStack addLast: aChild.
-				self visitedPrimitives add: aChild.
+				self visited add: aChild.
 				^ self getNextMatch]].
 		self searchStack removeLast].
 	^ nil
@@ -207,13 +207,13 @@ SBPatternMatcher >> strategy: aDict [
 ]
 
 { #category : #accessing }
-SBPatternMatcher >> visitedPrimitives [
+SBPatternMatcher >> visited [
 
-	^ visitedPrimitives
+	^ visited
 ]
 
 { #category : #accessing }
-SBPatternMatcher >> visitedPrimitives: aSet [
+SBPatternMatcher >> visited: aSet [
 
-	visitedPrimitives := aSet
+	visited := aSet
 ]

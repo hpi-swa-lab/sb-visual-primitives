@@ -25,12 +25,12 @@ Class {
 	#classVars : [
 		'ColorizeDifferences'
 	],
-	#category : #'Sandblocks-DomainBlocks'
+	#category : #'Sandblocks-DomainBlocks-PatternMatching'
 }
 
 { #category : #accessing }
 SBTransformation class >> colorizeDifferences [
-	<preference: 'Colorize changes of transformations' category: 'Sandblocks-DomainBlocks' description: 'This option enables automatic highlighting of same bindings during transformation. This might make it easier to see the changes a transformation does. This is only an alpha feature.' type: #Boolean>
+	<preference: 'Colorize changes of transformations' category: 'Sandblocks-DomainBlocks-PatternMatching' description: 'This option enables automatic highlighting of same bindings during transformation. This might make it easier to see the changes a transformation does. This is only an alpha feature.' type: #Boolean>
 
 	^ ColorizeDifferences ifNil: [false]
 ]
@@ -488,7 +488,15 @@ SBTransformation >> input: aPattern output: anotherPattern [
 	self
 		pattern: aPattern;
 		outputPattern: (anotherPattern isOutputPattern: true).
-	self buildImplicitChildrenMatchingPattern
+		
+	self pattern owner
+		addMorphBack: (SBColumn new
+			cellPositioning: #center;
+			cellGap: 6;
+			addMorphBack: (self newRepeatCountMorphFor: replaceCount);
+			addMorphBack: SBIcon iconSyncAlt large);
+		addMorphBack: self outputPattern.
+	self class colorizeDifferences ifTrue: [self colorDifferences].
 ]
 
 { #category : #'as yet unclassified' }
@@ -497,23 +505,6 @@ SBTransformation >> newRepeatCountMorphFor: aNumber [
 	aNumber isInfinite
 		ifTrue: [^ SBIcon iconInfinity color: Color red muchDarker]
 		ifFalse: [^ SBStNumber new value: aNumber]
-]
-
-{ #category : #callbacks }
-SBTransformation >> noteNewOwner: aMorph [
-
-	| wasBuilt |
-	wasBuilt := self classNameInput notNil.
-	super noteNewOwner: aMorph.
-	(wasBuilt not and: [self classNameInput notNil]) ifTrue: [
-		self pattern owner
-			addMorphBack: (SBColumn new
-				cellPositioning: #center;
-				cellGap: 6;
-				addMorphBack: (self newRepeatCountMorphFor: replaceCount);
-				addMorphBack: SBIcon iconSyncAlt large);
-			addMorphBack: self outputPattern].
-	self class colorizeDifferences ifTrue: [self colorDifferences]
 ]
 
 { #category : #accessing }

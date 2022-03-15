@@ -4,7 +4,7 @@ An SBQuery is used to query a part of the input that matches the query's pattern
 Class {
 	#name : #SBQuery,
 	#superclass : #SBPatternContainer,
-	#category : #'Sandblocks-DomainBlocks'
+	#category : #'Sandblocks-DomainBlocks-PatternMatching'
 }
 
 { #category : #'as yet unclassified' }

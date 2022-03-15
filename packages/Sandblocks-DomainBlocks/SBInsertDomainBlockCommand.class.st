@@ -33,9 +33,7 @@ SBInsertDomainBlockCommand >> do [
 	(self patternParent isBindingPattern not and: [self patternChildren notEmpty]) ifTrue: [self patternParent removeChild: self patternChildren first].
 	self patternChildren do: [:child | self morph addChild: child].
 	self patternParent ifNotNil: [
-		self patternParent
-			addChild: self morph
-			afterIndex: (self insertSiblingIndex).
+		self patternParent addChild: self morph afterIndex: self insertSiblingIndex.
 		
 		" When adding a new root binding pattern, the row gets deleted and a new one is used.
 		That is why we have to reset the container and index. "

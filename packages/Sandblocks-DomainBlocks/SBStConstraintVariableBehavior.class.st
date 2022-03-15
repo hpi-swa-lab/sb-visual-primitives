@@ -1,11 +1,11 @@
 "
-An SBStConstraintVariableBehavior is xxxxxxxxx.
+An SBStConstraintVariableBehavior is the behaviour of the SBStNames referencing bindings inside SBConstraintPatterns.
 
 "
 Class {
 	#name : #SBStConstraintVariableBehavior,
 	#superclass : #SBStDeclarationBehavior,
-	#category : #'Sandblocks-DomainBlocks'
+	#category : #'Sandblocks-DomainBlocks-PatternMatching'
 }
 
 { #category : #'as yet unclassified' }
@@ -67,7 +67,7 @@ SBStConstraintVariableBehavior >> printBlockOn: aStream [
 { #category : #'as yet unclassified' }
 SBStConstraintVariableBehavior >> scope [
 
-	^ {self block patternRoot parentSandblock}
+	^ {self block root parentSandblock}
 ]
 
 { #category : #'as yet unclassified' }

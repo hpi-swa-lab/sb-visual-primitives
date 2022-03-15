@@ -18,7 +18,7 @@ Class {
 	#instVars : [
 		'constraint'
 	],
-	#category : #'Sandblocks-DomainBlocks'
+	#category : #'Sandblocks-DomainBlocks-PatternMatching'
 }
 
 { #category : #'as yet unclassified' }
@@ -226,7 +226,7 @@ SBConstraintPattern >> patternChildren [
 { #category : #'pattern hierarchy' }
 SBConstraintPattern >> patternParent [
 
-	^ self owner
+	^ self owner isPatternBlock ifTrue: [self owner]
 ]
 
 { #category : #'pattern matching' }

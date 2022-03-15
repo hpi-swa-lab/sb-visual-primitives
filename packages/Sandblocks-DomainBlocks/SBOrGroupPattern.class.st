@@ -14,7 +14,7 @@ Class {
 	#instVars : [
 		'matchingPattern'
 	],
-	#category : #'Sandblocks-DomainBlocks'
+	#category : #'Sandblocks-DomainBlocks-PatternMatching'
 }
 
 { #category : #examples }

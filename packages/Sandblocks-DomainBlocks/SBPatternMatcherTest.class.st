@@ -1,11 +1,11 @@
 "
-A SBPatternMatcherTest is xxxxxxxxx.
+A SBPatternMatcherTest tests some pattern matching scenarios using SBDummyNodes.
 
 "
 Class {
 	#name : #SBPatternMatcherTest,
 	#superclass : #TestCase,
-	#category : #'Sandblocks-DomainBlocks'
+	#category : #'Sandblocks-DomainBlocks-PatternMatching'
 }
 
 { #category : #'as yet unclassified' }

@@ -44,7 +44,7 @@ Class {
 		'pattern',
 		'strategy'
 	],
-	#category : #'Sandblocks-DomainBlocks'
+	#category : #'Sandblocks-DomainBlocks-PatternMatching'
 }
 
 { #category : #'as yet unclassified' }
@@ -149,7 +149,8 @@ SBPatternContainer >> defaultVisualizationClass [
 { #category : #accessing }
 SBPatternContainer >> defaultVisualizationClass: aClass [
 
-	defaultVisualizationClass := aClass
+	defaultVisualizationClass := aClass.
+	self classNameInput object: aClass
 ]
 
 { #category : #'as yet unclassified' }
@@ -184,6 +185,18 @@ SBPatternContainer >> findAllIdentityBindingsAsDict: aPattern [
 		yourself
 ]
 
+{ #category : #'as yet unclassified' }
+SBPatternContainer >> identifierForIndex: aNumber [
+
+	^ ('', (Character alphabet at: aNumber - 1 // Character alphabet size + 1)) asSymbol
+]
+
+{ #category : #'as yet unclassified' }
+SBPatternContainer >> implicitPrefix [
+
+	^ 'i_'
+]
+
 { #category : #accessing }
 SBPatternContainer >> informationRow [
 
@@ -198,11 +211,18 @@ SBPatternContainer >> initialize [
 	self
 		changeTableLayout;
 		shrinkWrap;
+		listDirection: #topToBottom;
+		cellPositioning: #center;
 		cellInset: self cellInset;
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> true;
 			add: #explicitChildrenMatching -> true;
-			yourself)
+			yourself).
+	
+	classNameInput := SBStClassNameInput new prefix: 'Class: '.
+	self
+		addMorphBack: classNameInput;
+		addMorphBack: self informationRow
 ]
 
 { #category : #'as yet unclassified' }
@@ -212,21 +232,24 @@ SBPatternContainer >> isValidBinding: aString [
 ]
 
 { #category : #'as yet unclassified' }
-SBPatternContainer >> noteNewOwner: aMorph [
+SBPatternContainer >> nextIdentifier [
 
-	super noteNewOwner: aMorph.
-	classNameInput ifNil: [ | row |
-		classNameInput := SBStClassNameInput new
-			object: self defaultVisualizationClass;
-			prefix: 'Class: '.
-		self addMorph: (SBColumn new
-			cellPositioning: #center;
-			addMorphBack: classNameInput;
-			addMorphBack: self informationRow;
-			addMorphBack: (row := SBRow new
-				cellInset: self cellInset;
-				cellPositioning: #center)).
-		row addMorphBack: self pattern]
+	| invalidIdentifiers currentAttempt possibleIdentifer |
+	invalidIdentifiers := Array streamContents: [:stream |
+		self pattern allChildrenDo: [:child | | element |
+			element := child bindingName.
+			element := element ifNotNil: [
+				(child bindingName beginsWith: self implicitPrefix)
+					ifTrue: [element from: self implicitPrefix size + 1]
+					ifFalse: [element]].
+			stream nextPut: element]].
+	
+	currentAttempt := 1.
+	[
+		possibleIdentifer := self identifierForIndex: currentAttempt.
+		invalidIdentifiers includes: possibleIdentifer] whileTrue: [currentAttempt := currentAttempt + 1].
+	
+	^ possibleIdentifer
 ]
 
 { #category : #'as yet unclassified' }
@@ -244,7 +267,12 @@ SBPatternContainer >> pattern [
 { #category : #accessing }
 SBPatternContainer >> pattern: anSBGroupPattern [
 
-	pattern := anSBGroupPattern
+	| row |
+	pattern := anSBGroupPattern.
+	self addMorphBack: (row := SBRow new
+		cellInset: self cellInset;
+		cellPositioning: #center).
+	row addMorphBack: self pattern
 ]
 
 { #category : #'as yet unclassified' }
@@ -287,7 +315,7 @@ SBPatternContainer >> toggleImplicitChildTo: aBoolean withBinding: aString [
 SBPatternContainer >> toggleImplicitChildTo: aBoolean withBinding: aString on: aSBPattern [
 
 	aSBPattern allChildrenDo: [:child |
-		child bindingIndex = aString ifTrue: [
+		child bindingName = aString ifTrue: [
 			(child isKindOf: SBEllipsisPattern) ifTrue: [child isImplicitChild: aBoolean].
 			^ self]]
 ]

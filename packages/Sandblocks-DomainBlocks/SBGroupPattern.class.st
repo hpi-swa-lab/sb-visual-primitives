@@ -2,9 +2,9 @@
 An SBGroupPattern creates and contains SBBindingPatterns, SBConstraintPatterns and SBOrGroupPatterns. The patterns are seperated with an 'and'.
 
 Instance Variables
-	patternChildren:				OrderedCollection of SBDomainBlocks, SBConstraintPatterns and/or SBOrGroupPatterns
-	isOutputPattern: 	Boolean
-	parent:				Object
+	patternChildren:		OrderedCollection of SBDomainBlocks, SBConstraintPatterns and/or SBOrGroupPatterns
+	isOutputPattern: 		Boolean
+	parent:					Object
 	row:					SBRow
 
 patternChildren
@@ -27,7 +27,7 @@ Class {
 	#instVars : [
 		'isOutputPattern'
 	],
-	#category : #'Sandblocks-DomainBlocks'
+	#category : #'Sandblocks-DomainBlocks-PatternMatching'
 }
 
 { #category : #'as yet unclassified' }
@@ -45,7 +45,7 @@ SBGroupPattern class >> matches: aBlock [
 { #category : #'as yet unclassified' }
 SBGroupPattern class >> newFor: aBlock [
 
-	^ self new patternChildren: aBlock arguments first submorphs
+	^ self new patternChildren: (aBlock arguments first submorphs select: #isPatternBlock)
 ]
 
 { #category : #'as yet unclassified' }
@@ -65,7 +65,8 @@ SBGroupPattern class >> selector: aString receiverMatches: aMessage [
 { #category : #'as yet unclassified' }
 SBGroupPattern >> addChild: aDomainBlock afterIndex: aNumber [
 
-	self flag: #TODO. "Don't ignore the number anymore"
+	self flag: #TODO.
+	"Don't ignore the number anymore"
 	aDomainBlock patternParent ifNotNil: [aDomainBlock patternParent removeChild: aDomainBlock].
 	self openPatternAsChild: aDomainBlock
 ]
@@ -188,9 +189,10 @@ SBGroupPattern >> deleteBlock [
 SBGroupPattern >> deleteCommandFor: aBlock [
 
 	| primitive |
-	primitive := aBlock isPatternBlock
-		ifTrue: [aBlock]
-		ifFalse: [aBlock submorphThat: [:morph | morph isPatternBlock and: [morph patternParent = self]] ifNone: [nil]].
+	primitive := aBlock isPatternBlock ifTrue: [aBlock] ifFalse: [
+		aBlock
+			submorphThat: [:morph | morph isPatternBlock and: [morph patternParent = self]]
+			ifNone: [nil]].
 	
 	^ SBDeleteDomainBlockCommand new target: primitive
 ]
@@ -219,18 +221,6 @@ SBGroupPattern >> getNext: aDomainBlock [
 
 	self patternChildren do: [:pattern | (pattern getNext: aDomainBlock) ifFalse: [pattern reset] ifTrue: [^ true]].
 	^ false
-]
-
-{ #category : #'as yet unclassified' }
-SBGroupPattern >> identifierForIndex: aNumber [
-
-	^ ('', (Character alphabet at: aNumber - 1 // Character alphabet size + 1)) asSymbol
-]
-
-{ #category : #'as yet unclassified' }
-SBGroupPattern >> implicitPrefix [
-
-	^ 'i_'
 ]
 
 { #category : #initialization }
@@ -320,31 +310,11 @@ SBGroupPattern >> matches: aDomainBlock withBinding: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
-SBGroupPattern >> nextIdentifier [
-
-	| invalidIdentifiers currentAttempt possibleIdentifer |
-	invalidIdentifiers := Array streamContents: [:stream |
-		self allChildrenDo: [:pattern | | element |
-			element := pattern bindingIndex.
-			element := element ifNotNil: [
-				(pattern bindingIndex beginsWith: self implicitPrefix)
-					ifTrue: [element from: self implicitPrefix size + 1]
-					ifFalse: [element]].
-			stream nextPut: element]].
-	
-	currentAttempt := 1.
-	[
-		possibleIdentifer := self identifierForIndex: currentAttempt.
-		invalidIdentifiers includes: possibleIdentifer] whileTrue: [currentAttempt := currentAttempt + 1].
-	
-	^ possibleIdentifer
-]
-
-{ #category : #'as yet unclassified' }
 SBGroupPattern >> openPatternAsChild: aPattern [
 
 	| insertPosition addedBlock |
 	insertPosition := aPattern patternSiblingIndex * 2 - 1.
+	insertPosition < 0 ifTrue: [insertPosition := self submorphCount + 1].
 	
 	aPattern isBindingPattern
 		ifTrue: [
@@ -356,8 +326,7 @@ SBGroupPattern >> openPatternAsChild: aPattern [
 			
 			self addMorph: addedBlock atIndex: insertPosition.
 			
-			aPattern addToWorld: addedBlock.
-			aPattern addConnectorLinesIn: addedBlock]
+			aPattern addToWorld: addedBlock]
 		ifFalse: [
 			self addMorph: aPattern atIndex: insertPosition.
 			addedBlock := aPattern].
@@ -368,7 +337,11 @@ SBGroupPattern >> openPatternAsChild: aPattern [
 { #category : #accessing }
 SBGroupPattern >> patternChildren [
 
-	^ self submorphs select: #isPatternBlock
+	^ (self submorphs collect: [:morph |
+		morph isPatternBlock ifTrue: [morph] ifFalse: [
+			morph submorphs
+				detect: [:anotherMorph | anotherMorph isPatternBlock and: [anotherMorph patternParent = self]]
+				ifNone: [nil]]]) select: #isPatternBlock
 ]
 
 { #category : #accessing }
@@ -393,7 +366,6 @@ SBGroupPattern >> rebuild [
 { #category : #'as yet unclassified' }
 SBGroupPattern >> removeChild: aDomainBlock [
 
-	
 	self patternChildren: (self patternChildren remove: aDomainBlock)
 ]
 

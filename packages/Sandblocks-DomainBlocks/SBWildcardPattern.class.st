@@ -1,15 +1,16 @@
 "
-An SBWildcardPattern is xxxxxxxxx.
+An SBWildcardPattern used to represent a non-empty subtree. Its children can be below any node in that subtree. To that end, it searches the subtree via a depth-first search.
+
 
 Instance Variables
 	searchStack:		LinkedList
-	visitedPrimitives:	Set
+	visited:				Set
 
 searchStack
-	- xxxxx
+	- the current stack of the depth-first search
 
-visitedPrimitives
-	- xxxxx
+visited
+	- the domain blocks that have already been found by the depth-first search
 
 "
 Class {
@@ -17,9 +18,9 @@ Class {
 	#superclass : #SBBindingPattern,
 	#instVars : [
 		'searchStack',
-		'visitedPrimitives'
+		'visited'
 	],
-	#category : #'Sandblocks-DomainBlocks'
+	#category : #'Sandblocks-DomainBlocks-PatternMatching'
 }
 
 { #category : #accessing }
@@ -32,7 +33,7 @@ SBWildcardPattern >> bindingFor: aDomainBlock [
 SBWildcardPattern >> buildFromBinding: anArray [
 
 	| binding |
-	binding := anArray at: self bindingIndex.
+	binding := anArray at: self bindingName.
 	^ {self buildFromBinding: anArray currentPrimitive: (binding at: #root)}
 ]
 
@@ -40,7 +41,7 @@ SBWildcardPattern >> buildFromBinding: anArray [
 SBWildcardPattern >> buildFromBinding: anArray currentPrimitive: aDomainBlock [
 
 	| output binding leaf |
-	binding := anArray at: self bindingIndex.
+	binding := anArray at: self bindingName.
 	leaf := binding at: #leaf.
 	
 	output := aDomainBlock copy.
@@ -48,6 +49,19 @@ SBWildcardPattern >> buildFromBinding: anArray currentPrimitive: aDomainBlock [
 		ifTrue: [output patternChildren: (self buildChildrenFromBinding: anArray)]
 		ifFalse: [output patternChildren: (aDomainBlock patternChildren collect: [:primitive | self buildFromBinding: anArray currentPrimitive: primitive])].
 	^ output
+]
+
+{ #category : #'as yet unclassified' }
+SBWildcardPattern >> convertToBindingPattern [
+	<action>
+
+	self convertToPatternClass: SBBindingPattern
+]
+
+{ #category : #'as yet unclassified' }
+SBWildcardPattern >> convertToWildcardPattern [
+
+	
 ]
 
 { #category : #accessing }
@@ -139,7 +153,7 @@ SBWildcardPattern >> getNext: aDomainBlock [
 		^ true].
 	[self searchStack notEmpty] whileTrue: [
 		self currentTop patternChildren do: [:child |
-			(self visitedPrimitives includes: child) ifFalse: [
+			(self visited includes: child) ifFalse: [
 				self pushToStack: child.
 				self resetChildren.
 				^ true]].
@@ -153,7 +167,7 @@ SBWildcardPattern >> initialize [
 	super initialize.
 	self
 		searchStack: LinkedList new;
-		visitedPrimitives: Set new.
+		visited: Set new.
 	self firstSubmorph addMorph: (SBIcon iconAsterisk scale: 1.5)
 ]
 
@@ -161,7 +175,7 @@ SBWildcardPattern >> initialize [
 SBWildcardPattern >> pushToStack: aDomainBlock [
 
 	self searchStack addFirst: aDomainBlock.
-	self visitedPrimitives add: aDomainBlock
+	self visited add: aDomainBlock
 ]
 
 { #category : #'as yet unclassified' }
@@ -193,13 +207,13 @@ SBWildcardPattern >> setBindingFor: aDomainBlock in: aCollection [
 ]
 
 { #category : #accessing }
-SBWildcardPattern >> visitedPrimitives [
+SBWildcardPattern >> visited [
 
-	^ visitedPrimitives
+	^ visited
 ]
 
 { #category : #accessing }
-SBWildcardPattern >> visitedPrimitives: aSet [
+SBWildcardPattern >> visited: aSet [
 
-	visitedPrimitives := aSet
+	visited := aSet
 ]

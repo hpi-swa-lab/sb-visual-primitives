@@ -1,11 +1,11 @@
 "
-An SBStDeclarationForVPBinding is xxxxxxxxx.
+An SBStDeclarationForVPBinding is the behaviour of the SBStNames that defining bindings inside of SBBindingPatterns when they are inside of an SBQuery or on the input pattern side of an SBTransformation.
 
 "
 Class {
 	#name : #SBStDeclarationForVPBinding,
 	#superclass : #SBStDeclarationBehavior,
-	#category : #'Sandblocks-DomainBlocks'
+	#category : #'Sandblocks-DomainBlocks-PatternMatching'
 }
 
 { #category : #'as yet unclassified' }
@@ -28,7 +28,7 @@ SBStDeclarationForVPBinding >> asSuggestionItem [
 SBStDeclarationForVPBinding >> attached: aName [
 
 	super attached: aName.
-	self refreshBindingIndex
+	self refreshBindingName
 ]
 
 { #category : #'as yet unclassified' }
@@ -41,7 +41,7 @@ SBStDeclarationForVPBinding >> castToUnknownWhenEmpty [
 SBStDeclarationForVPBinding >> contentsChanged [
 
 	super contentsChanged.
-	self refreshBindingIndex
+	self refreshBindingName
 ]
 
 { #category : #accessing }
@@ -83,17 +83,17 @@ SBStDeclarationForVPBinding >> printBlockOn: aStream [
 ]
 
 { #category : #accessing }
-SBStDeclarationForVPBinding >> refreshBindingIndex [
+SBStDeclarationForVPBinding >> refreshBindingName [
 
 	| bindingPattern |
 	bindingPattern := name firstOwnerSuchThat: [:owner | owner isBindingPattern].
-	(bindingPattern labelPositionOf: name) = bindingPattern identityLabelPosition ifTrue: [bindingPattern bindingIndex: name contents]
+	(bindingPattern labelPositionOf: name) = bindingPattern identityLabelPosition ifTrue: [bindingPattern bindingName: name contents]
 ]
 
 { #category : #accessing }
 SBStDeclarationForVPBinding >> scope [
 
-	^ {self block patternRoot parentSandblock}
+	^ {self block root parentSandblock}
 ]
 
 { #category : #accessing }

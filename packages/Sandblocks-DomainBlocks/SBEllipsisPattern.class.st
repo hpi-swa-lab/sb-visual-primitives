@@ -19,7 +19,7 @@ Class {
 		'currentSize',
 		'isImplicitChild'
 	],
-	#category : #'Sandblocks-DomainBlocks'
+	#category : #'Sandblocks-DomainBlocks-PatternMatching'
 }
 
 { #category : #'as yet unclassified' }
@@ -29,24 +29,26 @@ SBEllipsisPattern >> addImplicitChildren: aDict [
 ]
 
 { #category : #'as yet unclassified' }
-SBEllipsisPattern >> bindingIndexWithImplicitPrefix: aBoolean [
+SBEllipsisPattern >> bindingNameWithImplicitPrefix: aBoolean [
 
-	self bindingIndex ifNil: [^ nil].
+	| prefix |
+	self bindingName ifNil: [^ nil].
+	prefix := self patternContainer implicitPrefix.
 	aBoolean
 		ifTrue: [
-			(self bindingIndex beginsWith: self implicitPrefix)
-				ifTrue: [^ self bindingIndex]
-				ifFalse: [^ self implicitPrefix, self bindingIndex]]
+			(self bindingName beginsWith: prefix)
+				ifTrue: [^ self bindingName]
+				ifFalse: [^ prefix, self bindingName]]
 		ifFalse: [
-			(self bindingIndex beginsWith: self implicitPrefix)
-				ifTrue: [^ self bindingIndex from: self implicitPrefix size + 1]
-				ifFalse: [^ self bindingIndex]]
+			(self bindingName beginsWith: prefix)
+				ifTrue: [^ self bindingName from: prefix size + 1]
+				ifFalse: [^ self bindingName]]
 ]
 
 { #category : #'as yet unclassified' }
 SBEllipsisPattern >> buildFromBinding: anArray [
 
-	^ (anArray at: self bindingIndex) veryDeepCopy
+	^ (anArray at: self bindingName) veryDeepCopy
 ]
 
 { #category : #'as yet unclassified' }
@@ -126,15 +128,15 @@ SBEllipsisPattern >> isImplicitChild [
 { #category : #accessing }
 SBEllipsisPattern >> isImplicitChild: aBoolean [
 
-	| setColor previousImplicit prevBindingIndex bindingInputBlock |
+	| setColor previousImplicit prevBindingName bindingInputBlock |
 	previousImplicit := self isImplicitChild.
 	isImplicitChild := aBoolean.
 	previousImplicit = self isImplicitChild ifTrue: [^ self].
-	prevBindingIndex := self bindingIndex.
-	self bindingIndex: (self bindingIndexWithImplicitPrefix: aBoolean).
-	bindingInputBlock := self bindingIndex
+	prevBindingName := self bindingName.
+	self bindingName: (self bindingNameWithImplicitPrefix: aBoolean).
+	bindingInputBlock := self bindingName
 		ifNil: [self newUnknown]
-		ifNotNil: [self bindingLabelBlockFrom: self bindingIndex].
+		ifNotNil: [self bindingLabelBlockFrom: self bindingName].
 	self setLabelAt: self identityLabelPosition to: bindingInputBlock.
 	setColor := [:newColor |
 		self childSandblocksDo: [:block | block color: newColor].
@@ -143,7 +145,7 @@ SBEllipsisPattern >> isImplicitChild: aBoolean [
 		ifTrue: [setColor value: Color gray]
 		ifFalse: [setColor value: Color black].
 	"If called with isImplicitChild not changing, this leads to an infinite loop."
-	self patternContainer ifNotNil: [:parentCase | parentCase toggleImplicitChildTo: self isImplicitChild withBinding: prevBindingIndex]
+	self patternContainer ifNotNil: [:parentCase | parentCase toggleImplicitChildTo: self isImplicitChild withBinding: prevBindingName]
 ]
 
 { #category : #accessing }
@@ -163,7 +165,9 @@ SBEllipsisPattern >> reset [
 { #category : #'as yet unclassified' }
 SBEllipsisPattern >> searchRootFor: aDomainBlock at: anIndex [
 
-	^ aDomainBlock patternChildren copyFrom: anIndex to: anIndex + self indexOffset
+	^ aDomainBlock patternChildren
+		copyFrom: anIndex
+		to: anIndex + self indexOffset
 ]
 
 { #category : #'as yet unclassified' }

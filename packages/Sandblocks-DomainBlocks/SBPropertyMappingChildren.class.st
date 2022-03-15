@@ -39,7 +39,11 @@ SBPropertyMappingChildren class >> getter: aBlock setter: anotherBlock [
 			ifNil: [{}]
 			ifNotNil: [:patternChildren | patternChildren reject: [:entry | entry isNil]]].
 	wrappedSetter := [:object :vp | anotherBlock value: object value: (vp propertyAt: #patternChildren)].
-	^ super getter: wrappedGetter setter: wrappedSetter vpProperty: #patternChildren name: 'patternChildren'
+	^ super
+		getter: wrappedGetter
+		setter: wrappedSetter
+		vpProperty: #patternChildren
+		name: 'patternChildren'
 ]
 
 { #category : #'as yet unclassified' }
@@ -47,7 +51,13 @@ SBPropertyMappingChildren class >> getter: aBlock setter: anotherBlock patternVa
 
 	anObject
 		ifNotNil: [Error signal: 'SBPropertyMappingChildren does not support patternValue as this would lead to patterns recusively having patternChildren. This will result in an infinite number of patternChildren.']
-		ifNil: [^ super getter: aBlock setter: anotherBlock patternValue: anObject vpProperty: aSymbol name: 'patternChildren']
+		ifNil: [
+			^ super
+				getter: aBlock
+				setter: anotherBlock
+				patternValue: anObject
+				vpProperty: aSymbol
+				name: 'patternChildren']
 ]
 
 { #category : #'as yet unclassified' }

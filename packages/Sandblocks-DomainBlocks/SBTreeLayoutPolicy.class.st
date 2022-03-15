@@ -149,14 +149,12 @@ SBTreeLayoutPolicy >> inset [
 SBTreeLayoutPolicy >> layout: aMorph in: aRectangle [
 
 	| root |
-	(aMorph submorphsSatisfying: #isConnector) do: #abandon.
 	root := self findRootIn: aMorph.
 	root ifNotNil: [
 		self
 			resetAll;
 			firstWalk: root;
-			secondWalk: root modSum: 0 layerHeights: (self maximumHeight: root) + self inset.
-		root addConnectorLinesIn: aMorph]
+			secondWalk: root modSum: 0 layerHeights: (self maximumHeight: root) + self inset]
 ]
 
 { #category : #accessing }

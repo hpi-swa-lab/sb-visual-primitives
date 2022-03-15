@@ -62,11 +62,10 @@ SBDomainBlockContainer >> code: aCodeBlock [
 	self visual removeAllMorphs.
 	aSandblock := aCodeBlock asSandblock.
 	
-	SBDomainBlock
+	self visual addMorph: (SBDomainBlock
 		newFromObject: (aSandblock evaluate isBlock
 			ifTrue: [aSandblock evaluate value]
-			ifFalse: [aSandblock evaluate])
-		in: self visual
+			ifFalse: [aSandblock evaluate])).
 ]
 
 { #category : #'as yet unclassified' }

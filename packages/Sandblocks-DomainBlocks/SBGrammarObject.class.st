@@ -26,8 +26,7 @@ SBGrammarObject class >> domainBlockMapping [
 				patternChildren size < 1 ifTrue: [] ifFalse: [
 					patternChildren size > 1
 						ifTrue: [object members: patternChildren]
-						ifFalse: [object content: patternChildren first]]]
-			}
+						ifFalse: [object content: patternChildren first]]]}
 ]
 
 { #category : #'as yet unclassified' }

@@ -14,7 +14,7 @@ Class {
 	#instVars : [
 		'originalMapping'
 	],
-	#category : #'Sandblocks-DomainBlocks'
+	#category : #'Sandblocks-DomainBlocks-PatternMatching'
 }
 
 { #category : #'as yet unclassified' }

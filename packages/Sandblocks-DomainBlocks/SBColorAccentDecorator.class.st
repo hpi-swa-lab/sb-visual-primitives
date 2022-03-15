@@ -1,15 +1,15 @@
 "
-A SBColorAccentDecorator is xxxxxxxxx.
+A SBColorAccentDecorator is a decorator allowing sandblock that be drawn with a border. Currently only used for highlighting changing in patterns; needs to be turned on in the preferences in the category Sandblocks-DomainBlocks-PatternMatching.
 
 Instance Variables
 	color:			Color
-	message:	String
+	message:		String
 
 color
-	- xxxxx
+	- the color of the border
 
 message
-	- xxxxx
+	- if supplied, this will be displayed when as the sandblock's balloonText 
 
 "
 Class {
@@ -19,7 +19,7 @@ Class {
 		'color',
 		'message'
 	],
-	#category : #'Sandblocks-DomainBlocks'
+	#category : #'Sandblocks-DomainBlocks-PatternMatching'
 }
 
 { #category : #callbacks }

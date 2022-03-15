@@ -3,10 +3,10 @@ An SBDomainBlock is the visual representation of an object. It can also be used 
 See SBPropertyMappings for the different ways of mapping.
 
 Instance Variables
-	blockDict:		Dictionary
-	patternChildren:			OrderedCollection of SBDomainBlocks
-	parent:			Object
-	sourceObject:	Object
+	blockDict:				Dictionary
+	patternChildren:		OrderedCollection of SBDomainBlocks
+	parent:					Object
+	sourceObject:			Object
 
 blockDict
 	- (#blockPosition -> SBBlock)
@@ -29,7 +29,6 @@ Class {
 	#superclass : #SBStSubstitution,
 	#instVars : [
 		'blockDict',
-		'patternChildren',
 		'sourceObject'
 	],
 	#category : #'Sandblocks-DomainBlocks'
@@ -96,20 +95,21 @@ SBDomainBlock >> addChild: aDomainBlock [
 { #category : #'as yet unclassified' }
 SBDomainBlock >> addChild: aDomainBlock afterIndex: aNumber [
 
+	| connector previousConnector |
 	aDomainBlock patternParent ifNotNil: [aDomainBlock patternParent removeChild: aDomainBlock].
-	self patternChildren add: aDomainBlock afterIndex: aNumber
-]
-
-{ #category : #'as yet unclassified' }
-SBDomainBlock >> addConnectorLinesIn: aMorph [
-
-	self patternChildren do: [:child | | connector |
-		connector := (SBConnectorLine connect: self align: #bottom to: child align: #top)
-			connectorType: #line;
-			lineWidth: 1;
-			color: Color black.
-		aMorph addMorphBack: connector.
-		child addConnectorLinesIn: aMorph]
+	self patternParent
+		ifNotNil: [
+			connector := (SBConnectorLine connect: self align: #bottom to: aDomainBlock align: #top)
+				connectorType: #line;
+				lineWidth: 1;
+				color: Color black.
+			aNumber = 0 ifTrue: [self owner addMorphFront: connector] ifFalse: [
+				previousConnector := (Array streamContents: [:stream | self outgoingConnectionsDo: [:m | stream nextPut: m]]) at: aNumber.
+				self owner addMorph: connector after: previousConnector].
+			self owner addMorph: aDomainBlock]
+		ifNil: [
+			self flag: #TODO. "Consider index here"
+			self attachDecorator: (SBFutureConnectionDecorator new to: aDomainBlock)]
 ]
 
 { #category : #'as yet unclassified' }
@@ -259,7 +259,9 @@ SBDomainBlock >> buildObject [
 { #category : #'as yet unclassified' }
 SBDomainBlock >> centerChild [
 
-	^ self patternChildren ifEmpty: [nil] ifNotEmpty: [self patternChildren at: self patternChildren size + 1 / 2]
+	^ self patternChildren
+		ifEmpty: [nil]
+		ifNotEmpty: [self patternChildren at: self patternChildren size + 1 / 2]
 ]
 
 { #category : #'as yet unclassified' }
@@ -333,8 +335,7 @@ SBDomainBlock >> initialize [
 				addAllMorphs: (self bottomLabelPositions collect: [:position | self blockDict at: position]);
 				hResizing: #spaceFill};
 		changeTableLayout;
-		shrinkWrap;
-		patternChildren: OrderedCollection new
+		shrinkWrap
 ]
 
 { #category : #'as yet unclassified' }
@@ -526,18 +527,6 @@ SBDomainBlock >> objectInterfaceNear: aBlock at: aSymbol [
 	^ {[:o | o isKindOf: SBDomainBlock]}
 ]
 
-{ #category : #accessing }
-SBDomainBlock >> parentCase [
-
-	^ nil
-]
-
-{ #category : #accessing }
-SBDomainBlock >> parentQuery [
-
-	^ nil
-]
-
 { #category : #actions }
 SBDomainBlock >> pasteReplace [
 	<action>
@@ -575,26 +564,28 @@ SBDomainBlock >> pasteReplace [
 { #category : #accessing }
 SBDomainBlock >> patternChildren [
 
-	^ self connectedBlocks
+	^ ((self decorators select: [:dec | dec isKindOf: SBFutureConnectionDecorator]) collect: [:dec | dec to]) addAll: self connectedBlocks; yourself
 ]
 
 { #category : #accessing }
 SBDomainBlock >> patternChildren: aCollection [
 
-	patternChildren := aCollection asOrderedCollection
-]
-
-{ #category : #accessing }
-SBDomainBlock >> patternContainer [
-
-	^ nil
+	self outgoingConnectionsDo: [:connector | connector to abandon. connector abandon].
+	self detachDecorators: SBFutureConnectionDecorator.
+	aCollection do: [:child | self addChild: child]
 ]
 
 { #category : #'pattern hierarchy' }
 SBDomainBlock >> patternParent [
-
-	self incomingConnectionsDo: [:parentPattern | ^ parentPattern].
-	^ nil.
+	
+	self owner ifNil: [^ nil].
+	self owner submorphsDo: [:sibling |
+		sibling isSandblock ifTrue: [sibling decorators
+			detect: [:dec | (dec isKindOf: SBFutureConnectionDecorator) and: [dec to = self]]
+			ifFound: [:dec | ^ dec morph]
+			ifNone: []]].
+	self incomingConnectionsDo: [:parentPattern | ^ parentPattern from].
+	^ nil
 ]
 
 { #category : #'colors and color policies' }
@@ -627,7 +618,7 @@ SBDomainBlock >> propertyAt: aSymbol [
 { #category : #'as yet unclassified' }
 SBDomainBlock >> removeChild: aDomainBlock [
 
-	self patternChildren remove: aDomainBlock
+	self patternChildren: (self patternChildren remove: aDomainBlock)
 ]
 
 { #category : #'as yet unclassified' }
