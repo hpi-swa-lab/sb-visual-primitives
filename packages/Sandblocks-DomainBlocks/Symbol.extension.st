@@ -69,7 +69,10 @@ Symbol >> vpSelectFrom: anOrderedCollection displayAs: anotherOrderedCollection 
 { #category : #'*Sandblocks-DomainBlocks' }
 Symbol >> vpSelectFrom: anOrderedCollection for: aSymbol [
 
-	^ SBPropertyMappingSelect property: aSymbol vpProperty: self choices: anOrderedCollection
+	^ SBPropertyMappingSelect
+		property: aSymbol
+		vpProperty: self
+		choices: anOrderedCollection
 ]
 
 { #category : #'*Sandblocks-DomainBlocks' }
@@ -81,5 +84,5 @@ Symbol >> vpStringFor: aSymbol [
 { #category : #'*Sandblocks-DomainBlocks' }
 Symbol >> vpStringFor: aSymbol patternValue: aString [
 
-	^ SBPropertyMappingString property: aSymbol vpProperty: self patternValue: aString.
+	^ SBPropertyMappingString property: aSymbol vpProperty: self patternValue: aString
 ]

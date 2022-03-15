@@ -39,5 +39,6 @@ Object >> propertyMappingClass [
 { #category : #'*Sandblocks-DomainBlocks' }
 Object >> showAsDomainBlock [
 	"marker"
+
 	^ self
 ]
