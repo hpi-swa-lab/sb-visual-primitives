@@ -224,10 +224,10 @@ SBBindingPattern >> addImplicitChildren: aDict [
 			at: index + implicitChildrenCount.
 		implicitChildrenCount := implicitChildrenCount + 1].
 	
+	oldChildren := self patternChildren copy.
 	(self patternChildren isEmpty or: [self patternChildren first wantsImplicitNeighbors]) ifTrue: [addImplicitChild value: 0].
 	
-	oldChildren := self patternChildren copy.
-	oldChildren := self updateChildren: oldChildren with: addImplicitChild.
+	self updateChildren: oldChildren with: addImplicitChild.
 	
 	[implicitChildrenCount < implicitChildrenIndices size] whileTrue: [addImplicitChild value: oldChildren size]
 ]
@@ -337,9 +337,9 @@ SBBindingPattern >> buildImplicitChildren: aDict [
 	
 	(self patternChildren isEmpty or: [self patternChildren first wantsImplicitNeighbors]) ifTrue: [addImplicitChild value: 0].
 	
-	aDict at: self bindingName put: implicitChildren asArray.
+	(self updateChildren: oldChildren with: addImplicitChild) do: [:child | child buildImplicitChildren: aDict].
 	
-	(self updateChildren: oldChildren with: addImplicitChild) do: [:child | child buildImplicitChildren: aDict]
+	aDict at: self bindingName put: implicitChildren asArray
 ]
 
 { #category : #'as yet unclassified' }
