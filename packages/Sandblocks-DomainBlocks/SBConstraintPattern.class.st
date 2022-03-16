@@ -3,14 +3,10 @@ An SBConstraintPattern represents a textual condition and is used for pattern ma
 
 Instance Variables
 	constraint:		BlockClosure
-	parent:			Object
 
 constraint
 	- contains the condition as a BlockClosure
 
-parent
-	- the parent primitive
-	- also indicates the hierarchy of patterns 
 "
 Class {
 	#name : #SBConstraintPattern,

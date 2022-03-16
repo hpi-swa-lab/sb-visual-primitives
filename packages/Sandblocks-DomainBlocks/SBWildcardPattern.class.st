@@ -1,7 +1,6 @@
 "
 An SBWildcardPattern used to represent a non-empty subtree. Its children can be below any node in that subtree. To that end, it searches the subtree via a depth-first search.
 
-
 Instance Variables
 	searchStack:		LinkedList
 	visited:				Set
