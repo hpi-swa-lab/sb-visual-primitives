@@ -30,17 +30,18 @@ Class {
 { #category : #'as yet unclassified' }
 SBInsertDomainBlockCommand >> do [
 
-	(self patternParent isBindingPattern not and: [self patternChildren notEmpty]) ifTrue: [self patternParent removeChild: self patternChildren first].
-	self patternChildren do: [:child | self morph addChild: child].
-	self patternParent ifNotNil: [
-		self patternParent addChild: self morph afterIndex: self insertSiblingIndex.
-		
-		" When adding a new root binding pattern, the row gets deleted and a new one is used.
-		That is why we have to reset the container and index. "
-		container := self patternParent owner.
-		index := self container submorphCount].
+	container := self patternParent isDomainBlock
+		ifTrue: [self patternParent owner]
+		ifFalse: [self patternChildren first owner].
+	index := self container submorphCount.
 	
-	self patternParent isBindingPattern ifTrue: [super do].
+	self patternChildren do: [:child |
+		child patternParent isDomainBlock
+			ifTrue: [self morph addChild: child]
+			ifFalse: [self morph addConnectorLineTo: child afterIndex: self morph patternChildren size]].
+	self patternParent isDomainBlock ifTrue: [self patternParent addChild: self morph afterIndex: self insertSiblingIndex].
+	
+	super do.
 	
 	self morph allChildrenDo: [:child | self container addMorphBack: child].
 	self morph patternContainer ifNotNil: #buildImplicitChildrenMatchingPattern.
@@ -103,14 +104,9 @@ SBInsertDomainBlockCommand >> undo [
 
 	| case |
 	case := self morph patternContainer.
-	self patternParent
-		ifNotNil: [
-			" When adding a new root binding pattern, the row gets deleted and a new one is used.
-			That is why we have to reset the container. "
-			container := self patternParent owner.
-			self patternChildren reverseDo: [:child | self patternParent addChild: child afterIndex: self insertSiblingIndex]]
-		ifNil: [self patternChildren do: [:child | self morph removeChild: child]].
-	self morph patternChildren do: [:child | child abandon].
+	self patternParent ifNotNil: [self patternParent isDomainBlock ifTrue: [self patternChildren reverseDo: [:child | self patternParent addChild: child afterIndex: self insertSiblingIndex]]].
+	self morph patternChildren do: [:child | (self patternChildren includes: child) not ifTrue: [self morph removeChild: child]].
+	self morph allConnections do: #delete.
 	
 	super undo.
 	case ifNotNil: #buildImplicitChildrenMatchingPattern.

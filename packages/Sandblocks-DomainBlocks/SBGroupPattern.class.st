@@ -52,10 +52,8 @@ SBGroupPattern class >> selector: aString receiverMatches: aMessage [
 { #category : #'as yet unclassified' }
 SBGroupPattern >> addChild: aDomainBlock afterIndex: aNumber [
 
-	self flag: #TODO.
-	"Don't ignore the number anymore"
 	aDomainBlock patternParent ifNotNil: [aDomainBlock patternParent removeChild: aDomainBlock].
-	self openPatternAsChild: aDomainBlock
+	self openPatternAsChild: aDomainBlock afterIndex: aNumber
 ]
 
 { #category : #'as yet unclassified' }
@@ -167,9 +165,7 @@ SBGroupPattern >> collectIdentityBindingsInto: aCollection [
 { #category : #'as yet unclassified' }
 SBGroupPattern >> deleteBlock [
 
-	self sandblockEditor do: (SBDeleteDomainBlockCommand new
-		target: self;
-		yourself)
+	self sandblockEditor do: (SBDeleteSubtreeCommand new target: self)
 ]
 
 { #category : #'insert/delete' }
@@ -181,7 +177,7 @@ SBGroupPattern >> deleteCommandFor: aBlock [
 			submorphThat: [:morph | morph isPatternBlock and: [morph patternParent = self]]
 			ifNone: [nil]].
 	
-	^ SBDeleteDomainBlockCommand new target: primitive
+	^ SBDeleteSubtreeCommand new target: primitive
 ]
 
 { #category : #'pattern matching' }
@@ -297,11 +293,11 @@ SBGroupPattern >> matches: aDomainBlock withBinding: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
-SBGroupPattern >> openPatternAsChild: aPattern [
+SBGroupPattern >> openPatternAsChild: aPattern afterIndex: aNumber [
 
 	| insertPosition addedBlock |
-	insertPosition := aPattern patternSiblingIndex * 2 - 1.
-	insertPosition < 0 ifTrue: [insertPosition := self submorphCount + 1].
+	insertPosition := aNumber * 2.
+	insertPosition = 0 ifTrue: [insertPosition := 1].
 	
 	aPattern isBindingPattern
 		ifTrue: [
@@ -335,7 +331,7 @@ SBGroupPattern >> patternChildren [
 SBGroupPattern >> patternChildren: aCollection [
 
 	self removeAllMorphs.
-	aCollection do: [:aPattern | self openPatternAsChild: aPattern]
+	aCollection do: [:aPattern | self addChild: aPattern afterIndex: self patternChildren size]
 ]
 
 { #category : #'pattern hierarchy' }
@@ -353,7 +349,9 @@ SBGroupPattern >> rebuild [
 { #category : #'as yet unclassified' }
 SBGroupPattern >> removeChild: aDomainBlock [
 
-	self patternChildren: (self patternChildren remove: aDomainBlock)
+	(aDomainBlock isBindingPattern
+		ifTrue: [aDomainBlock owner]
+		ifFalse: [aDomainBlock]) delete
 ]
 
 { #category : #'as yet unclassified' }

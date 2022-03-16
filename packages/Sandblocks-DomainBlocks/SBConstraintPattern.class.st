@@ -119,9 +119,7 @@ SBConstraintPattern >> constraint: aBlockClosure [
 { #category : #'as yet unclassified' }
 SBConstraintPattern >> deleteBlock [
 
-	self sandblockEditor do: (SBDeleteDomainBlockCommand new
-		target: self;
-		yourself)
+	self sandblockEditor do: (SBDeleteSubtreeCommand new target: self)
 ]
 
 { #category : #'insert/delete' }

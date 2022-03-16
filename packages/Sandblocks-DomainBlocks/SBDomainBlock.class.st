@@ -86,11 +86,21 @@ SBDomainBlock >> addChild: aDomainBlock [
 { #category : #'as yet unclassified' }
 SBDomainBlock >> addChild: aDomainBlock afterIndex: aNumber [
 
-	| connector previousConnector |
 	aDomainBlock patternParent ifNotNil: [aDomainBlock patternParent removeChild: aDomainBlock].
-	self patternParent
-		ifNotNil: [
-			connector := (SBConnectorLine connect: self align: #bottom to: aDomainBlock align: #top)
+	self addConnectorLineTo: aDomainBlock afterIndex: aNumber
+]
+
+{ #category : #'as yet unclassified' }
+SBDomainBlock >> addConnectorLineTo: aDomainBlock afterIndex: aNumber [
+
+	| connector previousConnector |
+	self canCreateConnectors
+		ifTrue: [
+			connector := (SBDomainBlockConnector
+				connect: self
+				align: #bottom
+				to: aDomainBlock
+				align: #top)
 				connectorType: #line;
 				lineWidth: 1;
 				color: Color black.
@@ -98,9 +108,9 @@ SBDomainBlock >> addChild: aDomainBlock afterIndex: aNumber [
 				previousConnector := (Array streamContents: [:stream | self outgoingConnectionsDo: [:m | stream nextPut: m]]) at: aNumber.
 				self owner addMorph: connector after: previousConnector].
 			self owner addMorph: aDomainBlock]
-		ifNil: [
+		ifFalse: [
 			self flag: #TODO.
-			"Consider index here"
+			"Consider index here. Would be nice but probably doesn't actually change anything"
 			self attachDecorator: (SBFutureConnectionDecorator new to: aDomainBlock)]
 ]
 
@@ -253,6 +263,12 @@ SBDomainBlock >> buildObject [
 ]
 
 { #category : #'as yet unclassified' }
+SBDomainBlock >> canCreateConnectors [
+
+	^ self patternParent notNil or: [(self ownerThatIsA: SBDomainBlockContainer) notNil]
+]
+
+{ #category : #'as yet unclassified' }
 SBDomainBlock >> centerChild [
 
 	^ self patternChildren
@@ -284,9 +300,7 @@ SBDomainBlock >> defaultShape [
 { #category : #actions }
 SBDomainBlock >> deleteBlock [
 
-	self sandblockEditor do: (SBDeleteDomainBlockCommand new
-		target: self;
-		yourself)
+	self sandblockEditor do: (SBDeleteSubtreeCommand new target: self)
 ]
 
 { #category : #'as yet unclassified' }
@@ -313,8 +327,7 @@ SBDomainBlock >> initialize [
 	
 	self
 		blockDict: Dictionary new;
-		initializeLabelBlocks;
-		shape: self defaultShape.
+		initializeLabelBlocks.
 	self blockDict at: #innerLabel put: self shape.
 	
 	self
@@ -545,7 +558,7 @@ SBDomainBlock >> pasteReplace [
 				ifFalse: [
 					index = 1 ifTrue: [
 						editor do: (SBCombinedCommand newWith: {
-							SBDeleteDomainBlockCommand new target: self.
+							SBDeleteSubtreeCommand new target: self.
 							SBInsertDomainBlockCommand new
 								index: self owner submorphCount + 1;
 								patternParent: self patternParent;

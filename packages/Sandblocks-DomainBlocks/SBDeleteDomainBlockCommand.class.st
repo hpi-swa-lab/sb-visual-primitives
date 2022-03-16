@@ -25,14 +25,11 @@ Class {
 { #category : #'do-undo' }
 SBDeleteDomainBlockCommand >> do [
 
-	oldOwner := target owner.
 	self oldPatternParent: target patternParent.
-	self oldPatternSiblingIndex: target patternSiblingIndex.
-	
+	self oldPatternParent isDomainBlock
+		ifTrue: [self oldPatternSiblingIndex: target patternSiblingIndex]
+		ifFalse: [target := target owner].
 	super do.
-	
-	target allChildrenDo: [:block | block abandon].
-	self oldPatternParent patternContainer ifNotNil: #buildImplicitChildrenMatchingPattern.
 	^ self oldPatternParent
 ]
 
@@ -63,11 +60,7 @@ SBDeleteDomainBlockCommand >> oldPatternSiblingIndex: aNumber [
 { #category : #'do-undo' }
 SBDeleteDomainBlockCommand >> undo [
 
+	target isDomainBlock ifFalse: [^ super undo].
 	self oldPatternParent ifNotNil: [self oldPatternParent addChild: target afterIndex: self oldPatternSiblingIndex - 1].
-	
-	self oldPatternParent isBindingPattern ifTrue: [
-		target allChildrenDo: [:block | oldOwner addMorphBack: block].
-		super undo].
-	self oldPatternParent patternContainer ifNotNil: #buildImplicitChildrenMatchingPattern.
 	^ target
 ]

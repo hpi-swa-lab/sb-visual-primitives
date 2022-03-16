@@ -30,10 +30,10 @@ SBRelInsertDomainBlockCommand >> morphIndexInChildren [
 	^ self adjacent
 		ifNil: [self before ifTrue: [0] ifFalse: [self container patternChildren size]]
 		ifNotNil: [ | indexInRow actualAdjacent |
-			actualAdjacent := self container row
+			actualAdjacent := self container
 				submorphThat: [:submorph | (self adjacent hasOwner: submorph) or: [submorph = self adjacent]]
 				ifNone: [nil].
-			indexInRow := self container row submorphIndexOf: actualAdjacent.
+			indexInRow := self container submorphIndexOf: actualAdjacent.
 			self before ifTrue: [indexInRow := indexInRow - 1].
 			indexInRow + 1 / 2]
 ]

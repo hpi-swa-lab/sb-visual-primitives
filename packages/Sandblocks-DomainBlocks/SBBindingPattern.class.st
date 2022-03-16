@@ -212,17 +212,16 @@ SBBindingPattern >> addImplicitChildWithIdentifier: aString at: aNumber [
 { #category : #'as yet unclassified' }
 SBBindingPattern >> addImplicitChildren: aDict [
 
-	| addImplicitChild implicitChildrenCount implicitChildrenIndices oldChildren |
+	| addImplicitChild implicitChildrenIndices implicitChildrenCount oldChildren |
 	self patternChildren do: [:child | child addImplicitChildren: aDict].
 	implicitChildrenIndices := aDict at: self bindingName ifAbsent: [^ self].
 	implicitChildrenCount := 0.
 	
 	addImplicitChild := [:index |
 		implicitChildrenCount >= implicitChildrenIndices size ifTrue: [^ self].
-		(self patternChildren notEmpty and: [self patternChildren last wantsImplicitNeighbors not]) ifFalse: [
-			self
-				addImplicitChildWithIdentifier: (implicitChildrenIndices at: implicitChildrenCount + 1)
-				at: index + implicitChildrenCount].
+		self
+			addImplicitChildWithIdentifier: (implicitChildrenIndices at: implicitChildrenCount + 1)
+			at: index + implicitChildrenCount.
 		implicitChildrenCount := implicitChildrenCount + 1].
 	
 	oldChildren := self patternChildren copy.
@@ -409,7 +408,7 @@ SBBindingPattern >> convertToPatternClass: aClass [
 	"Only suitable for conversion from ellipsis to binding and vice versa."
 
 	self sandblockEditor do: (SBCombinedCommand newWith: {
-		SBDeleteDomainBlockCommand new target: self.
+		SBDeleteSubtreeCommand new target: self.
 		SBInsertDomainBlockCommand new
 			index: self owner submorphCount + 1;
 			patternParent: self patternParent;
@@ -624,7 +623,7 @@ SBBindingPattern >> newLabelBlockAt: aVPProperty [
 SBBindingPattern >> noteNewOwner: newOwner [
 
 	super noteNewOwner: newOwner.
-	self rebuild
+	self shape ifNil: [self rebuild]
 ]
 
 { #category : #accessing }

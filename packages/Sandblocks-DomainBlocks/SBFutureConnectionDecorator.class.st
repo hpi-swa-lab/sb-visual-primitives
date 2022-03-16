@@ -11,8 +11,12 @@ Class {
 SBFutureConnectionDecorator >> noteNewOwner: aMorph [
 
 	| connector |
-	(self morph patternParent notNil or: [(self morph ownerThatIsA: SBDomainBlockContainer) notNil]) ifTrue: [
-		connector := (SBConnectorLine connect: self morph align: #bottom to: self to align: #top)
+	self morph canCreateConnectors ifTrue: [
+		connector := (SBDomainBlockConnector
+			connect: self morph
+			align: #bottom
+			to: self to
+			align: #top)
 			connectorType: #line;
 			lineWidth: 1;
 			color: Color black.
