@@ -16,8 +16,8 @@ Class {
 	#name : #SBColorAccentDecorator,
 	#superclass : #SBBlockDecorator,
 	#instVars : [
-		'color',
-		'message'
+		'message',
+		'color'
 	],
 	#category : #'Sandblocks-DomainBlocks-PatternMatching'
 }

@@ -105,10 +105,7 @@ SBPatternContainer >> artefactChanged: aMethodBlock [
 { #category : #'as yet unclassified' }
 SBPatternContainer >> binding: aString for: block class: aClass ifPresent: aBlock [
 
-	| bindingsSet |
-	bindingsSet := Set new.
-	self patternRoots ifNotNil: [self patternRoots do: [:patternRoot | patternRoot collectBindingsInto: bindingsSet]].
-	bindingsSet
+	self findAllBindings
 		detect: [:b | b notNil and: [b contents = aString]]
 		ifFound: [:b | ^ aBlock value: b].
 	^ super binding: aString for: block class: aClass ifPresent: aBlock
@@ -167,11 +164,11 @@ SBPatternContainer >> explicitRootMatching [
 ]
 
 { #category : #'as yet unclassified' }
-SBPatternContainer >> findAllBindings: aPattern [
+SBPatternContainer >> findAllBindings [
 
 	| bindings |
 	bindings := Set new.
-	aPattern collectBindingsInto: bindings.
+	self pattern collectBindingsInto: bindings.
 	^ bindings
 ]
 
@@ -229,7 +226,7 @@ SBPatternContainer >> initialize [
 { #category : #'as yet unclassified' }
 SBPatternContainer >> isValidBinding: aString [
 
-	^ (self findAllBindings: self pattern) contains: [:binding | binding contents = aString]
+	^ self findAllBindings contains: [:binding | binding contents = aString]
 ]
 
 { #category : #'as yet unclassified' }
@@ -274,14 +271,6 @@ SBPatternContainer >> pattern: anSBGroupPattern [
 		cellInset: self cellInset;
 		cellPositioning: #center).
 	row addMorphBack: self pattern
-]
-
-{ #category : #'as yet unclassified' }
-SBPatternContainer >> patternRoots [
-
-	^ self pattern patternChildren isEmpty
-		ifTrue: [nil]
-		ifFalse: [self pattern patternChildren select: [:child | child isKindOf: SBBindingPattern]]
 ]
 
 { #category : #accessing }

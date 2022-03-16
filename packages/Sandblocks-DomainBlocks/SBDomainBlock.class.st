@@ -327,7 +327,8 @@ SBDomainBlock >> initialize [
 	
 	self
 		blockDict: Dictionary new;
-		initializeLabelBlocks.
+		initializeLabelBlocks;
+		shape: self defaultShape.
 	self blockDict at: #innerLabel put: self shape.
 	
 	self

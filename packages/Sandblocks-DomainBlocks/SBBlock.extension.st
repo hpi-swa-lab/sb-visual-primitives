@@ -35,5 +35,7 @@ SBBlock >> patternRoot [
 { #category : #'*Sandblocks-DomainBlocks' }
 SBBlock >> patternSiblingIndex [
 
-	^ self patternParent ifNil: [0] ifNotNil: [self patternParent patternChildren indexOf: self]
+	^ self patternParent
+		ifNil: [0]
+		ifNotNil: [self patternParent patternChildren indexOf: self]
 ]

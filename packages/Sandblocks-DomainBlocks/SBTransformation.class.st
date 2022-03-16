@@ -144,8 +144,6 @@ SBTransformation >> exampleDeleteNodeInside: aTree [
 					right: ((SBDummyNode key: 4) left: (SBDummyNode key: 42))) showAsDomainBlock}]
 		label: 'example'.
 	"Nodes that do not appear in the output pattern, are simply left out / deleted."
-	self flag: #bug.
-	"building the implicit patternChildren seems to not work."
 	^ (SBTransformation
 		input: (SBGroupPattern patterns: {
 			SBBindingPattern
@@ -173,6 +171,7 @@ SBTransformation >> exampleDeleteNodeInside: aTree [
 { #category : #examples }
 SBTransformation >> exampleEllipsisPatternWithLabel: aDummyNode [
 
+	| tttt |
 	self
 		example: [SBTransformation new]
 		args: [
@@ -185,6 +184,7 @@ SBTransformation >> exampleEllipsisPatternWithLabel: aDummyNode [
 						left: (SBDummyNode key: 4);
 						right: (SBDummyNode key: 5))) showAsDomainBlock}]
 		label: 'example'.
+	tttt := 5.
 	^ (SBTransformation
 		input: (SBGroupPattern patterns: {
 			SBBindingPattern
@@ -204,7 +204,8 @@ SBTransformation >> exampleEllipsisPatternWithLabel: aDummyNode [
 								bindingDict: {#innerLabel -> #g. #identity -> #cChildren}
 								visualizingClass: SBDummyNode}
 						visualizingClass: SBDummyNode}
-				visualizingClass: SBDummyNode})
+				visualizingClass: SBDummyNode.
+			SBConstraintPattern constraint: [:bindings | (bindings at: #a) = tttt]})
 		output: (SBGroupPattern patterns: {
 			SBBindingPattern
 				bindingDict: {#identity -> #a}

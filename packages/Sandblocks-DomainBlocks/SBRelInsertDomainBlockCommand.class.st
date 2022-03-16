@@ -5,7 +5,7 @@ An SBRelInsertDomainBlockCommand is used to insert new patterns into an SBGroupP
 Class {
 	#name : #SBRelInsertDomainBlockCommand,
 	#superclass : #SBRelInsertCommand,
-	#category : #'Sandblocks-DomainBlocks'
+	#category : #'Sandblocks-DomainBlocks-PatternMatching'
 }
 
 { #category : #'as yet unclassified' }
@@ -17,11 +17,11 @@ SBRelInsertDomainBlockCommand >> continueAfterInsert: aCharacter [
 { #category : #'as yet unclassified' }
 SBRelInsertDomainBlockCommand >> do [
 
-	| result |
 	self morph isUnknown ifTrue: [^ nil].
-	result := super do.
 	self container addChild: self morph afterIndex: self morphIndexInChildren.
-	^ result
+	^ self morph wantsInput
+		ifTrue: [self morph]
+		ifFalse: [self morph nextBlockThat: #wantsInput]
 ]
 
 { #category : #'as yet unclassified' }

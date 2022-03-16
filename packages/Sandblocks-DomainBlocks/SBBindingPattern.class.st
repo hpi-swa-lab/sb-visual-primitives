@@ -623,7 +623,7 @@ SBBindingPattern >> newLabelBlockAt: aVPProperty [
 SBBindingPattern >> noteNewOwner: newOwner [
 
 	super noteNewOwner: newOwner.
-	self shape ifNil: [self rebuild]
+	self rebuild
 ]
 
 { #category : #accessing }
@@ -653,6 +653,7 @@ SBBindingPattern >> preferredColor [
 SBBindingPattern >> rebuild [
 
 	self blockPositions do: [:position | (self blockDict at: position) removeAllMorphs].
+	self blockDict at: #innerLabel put: nil.
 	self shape: self defaultShape.
 	self addPropertyMappings: self staticDomainBlockMapping.
 	self addPropertyMappings: self expressionMappings.

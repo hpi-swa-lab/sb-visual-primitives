@@ -99,13 +99,6 @@ SBGroupPattern >> addNewOrPattern [
 ]
 
 { #category : #'as yet unclassified' }
-SBGroupPattern >> addNewParent [
-	"Do nothing yet"
-
-	
-]
-
-{ #category : #'as yet unclassified' }
 SBGroupPattern >> addSeparatorsAround: aPattern [
 
 	(aPattern submorphAfter
@@ -134,7 +127,7 @@ SBGroupPattern >> allChildrenDo: aBlock [
 SBGroupPattern >> buildFromBinding: anArray [
 
 	self flag: #TODO.
-	"Support multiple patternChildren"
+	"Support multiple patternChildren to support multiple outputs"
 	^ self patternChildren first buildFromBinding: anArray
 ]
 
@@ -165,7 +158,7 @@ SBGroupPattern >> collectIdentityBindingsInto: aCollection [
 { #category : #'as yet unclassified' }
 SBGroupPattern >> deleteBlock [
 
-	self sandblockEditor do: (SBDeleteSubtreeCommand new target: self)
+	self sandblockEditor do: (SBDeleteDomainBlockCommand new target: self)
 ]
 
 { #category : #'insert/delete' }
@@ -293,6 +286,13 @@ SBGroupPattern >> matches: aDomainBlock withBinding: aCollection [
 ]
 
 { #category : #'as yet unclassified' }
+SBGroupPattern >> noteNewOwner: aMorph [
+
+	super noteNewOwner: aMorph.
+	self patternChildren do: [:submorph | submorph noteNewOwner: self]
+]
+
+{ #category : #'as yet unclassified' }
 SBGroupPattern >> openPatternAsChild: aPattern afterIndex: aNumber [
 
 	| insertPosition addedBlock |
@@ -358,6 +358,15 @@ SBGroupPattern >> removeChild: aDomainBlock [
 SBGroupPattern >> removeImplicitChildren [
 
 	self patternChildren do: [:child | child removeImplicitChildren]
+]
+
+{ #category : #'as yet unclassified' }
+SBGroupPattern >> removedMorph: anSBBlock [
+
+	| deletedLabelCount |
+	deletedLabelCount := 0.
+	self submorphs withIndexDo: [:submorph :index | ((index - deletedLabelCount) odd and: [submorph isKindOf: SBTextBubble]) ifTrue: [submorph delete]].
+	(self submorphs notEmpty and: [self lastSubmorph isKindOf: SBTextBubble]) ifTrue: [self lastSubmorph delete]
 ]
 
 { #category : #'as yet unclassified' }
