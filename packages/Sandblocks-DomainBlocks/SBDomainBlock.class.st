@@ -4,20 +4,11 @@ See SBPropertyMappings for the different ways of mapping.
 
 Instance Variables
 	blockDict:				Dictionary
-	patternChildren:		OrderedCollection of SBDomainBlocks
-	parent:					Object
 	sourceObject:			Object
 
 blockDict
 	- (#blockPosition -> SBBlock)
 	- stores the blocks that the labels or shape blocks are inserted into
-
-patternChildren
-	- the connected SBDomainBlocks
-
-parent
-	- the parent primitive
-	- also indicates the hierarchy of patterns 
 
 sourceObject
 	- the object the primitive is build for

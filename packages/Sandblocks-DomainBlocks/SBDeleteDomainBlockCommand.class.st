@@ -2,13 +2,13 @@
 An SBDeleteDomainBlockCommand is a Command to remove an SBDomainBlock. It's removed from its world and hirachy. The Morphs in the primitive's patternChildren will be abandoned, too.
 
 Instance Variables
-	oldParent:			SBBlock
-	oldSiblingIndex:	Number
+	oldPatternParent:			SBBlock
+	oldPatternSiblingIndex:	Number
 
-oldParent
+oldPatternParent
 	- saves the previous parent for do and undo
 
-oldSiblingIndex
+oldPatternSiblingIndex
 	- previous position index of the deleted primitive in the parent's patternChildren
 
 "

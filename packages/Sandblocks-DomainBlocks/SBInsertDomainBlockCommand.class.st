@@ -2,18 +2,18 @@
 An SBInsertDomainBlockCommand is used to insert an SBDomainBlock into the current hierarchy.
 
 Instance Variables
-	patternChildren:			OrderedCollection of SBDomainBlocks
-	parent:			SBDomainBlock
-	siblingIndex:	Number
+	patternChildren:		OrderedCollection of SBDomainBlocks
+	patternParent:			SBDomainBlock
+	patternSiblingIndex:	Number
 
 patternChildren
 	- SBDomainBlocks that will be patternChildren of the inserted primitive
 
-parent
+patternParent
 	- parent primitive of the inserted one
 
-siblingIndex
-	- position index of the inserted primitive in the parent's patternChildren 
+patternSiblingIndex
+	- position index of the inserted primitive in the patternParent's patternChildren 
 
 "
 Class {

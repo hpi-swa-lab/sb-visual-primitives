@@ -3,13 +3,9 @@ An SBDomainBlockContainer displayes the block's value as an SBDomainBlock. The c
 
 Instance Variables
 	isImplicit:	Boolean
-	visual:		SBBlock
 
 isImplicit
 	- indicates whether the SBDomainBlockContainer is shown implicitly
-
-visual
-	- container for the visualization of code
 
 "
 Class {

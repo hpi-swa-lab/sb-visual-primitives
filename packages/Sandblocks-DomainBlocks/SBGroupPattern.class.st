@@ -2,23 +2,10 @@
 An SBGroupPattern creates and contains SBBindingPatterns, SBConstraintPatterns and SBOrGroupPatterns. The patterns are seperated with an 'and'.
 
 Instance Variables
-	patternChildren:		OrderedCollection of SBDomainBlocks, SBConstraintPatterns and/or SBOrGroupPatterns
-	isOutputPattern: 		Boolean
-	parent:					Object
-	row:					SBRow
-
-patternChildren
-	- contains the patterns
+	isOutputPattern: 	Boolean
 
 isOutputPattern
-	- indicates whether this SBGGroupPattern is an output pattern
-
-parent
-	- the parent primitive
-	- also indicates the hierarchy of patterns 
-
-row
-	- container for SBBindingPatterns, SBConstraintPatterns and the seperator strings
+	- indicates whether this SBGroupPattern is an output pattern
 
 "
 Class {
