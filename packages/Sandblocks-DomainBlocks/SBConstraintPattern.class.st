@@ -110,7 +110,7 @@ SBConstraintPattern >> constraint [
 
 { #category : #accessing }
 SBConstraintPattern >> constraint: aBlockClosure [
-	
+
 	constraint := aBlockClosure.
 	self removeAllMorphs.
 	self addAllMorphs: aBlockClosure asSandblock statements.

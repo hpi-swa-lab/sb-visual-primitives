@@ -133,8 +133,8 @@ SBTreeLayoutPolicy >> firstWalk: aPattern [
 ]
 
 { #category : #'as yet unclassified' }
-SBTreeLayoutPolicy >> floating [ 
-	
+SBTreeLayoutPolicy >> floating [
+
 	^ true
 ]
 

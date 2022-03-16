@@ -29,7 +29,7 @@ Class {
 
 { #category : #'as yet unclassified' }
 SBInsertDomainBlockCommand >> do [
-	
+
 	(self patternParent isBindingPattern not and: [self patternChildren notEmpty]) ifTrue: [self patternParent removeChild: self patternChildren first].
 	self patternChildren do: [:child | self morph addChild: child].
 	self patternParent ifNotNil: [
@@ -104,7 +104,7 @@ SBInsertDomainBlockCommand >> undo [
 	| case |
 	case := self morph patternContainer.
 	self patternParent
-		ifNotNil: [			
+		ifNotNil: [
 			" When adding a new root binding pattern, the row gets deleted and a new one is used.
 			That is why we have to reset the container. "
 			container := self patternParent owner.

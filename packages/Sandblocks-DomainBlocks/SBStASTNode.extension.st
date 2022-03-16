@@ -19,11 +19,11 @@ SBStASTNode >> visualize [
 		ifTrue: [self evaluate value]
 		ifFalse: [self evaluate]) class.
 	(objectClass class canUnderstandBeforeObject: #domainBlockMapping) ifFalse: [
+		self flag: #TODO "Toms Feedback einarbeiten dass die some positions zu unknowns werden".
 		SBPopup new
 			addMorphBack: (SBStMethod new
 				selector: 'domainBlockMapping' arguments: #() class: objectClass class;
 				body: (SBStBlockBody new statements: {
-				self flag: #TODO "Toms Feedback einarbeiten dass die some positions zu unknowns werden".
 					[:b | b return: '{ #shape vpConstant: (RectangleMorph new color: (Color green)).
 			#identityLabelPosition vpConstant: #somePosition.
 			#somePosition vpNumberFor: #someNumberAccessor.

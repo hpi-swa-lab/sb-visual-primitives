@@ -134,7 +134,7 @@ SBDomainBlock >> addLabel [
 { #category : #'as yet unclassified' }
 SBDomainBlock >> addNewChild [
 	<action>
-	
+
 	| newChild |
 	self sandblockEditor do: (SBInsertDomainBlockCommand new
 		index: self owner submorphCount + 1;
@@ -493,7 +493,7 @@ SBDomainBlock >> moveCursorLeft [
 { #category : #'as yet unclassified' }
 SBDomainBlock >> moveCursorRight [
 	<action>
-	
+
 	self floating
 		ifTrue: [self rightSibling ifNotNil: #select ifNil: [self selectRightToplevel]]
 		ifFalse: [self sandblockEditor cursor moveCursorRight]
@@ -570,7 +570,7 @@ SBDomainBlock >> pasteReplace [
 SBDomainBlock >> patternChildren [
 
 	^ ((self decorators select: [:dec | dec isKindOf: SBFutureConnectionDecorator]) collect: [:dec | dec to])
-		addAll: (self connectedBlocks);
+		addAll: self connectedBlocks;
 		yourself
 ]
 
@@ -629,7 +629,7 @@ SBDomainBlock >> propertyAt: aSymbol [
 SBDomainBlock >> removeChild: aDomainBlock [
 
 	aDomainBlock delete.
-	self allConnections do: #checkAutoDelete.
+	self allConnections do: #checkAutoDelete
 ]
 
 { #category : #'as yet unclassified' }
