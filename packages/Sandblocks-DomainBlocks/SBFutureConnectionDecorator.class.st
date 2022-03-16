@@ -16,8 +16,8 @@ SBFutureConnectionDecorator >> noteNewOwner: aMorph [
 			connectorType: #line;
 			lineWidth: 1;
 			color: Color black.
-		aMorph addMorph: connector.
-		aMorph addMorph: self to.
+		aMorph addMorphBack: connector.
+		aMorph addMorphBack: self to.
 		self detach]
 ]
 
