@@ -108,7 +108,8 @@ SBDomainBlock >> addChild: aDomainBlock afterIndex: aNumber [
 				self owner addMorph: connector after: previousConnector].
 			self owner addMorph: aDomainBlock]
 		ifNil: [
-			self flag: #TODO. "Consider index here"
+			self flag: #TODO.
+			"Consider index here"
 			self attachDecorator: (SBFutureConnectionDecorator new to: aDomainBlock)]
 ]
 
@@ -564,26 +565,31 @@ SBDomainBlock >> pasteReplace [
 { #category : #accessing }
 SBDomainBlock >> patternChildren [
 
-	^ ((self decorators select: [:dec | dec isKindOf: SBFutureConnectionDecorator]) collect: [:dec | dec to]) addAll: self connectedBlocks; yourself
+	^ ((self decorators select: [:dec | dec isKindOf: SBFutureConnectionDecorator]) collect: [:dec | dec to])
+		addAll: self connectedBlocks;
+		yourself
 ]
 
 { #category : #accessing }
 SBDomainBlock >> patternChildren: aCollection [
 
-	self outgoingConnectionsDo: [:connector | connector to abandon. connector abandon].
+	self outgoingConnectionsDo: [:connector |
+		connector to abandon.
+		connector abandon].
 	self detachDecorators: SBFutureConnectionDecorator.
 	aCollection do: [:child | self addChild: child]
 ]
 
 { #category : #'pattern hierarchy' }
 SBDomainBlock >> patternParent [
-	
+
 	self owner ifNil: [^ nil].
 	self owner submorphsDo: [:sibling |
-		sibling isSandblock ifTrue: [sibling decorators
-			detect: [:dec | (dec isKindOf: SBFutureConnectionDecorator) and: [dec to = self]]
-			ifFound: [:dec | ^ dec morph]
-			ifNone: []]].
+		sibling isSandblock ifTrue: [
+			sibling decorators
+				detect: [:dec | (dec isKindOf: SBFutureConnectionDecorator) and: [dec to = self]]
+				ifFound: [:dec | ^ dec morph]
+				ifNone: []]].
 	self incomingConnectionsDo: [:parentPattern | ^ parentPattern from].
 	^ nil
 ]

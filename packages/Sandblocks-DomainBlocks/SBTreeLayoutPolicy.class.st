@@ -154,7 +154,10 @@ SBTreeLayoutPolicy >> layout: aMorph in: aRectangle [
 		self
 			resetAll;
 			firstWalk: root;
-			secondWalk: root modSum: 0 layerHeights: (self maximumHeight: root) + self inset]
+			secondWalk: root
+				modSum: 0
+				layerHeights: (self maximumHeight: root) + self inset
+				origin: aRectangle origin]
 ]
 
 { #category : #accessing }
@@ -248,12 +251,12 @@ SBTreeLayoutPolicy >> resetAll [
 ]
 
 { #category : #layouting }
-SBTreeLayoutPolicy >> secondWalk: aPattern modSum: aValue layerHeights: anotherValue [
+SBTreeLayoutPolicy >> secondWalk: aPattern modSum: aValue layerHeights: anotherValue origin: aPoint [
 
 	aPattern
 		fullBounds;
-		center: (self xOf: aPattern) + aValue - ((self distance: aPattern) / 2) @ (anotherValue * (self depthOf: aPattern)).
-	aPattern patternChildren do: [:child | self secondWalk: child modSum: aValue + (self modOf: aPattern) layerHeights: anotherValue]
+		center: (self xOf: aPattern) + aValue - ((self distance: aPattern) / 2) @ (anotherValue * (self depthOf: aPattern)) + aPoint.
+	aPattern patternChildren do: [:child | self secondWalk: child modSum: aValue + (self modOf: aPattern) layerHeights: anotherValue origin: aPoint]
 ]
 
 { #category : #layouting }

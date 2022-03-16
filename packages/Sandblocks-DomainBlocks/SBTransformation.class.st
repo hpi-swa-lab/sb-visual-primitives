@@ -488,7 +488,7 @@ SBTransformation >> input: aPattern output: anotherPattern [
 	self
 		pattern: aPattern;
 		outputPattern: (anotherPattern isOutputPattern: true).
-		
+	
 	self pattern owner
 		addMorphBack: (SBColumn new
 			cellPositioning: #center;
@@ -496,7 +496,7 @@ SBTransformation >> input: aPattern output: anotherPattern [
 			addMorphBack: (self newRepeatCountMorphFor: replaceCount);
 			addMorphBack: SBIcon iconSyncAlt large);
 		addMorphBack: self outputPattern.
-	self class colorizeDifferences ifTrue: [self colorDifferences].
+	self class colorizeDifferences ifTrue: [self colorDifferences]
 ]
 
 { #category : #'as yet unclassified' }

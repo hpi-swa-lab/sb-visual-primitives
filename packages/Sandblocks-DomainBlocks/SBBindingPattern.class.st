@@ -637,7 +637,7 @@ SBBindingPattern >> originalPropertyMappingAt: aVPProperty [
 
 { #category : #'as yet unclassified' }
 SBBindingPattern >> patternParent [
-	
+
 	self owner ifNil: [^ nil].
 	super patternParent ifNotNil: [:parent | ^ parent].
 	^ self owner owner isPatternBlock ifTrue: [self owner owner]

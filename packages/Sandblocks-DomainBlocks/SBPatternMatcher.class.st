@@ -2,10 +2,10 @@
 An SBPatternMatcher is used for pattern matching. It tries to match the defined pattern in the SBTransformation to the input.
 
 Instance Variables
-	pattern:					SBGroupPattern
+	pattern:				SBGroupPattern
 	performedMatch:		Boolean
 	searchStack:			LinkedList
-	strategy:					Dictionary
+	strategy:				Dictionary
 	visited:					Set
 
 pattern

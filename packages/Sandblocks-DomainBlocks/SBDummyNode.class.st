@@ -31,9 +31,7 @@ SBDummyNode class >> childrenMappingEntry [
 	^ SBPropertyMappingChildren
 		getter: [:object | {object left. object right} reject: [:child | child isNil]]
 		setter: [:object :children |
-			children size >= 1
-				ifTrue: [object left: children first]
-				ifFalse: [object left: nil].
+			children size >= 1 ifTrue: [object left: children first] ifFalse: [object left: nil].
 			children size >= 2
 				ifTrue: [object right: children second]
 				ifFalse: [object right: nil]]

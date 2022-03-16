@@ -16,17 +16,16 @@ Class {
 	#name : #SBDomainBlockContainer,
 	#superclass : #SBStSubstitution,
 	#instVars : [
-		'isImplicit',
-		'visual'
+		'isImplicit'
 	],
 	#category : #'Sandblocks-DomainBlocks'
 }
 
 { #category : #'as yet unclassified' }
-SBDomainBlockContainer class >> code: aCode [
+SBDomainBlockContainer class >> code: anObject [
 	" marker "
 
-	^ self new code: aCode asSandblock
+	^ self new code: anObject asSandblock
 ]
 
 { #category : #'as yet unclassified' }
@@ -50,6 +49,13 @@ SBDomainBlockContainer class >> newFor: aBlock [
 ]
 
 { #category : #'as yet unclassified' }
+SBDomainBlockContainer class >> visualize: aDomainBlock [
+	" marker "
+
+	^ self new visualize: aDomainBlock
+]
+
+{ #category : #'as yet unclassified' }
 SBDomainBlockContainer >> artefactSaved: aMethodBlock [
 
 	self code: (String streamContents: [:stream | self writeCodeOn: stream]) parseAsSandblock
@@ -58,14 +64,10 @@ SBDomainBlockContainer >> artefactSaved: aMethodBlock [
 { #category : #'as yet unclassified' }
 SBDomainBlockContainer >> code: aCodeBlock [
 
-	| aSandblock |
-	self visual removeAllMorphs.
-	aSandblock := aCodeBlock asSandblock.
+	| result |
+	result := aCodeBlock asSandblock evaluate.
 	
-	self visual addMorph: (SBDomainBlock
-		newFromObject: (aSandblock evaluate isBlock
-			ifTrue: [aSandblock evaluate value]
-			ifFalse: [aSandblock evaluate])).
+	self visualize: (SBDomainBlock newFromObject: (result isBlock ifTrue: [result value] ifFalse: [result]))
 ]
 
 { #category : #'as yet unclassified' }
@@ -185,7 +187,7 @@ SBDomainBlockContainer >> initialize [
 		shrinkWrap;
 		changeTableLayout;
 		cellInset: 6;
-		addMorphBack: (visual := SBBlock new
+		addMorphBack: (SBBlock new
 			layoutPolicy: SBTreeLayoutPolicy new;
 			shrinkWrap;
 			layoutInset: 6;
@@ -213,10 +215,11 @@ SBDomainBlockContainer >> tryWriteSourceOrStore: anObject on: aStream [
 		ifFalse: [anObject storeOn: aStream]
 ]
 
-{ #category : #accessing }
-SBDomainBlockContainer >> visual [
+{ #category : #'as yet unclassified' }
+SBDomainBlockContainer >> visualize: aDomainBlock [
 
-	^ visual
+	self firstSubmorph removeAllMorphs.
+	self firstSubmorph addMorph: aDomainBlock
 ]
 
 { #category : #accessing }
@@ -224,7 +227,7 @@ SBDomainBlockContainer >> writeCodeOn: aStream [
 
 	| object |
 	aStream nextPut: $(.
-	object := (self visual submorphs detect: [:morph | morph isDomainBlock]) patternRoot buildObject.
+	object := (self firstSubmorph submorphs detect: [:morph | morph isDomainBlock]) patternRoot buildObject.
 	self tryWriteSourceOrStore: object on: aStream.
 	aStream nextPut: $)
 ]
