@@ -26,11 +26,11 @@ Class {
 SBDeleteDomainBlockCommand >> do [
 
 	oldOwner := target owner.
-	super do.
-	
 	self oldPatternParent: target patternParent.
 	self oldPatternSiblingIndex: target patternSiblingIndex.
-	self oldPatternParent ifNotNil: [self oldPatternParent removeChild: target].
+	
+	super do.
+	
 	target allChildrenDo: [:block | block abandon].
 	self oldPatternParent patternContainer ifNotNil: #buildImplicitChildrenMatchingPattern.
 	^ self oldPatternParent

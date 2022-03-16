@@ -669,9 +669,9 @@ SBBindingPattern >> rebuild [
 
 { #category : #'as yet unclassified' }
 SBBindingPattern >> removeImplicitChildren [
-
-	self patternChildren select: #isImplicitChild thenDo: #abandon.
-	self patternChildren: (self patternChildren reject: #isImplicitChild).
+	
+	self patternChildren select: #isImplicitChild thenDo: #delete.
+	self allConnections do: #checkAutoDelete.
 	self patternChildren do: #removeImplicitChildren
 ]
 

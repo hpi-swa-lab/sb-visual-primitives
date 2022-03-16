@@ -117,6 +117,7 @@ SBGrammarObject >> exampleGrammarRuleMergeWithExpression: aGrammarObject [
 { #category : #'as yet unclassified' }
 SBGrammarObject >> initialize [
 
+	super initialize.
 	members := nil.
 	content := nil.
 	objectName := nil.

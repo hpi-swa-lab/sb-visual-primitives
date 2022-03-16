@@ -132,6 +132,12 @@ SBTreeLayoutPolicy >> firstWalk: aPattern [
 				self setModOf: aPattern to: (self xOf: aPattern) - midpoint - (dist / 2)]]
 ]
 
+{ #category : #'as yet unclassified' }
+SBTreeLayoutPolicy >> floating [ 
+	
+	^ true
+]
+
 { #category : #'initialize-release' }
 SBTreeLayoutPolicy >> initialize [
 
