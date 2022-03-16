@@ -1,5 +1,5 @@
 "
-A SBPatternMatcherTest tests some pattern matching scenarios using SBDummyNodes.
+An SBPatternMatcherTest tests some pattern matching scenarios using SBDummyNodes.
 
 "
 Class {
