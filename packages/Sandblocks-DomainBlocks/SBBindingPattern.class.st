@@ -109,6 +109,12 @@ SBBindingPattern class >> bindingDict: aDict visualizingClass: aClass [
 ]
 
 { #category : #'as yet unclassified' }
+SBBindingPattern class >> defaultVisualizedAs: aClass [
+
+	^ SBBindingPattern new visualizingClass: aClass
+]
+
+{ #category : #'as yet unclassified' }
 SBBindingPattern class >> expressionDict: aDict [
 
 	^ self new expressionDict: aDict asDictionary
@@ -212,16 +218,17 @@ SBBindingPattern >> addImplicitChildWithIdentifier: aString at: aNumber [
 { #category : #'as yet unclassified' }
 SBBindingPattern >> addImplicitChildren: aDict [
 
-	| addImplicitChild implicitChildrenIndices implicitChildrenCount oldChildren |
+	| addImplicitChild implicitChildrenCount implicitChildrenIndices oldChildren |
 	self patternChildren do: [:child | child addImplicitChildren: aDict].
 	implicitChildrenIndices := aDict at: self bindingName ifAbsent: [^ self].
 	implicitChildrenCount := 0.
 	
 	addImplicitChild := [:index |
 		implicitChildrenCount >= implicitChildrenIndices size ifTrue: [^ self].
-		self
-			addImplicitChildWithIdentifier: (implicitChildrenIndices at: implicitChildrenCount + 1)
-			at: index + implicitChildrenCount.
+		(self patternChildren notEmpty and: [self patternChildren last wantsImplicitNeighbors not]) ifFalse: [
+			self
+				addImplicitChildWithIdentifier: (implicitChildrenIndices at: implicitChildrenCount + 1)
+				at: index + implicitChildrenCount].
 		implicitChildrenCount := implicitChildrenCount + 1].
 	
 	oldChildren := self patternChildren copy.
