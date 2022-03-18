@@ -39,23 +39,28 @@ SBRelInsertDomainBlockCommand >> morphIndexInChildren [
 ]
 
 { #category : #'as yet unclassified' }
+SBRelInsertDomainBlockCommand >> newSuggestionItemFor: aPattern withSelector: aString of: anSBPatternContainer [
+
+	^ (SBInsertSuggestionItem selector: aString label: 'choice')
+		morph: (aPattern defaultVisualizedAs: anSBPatternContainer defaultVisualizationClass)
+		editor: anSBPatternContainer sandblockEditor
+		previewOnly: false
+]
+
+{ #category : #'as yet unclassified' }
 SBRelInsertDomainBlockCommand >> suggestions [
 
-	| suggestions outputPattern |
+	| suggestions outputPattern patternContainer |
+	patternContainer := self container patternContainer.
 	suggestions := {
-		(SBInsertSuggestionItem selector: 'addNewBindingPattern' label: 'choice')
-			morph: SBBindingPattern new
-			previewOnly: false.
-		(SBInsertSuggestionItem selector: 'addNewConstraintPattern' label: 'choice')
-			morph: SBConstraintPattern default
-			previewOnly: false.
-		(SBInsertSuggestionItem selector: 'addNewAndPattern' label: 'choice')
-			morph: SBGroupPattern default
-			previewOnly: false.
-		(SBInsertSuggestionItem selector: 'addNewOrPattern' label: 'choice')
-			morph: SBOrGroupPattern default
-			previewOnly: false}.
-	outputPattern := self container patternContainer outputPattern.
+		self newSuggestionItemFor: SBBindingPattern withSelector: 'addNewBindingPattern' of: patternContainer.
+		self
+			newSuggestionItemFor: SBConstraintPattern
+			withSelector: 'addNewConstraintPattern'
+			of: patternContainer.
+		self newSuggestionItemFor: SBGroupPattern withSelector: 'addNewAndPattern' of: patternContainer.
+		self newSuggestionItemFor: SBOrGroupPattern withSelector: 'addNewOrPattern' of: patternContainer}.
+	outputPattern := patternContainer outputPattern.
 	outputPattern = self container ifTrue: [^ {suggestions first}].
 	^ suggestions
 ]

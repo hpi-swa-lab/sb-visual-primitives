@@ -24,6 +24,12 @@ SBGroupPattern class >> default [
 ]
 
 { #category : #'as yet unclassified' }
+SBGroupPattern class >> defaultVisualizedAs: aClass [
+
+	^ self patterns: {SBBindingPattern defaultVisualizedAs: aClass. SBConstraintPattern default}
+]
+
+{ #category : #'as yet unclassified' }
 SBGroupPattern class >> matches: aBlock [
 
 	^ self selector: #patterns: receiverMatches: aBlock

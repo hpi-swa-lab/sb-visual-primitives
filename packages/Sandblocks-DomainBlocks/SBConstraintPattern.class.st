@@ -37,6 +37,12 @@ SBConstraintPattern class >> default [
 ]
 
 { #category : #'as yet unclassified' }
+SBConstraintPattern class >> defaultVisualizedAs: aClass [
+
+	^ self default
+]
+
+{ #category : #'as yet unclassified' }
 SBConstraintPattern class >> matches: aBlock [
 
 	^ self selector: #constraint: receiverMatches: aBlock
