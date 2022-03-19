@@ -8,7 +8,7 @@ Class {
 	#category : #'Sandblocks-DomainBlocks-PatternMatching'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #helpers }
 SBPatternMatcherTest >> buildList: aCollection [
 
 	| asTree reversed |
@@ -18,7 +18,7 @@ SBPatternMatcherTest >> buildList: aCollection [
 	^ self buildTree: asTree
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #helpers }
 SBPatternMatcherTest >> buildTree: aCollection [
 
 	^ SBDummyNode buildTree: aCollection
@@ -219,7 +219,7 @@ SBPatternMatcherTest >> exampleWithConstants: anObject [
 		replaceCount: Float infinity) value
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #helpers }
 SBPatternMatcherTest >> getLabelList: aPrimitive [
 
 	| currentPrimitive list |
@@ -232,7 +232,7 @@ SBPatternMatcherTest >> getLabelList: aPrimitive [
 	^ list
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #helpers }
 SBPatternMatcherTest >> getLabelTree: aPrimitive [
 
 	^ aPrimitive patternChildren

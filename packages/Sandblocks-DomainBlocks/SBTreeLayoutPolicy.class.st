@@ -257,6 +257,16 @@ SBTreeLayoutPolicy >> resetAll [
 ]
 
 { #category : #layouting }
+SBTreeLayoutPolicy >> secondWalk: aPattern modSum: aValue layerHeights: anotherValue [
+
+	aPattern
+		fullBounds;
+		center: (self xOf: aPattern) + aValue - ((self distance: aPattern) / 2) @ (anotherValue * (self depthOf: aPattern)).
+	"	self addConnectorLineToWorld."
+	aPattern children do: [:child | self secondWalk: child modSum: aValue + (self modOf: aPattern) layerHeights: anotherValue]
+]
+
+{ #category : #layouting }
 SBTreeLayoutPolicy >> secondWalk: aPattern modSum: aValue layerHeights: anotherValue origin: aPoint [
 
 	aPattern

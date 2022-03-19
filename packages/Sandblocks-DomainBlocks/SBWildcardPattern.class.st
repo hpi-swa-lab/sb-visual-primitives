@@ -28,7 +28,7 @@ SBWildcardPattern >> bindingFor: aDomainBlock [
 	^ {#root -> self searchStack last. #leaf -> self currentTop} asDictionary
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pattern matching' }
 SBWildcardPattern >> buildFromBinding: anArray [
 
 	| binding |
@@ -36,7 +36,7 @@ SBWildcardPattern >> buildFromBinding: anArray [
 	^ {self buildFromBinding: anArray currentPrimitive: (binding at: #root)}
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pattern matching' }
 SBWildcardPattern >> buildFromBinding: anArray currentPrimitive: aDomainBlock [
 
 	| output binding leaf |
@@ -69,7 +69,7 @@ SBWildcardPattern >> currentTop [
 	^ self searchStack first
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #examples }
 SBWildcardPattern >> exampleExtractLeaf: aTree [
 
 	self
@@ -97,7 +97,7 @@ SBWildcardPattern >> exampleExtractLeaf: aTree [
 		replaceCount: Float infinity) value: aTree
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #examples }
 SBWildcardPattern >> exampleExtractNodeWithTwoChildren: aTree [
 
 	self
@@ -137,7 +137,7 @@ SBWildcardPattern >> exampleExtractNodeWithTwoChildren: aTree [
 		replaceCount: Float infinity) value: aTree
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pattern matching' }
 SBWildcardPattern >> getCurrentPrimitive: aDomainBlock [
 
 	^ self searchStack ifEmpty: [aDomainBlock] ifNotEmpty: [self currentTop]
@@ -160,7 +160,7 @@ SBWildcardPattern >> getNext: aDomainBlock [
 	^ false
 ]
 
-{ #category : #initialization }
+{ #category : #accessing }
 SBWildcardPattern >> initialize [
 
 	super initialize.
@@ -177,7 +177,7 @@ SBWildcardPattern >> pushToStack: aDomainBlock [
 	self visited add: aDomainBlock
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBWildcardPattern >> reset [
 
 	super reset.

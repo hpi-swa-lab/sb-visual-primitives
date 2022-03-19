@@ -45,7 +45,7 @@ SBEllipsisPattern >> bindingNameWithImplicitPrefix: aBoolean [
 				ifFalse: [^ self bindingName]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pattern matching' }
 SBEllipsisPattern >> buildFromBinding: anArray [
 
 	^ (anArray at: self bindingName) veryDeepCopy
@@ -71,7 +71,7 @@ SBEllipsisPattern >> convertToEllipsisPattern [
 	
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pattern matching' }
 SBEllipsisPattern >> couldMatch: aDomainBlock [
 
 	^ true
@@ -95,7 +95,7 @@ SBEllipsisPattern >> doubleClick: anEvent [
 	self isImplicitChild: self isImplicitChild not
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pattern matching' }
 SBEllipsisPattern >> getNext: aDomainBlock [
 
 	self currentSize: self currentSize + 1.
@@ -162,7 +162,7 @@ SBEllipsisPattern >> reset [
 	self currentSize: 0
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pattern matching' }
 SBEllipsisPattern >> searchRootFor: aDomainBlock at: anIndex [
 
 	^ aDomainBlock patternChildren

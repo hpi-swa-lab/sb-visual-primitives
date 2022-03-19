@@ -110,7 +110,7 @@ SBOrGroupPattern class >> exampleNested: aDummyNode [
 		replaceCount: Float infinity) value: aDummyNode
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pattern matching' }
 SBOrGroupPattern >> getNext: aDomainBlock [
 
 	self patternChildren do: [:pattern | (pattern getNext: aDomainBlock) ifTrue: [^ true]].
@@ -119,7 +119,7 @@ SBOrGroupPattern >> getNext: aDomainBlock [
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pattern matching' }
 SBOrGroupPattern >> matches: aDomainBlock withBinding: aCollection [
 
 	^ self matchingPattern matches: aDomainBlock withBinding: aCollection
@@ -149,7 +149,7 @@ SBOrGroupPattern >> separatorString [
 	^ ' or '
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pattern matching' }
 SBOrGroupPattern >> setBindingFor: aDomainBlock in: aCollection [
 
 	^ self matchingPattern setBindingFor: aDomainBlock in: aCollection

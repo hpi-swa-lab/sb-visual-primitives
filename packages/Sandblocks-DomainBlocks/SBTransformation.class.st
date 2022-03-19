@@ -109,7 +109,7 @@ SBTransformation >> buildImplicitChildrenMatchingPattern [
 		self outputPattern addImplicitChildren: additionalNodes]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBTransformation >> colorDifferences [
 	<action>
 
@@ -465,7 +465,7 @@ SBTransformation >> exampleWithConstants: aDummyNode [
 		replaceCount: Float infinity) value
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBTransformation >> hideColorDifferences [
 	<action>
 
@@ -476,14 +476,14 @@ SBTransformation >> hideColorDifferences [
 	outputBindingDict do: [:binding | binding detachDecorators: SBColorAccentDecorator]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBTransformation >> initialize [
 
 	super initialize.
 	self replaceCount: Float infinity
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBTransformation >> input: aPattern output: anotherPattern [
 
 	self

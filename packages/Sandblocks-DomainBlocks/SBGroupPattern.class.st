@@ -55,26 +55,26 @@ SBGroupPattern class >> selector: aString receiverMatches: aMessage [
 	^ (aMessage receiver satisfies: #(#notNil #isBinding)) and: [self name = aMessage receiver contents and: [aMessage selector = aString]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'insert/delete' }
 SBGroupPattern >> addChild: aDomainBlock afterIndex: aNumber [
 
 	aDomainBlock patternParent ifNotNil: [aDomainBlock patternParent removeChild: aDomainBlock].
 	self openPatternAsChild: aDomainBlock afterIndex: aNumber
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'insert/delete' }
 SBGroupPattern >> addImplicitChildren: anArray [
 
 	self patternChildren do: [:pattern | pattern addImplicitChildren: anArray]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBGroupPattern >> addNewAndPattern [
 
 	self insertNewPattern: SBGroupPattern default
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBGroupPattern >> addNewBindingPattern [
 
 	self flag: #todo.
@@ -82,7 +82,7 @@ SBGroupPattern >> addNewBindingPattern [
 	self insertNewPattern: SBBindingPattern new
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBGroupPattern >> addNewChild [
 	<action>
 
@@ -92,13 +92,13 @@ SBGroupPattern >> addNewChild [
 	self perform: (options at: selectedIndex ifAbsent: [])
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBGroupPattern >> addNewConstraintPattern [
 
 	self insertNewPattern: SBConstraintPattern default
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBGroupPattern >> addNewOrPattern [
 
 	self insertNewPattern: SBOrGroupPattern default
@@ -123,7 +123,7 @@ SBGroupPattern >> addToWorld: aWorld [
 	aWorld addMorphBack: self
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'insert/delete' }
 SBGroupPattern >> allChildrenDo: aBlock [
 
 	self patternChildren do: [:child | child allChildrenDo: aBlock]
@@ -149,19 +149,19 @@ SBGroupPattern >> canDeleteChild: aBlock [
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pattern matching' }
 SBGroupPattern >> collectBindingsInto: aCollection [
 
 	self patternChildren do: [:child | child collectBindingsInto: aCollection]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pattern matching' }
 SBGroupPattern >> collectIdentityBindingsInto: aCollection [
 
 	self patternChildren do: [:child | child collectIdentityBindingsInto: aCollection]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'insert/delete' }
 SBGroupPattern >> deleteBlock [
 
 	self sandblockEditor do: (SBDeleteDomainBlockCommand new target: self)
@@ -198,7 +198,7 @@ SBGroupPattern >> fixedNumberOfChildren [
 	^ false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pattern matching' }
 SBGroupPattern >> getNext: aDomainBlock [
 
 	self patternChildren do: [:pattern | (pattern getNext: aDomainBlock) ifFalse: [pattern reset] ifTrue: [^ true]].
@@ -237,7 +237,7 @@ SBGroupPattern >> insertCommandRequest: aMorph near: aBlock before: aBoolean [
 		ifFalse: [self submorphs isEmpty ifTrue: [insertCommand] ifFalse: [nil]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'insert/delete' }
 SBGroupPattern >> insertNewPattern: aPattern [
 
 	self sandblockEditor do: (SBInsertDomainBlockCommand new
@@ -346,13 +346,13 @@ SBGroupPattern >> patternParent [
 	^ self owner isPatternBlock ifTrue: [self owner]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 SBGroupPattern >> rebuild [
 
 	self allChildrenDo: [:child | child rebuild]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'insert/delete' }
 SBGroupPattern >> removeChild: aDomainBlock [
 
 	(aDomainBlock isBindingPattern
@@ -360,7 +360,7 @@ SBGroupPattern >> removeChild: aDomainBlock [
 		ifFalse: [aDomainBlock]) delete
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'insert/delete' }
 SBGroupPattern >> removeImplicitChildren [
 
 	self patternChildren do: [:child | child removeImplicitChildren]
@@ -375,7 +375,7 @@ SBGroupPattern >> removedMorph: anSBBlock [
 	(self submorphs notEmpty and: [self lastSubmorph isKindOf: SBTextBubble]) ifTrue: [self lastSubmorph delete]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 SBGroupPattern >> reset [
 
 	self patternChildren do: [:pattern | pattern reset]

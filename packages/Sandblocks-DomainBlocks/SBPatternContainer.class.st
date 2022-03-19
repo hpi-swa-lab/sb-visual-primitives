@@ -120,7 +120,7 @@ SBPatternContainer >> buildImplicitChildrenMatchingPattern [
 		self explicitChildrenMatching ifFalse: [self pattern buildImplicitChildren: Dictionary new]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBPatternContainer >> cellInset [
 
 	^ 3
@@ -132,7 +132,7 @@ SBPatternContainer >> classNameInput [
 	^ classNameInput
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBPatternContainer >> color [
 
 	^ color
@@ -151,19 +151,19 @@ SBPatternContainer >> defaultVisualizationClass: aClass [
 	self classNameInput object: aClass
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pattern matching' }
 SBPatternContainer >> explicitChildrenMatching [
 
 	^ self strategy at: #explicitChildrenMatching ifAbsent: [true]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pattern matching' }
 SBPatternContainer >> explicitRootMatching [
 
 	^ self strategy at: #explicitRootMatching ifAbsent: [true]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pattern matching' }
 SBPatternContainer >> findAllBindings [
 
 	| bindings |
@@ -172,7 +172,7 @@ SBPatternContainer >> findAllBindings [
 	^ bindings
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'insert/delete' }
 SBPatternContainer >> findAllIdentityBindingsAsDict: aPattern [
 
 	| bindings |
@@ -183,13 +183,13 @@ SBPatternContainer >> findAllIdentityBindingsAsDict: aPattern [
 		yourself
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'insert/delete' }
 SBPatternContainer >> identifierForIndex: aNumber [
 
 	^ ('', (Character alphabet at: aNumber - 1 // Character alphabet size + 1)) asSymbol
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'insert/delete' }
 SBPatternContainer >> implicitPrefix [
 
 	^ 'i_'
@@ -201,7 +201,7 @@ SBPatternContainer >> informationRow [
 	^ informationRow
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBPatternContainer >> initialize [
 
 	super initialize.
@@ -223,13 +223,13 @@ SBPatternContainer >> initialize [
 		addMorphBack: self informationRow
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pattern matching' }
 SBPatternContainer >> isValidBinding: aString [
 
 	^ self findAllBindings contains: [:binding | binding contents = aString]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'insert/delete' }
 SBPatternContainer >> nextIdentifier [
 
 	| invalidIdentifiers currentAttempt possibleIdentifer |
@@ -310,7 +310,7 @@ SBPatternContainer >> toggleImplicitChildTo: aBoolean withBinding: aString on: a
 			^ self]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pattern matching' }
 SBPatternContainer >> toggleStrategy: aSymbol [
 
 	self strategy at: aSymbol put: (self strategy at: aSymbol) not.

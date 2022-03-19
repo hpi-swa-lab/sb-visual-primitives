@@ -17,7 +17,7 @@ Class {
 	#category : #'Sandblocks-DomainBlocks-PatternMatching'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #replacements }
 SBConstraintPattern class >> constraint: aClosure [
 	"marker"
 

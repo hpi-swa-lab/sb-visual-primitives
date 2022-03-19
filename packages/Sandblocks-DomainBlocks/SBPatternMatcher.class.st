@@ -51,13 +51,13 @@ SBPatternMatcher class >> input: aDomainBlock pattern: anSBGroupPattern [
 	^ self new input: aDomainBlock pattern: anSBGroupPattern
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'output creation' }
 SBPatternMatcher >> build: aPattern fromBinding: anArray [
 
 	^ self build: aPattern fromBinding: anArray currentPrimitive: self searchStack first
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'output creation' }
 SBPatternMatcher >> build: aPattern fromBinding: anArray currentPrimitive: aDomainBlock [
 
 	| subtreeRoot |
@@ -105,7 +105,7 @@ SBPatternMatcher >> explicitChildrenMatching [
 	^ self strategy at: #explicitChildrenMatching ifAbsent: [true]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'output creation' }
 SBPatternMatcher >> getAllMatches [
 
 	| matches match |
@@ -134,7 +134,7 @@ SBPatternMatcher >> getNextMatch [
 	^ self getMatch ifNil: [self dealWithUndefinedResult]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBPatternMatcher >> initialize [
 
 	super initialize.
@@ -149,7 +149,7 @@ SBPatternMatcher >> input: aDomainBlock [
 	self performedMatch: false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBPatternMatcher >> input: aDomainBlock pattern: anSBGroupPattern [
 
 	self

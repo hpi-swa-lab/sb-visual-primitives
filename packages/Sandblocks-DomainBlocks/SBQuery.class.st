@@ -63,14 +63,14 @@ SBQuery class >> newFor: aBlock [
 				visualizePatternsAs: aBlock arguments third evaluate]}
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #replacements }
 SBQuery class >> pattern: anSBDomainBlockContainer [
 	" marker "
 
 	^ self new pattern: anSBDomainBlockContainer
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #replacements }
 SBQuery class >> pattern: anSBDomainBlockContainer strategy: aDict [
 	" marker "
 
@@ -79,7 +79,7 @@ SBQuery class >> pattern: anSBDomainBlockContainer strategy: aDict [
 		strategy: aDict
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #replacements }
 SBQuery class >> pattern: anSBDomainBlockContainer strategy: aDict visualizePatternsAs: aClass [
 	" marker "
 

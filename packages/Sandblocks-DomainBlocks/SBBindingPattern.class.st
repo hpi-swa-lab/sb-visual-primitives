@@ -41,13 +41,13 @@ Class {
 	#category : #'Sandblocks-DomainBlocks-PatternMatching'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #replacements }
 SBBindingPattern class >> bindingDict: aDict [
 
 	^ self new bindingDict: aDict asDictionary
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #replacements }
 SBBindingPattern class >> bindingDict: aDict expressionDict: anotherDict [
 
 	^ self new
@@ -55,7 +55,7 @@ SBBindingPattern class >> bindingDict: aDict expressionDict: anotherDict [
 		expressionDict: anotherDict asDictionary
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #replacements }
 SBBindingPattern class >> bindingDict: aDict expressionDict: anotherDict patternChildren: aCollection [
 
 	^ self new
@@ -64,7 +64,7 @@ SBBindingPattern class >> bindingDict: aDict expressionDict: anotherDict pattern
 		patternChildren: aCollection
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #replacements }
 SBBindingPattern class >> bindingDict: aDict expressionDict: anotherDict patternChildren: aCollection visualizingClass: aClass [
 
 	^ self new
@@ -74,7 +74,7 @@ SBBindingPattern class >> bindingDict: aDict expressionDict: anotherDict pattern
 		visualizingClass: aClass
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #replacements }
 SBBindingPattern class >> bindingDict: aDict expressionDict: anotherDict visualizingClass: aClass [
 
 	^ self new
@@ -83,7 +83,7 @@ SBBindingPattern class >> bindingDict: aDict expressionDict: anotherDict visuali
 		visualizingClass: aClass
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #replacements }
 SBBindingPattern class >> bindingDict: aDict patternChildren: aCollection [
 
 	^ self new
@@ -91,7 +91,7 @@ SBBindingPattern class >> bindingDict: aDict patternChildren: aCollection [
 		patternChildren: aCollection
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #replacements }
 SBBindingPattern class >> bindingDict: aDict patternChildren: aCollection visualizingClass: aClass [
 
 	^ self new
@@ -100,7 +100,7 @@ SBBindingPattern class >> bindingDict: aDict patternChildren: aCollection visual
 		visualizingClass: aClass
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #replacements }
 SBBindingPattern class >> bindingDict: aDict visualizingClass: aClass [
 
 	^ self new
@@ -114,13 +114,13 @@ SBBindingPattern class >> defaultVisualizedAs: aClass [
 	^ SBBindingPattern new visualizingClass: aClass
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #replacements }
 SBBindingPattern class >> expressionDict: aDict [
 
 	^ self new expressionDict: aDict asDictionary
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #replacements }
 SBBindingPattern class >> expressionDict: aDict bindingDict: anotherDict [
 
 	^ self new
@@ -128,7 +128,7 @@ SBBindingPattern class >> expressionDict: aDict bindingDict: anotherDict [
 		bindingDict: anotherDict asDictionary
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #replacements }
 SBBindingPattern class >> expressionDict: aDict bindingDict: anotherDict visualizingClass: aClass [
 
 	^ self new
@@ -137,7 +137,7 @@ SBBindingPattern class >> expressionDict: aDict bindingDict: anotherDict visuali
 		visualizingClass: aClass
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #replacements }
 SBBindingPattern class >> expressionDict: aDict patternChildren: aCollection [
 
 	^ self new
@@ -145,7 +145,7 @@ SBBindingPattern class >> expressionDict: aDict patternChildren: aCollection [
 		patternChildren: aCollection
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #replacements }
 SBBindingPattern class >> expressionDict: aDict patternChildren: aCollection visualizingClass: aClass [
 
 	^ self new
@@ -154,7 +154,7 @@ SBBindingPattern class >> expressionDict: aDict patternChildren: aCollection vis
 		visualizingClass: aClass
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #replacements }
 SBBindingPattern class >> expressionDict: aDict visualizingClass: aClass [
 
 	^ self new
@@ -189,14 +189,14 @@ SBBindingPattern class >> newFor: aBlock [
 	^ self perform: aBlock selector asSymbol withArguments: arguments
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #replacements }
 SBBindingPattern class >> writeBackClosure: aClosure [
 	"should look like [:var | yourVariable := var]"
 
 	^ self writeBackClosure: aClosure patternChildren: {}
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #replacements }
 SBBindingPattern class >> writeBackClosure: aClosure patternChildren: aCollection [
 	"should look like [:var | yourVariable := var]"
 
@@ -239,7 +239,7 @@ SBBindingPattern >> addImplicitChildren: aDict [
 	[implicitChildrenCount < implicitChildrenIndices size] whileTrue: [addImplicitChild value: oldChildren size]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'initialize-release' }
 SBBindingPattern >> addToWorld: aWorld [
 
 	aWorld addMorphBack: self.
@@ -295,7 +295,7 @@ SBBindingPattern >> bindingName: anObject [
 		ifFalse: [anObject])
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'initialize-release' }
 SBBindingPattern >> bindingNameAutoCast [
 
 	^ [:name :morph | | container |
@@ -311,13 +311,13 @@ SBBindingPattern >> bindingNameWithImplicitPrefix: aBoolean [
 	^ self bindingName
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pattern matching' }
 SBBindingPattern >> buildChildrenFromBinding: aDict [
 
 	^ self patternChildren gather: [:pattern | pattern buildFromBinding: aDict]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pattern matching' }
 SBBindingPattern >> buildFromBinding: aDict [
 
 	| output |
@@ -349,7 +349,7 @@ SBBindingPattern >> buildImplicitChildren: aDict [
 	aDict at: self bindingName put: implicitChildren asArray
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBBindingPattern >> buildNewInstance [
 
 	^ SBBindingPattern new
@@ -383,14 +383,14 @@ SBBindingPattern >> childrenInCurrentMatch [
 	^ self patternChildren size + offsetSum
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pattern matching' }
 SBBindingPattern >> collectBindingsInto: aCollection [
 
 	self patternChildren do: [:child | child collectBindingsInto: aCollection].
 	self blockDict keysAndValuesDo: [:position :value | (value firstSubmorphOrNil satisfies: #(#notNil #isSandblock #isName #isBlockBinding)) ifTrue: [aCollection add: value firstSubmorph]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pattern matching' }
 SBBindingPattern >> collectIdentityBindingsInto: aCollection [
 
 	self patternChildren do: [:child | child collectBindingsInto: aCollection].
@@ -433,7 +433,7 @@ SBBindingPattern >> convertToWildcardPattern [
 	self convertToPatternClass: SBWildcardPattern
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pattern matching' }
 SBBindingPattern >> couldMatch: aDomainBlock [
 
 	^ self childrenInCurrentMatch = aDomainBlock patternChildren size and: [self constant isNil or: [self constant value = aDomainBlock sourceObject]]
@@ -498,7 +498,7 @@ SBBindingPattern >> findConstant [
 		nil]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pattern matching' }
 SBBindingPattern >> findOriginRoot [
 
 	^ self findConstant asDomainBlock patternRoot sourceObject
@@ -510,7 +510,7 @@ SBBindingPattern >> getCurrentPrimitive: aDomainBlock [
 	^ aDomainBlock
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pattern matching' }
 SBBindingPattern >> getNext: aDomainBlock [
 	"Updates the visual primitive the pattern will bind to and returns whether a new binding was found. Whether the binding is correct needs to be checked with matches: withBinding:."
 
@@ -541,7 +541,7 @@ SBBindingPattern >> indexOffset [
 	^ 0
 ]
 
-{ #category : #accessing }
+{ #category : #'initialize-release' }
 SBBindingPattern >> initialize [
 
 	super initialize.
@@ -599,7 +599,7 @@ SBBindingPattern >> labelSuggestionsFor: aSBUnknownLabel [
 		self constantSuggestionsFor: aSBUnknownLabel}
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pattern matching' }
 SBBindingPattern >> matches: aDomainBlock withBinding: aCollection [
 
 	| offset |
@@ -656,7 +656,7 @@ SBBindingPattern >> preferredColor [
 	^ self color
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'initialize-release' }
 SBBindingPattern >> rebuild [
 
 	self blockPositions do: [:position | (self blockDict at: position) removeAllMorphs].
@@ -683,13 +683,13 @@ SBBindingPattern >> removeImplicitChildren [
 	self patternChildren do: #removeImplicitChildren
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'initialize-release' }
 SBBindingPattern >> reset [
 
 	self resetChildren
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'initialize-release' }
 SBBindingPattern >> resetChildren [
 
 	self patternChildren do: [:child | child reset]
@@ -787,13 +787,13 @@ SBBindingPattern >> wantsImplicitNeighbors [
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBindingPattern >> writeBackClosure [
 
 	^ writeBackClosure
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBindingPattern >> writeBackClosure: aClosure [
 
 	writeBackClosure := aClosure isSandblock
@@ -805,19 +805,19 @@ SBBindingPattern >> writeBackClosure: aClosure [
 		ifFalse: [aClosure]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBindingPattern >> writeBackClosureString [
 
 	^ writeBackClosureString
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBBindingPattern >> writeBackClosureString: aString [
 
 	writeBackClosureString := aString
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 SBBindingPattern >> writeDict: aDict on: aStream using: aBlock [
 
 	aStream nextPut: ${.
