@@ -1,5 +1,5 @@
 "
-An SBBindingPattern is used to represent a single object visual. It's patternChildren are visualized as well recursively.
+An SBBindingPattern is used to represent a single object. It's patternChildren are visualized as well recursively.
 
 Instance Variables
 	bindingDict:				Dictionary
@@ -512,7 +512,7 @@ SBBindingPattern >> getCurrentDomainBlock: aDomainBlock [
 
 { #category : #'pattern matching' }
 SBBindingPattern >> getNext: aDomainBlock [
-	"Updates the visual primitive the pattern will bind to and returns whether a new binding was found. Whether the binding is correct needs to be checked with matches: withBinding:."
+	"Updates the domain block the pattern will bind to and returns whether a new binding was found. Whether the binding is correct needs to be checked with matches: withBinding:."
 
 	| currentDomainBlock |
 	currentDomainBlock := self getCurrentDomainBlock: aDomainBlock.

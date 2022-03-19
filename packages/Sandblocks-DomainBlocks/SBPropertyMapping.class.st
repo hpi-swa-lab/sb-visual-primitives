@@ -27,7 +27,7 @@ setter
 	- should look like this: [:object :db | ... ]
 
 dbProperty
-	- specifies where the mapping will be applied in the visual primitive
+	- specifies where the mapping will be applied in the domain block
 	- can be #shape #children or a labelPosition, e.g. #innerLabel or #topLeftLabel (see SBDomainBlock >> labelPositions) 
 
 "
