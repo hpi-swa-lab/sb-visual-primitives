@@ -30,7 +30,7 @@ SBDeleteSubtreeCommand >> command: anObject [
 	command := anObject
 ]
 
-{ #category : #accessing }
+{ #category : #'do-undo' }
 SBDeleteSubtreeCommand >> do [
 
 	| selection container |
@@ -59,7 +59,7 @@ SBDeleteSubtreeCommand >> target: anObject [
 	target := anObject
 ]
 
-{ #category : #accessing }
+{ #category : #'do-undo' }
 SBDeleteSubtreeCommand >> undo [
 
 	| selection |

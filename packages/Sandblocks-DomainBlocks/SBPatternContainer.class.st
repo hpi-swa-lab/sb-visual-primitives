@@ -79,7 +79,7 @@ SBPatternContainer class >> rootStrategy [
 	^ #explicitRootMatching
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'adding/removing' }
 SBPatternContainer >> addToggleButtonFor: aSymbol [
 
 	| correctIcon correctText button isExplicit |
@@ -96,13 +96,13 @@ SBPatternContainer >> addToggleButtonFor: aSymbol [
 		ifNotNil: [:existingButton | existingButton replaceBy: button]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #callbacks }
 SBPatternContainer >> artefactChanged: aMethodBlock [
 
 	classNameInput ifNotNil: [classNameInput selectedClass ~= self defaultVisualizationClass ifTrue: [self defaultVisualizationClass: classNameInput selectedClass]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'ast helpers' }
 SBPatternContainer >> binding: aString for: block class: aClass ifPresent: aBlock [
 
 	self findAllBindings
@@ -111,7 +111,7 @@ SBPatternContainer >> binding: aString for: block class: aClass ifPresent: aBloc
 	^ super binding: aString for: block class: aClass ifPresent: aBlock
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pattern matching' }
 SBPatternContainer >> buildImplicitChildrenMatchingPattern [
 
 	self pattern ifNotNil: [
@@ -250,12 +250,6 @@ SBPatternContainer >> nextIdentifier [
 	^ possibleIdentifer
 ]
 
-{ #category : #'as yet unclassified' }
-SBPatternContainer >> objectInterfaceNear: aBlock at: aSymbol [
-
-	^ {[:o | o isKindOf: SBDomainBlock]}
-]
-
 { #category : #accessing }
 SBPatternContainer >> pattern [
 
@@ -295,16 +289,16 @@ SBPatternContainer >> strategyButtonFor: aSymbol [
 	^ self informationRow submorphs at: index ifAbsent: [nil]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pattern matching' }
 SBPatternContainer >> toggleImplicitChildTo: aBoolean withBinding: aString [
 
 	self toggleImplicitChildTo: aBoolean withBinding: aString on: self pattern
 ]
 
-{ #category : #'as yet unclassified' }
-SBPatternContainer >> toggleImplicitChildTo: aBoolean withBinding: aString on: aSBPattern [
+{ #category : #'pattern matching' }
+SBPatternContainer >> toggleImplicitChildTo: aBoolean withBinding: aString on: anSBPattern [
 
-	aSBPattern allChildrenDo: [:child |
+	anSBPattern allChildrenDo: [:child |
 		child bindingName = aString ifTrue: [
 			(child isKindOf: SBEllipsisPattern) ifTrue: [child isImplicitChild: aBoolean].
 			^ self]]

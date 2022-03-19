@@ -72,19 +72,19 @@ SBConstraintPattern class >> selector: aString receiverMatches: aMessage [
 	^ (aMessage receiver satisfies: #(#notNil #isBinding)) and: [self name = aMessage receiver contents and: [aMessage selector = aString]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'adding/removing' }
 SBConstraintPattern >> addToWorld: aWorld [
 
 	aWorld addMorphBack: self
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #utilities }
 SBConstraintPattern >> allChildrenDo: aBlock [
 
 	
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pattern matching' }
 SBConstraintPattern >> buildImplicitChildren: aDict [
 
 	
@@ -122,7 +122,7 @@ SBConstraintPattern >> constraint: aBlockClosure [
 		unknown label: 'expr']
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBConstraintPattern >> deleteBlock [
 
 	self sandblockEditor do: (SBDeleteDomainBlockCommand new target: self)
@@ -196,7 +196,7 @@ SBConstraintPattern >> layoutCommands [
 		data: (self submorphs collect: [:s | s layoutCommands] separatedBy: [SBAlgebraCommand hardLine])
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pattern matching' }
 SBConstraintPattern >> matches: aDomainBlock withBinding: aDict [
 
 	| originalBindings |
@@ -211,13 +211,13 @@ SBConstraintPattern >> matches: aDomainBlock withBinding: aDict [
 	^ self constraint value: originalBindings
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 SBConstraintPattern >> newUnknown [
 
 	^ SBUnknown new grammarHandler: SBStGrammarHandler new
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBConstraintPattern >> patternChildren [
 
 	^ {}
@@ -253,7 +253,7 @@ SBConstraintPattern >> statements [
 	^ self submorphs
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBConstraintPattern >> wantsMethodBody [
 
 	^ false

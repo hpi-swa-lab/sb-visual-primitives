@@ -137,13 +137,13 @@ SBOrGroupPattern >> matchingPattern: aPattern [
 	matchingPattern := aPattern
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 SBOrGroupPattern >> reset [
 
 	self matchingPattern: nil
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBOrGroupPattern >> separatorString [
 
 	^ ' or '

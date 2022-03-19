@@ -24,7 +24,7 @@ SBPatternMatcherTest >> buildTree: aCollection [
 	^ SBDummyNode buildTree: aCollection
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #examples }
 SBPatternMatcherTest >> examplePatternChildSmallerThanParent [
 
 	^ SBGroupPattern patterns: {
@@ -37,7 +37,7 @@ SBPatternMatcherTest >> examplePatternChildSmallerThanParent [
 		SBConstraintPattern constraint: [:bindings | (bindings at: #c) key < (bindings at: #a) key]}
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #examples }
 SBPatternMatcherTest >> examplePatternChildSmallerThanParentOutput [
 
 	^ SBGroupPattern patterns: {
@@ -49,7 +49,7 @@ SBPatternMatcherTest >> examplePatternChildSmallerThanParentOutput [
 			SBEllipsisPattern bindingDict: {#identity -> #d}}}
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #examples }
 SBPatternMatcherTest >> examplePatternSimpleTree [
 
 	^ SBGroupPattern patterns: {
@@ -59,7 +59,7 @@ SBPatternMatcherTest >> examplePatternSimpleTree [
 		SBConstraintPattern constraint: [:bindings | (bindings at: #a) key = ((bindings at: #b) key + (bindings at: #c) key)]}
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #examples }
 SBPatternMatcherTest >> examplePatternSimpleTreeOutput [
 
 	^ SBBindingPattern
@@ -67,7 +67,7 @@ SBPatternMatcherTest >> examplePatternSimpleTreeOutput [
 		patternChildren: {SBBindingPattern bindingDict: {#identity -> #c}. SBBindingPattern bindingDict: {#identity -> #b}}
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #examples }
 SBPatternMatcherTest >> examplePatternSingleNode [
 
 	^ SBGroupPattern patterns: {
@@ -75,7 +75,7 @@ SBPatternMatcherTest >> examplePatternSingleNode [
 		SBConstraintPattern constraint: [:bindings | (bindings at: #a) key = 10]}
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #examples }
 SBPatternMatcherTest >> examplePatternSortTree [
 
 	^ SBGroupPattern patterns: {
@@ -92,7 +92,7 @@ SBPatternMatcherTest >> examplePatternSortTree [
 		SBConstraintPattern constraint: [:bindings | (bindings at: #b) key > (bindings at: #c) key]}
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #examples }
 SBPatternMatcherTest >> examplePatternSortTreeOutput [
 
 	^ SBGroupPattern patterns: {
@@ -108,7 +108,7 @@ SBPatternMatcherTest >> examplePatternSortTreeOutput [
 			SBEllipsisPattern bindingDict: {#identity -> #h}}}
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #examples }
 SBPatternMatcherTest >> examplePatternTreeWithEllipses [
 
 	^ SBGroupPattern patterns: {
@@ -125,7 +125,7 @@ SBPatternMatcherTest >> examplePatternTreeWithEllipses [
 		SBConstraintPattern constraint: [:bindings | (bindings at: #a) key = ((bindings at: #b) key + (bindings at: #c) key)]}
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #examples }
 SBPatternMatcherTest >> examplePatternTreeWithLabeledEllipses [
 
 	^ SBGroupPattern patterns: {
@@ -134,7 +134,7 @@ SBPatternMatcherTest >> examplePatternTreeWithLabeledEllipses [
 			patternChildren: {SBEllipsisPattern bindingDict: {#identity -> #b}. SBBindingPattern bindingDict: {#identity -> #c}}}
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #examples }
 SBPatternMatcherTest >> examplePatternTreeWithLabeledEllipsesOutput [
 
 	^ SBGroupPattern patterns: {
@@ -143,7 +143,7 @@ SBPatternMatcherTest >> examplePatternTreeWithLabeledEllipsesOutput [
 			patternChildren: {SBBindingPattern bindingDict: {#identity -> #c}. SBEllipsisPattern bindingDict: {#identity -> #b}}}
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #examples }
 SBPatternMatcherTest >> examplePatternTwoNodes [
 
 	^ SBGroupPattern patterns: {
@@ -153,7 +153,7 @@ SBPatternMatcherTest >> examplePatternTwoNodes [
 		SBConstraintPattern constraint: [:bindings | (bindings at: #a) key = ((bindings at: #b) key + 10)]}
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #examples }
 SBPatternMatcherTest >> examplePatternTwoNodesWithLabeledWildcard [
 
 	^ SBGroupPattern patterns: {
@@ -165,7 +165,7 @@ SBPatternMatcherTest >> examplePatternTwoNodesWithLabeledWildcard [
 		SBConstraintPattern constraint: [:bindings | (bindings at: #a) key = ((bindings at: #b) key + 10)]}
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #examples }
 SBPatternMatcherTest >> examplePatternTwoNodesWithLabeledWildcardOutput [
 
 	^ SBBindingPattern bindingDict: {#identity -> #a} patternChildren: {
@@ -175,7 +175,7 @@ SBPatternMatcherTest >> examplePatternTwoNodesWithLabeledWildcardOutput [
 				patternChildren: {SBBindingPattern bindingDict: {#identity -> #b}}}}
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #examples }
 SBPatternMatcherTest >> examplePatternTwoNodesWithWildcard [
 
 	^ SBGroupPattern patterns: {
@@ -187,7 +187,7 @@ SBPatternMatcherTest >> examplePatternTwoNodesWithWildcard [
 		SBConstraintPattern constraint: [:bindings | (bindings at: #a) key = ((bindings at: #b) key + 10)]}
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #examples }
 SBPatternMatcherTest >> examplePatternTwoWildcardList [
 
 	^ SBGroupPattern patterns: {
@@ -200,7 +200,7 @@ SBPatternMatcherTest >> examplePatternTwoWildcardList [
 		SBConstraintPattern constraint: [:bindings | (bindings at: #a) key = ((bindings at: #b) key + 10)]}
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #examples }
 SBPatternMatcherTest >> exampleWithConstants: anObject [
 
 	^ (SBTransformation
@@ -240,7 +240,7 @@ SBPatternMatcherTest >> getLabelTree: aPrimitive [
 		ifNotEmpty: [(aPrimitive propertyAt: #innerLabel) asInteger -> (aPrimitive patternChildren collect: [:child | self getLabelTree: child]) asArray]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SBPatternMatcherTest >> testComplexTree [
 
 	| matcher root vp10 vp3 vp7 vp1 |
@@ -257,7 +257,7 @@ SBPatternMatcherTest >> testComplexTree [
 		equals: (matcher getAllMatches collect: [:match | {match at: #a. match at: #b. match at: #c} collect: [:node | node sourceObject]]) asSet
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SBPatternMatcherTest >> testConstantsWork [
 
 	| tree resultingTree |
@@ -266,7 +266,7 @@ SBPatternMatcherTest >> testConstantsWork [
 	self assert: {10. 8. 9} equals: (self getLabelList: resultingTree asDomainBlock) asArray
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SBPatternMatcherTest >> testFiveNodesWithWildcard [
 
 	| matcher primitives config |
@@ -280,7 +280,7 @@ SBPatternMatcherTest >> testFiveNodesWithWildcard [
 		equals: (matcher getAllMatches collect: [:match | {(match at: #a) sourceObject key. (match at: #b) sourceObject key}]) asArray
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SBPatternMatcherTest >> testMatchAllChildrenTree [
 
 	| matcher root vp3 vp2 vp5 |
@@ -296,7 +296,7 @@ SBPatternMatcherTest >> testMatchAllChildrenTree [
 		equals: (matcher getAllMatches collect: [:match | {match at: #a. match at: #b. match at: #c} collect: [:node | node sourceObject]]) asSet
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SBPatternMatcherTest >> testSimpleTree [
 
 	| matcher root |
@@ -309,7 +309,7 @@ SBPatternMatcherTest >> testSimpleTree [
 		equals: (matcher getAllMatches collect: [:match | match collect: [:node | node sourceObject]]) asArray
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SBPatternMatcherTest >> testSimpleTreeEllipsisOutput [
 
 	| matcher root output |
@@ -323,7 +323,7 @@ SBPatternMatcherTest >> testSimpleTreeEllipsisOutput [
 	self assert: 10 -> {4. 2 -> {-1}} equals: (self getLabelTree: output first)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SBPatternMatcherTest >> testSimpleTreeOutput [
 
 	| matcher root output |
@@ -335,7 +335,7 @@ SBPatternMatcherTest >> testSimpleTreeOutput [
 	self assert: 10 -> {3. 7} equals: (self getLabelTree: output)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SBPatternMatcherTest >> testSingleNodeMatch [
 
 	| matcher primitives |
@@ -346,7 +346,7 @@ SBPatternMatcherTest >> testSingleNodeMatch [
 		equals: (matcher getAllMatches collect: [:match | {#a -> (match at: #a) sourceObject key}]) first
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SBPatternMatcherTest >> testSortTreeOutput [
 
 	| root output |
@@ -362,7 +362,7 @@ SBPatternMatcherTest >> testSortTreeOutput [
 		equals: {self getLabelTree: output asDomainBlock}
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SBPatternMatcherTest >> testThreeNodesWithWildcard [
 
 	| matcher primitives |
@@ -375,7 +375,7 @@ SBPatternMatcherTest >> testThreeNodesWithWildcard [
 		equals: (matcher getAllMatches collect: [:match | {(match at: #a) sourceObject key. (match at: #b) sourceObject key}]) asArray
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #tests }
 SBPatternMatcherTest >> testThreeNodesWithWildcardOutput [
 
 	| matcher primitives output match |

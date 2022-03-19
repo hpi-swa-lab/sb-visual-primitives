@@ -43,22 +43,22 @@ SBDomainBlock class >> matches: aBlock [
 { #category : #'as yet unclassified' }
 SBDomainBlock class >> newFromObject: anObject [
 
-	| vp |
-	vp := self new.
-	vp sourceObject: anObject.
-	vp addPropertyMappings: anObject class domainBlockMapping.
-	^ vp
+	| domainBlock |
+	domainBlock := self new.
+	domainBlock sourceObject: anObject.
+	domainBlock addPropertyMappings: anObject class domainBlockMapping.
+	^ domainBlock
 ]
 
 { #category : #'as yet unclassified' }
 SBDomainBlock class >> newFromObject: anObject in: aMorph [
 
-	| vp |
-	vp := self new.
-	aMorph addMorphBack: vp.
-	vp sourceObject: anObject.
-	vp addPropertyMappings: anObject class domainBlockMapping.
-	^ vp
+	| domainBlock |
+	domainBlock := self new.
+	aMorph addMorphBack: domainBlock.
+	domainBlock sourceObject: anObject.
+	domainBlock addPropertyMappings: anObject class domainBlockMapping.
+	^ domainBlock
 ]
 
 { #category : #'as yet unclassified' }
@@ -77,20 +77,20 @@ SBDomainBlock class >> selector: aString receiverMatches: aMessage [
 	^ (aMessage receiver satisfies: #(#notNil #isBinding)) and: [self name = aMessage receiver contents and: [aMessage selector = aString]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'adding/removing' }
 SBDomainBlock >> addChild: aDomainBlock [
 
 	self addChild: aDomainBlock afterIndex: self patternChildren size
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'adding/removing' }
 SBDomainBlock >> addChild: aDomainBlock afterIndex: aNumber [
 
 	aDomainBlock patternParent ifNotNil: [aDomainBlock patternParent removeChild: aDomainBlock].
 	self addConnectorLineTo: aDomainBlock afterIndex: aNumber
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'adding/removing' }
 SBDomainBlock >> addConnectorLineTo: aDomainBlock afterIndex: aNumber [
 
 	| connector previousConnector |
@@ -114,7 +114,7 @@ SBDomainBlock >> addConnectorLineTo: aDomainBlock afterIndex: aNumber [
 			self attachDecorator: (SBFutureConnectionDecorator new to: aDomainBlock)]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBDomainBlock >> addLabel [
 	<action>
 	<actionValidIf: #supportsLabels>
@@ -132,7 +132,7 @@ SBDomainBlock >> addLabel [
 			undo: [self removeLabelAt: dbProperty])]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBDomainBlock >> addNewChild [
 	<action>
 
@@ -147,7 +147,7 @@ SBDomainBlock >> addNewChild [
 	newChild inputContainedUnknown
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBDomainBlock >> addNewParent [
 	<action>
 
@@ -164,7 +164,7 @@ SBDomainBlock >> addNewParent [
 	newChild inputContainedUnknown
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'adding/removing' }
 SBDomainBlock >> addPropertyMapping: anSBPropertyMapping [
 
 	| value propertyMapping newChild |
@@ -184,25 +184,25 @@ SBDomainBlock >> addPropertyMapping: anSBPropertyMapping [
 		otherwise: [(self labelPositions includes: propertyMapping dbProperty) ifTrue: [(self blockDict at: propertyMapping dbProperty) addDBLabel: (propertyMapping getMorphFor: self sourceObject)]]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'adding/removing' }
 SBDomainBlock >> addPropertyMappings: aCollection [
 
 	aCollection do: [:mappingEntry | self addPropertyMapping: mappingEntry]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'adding/removing' }
 SBDomainBlock >> addToWorld: aWorld [
 
 	^ self subclassResponsibility
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'adding/removing' }
 SBDomainBlock >> afterAddLabel: aBlock [
 
 	
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #utilities }
 SBDomainBlock >> allChildrenDo: aBlock [
 
 	aBlock value: self.
@@ -227,19 +227,19 @@ SBDomainBlock >> blockDict: aDict [
 	blockDict := aDict
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBDomainBlock >> blockPositions [
 
 	^ self topLabelPositions, self middleBlockPositions, self bottomLabelPositions
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBDomainBlock >> bottomLabelPositions [
 
 	^ {#bottomLeftLabel. #bottomCenterLabel. #bottomRightLabel}
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 SBDomainBlock >> buildNewInstance [
 
 	^ self sourceObject
@@ -247,7 +247,7 @@ SBDomainBlock >> buildNewInstance [
 		ifNil: [self class new]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 SBDomainBlock >> buildObject [
 
 	| anObject |
@@ -262,13 +262,13 @@ SBDomainBlock >> buildObject [
 	^ anObject
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBDomainBlock >> canCreateConnectors [
 
 	^ self patternParent notNil or: [(self ownerThatIsA: SBDomainBlockContainer) notNil]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBDomainBlock >> centerChild [
 
 	^ self patternChildren
@@ -276,13 +276,13 @@ SBDomainBlock >> centerChild [
 		ifNotEmpty: [self patternChildren at: self patternChildren size + 1 / 2]
 ]
 
-{ #category : #'as yet unclassified' }
-SBDomainBlock >> constantSuggestionsFor: aSBUnknownLabel [
+{ #category : #accessing }
+SBDomainBlock >> constantSuggestionsFor: anSBUnknownLabel [
 
-	| aVPProperty suggestionConstant constantString suggestionConstantBlock |
-	aVPProperty := self labelPositionOf: aSBUnknownLabel.
-	suggestionConstant := self suggestionConstantAt: aVPProperty.
-	suggestionConstantBlock := self suggestionConstantBlockAt: aVPProperty.
+	| dbProperty suggestionConstant constantString suggestionConstantBlock |
+	dbProperty := self labelPositionOf: anSBUnknownLabel.
+	suggestionConstant := self suggestionConstantAt: dbProperty.
+	suggestionConstantBlock := self suggestionConstantBlockAt: dbProperty.
 	constantString := String streamContents: [:stream |
 		stream
 			nextPut: $[;
@@ -291,7 +291,7 @@ SBDomainBlock >> constantSuggestionsFor: aSBUnknownLabel [
 	^ (SBBlockSuggestionItem selector: constantString label: 'constant') builder: [suggestionConstantBlock]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #layout }
 SBDomainBlock >> defaultShape [
 
 	^ CircleMorph new layoutInset: 4
@@ -303,7 +303,16 @@ SBDomainBlock >> deleteBlock [
 	self sandblockEditor do: (SBDeleteSubtreeCommand new target: self)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
+SBDomainBlock >> domainBlockMappingAt: aSymbol [
+
+	^ self domainBlockMappings
+		detect: [:mapping | mapping key = aSymbol]
+		ifFound: [:mapping | mapping asPropertyMapping]
+		ifNone: [nil]
+]
+
+{ #category : #accessing }
 SBDomainBlock >> domainBlockMappings [
 
 	^ self sourceObject class domainBlockMapping collect: [:mappingOrAssoc |
@@ -348,7 +357,7 @@ SBDomainBlock >> initialize [
 		shrinkWrap
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 SBDomainBlock >> initializeLabelBlocks [
 
 	self blockPositions do: [:blockPosition |
@@ -360,7 +369,7 @@ SBDomainBlock >> initializeLabelBlocks [
 			yourself)]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBDomainBlock >> innerLabel [
 
 	^ (self blockDict at: #innerLabel ifAbsent: [nil]) firstSubmorphOrNil
@@ -386,7 +395,7 @@ SBDomainBlock >> isExpression [
 	^ false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBDomainBlock >> isTreeLayoutRoot [
 
 	^ self patternParent isNil
@@ -404,29 +413,29 @@ SBDomainBlock >> label: anObject [
 	^ self innerLabel: (SBTextBubble new contents: anObject asString)
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBDomainBlock >> labelContentAt: aSymbol [
 
 	^ (self blockDict at: aSymbol) firstSubmorph contents
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBDomainBlock >> labelPositionOf: aMorph [
 
 	self blockDict keysAndValuesDo: [:position :block | (aMorph hasOwner: block) ifTrue: [^ position]].
 	^ nil
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBDomainBlock >> labelPositions [
 
 	^ self topLabelPositions, self middleLabelPositions, self bottomLabelPositions
 ]
 
-{ #category : #'as yet unclassified' }
-SBDomainBlock >> labelSuggestionsFor: aSBUnknownLabel [
+{ #category : #accessing }
+SBDomainBlock >> labelSuggestionsFor: anSBUnknownLabel [
 
-	^ {self constantSuggestionsFor: aSBUnknownLabel}
+	^ {self constantSuggestionsFor: anSBUnknownLabel}
 ]
 
 { #category : #layout }
@@ -435,7 +444,7 @@ SBDomainBlock >> layoutInset [
 	^ 0
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBDomainBlock >> leftSibling [
 
 	| index |
@@ -444,19 +453,19 @@ SBDomainBlock >> leftSibling [
 	^ index > 1 ifTrue: [self patternParent patternChildren at: index - 1]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBDomainBlock >> middleBlockPositions [
 
 	^ {#leftLabel. #shape. #rightLabel}
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBDomainBlock >> middleLabelPositions [
 
 	^ {#leftLabel. #innerLabel. #rightLabel}
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBDomainBlock >> missingProperties [
 
 	^ self domainBlockMappings select: [:mapping |
@@ -477,7 +486,7 @@ SBDomainBlock >> morphAt: aSymbol [
 	aSymbol = #shape ifTrue: [^ self shape]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBDomainBlock >> moveCursorDown [
 	<action>
 
@@ -486,7 +495,7 @@ SBDomainBlock >> moveCursorDown [
 		ifFalse: [self sandblockEditor cursor moveCursorDown]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBDomainBlock >> moveCursorLeft [
 	<action>
 
@@ -495,7 +504,7 @@ SBDomainBlock >> moveCursorLeft [
 		ifFalse: [self sandblockEditor cursor moveCursorLeft]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBDomainBlock >> moveCursorRight [
 	<action>
 
@@ -504,7 +513,7 @@ SBDomainBlock >> moveCursorRight [
 		ifFalse: [self sandblockEditor cursor moveCursorRight]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBDomainBlock >> moveCursorUp [
 	<action>
 
@@ -513,13 +522,13 @@ SBDomainBlock >> moveCursorUp [
 		ifFalse: [self sandblockEditor cursor moveCursorUp]
 ]
 
-{ #category : #'as yet unclassified' }
-SBDomainBlock >> newLabelBlockAt: aVPProperty [
+{ #category : #accessing }
+SBDomainBlock >> newLabelBlockAt: aSymbol [
 
-	^ self suggestionConstantBlockAt: aVPProperty
+	^ self suggestionConstantBlockAt: aSymbol
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 SBDomainBlock >> newUnknown [
 
 	^ SBUnknownLabel new grammarHandler: SBStGrammarHandler new
@@ -624,26 +633,26 @@ SBDomainBlock >> propertyAt: aSymbol [
 	(self labelPositions includes: aSymbol) ifTrue: [
 		^ self blockDict
 			at: aSymbol
-			ifPresent: [:block | (self vpMappingAt: aSymbol) getLabelContents: block]
+			ifPresent: [:block | (self domainBlockMappingAt: aSymbol) getLabelContents: block]
 			ifAbsent: [nil]].
 	aSymbol = #patternChildren ifTrue: [^ self patternChildren collect: #buildObject].
 	aSymbol = #shape ifTrue: [^ self shape]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'adding/removing' }
 SBDomainBlock >> removeChild: aDomainBlock [
 
 	aDomainBlock delete.
 	self allConnections do: #checkAutoDelete
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'adding/removing' }
 SBDomainBlock >> removeLabelAt: aSymbol [
 
 	(self blockDict at: aSymbol) removeAllMorphs
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBDomainBlock >> rightSibling [
 
 	| index |
@@ -655,13 +664,13 @@ SBDomainBlock >> rightSibling [
 { #category : #accessing }
 SBDomainBlock >> setLabelAt: aSymbol to: anObject [
 
-	| morphy positionBlock |
-	morphy := self getLabelMorph: anObject.
+	| morph positionBlock |
+	morph := self getLabelMorph: anObject.
 	positionBlock := self blockDict at: aSymbol.
 	positionBlock
 		removeAllMorphs;
-		addMorphBack: morphy.
-	^ morphy
+		addMorphBack: morph.
+	^ morph
 ]
 
 { #category : #accessing }
@@ -701,32 +710,32 @@ SBDomainBlock >> sourceObject: anObject [
 	sourceObject := anObject
 ]
 
-{ #category : #'as yet unclassified' }
-SBDomainBlock >> suggestionConstantAt: aVPProperty [
+{ #category : #accessing }
+SBDomainBlock >> suggestionConstantAt: aSymbol [
 
-	| aSBPropertyMapping |
-	aSBPropertyMapping := self vpMappingAt: aVPProperty.
-	^ aSBPropertyMapping ifNotNil: #suggestionConstant ifNil: [#a]
+	| anSBPropertyMapping |
+	anSBPropertyMapping := self domainBlockMappingAt: aSymbol.
+	^ anSBPropertyMapping ifNotNil: #suggestionConstant ifNil: [#a]
 ]
 
-{ #category : #'as yet unclassified' }
-SBDomainBlock >> suggestionConstantBlockAt: aVPProperty [
+{ #category : #accessing }
+SBDomainBlock >> suggestionConstantBlockAt: aSymbol [
 
-	| suggestionConstant aSBPropertyMapping |
-	aSBPropertyMapping := self vpMappingAt: aVPProperty.
-	suggestionConstant := self suggestionConstantAt: aVPProperty.
-	^ aSBPropertyMapping
-		ifNotNil: [aSBPropertyMapping getMorphForValue: suggestionConstant]
+	| suggestionConstant anSBPropertyMapping |
+	anSBPropertyMapping := self domainBlockMappingAt: aSymbol.
+	suggestionConstant := self suggestionConstantAt: aSymbol.
+	^ anSBPropertyMapping
+		ifNotNil: [anSBPropertyMapping getMorphForValue: suggestionConstant]
 		ifNil: [#a]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #testing }
 SBDomainBlock >> supportsLabels [
 
 	^ true
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBDomainBlock >> topLabelPositions [
 
 	^ {#topLeftLabel. #topCenterLabel. #topRightLabel}
@@ -736,15 +745,6 @@ SBDomainBlock >> topLabelPositions [
 SBDomainBlock >> valueFromPropertyMapping: aPropertyMapping [
 
 	^ aPropertyMapping value: self sourceObject
-]
-
-{ #category : #'as yet unclassified' }
-SBDomainBlock >> vpMappingAt: aVPProperty [
-
-	^ self domainBlockMappings
-		detect: [:mapping | mapping key = aVPProperty]
-		ifFound: [:mapping | mapping asPropertyMapping]
-		ifNone: [nil]
 ]
 
 { #category : #printing }

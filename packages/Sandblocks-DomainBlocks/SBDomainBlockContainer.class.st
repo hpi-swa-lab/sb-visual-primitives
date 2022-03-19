@@ -51,13 +51,13 @@ SBDomainBlockContainer class >> visualize: aDomainBlock [
 	^ self new visualize: aDomainBlock
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #callbacks }
 SBDomainBlockContainer >> artefactSaved: aMethodBlock [
 
 	self code: (String streamContents: [:stream | self writeCodeOn: stream]) parseAsSandblock
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #visualization }
 SBDomainBlockContainer >> code: aCodeBlock [
 
 	| result |
@@ -66,7 +66,7 @@ SBDomainBlockContainer >> code: aCodeBlock [
 	self visualize: (SBDomainBlock newFromObject: (result isBlock ifTrue: [result value] ifFalse: [result]))
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #visualization }
 SBDomainBlockContainer >> devisualize [
 	<action>
 	<actionValidIf: #isImplicit>
@@ -119,7 +119,7 @@ SBDomainBlockContainer >> exampleGameCardHand [
 			type: 'water'})
 ]
 
-{ #category : #accessing }
+{ #category : #examples }
 SBDomainBlockContainer >> exampleRectangleStringLabel [
 
 	SBDomainBlockContainer code: ((SBRectangleTopLabelFixture key: 'a')
@@ -171,7 +171,7 @@ SBDomainBlockContainer >> exampleSpecialShape [
 		right: (SBSpecialShapeFixture key: 1))
 ]
 
-{ #category : #accessing }
+{ #category : #initialization }
 SBDomainBlockContainer >> initialize [
 
 	super initialize.
@@ -203,7 +203,7 @@ SBDomainBlockContainer >> isImplicit: aBoolean [
 	isImplicit := aBoolean
 ]
 
-{ #category : #accessing }
+{ #category : #printing }
 SBDomainBlockContainer >> tryWriteSourceOrStore: anObject on: aStream [
 
 	(anObject respondsTo: #writeSourceOn:)
@@ -211,14 +211,14 @@ SBDomainBlockContainer >> tryWriteSourceOrStore: anObject on: aStream [
 		ifFalse: [anObject storeOn: aStream]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #visualization }
 SBDomainBlockContainer >> visualize: aDomainBlock [
 
 	self firstSubmorph removeAllMorphs.
 	self firstSubmorph addMorph: aDomainBlock
 ]
 
-{ #category : #accessing }
+{ #category : #printing }
 SBDomainBlockContainer >> writeCodeOn: aStream [
 
 	| object |
@@ -228,7 +228,7 @@ SBDomainBlockContainer >> writeCodeOn: aStream [
 	aStream nextPut: $)
 ]
 
-{ #category : #accessing }
+{ #category : #printing }
 SBDomainBlockContainer >> writeSourceOn: aStream [
 
 	self isImplicit

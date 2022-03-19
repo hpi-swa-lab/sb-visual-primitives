@@ -23,7 +23,7 @@ SBPropertyMappingExpression class >> expression: aBlock dbProperty: aSymbol orig
 	^ (self getter: aBlock setter: [:ignore | ] dbProperty: aSymbol name: aPropertyMapping name) originalMapping: aPropertyMapping
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBPropertyMappingExpression >> getMorphFor: anObject [
 
 	| value |

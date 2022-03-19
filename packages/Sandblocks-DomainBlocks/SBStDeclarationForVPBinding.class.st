@@ -83,14 +83,6 @@ SBStDeclarationForVPBinding >> printBlockOn: aStream [
 ]
 
 { #category : #accessing }
-SBStDeclarationForVPBinding >> refreshBindingIndex [
-
-	| bindingPattern |
-	bindingPattern := name firstOwnerSuchThat: [:owner | owner isVisualPrimitive].
-	(bindingPattern labelPositionOf: name) = bindingPattern identityLabelPosition ifTrue: [bindingPattern bindingIndex: name contents]
-]
-
-{ #category : #accessing }
 SBStDeclarationForVPBinding >> refreshBindingName [
 
 	| bindingPattern |

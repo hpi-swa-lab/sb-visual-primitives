@@ -188,7 +188,7 @@ SBPropertyMapping >> getter: aBlockClosure [
 	getter := aBlockClosure
 ]
 
-{ #category : #'initialize-release' }
+{ #category : #initialization }
 SBPropertyMapping >> initialize [
 
 	super initialize.

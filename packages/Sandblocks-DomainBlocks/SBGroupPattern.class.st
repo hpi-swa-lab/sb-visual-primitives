@@ -104,7 +104,7 @@ SBGroupPattern >> addNewOrPattern [
 	self insertNewPattern: SBOrGroupPattern default
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'adding/removing' }
 SBGroupPattern >> addSeparatorsAround: aPattern [
 
 	(aPattern submorphAfter
@@ -116,7 +116,7 @@ SBGroupPattern >> addSeparatorsAround: aPattern [
 		ifNotNil: [(aPattern submorphBefore isKindOf: SBTextBubble) not]) ifTrue: [self addMorph: (SBTextBubble new contents: self separatorString) inFrontOf: aPattern]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'adding/removing' }
 SBGroupPattern >> addToWorld: aWorld [
 
 	self patternChildren do: [:pattern | pattern addToWorld: aWorld].
@@ -129,7 +129,7 @@ SBGroupPattern >> allChildrenDo: aBlock [
 	self patternChildren do: [:child | child allChildrenDo: aBlock]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pattern matching' }
 SBGroupPattern >> buildFromBinding: anArray [
 
 	self flag: #TODO.
@@ -137,7 +137,7 @@ SBGroupPattern >> buildFromBinding: anArray [
 	^ self patternChildren first buildFromBinding: anArray
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pattern matching' }
 SBGroupPattern >> buildImplicitChildren: anArray [
 
 	self patternChildren do: [:pattern | pattern buildImplicitChildren: anArray]
@@ -170,13 +170,13 @@ SBGroupPattern >> deleteBlock [
 { #category : #'insert/delete' }
 SBGroupPattern >> deleteCommandFor: aBlock [
 
-	| primitive |
-	primitive := aBlock isPatternBlock ifTrue: [aBlock] ifFalse: [
+	| domainBlock |
+	domainBlock := aBlock isPatternBlock ifTrue: [aBlock] ifFalse: [
 		aBlock
 			submorphThat: [:morph | morph isPatternBlock and: [morph patternParent = self]]
 			ifNone: [nil]].
 	
-	^ SBDeleteSubtreeCommand new target: primitive
+	^ SBDeleteSubtreeCommand new target: domainBlock
 ]
 
 { #category : #'pattern matching' }
@@ -192,7 +192,7 @@ SBGroupPattern >> findOriginRoot [
 	^ self findConstant asDomainBlock patternRoot sourceObject
 ]
 
-{ #category : #accessing }
+{ #category : #testing }
 SBGroupPattern >> fixedNumberOfChildren [
 
 	^ false
@@ -249,13 +249,13 @@ SBGroupPattern >> insertNewPattern: aPattern [
 		yourself)
 ]
 
-{ #category : #accessing }
+{ #category : #testing }
 SBGroupPattern >> isExpression [
 
 	^ false
 ]
 
-{ #category : #accessing }
+{ #category : #testing }
 SBGroupPattern >> isImplicitChild [
 
 	^ false
@@ -273,7 +273,7 @@ SBGroupPattern >> isOutputPattern: aBoolean [
 	isOutputPattern := aBoolean
 ]
 
-{ #category : #accessing }
+{ #category : #'*Sandblocks-DomainBlocks' }
 SBGroupPattern >> isPatternBlock [
 
 	^ true
@@ -285,20 +285,20 @@ SBGroupPattern >> label [
 	^ nil
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pattern matching' }
 SBGroupPattern >> matches: aDomainBlock withBinding: aCollection [
 
 	^ self patternChildren allSatisfy: [:pattern | pattern matches: aDomainBlock withBinding: aCollection]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #callbacks }
 SBGroupPattern >> noteNewOwner: aMorph [
 
 	super noteNewOwner: aMorph.
 	self patternChildren do: [:submorph | submorph noteNewOwner: self]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'adding/removing' }
 SBGroupPattern >> openPatternAsChild: aPattern afterIndex: aNumber [
 
 	| insertPosition addedBlock |
@@ -366,7 +366,7 @@ SBGroupPattern >> removeImplicitChildren [
 	self patternChildren do: [:child | child removeImplicitChildren]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'submorphs - callbacks' }
 SBGroupPattern >> removedMorph: anSBBlock [
 
 	| deletedLabelCount |

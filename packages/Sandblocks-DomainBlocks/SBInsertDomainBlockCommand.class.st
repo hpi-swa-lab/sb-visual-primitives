@@ -27,7 +27,7 @@ Class {
 	#category : #'Sandblocks-DomainBlocks'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #apply }
 SBInsertDomainBlockCommand >> do [
 
 	container := self patternParent isDomainBlock
@@ -48,7 +48,7 @@ SBInsertDomainBlockCommand >> do [
 	^ self morph
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'initialize-release' }
 SBInsertDomainBlockCommand >> initialize [
 
 	super initialize.
@@ -99,7 +99,7 @@ SBInsertDomainBlockCommand >> patternSiblingIndex: aNumber [
 	patternSiblingIndex := aNumber
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #apply }
 SBInsertDomainBlockCommand >> undo [
 
 	| case |

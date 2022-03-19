@@ -22,13 +22,13 @@ Class {
 	#category : #'Sandblocks-DomainBlocks-PatternMatching'
 }
 
-{ #category : #'as yet unclassified' }
+{ #category : #'adding/removing' }
 SBEllipsisPattern >> addImplicitChildren: aDict [
 
 	
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBEllipsisPattern >> bindingNameWithImplicitPrefix: aBoolean [
 
 	| prefix |
@@ -51,20 +51,20 @@ SBEllipsisPattern >> buildFromBinding: anArray [
 	^ (anArray at: self bindingName) veryDeepCopy
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'initialize-release' }
 SBEllipsisPattern >> buildImplicitChildren: anArray [
 
 	
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBEllipsisPattern >> convertToBindingPattern [
 	<action>
 
 	self convertToPatternClass: SBBindingPattern
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBEllipsisPattern >> convertToEllipsisPattern [
 	"we done here"
 
@@ -108,7 +108,7 @@ SBEllipsisPattern >> indexOffset [
 	^ self currentSize - 1
 ]
 
-{ #category : #initialization }
+{ #category : #'initialize-release' }
 SBEllipsisPattern >> initialize [
 
 	super initialize.
@@ -155,7 +155,7 @@ SBEllipsisPattern >> patternChildren: aCollection [
 	super patternChildren: aCollection
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'initialize-release' }
 SBEllipsisPattern >> reset [
 
 	super reset.
@@ -170,7 +170,7 @@ SBEllipsisPattern >> searchRootFor: aDomainBlock at: anIndex [
 		to: anIndex + self indexOffset
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBEllipsisPattern >> setLabelBindingsFor: aCollection in: aDict using: aBlockClosure [
 
 	self labelBindingDict keysAndValuesDo: [:labelPosition :bindingName |
@@ -179,38 +179,14 @@ SBEllipsisPattern >> setLabelBindingsFor: aCollection in: aDict using: aBlockClo
 			value: (aCollection collect: [:domainBlock | domainBlock propertyAt: labelPosition])]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #accessing }
 SBEllipsisPattern >> wantsImplicitNeighbors [
 
 	^ false
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBEllipsisPattern >> wrapInMessageSend [
-	"NO CHILDREN ALLOWED!
-	
-              ,-----.
-            W/,-. ,-.\W
-            ()>a   a<()
-            (.--(_)--.)
-          ,'/.-'/-\`-.\`.
-        ,' /    `-'    \ `.
-       /   \           /   \
-      /     `.       ,'     \
-     /    /   `-._.-'   \    \
-   ,-`-._/|     |=|o    |\_.-<
-  <,--.)  |_____| |o____|  )_ \
-   `-)|    |//   _   \\|     )/
-     ||    |'    |    `|
-     ||    |     |     |
-     ||    (    )|(    )
-     ||    |     |     |
-     ||    |     |     |
-     ||    |_.--.|.--._|
-     ||     /'"
-	"| |"
-	"`\
-     []     `===' `==='  hjw"
 	<action>
 
 	

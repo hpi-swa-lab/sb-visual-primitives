@@ -95,7 +95,7 @@ SBTransformation class >> suggestion [
 		case classNameInput promptClassForVPCase]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pattern matching' }
 SBTransformation >> buildImplicitChildrenMatchingPattern [
 
 	(self pattern isNil or: [self outputPattern isNil]) ifTrue: [^ self].
@@ -171,7 +171,7 @@ SBTransformation >> exampleDeleteNodeInside: aTree [
 { #category : #examples }
 SBTransformation >> exampleEllipsisPatternWithLabel: aDummyNode [
 
-	| tttt |
+	| number |
 	self
 		example: [SBTransformation new]
 		args: [
@@ -184,7 +184,7 @@ SBTransformation >> exampleEllipsisPatternWithLabel: aDummyNode [
 						left: (SBDummyNode key: 4);
 						right: (SBDummyNode key: 5))) showAsDomainBlock}]
 		label: 'example'.
-	tttt := 5.
+	number := 5.
 	^ (SBTransformation
 		input: (SBGroupPattern patterns: {
 			SBBindingPattern
@@ -205,7 +205,7 @@ SBTransformation >> exampleEllipsisPatternWithLabel: aDummyNode [
 								visualizingClass: SBDummyNode}
 						visualizingClass: SBDummyNode}
 				visualizingClass: SBDummyNode.
-			SBConstraintPattern constraint: [:bindings | (bindings at: #a) = tttt]})
+			SBConstraintPattern constraint: [:bindings | (bindings at: #a) = number]})
 		output: (SBGroupPattern patterns: {
 			SBBindingPattern
 				bindingDict: {#identity -> #a}
@@ -476,14 +476,14 @@ SBTransformation >> hideColorDifferences [
 	outputBindingDict do: [:binding | binding detachDecorators: SBColorAccentDecorator]
 ]
 
-{ #category : #accessing }
+{ #category : #initialization }
 SBTransformation >> initialize [
 
 	super initialize.
 	self replaceCount: Float infinity
 ]
 
-{ #category : #accessing }
+{ #category : #initialization }
 SBTransformation >> input: aPattern output: anotherPattern [
 
 	self
@@ -500,7 +500,7 @@ SBTransformation >> input: aPattern output: anotherPattern [
 	self class colorizeDifferences ifTrue: [self colorDifferences]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #initialization }
 SBTransformation >> newRepeatCountMorphFor: aNumber [
 
 	aNumber isInfinite
@@ -543,7 +543,7 @@ SBTransformation >> replaceCountInput [
 	^ self pattern owner ifNotNil: [:owner | owner submorphs second firstSubmorph]
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #'pattern matching' }
 SBTransformation >> toggleImplicitChildTo: aBoolean withBinding: aString [
 
 	super toggleImplicitChildTo: aBoolean withBinding: aString.
@@ -572,14 +572,14 @@ SBTransformation >> value [
 { #category : #accessing }
 SBTransformation >> value: anObject [
 
-	| matcher currentPrimitive match iteration |
-	currentPrimitive := anObject asDomainBlock.
-	matcher := (SBPatternMatcher input: currentPrimitive pattern: self pattern) strategy: self strategy.
+	| matcher currentDomainBlock match iteration |
+	currentDomainBlock := anObject asDomainBlock.
+	matcher := (SBPatternMatcher input: currentDomainBlock pattern: self pattern) strategy: self strategy.
 	iteration := 0.
 	[(match := matcher getNextMatch) notNil and: [(iteration := iteration + 1) <= self replaceCount]] whileTrue: [
-		currentPrimitive := matcher build: self outputPattern fromBinding: match.
-		matcher input: currentPrimitive].
-	^ currentPrimitive buildObject
+		currentDomainBlock := matcher build: self outputPattern fromBinding: match.
+		matcher input: currentDomainBlock].
+	^ currentDomainBlock buildObject
 ]
 
 { #category : #printing }

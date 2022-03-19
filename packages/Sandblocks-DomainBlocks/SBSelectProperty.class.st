@@ -110,7 +110,7 @@ SBSelectProperty >> currentValueIndex: aNumber [
 		addMorphBack: (self getRepresentationMorphAt: currentValueIndex)
 ]
 
-{ #category : #accessing }
+{ #category : #'event handling' }
 SBSelectProperty >> doubleClick: anEvent [
 
 	| selectedIndex |
@@ -137,7 +137,7 @@ SBSelectProperty >> getRepresentationMorphAt: anIndex [
 	^ nil
 ]
 
-{ #category : #accessing }
+{ #category : #initialization }
 SBSelectProperty >> initialize [
 
 	super initialize.
@@ -170,13 +170,13 @@ SBSelectProperty >> title: aString [
 	title := aString
 ]
 
-{ #category : #accessing }
+{ #category : #'halos and balloon help' }
 SBSelectProperty >> wantsBalloon [
 
 	^ true
 ]
 
-{ #category : #accessing }
+{ #category : #printing }
 SBSelectProperty >> writeSourceOn: aStream [
 
 	aStream store: self contents

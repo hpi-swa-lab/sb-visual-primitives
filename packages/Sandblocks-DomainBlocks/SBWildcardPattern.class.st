@@ -50,14 +50,14 @@ SBWildcardPattern >> buildFromBinding: anArray currentPrimitive: aDomainBlock [
 	^ output
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBWildcardPattern >> convertToBindingPattern [
 	<action>
 
 	self convertToPatternClass: SBBindingPattern
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #actions }
 SBWildcardPattern >> convertToWildcardPattern [
 
 	
@@ -138,7 +138,7 @@ SBWildcardPattern >> exampleExtractNodeWithTwoChildren: aTree [
 ]
 
 { #category : #'pattern matching' }
-SBWildcardPattern >> getCurrentPrimitive: aDomainBlock [
+SBWildcardPattern >> getCurrentDomainBlock: aDomainBlock [
 
 	^ self searchStack ifEmpty: [aDomainBlock] ifNotEmpty: [self currentTop]
 ]
