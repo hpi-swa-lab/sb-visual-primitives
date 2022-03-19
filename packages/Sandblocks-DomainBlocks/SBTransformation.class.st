@@ -534,13 +534,14 @@ SBTransformation >> replaceCount [
 { #category : #accessing }
 SBTransformation >> replaceCount: aNumber [
 
-	replaceCount := aNumber
+	replaceCount := aNumber.
+	self replaceCountInput ifNotNil: [:morph | morph replaceBy: (self newRepeatCountMorphFor: aNumber)]
 ]
 
 { #category : #accessing }
 SBTransformation >> replaceCountInput [
 
-	^ self pattern owner ifNotNil: [:owner | owner submorphs second firstSubmorph]
+	^ (self pattern ifNotNil: #owner) ifNotNil: [:owner | owner submorphs second firstSubmorph]
 ]
 
 { #category : #'pattern matching' }
