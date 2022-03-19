@@ -243,17 +243,17 @@ SBPatternMatcherTest >> getLabelTree: aPrimitive [
 { #category : #tests }
 SBPatternMatcherTest >> testComplexTree [
 
-	| matcher root vp10 vp3 vp7 vp1 |
+	| matcher root db10 db3 db7 db1 |
 	root := SBDummyNode buildTree: {42 -> {10 -> {3 -> {1 -> {0. 1}. 2 -> {5}}. 7 -> {5 -> {5. 5}. 2 -> {8}}}}}.
-	vp10 := root left.
-	vp3 := vp10 left.
-	vp7 := vp10 right.
-	vp1 := vp3 left.
+	db10 := root left.
+	db3 := db10 left.
+	db7 := db10 right.
+	db1 := db3 left.
 	matcher := SBPatternMatcher
 		input: root asDomainBlock
 		pattern: self examplePatternTreeWithEllipses.
 	self
-		assert: {{vp10. vp3. vp7}. {vp3. vp1. vp3 right}. {vp1. vp1 left. vp1 right}. {vp7. vp7 left. vp7 right}} asSet
+		assert: {{db10. db3. db7}. {db3. db1. db3 right}. {db1. db1 left. db1 right}. {db7. db7 left. db7 right}} asSet
 		equals: (matcher getAllMatches collect: [:match | {match at: #a. match at: #b. match at: #c} collect: [:node | node sourceObject]]) asSet
 ]
 
@@ -283,16 +283,16 @@ SBPatternMatcherTest >> testFiveNodesWithWildcard [
 { #category : #tests }
 SBPatternMatcherTest >> testMatchAllChildrenTree [
 
-	| matcher root vp3 vp2 vp5 |
+	| matcher root db3 db2 db5 |
 	root := SBDummyNode buildTree: {10 -> {5 -> {2 -> {1. 1}. 3 -> {2. 1}}}}.
-	vp5 := root left.
-	vp2 := vp5 left.
-	vp3 := vp5 right.
+	db5 := root left.
+	db2 := db5 left.
+	db3 := db5 right.
 	matcher := SBPatternMatcher
 		input: root asDomainBlock
 		pattern: self examplePatternTreeWithEllipses.
 	self
-		assert: {{vp5. vp2. vp3}. {vp2. vp2 left. vp2 right}. {vp3. vp3 left. vp3 right}} asSet
+		assert: {{db5. db2. db3}. {db2. db2 left. db2 right}. {db3. db3 left. db3 right}} asSet
 		equals: (matcher getAllMatches collect: [:match | {match at: #a. match at: #b. match at: #c} collect: [:node | node sourceObject]]) asSet
 ]
 

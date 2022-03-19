@@ -92,7 +92,7 @@ SBTransformation class >> suggestion [
 			target: block;
 			replacer: case;
 			yourself).
-		case classNameInput promptClassForVPCase]
+		case classNameInput promptClassForDBCase]
 ]
 
 { #category : #'pattern matching' }

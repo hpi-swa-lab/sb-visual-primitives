@@ -13,7 +13,7 @@ SBSpecialShapeFixture class >> domainBlockMapping [
 				CircleMorph new
 					color: (Color r: 0.5 g: 0.5 b: (object key ifNotNil: [:key | key asInteger / 255] ifNil: [0]));
 					yourself]
-			setter: [:object :vp | object key: ((vp propertyAt: #shape) color blue * 255) rounded]
+			setter: [:object :db | object key: ((db propertyAt: #shape) color blue * 255) rounded]
 			patternValue: (CircleMorph new color: (Color r: 0.5 g: 0.5 b: 0.1))
 			dbProperty: #shape
 			name: 'shape'.

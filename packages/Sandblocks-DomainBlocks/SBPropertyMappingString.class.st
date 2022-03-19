@@ -1,5 +1,5 @@
 "
-An SBPropertyMappingString is used to map from a property that's a String to a vpProperty and back. The Morph that will be displayed is an SBTextBubble.
+An SBPropertyMappingString is used to map from a property that's a String to a dbProperty and back. The Morph that will be displayed is an SBTextBubble.
 
 "
 Class {

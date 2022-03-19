@@ -1,5 +1,5 @@
 "
-An SBPropertyMappingNumber is used to map from a property that's a Number to a vpProperty and back. The Morph that will be displayed is an SBStNumber.
+An SBPropertyMappingNumber is used to map from a property that's a Number to a dbProperty and back. The Morph that will be displayed is an SBStNumber.
 
 "
 Class {

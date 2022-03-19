@@ -1,5 +1,5 @@
 "
-An SBPropertyMappingSelect is used to map from a specific set of choices to corresponding representations for a vpProperty. To be able to change the selection the returned Morph is an SBSelectProperty.
+An SBPropertyMappingSelect is used to map from a specific set of choices to corresponding representations for a dbProperty. To be able to change the selection the returned Morph is an SBSelectProperty.
 
 Instance Variables
 	choices: 				OrderedCollection

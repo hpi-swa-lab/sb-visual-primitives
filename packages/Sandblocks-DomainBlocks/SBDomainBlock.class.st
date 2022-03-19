@@ -1,5 +1,5 @@
 "
-An SBDomainBlock is the visual representation of an object. It can also be used to display various patterns. When originating from an object, this object's class domainBlockMapping will be used as a directive on how to map from object properties to properties of the visual primitive (vpProperty). 
+An SBDomainBlock is the visual representation of an object. It can also be used to display various patterns. When originating from an object, this object's class domainBlockMapping will be used as a directive on how to map from object properties to properties of the domain block (dbProperty). 
 See SBPropertyMappings for the different ways of mapping.
 
 Instance Variables

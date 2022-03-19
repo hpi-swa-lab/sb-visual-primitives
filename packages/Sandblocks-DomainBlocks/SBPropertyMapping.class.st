@@ -7,7 +7,7 @@ Instance Variables
 	name:			String
 	patternValue:	Object
 	setter:			BlockClosure
-	vpProperty:		Symbol
+	dbProperty:		Symbol
 
 getter
 	- should look like this: [:object | ... ]
@@ -24,9 +24,9 @@ patternValue
 	- this value will be displayed if there is no origin object, because the primitive is a pattern
 
 setter
-	- should look like this: [:object :vp | ... ]
+	- should look like this: [:object :db | ... ]
 
-vpProperty
+dbProperty
 	- specifies where the mapping will be applied in the visual primitive
 	- can be #shape #children or a labelPosition, e.g. #innerLabel or #topLeftLabel (see SBDomainBlock >> labelPositions) 
 

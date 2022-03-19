@@ -1,5 +1,5 @@
 "
-An SBPropertyMappingCode is used to map from a property that's a closure to a vpProperty and back. The Morph that will be displayed is a sandblock showing the code of that closure.
+An SBPropertyMappingCode is used to map from a property that's a closure to a dbProperty and back. The Morph that will be displayed is a sandblock showing the code of that closure.
 
 "
 Class {

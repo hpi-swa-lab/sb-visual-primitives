@@ -1,15 +1,15 @@
 "
-An SBStDeclarationForVPBinding is the behaviour of the SBStNames that defining bindings inside of SBBindingPatterns when they are inside of an SBQuery or on the input pattern side of an SBTransformation.
+An SBStDeclarationForDBBinding is the behaviour of the SBStNames that defining bindings inside of SBBindingPatterns when they are inside of an SBQuery or on the input pattern side of an SBTransformation.
 
 "
 Class {
-	#name : #SBStDeclarationForVPBinding,
+	#name : #SBStDeclarationForDBBinding,
 	#superclass : #SBStDeclarationBehavior,
 	#category : #'Sandblocks-DomainBlocks-PatternMatching'
 }
 
 { #category : #'as yet unclassified' }
-SBStDeclarationForVPBinding class >> checkCastFor: aBlock parent: aMorph [
+SBStDeclarationForDBBinding class >> checkCastFor: aBlock parent: aMorph [
 
 	| case |
 	case := aMorph containingSandblock isBindingPattern
@@ -19,63 +19,63 @@ SBStDeclarationForVPBinding class >> checkCastFor: aBlock parent: aMorph [
 ]
 
 { #category : #accessing }
-SBStDeclarationForVPBinding >> asSuggestionItem [
+SBStDeclarationForDBBinding >> asSuggestionItem [
 
 	^ SBSuggestionItem selector: self contents label: 'block var'
 ]
 
 { #category : #accessing }
-SBStDeclarationForVPBinding >> attached: aName [
+SBStDeclarationForDBBinding >> attached: aName [
 
 	super attached: aName.
 	self refreshBindingName
 ]
 
 { #category : #'as yet unclassified' }
-SBStDeclarationForVPBinding >> castToUnknownWhenEmpty [
+SBStDeclarationForDBBinding >> castToUnknownWhenEmpty [
 
 	^ true
 ]
 
 { #category : #accessing }
-SBStDeclarationForVPBinding >> contentsChanged [
+SBStDeclarationForDBBinding >> contentsChanged [
 
 	super contentsChanged.
 	self refreshBindingName
 ]
 
 { #category : #accessing }
-SBStDeclarationForVPBinding >> guessedClass [
+SBStDeclarationForDBBinding >> guessedClass [
 
 	^ self block containingArtefact typeFor: self block
 ]
 
 { #category : #accessing }
-SBStDeclarationForVPBinding >> inputCommandClass [
+SBStDeclarationForDBBinding >> inputCommandClass [
 
 	^ SBStBindingRenameCommand
 ]
 
 { #category : #accessing }
-SBStDeclarationForVPBinding >> isBlockBinding [
+SBStDeclarationForDBBinding >> isBlockBinding [
 
 	^ true
 ]
 
 { #category : #'as yet unclassified' }
-SBStDeclarationForVPBinding >> isExpression [
+SBStDeclarationForDBBinding >> isExpression [
 
 	^ false
 ]
 
 { #category : #accessing }
-SBStDeclarationForVPBinding >> isMethodLocal [
+SBStDeclarationForDBBinding >> isMethodLocal [
 
 	^ true
 ]
 
 { #category : #accessing }
-SBStDeclarationForVPBinding >> printBlockOn: aStream [
+SBStDeclarationForDBBinding >> printBlockOn: aStream [
 
 	aStream
 		nextPutAll: 'pattern input declaration ';
@@ -83,7 +83,7 @@ SBStDeclarationForVPBinding >> printBlockOn: aStream [
 ]
 
 { #category : #accessing }
-SBStDeclarationForVPBinding >> refreshBindingName [
+SBStDeclarationForDBBinding >> refreshBindingName [
 
 	| bindingPattern |
 	bindingPattern := name firstOwnerSuchThat: [:owner | owner isBindingPattern].
@@ -91,19 +91,19 @@ SBStDeclarationForVPBinding >> refreshBindingName [
 ]
 
 { #category : #accessing }
-SBStDeclarationForVPBinding >> scope [
+SBStDeclarationForDBBinding >> scope [
 
 	^ {self block root parentSandblock}
 ]
 
 { #category : #accessing }
-SBStDeclarationForVPBinding >> symbolsFor: aColorPolicy [
+SBStDeclarationForDBBinding >> symbolsFor: aColorPolicy [
 
 	^ #(nil nil)
 ]
 
 { #category : #accessing }
-SBStDeclarationForVPBinding >> valid [
+SBStDeclarationForDBBinding >> valid [
 
 	^ ((self block containingBlock ifNotNil: #parentSandblock) ifNotNil: [:parent |
 		parent

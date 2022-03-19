@@ -301,7 +301,7 @@ SBBindingPattern >> bindingNameAutoCast [
 	^ [:name :morph | | container |
 		container := self patternContainer.
 		(container notNil and: [name hasOwner: container pattern])
-			ifTrue: [name behaviorClass: SBStDeclarationForVPBinding]
+			ifTrue: [name behaviorClass: SBStDeclarationForDBBinding]
 			ifFalse: [name behaviorClass: SBStBinding]]
 ]
 
@@ -621,7 +621,7 @@ SBBindingPattern >> newEmptyChildNear: aBlock before: aBoolean [
 ]
 
 { #category : #accessing }
-SBBindingPattern >> newLabelBlockAt: aVPProperty [
+SBBindingPattern >> newLabelBlockAt: aDBProperty [
 
 	^ self newUnknown
 ]

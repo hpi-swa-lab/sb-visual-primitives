@@ -1,5 +1,5 @@
 "
-An SBPropertyMappingExpression is used to display an expression at the given vpProperty. This is mostly needed in SBBindingPatterns.
+An SBPropertyMappingExpression is used to display an expression at the given dbProperty. This is mostly needed in SBBindingPatterns.
 
 Instance Variables
 	originalMapping: SBPropertyMapping

@@ -1,7 +1,7 @@
 Extension { #name : #SBStClassNameInput }
 
 { #category : #'*Sandblocks-DomainBlocks' }
-SBStClassNameInput >> promptClassForVPCase [
+SBStClassNameInput >> promptClassForDBCase [
 
 	(UIManager default
 		chooseClassOrTrait: 'Choose the class of the objects used it this case'
