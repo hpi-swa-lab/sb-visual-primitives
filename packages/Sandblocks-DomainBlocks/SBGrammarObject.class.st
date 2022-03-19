@@ -15,10 +15,10 @@ Class {
 SBGrammarObject class >> domainBlockMapping [
 
 	^ {
-		#shape vpConstant: (CircleMorph new color: Color white).
-		#identityLabelPosition vpConstant: #bottomCenterLabel.
-		#topLeftLabel vpSelectFrom: {'SEQ'. 'REPEAT'. 'REPEAT1'. 'SYMBOL'} for: #type.
-		#innerLabel vpStringFor: #objectName.
+		#shape dbConstant: (CircleMorph new color: Color white).
+		#identityLabelPosition dbConstant: #bottomCenterLabel.
+		#topLeftLabel dbSelectFrom: {'SEQ'. 'REPEAT'. 'REPEAT1'. 'SYMBOL'} for: #type.
+		#innerLabel dbStringFor: #objectName.
 		
 		SBPropertyMappingChildren
 			getter: [:object | object members ifNil: [{object content} asOrderedCollection]]

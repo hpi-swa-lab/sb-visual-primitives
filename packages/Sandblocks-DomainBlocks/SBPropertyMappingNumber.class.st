@@ -12,16 +12,16 @@ Class {
 SBPropertyMappingNumber class >> defaultSetterBlockWith: aSymbol for: anotherSymbol [
 
 	^ aSymbol isSymbol
-		ifTrue: [[:object :vp | (vp propertyAt: anotherSymbol) ifNotNil: [object perform: aSymbol asSimpleSetter with: (vp propertyAt: anotherSymbol) asNumber]]]
+		ifTrue: [[:object :db | (db propertyAt: anotherSymbol) ifNotNil: [object perform: aSymbol asSimpleSetter with: (db propertyAt: anotherSymbol) asNumber]]]
 		ifFalse: [
-			[:object :vp | "do nothing, because value should be constant"
+			[:object :db | "do nothing, because value should be constant"
 			]]
 ]
 
 { #category : #'as yet unclassified' }
 SBPropertyMappingNumber >> getLabelContents: anObject [
 
-	^ (super getLabelContents: anObject) asNumber
+	^ (super getLabelContents: anObject) ifNotNil: #asNumber
 ]
 
 { #category : #'as yet unclassified' }

@@ -25,10 +25,10 @@ SBStASTNode >> visualize [
 			addMorphBack: (SBStMethod new
 				selector: 'domainBlockMapping' arguments: #() class: objectClass class;
 				body: (SBStBlockBody new statements: {
-					[:b | b return: '{ #shape vpConstant: (RectangleMorph new color: (Color green)).
-			#identityLabelPosition vpConstant: #somePosition.
-			#somePosition vpNumberFor: #someNumberAccessor.
-			#somePosition vpStringFor: #someStringAccessor.
+					[:b | b return: '{ #shape dbConstant: (RectangleMorph new color: (Color green)).
+			#identityLabelPosition dbConstant: #somePosition.
+			#somePosition dbNumberFor: #someNumberAccessor.
+			#somePosition dbStringFor: #someStringAccessor.
 		}' parseAsSandblock] sbStBuild}));
 			showBelow: domainBlockContainer closeOnDeselect: true.
 		self inform: 'The class ', objectClass name asString, ' does not implement domainBlockMapping which is required to visualize its instance. Please do so']

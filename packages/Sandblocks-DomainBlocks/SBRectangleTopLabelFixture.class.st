@@ -8,7 +8,7 @@ Class {
 SBRectangleTopLabelFixture class >> domainBlockMapping [
 
 	^ {
-		#shape vpConstant: (RectangleMorph new
+		#shape dbConstant: (RectangleMorph new
 			color: (Color r: 0.0 g: 1 b: 0.502);
 			changeTableLayout;
 			listCentering: #center;
@@ -16,7 +16,7 @@ SBRectangleTopLabelFixture class >> domainBlockMapping [
 			shrinkWrap;
 			layoutInset: 8;
 			yourself).
-		#identityLabelPosition vpConstant: #bottomCenterLabel.
-		#innerLabel vpStringFor: #key.
+		#identityLabelPosition dbConstant: #bottomCenterLabel.
+		#innerLabel dbStringFor: #key.
 		self childrenMappingEntry}
 ]

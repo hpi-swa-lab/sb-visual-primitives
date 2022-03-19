@@ -12,9 +12,9 @@ Class {
 SBPropertyMappingString class >> defaultSetterBlockWith: aSymbol for: anotherSymbol [
 
 	^ aSymbol isSymbol
-		ifTrue: [[:object :vp | (vp propertyAt: anotherSymbol) ifNotNil: [object perform: aSymbol asSimpleSetter with: (vp propertyAt: anotherSymbol) asString]]]
+		ifTrue: [[:object :db | (db propertyAt: anotherSymbol) ifNotNil: [object perform: aSymbol asSimpleSetter with: (db propertyAt: anotherSymbol) asString]]]
 		ifFalse: [
-			[:object :vp | "do nothing, because value should be constant"
+			[:object :db | "do nothing, because value should be constant"
 			]]
 ]
 

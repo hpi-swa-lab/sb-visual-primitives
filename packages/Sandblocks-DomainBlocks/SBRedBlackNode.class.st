@@ -30,12 +30,12 @@ SBRedBlackNode class >> domainBlockMapping [
 
 	^ {
 		#shape
-			vpSelectFrom: {true. false}
+			dbSelectFrom: {true. false}
 			displayAs: {CircleMorph new color: Color red. CircleMorph new color: Color black}
 			for: #isRed.
-		#children vpChildFor: #children.
-		#innerLabel vpNumberFor: #key.
-		#identityLabelPosition vpConstant: #leftLabel}
+		#children dbChildFor: #children.
+		#innerLabel dbNumberFor: #key.
+		#identityLabelPosition dbConstant: #leftLabel}
 ]
 
 { #category : #'as yet unclassified' }

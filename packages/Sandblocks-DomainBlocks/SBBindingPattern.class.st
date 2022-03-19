@@ -486,7 +486,7 @@ SBBindingPattern >> expressionMappings [
 	^ self labelExpressionDict associations collect: [:association |
 		SBPropertyMappingExpression
 			expression: association value
-			vpProperty: association key
+			dbProperty: association key
 			originalMapping: (self originalPropertyMappingAt: association key)]
 ]
 

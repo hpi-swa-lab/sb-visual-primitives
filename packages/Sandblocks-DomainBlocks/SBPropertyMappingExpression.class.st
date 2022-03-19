@@ -18,9 +18,9 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBPropertyMappingExpression class >> expression: aBlock vpProperty: aSymbol originalMapping: aPropertyMapping [
+SBPropertyMappingExpression class >> expression: aBlock dbProperty: aSymbol originalMapping: aPropertyMapping [
 
-	^ (self getter: aBlock setter: [:ignore | ] vpProperty: aSymbol name: aPropertyMapping name) originalMapping: aPropertyMapping
+	^ (self getter: aBlock setter: [:ignore | ] dbProperty: aSymbol name: aPropertyMapping name) originalMapping: aPropertyMapping
 ]
 
 { #category : #'as yet unclassified' }

@@ -27,24 +27,28 @@ Class {
 SBPropertyMappingSelect class >> defaultSetterBlockWith: aSymbol for: anotherSymbol [
 
 	^ aSymbol isSymbol
-		ifTrue: [[:object :vp | (vp morphAt: anotherSymbol) ifNotNil: [object perform: aSymbol asSimpleSetter with: (vp morphAt: anotherSymbol) currentChoice]]]
-		ifFalse: [[:object :vp | ]]
+		ifTrue: [
+			[:object :db |
+				(db morphAt: anotherSymbol) ifNotNil: [ | dbValue |
+					dbValue := db morphAt: anotherSymbol.
+					(dbValue isKindOf: SBSelectProperty) ifTrue: [object perform: aSymbol asSimpleSetter with: dbValue currentChoice]]]]
+		ifFalse: [[:object :db | ]]
 ]
 
 { #category : #'as yet unclassified' }
-SBPropertyMappingSelect class >> property: aSymbol vpProperty: anotherSymbol choices: anOrderedCollection [
+SBPropertyMappingSelect class >> property: aSymbol dbProperty: anotherSymbol choices: anOrderedCollection [
 
 	^ self
 		property: aSymbol
-		vpProperty: anotherSymbol
+		dbProperty: anotherSymbol
 		choices: anOrderedCollection
 		representations: anOrderedCollection
 ]
 
 { #category : #'as yet unclassified' }
-SBPropertyMappingSelect class >> property: aSymbol vpProperty: anotherSymbol choices: anOrderedCollection representations: anotherOrderedCollection [
+SBPropertyMappingSelect class >> property: aSymbol dbProperty: anotherSymbol choices: anOrderedCollection representations: anotherOrderedCollection [
 
-	^ (self property: aSymbol vpProperty: anotherSymbol)
+	^ (self property: aSymbol dbProperty: anotherSymbol)
 		choices: anOrderedCollection;
 		representations: anotherOrderedCollection;
 		yourself

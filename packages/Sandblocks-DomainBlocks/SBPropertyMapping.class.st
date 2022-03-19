@@ -40,19 +40,19 @@ Class {
 		'name',
 		'patternValue',
 		'setter',
-		'vpProperty'
+		'dbProperty'
 	],
 	#category : #'Sandblocks-DomainBlocks'
 }
 
 { #category : #'as yet unclassified' }
-SBPropertyMapping class >> constant: anObject vpProperty: aSymbol [
+SBPropertyMapping class >> constant: anObject dbProperty: aSymbol [
 
 	^ (self
 		getter: [:ignore | anObject]
 		setter: [:ignore :ignore2 | ]
 		patternValue: anObject
-		vpProperty: aSymbol
+		dbProperty: aSymbol
 		name: aSymbol asString) isConstant: true
 ]
 
@@ -74,8 +74,8 @@ SBPropertyMapping class >> defaultPatternValueFor: aSymbol [
 SBPropertyMapping class >> defaultSetterBlockWith: aSymbol for: anotherSymbol [
 
 	^ aSymbol isSymbol
-		ifTrue: [[:object :vp | object perform: aSymbol asSimpleSetter with: (vp propertyAt: anotherSymbol)]]
-		ifFalse: [[:object :vp | ]]
+		ifTrue: [[:object :db | object perform: aSymbol asSimpleSetter with: (db propertyAt: anotherSymbol)]]
+		ifFalse: [[:object :db | ]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -91,26 +91,26 @@ SBPropertyMapping class >> fromAssociation: anAssociation [
 		getter: getterBlock
 		setter: setterBlock
 		patternValue: patternValue
-		vpProperty: anAssociation key
+		dbProperty: anAssociation key
 		name: name) isConstant: anAssociation value isSymbol not
 ]
 
 { #category : #'as yet unclassified' }
-SBPropertyMapping class >> getter: aBlock setter: anotherBlock patternValue: anObject vpProperty: aSymbol name: aString [
+SBPropertyMapping class >> getter: aBlock setter: anotherBlock dbProperty: aSymbol name: aString [
+
+	^ self getter: aBlock setter: anotherBlock patternValue: nil dbProperty: aSymbol name: aString
+]
+
+{ #category : #'as yet unclassified' }
+SBPropertyMapping class >> getter: aBlock setter: anotherBlock patternValue: anObject dbProperty: aSymbol name: aString [
 
 	^ self new
 		getter: aBlock;
 		setter: anotherBlock;
-		vpProperty: aSymbol;
+		dbProperty: aSymbol;
 		patternValue: anObject;
 		name: aString;
 		yourself
-]
-
-{ #category : #'as yet unclassified' }
-SBPropertyMapping class >> getter: aBlock setter: anotherBlock vpProperty: aSymbol name: aString [
-
-	^ self getter: aBlock setter: anotherBlock patternValue: nil vpProperty: aSymbol name: aString
 ]
 
 { #category : #'as yet unclassified' }
@@ -120,13 +120,13 @@ SBPropertyMapping class >> mappingName: anObject withDefault: aString [
 ]
 
 { #category : #'as yet unclassified' }
-SBPropertyMapping class >> property: aSymbol vpProperty: anotherSymbol [
+SBPropertyMapping class >> property: aSymbol dbProperty: anotherSymbol [
 
-	^ self property: aSymbol vpProperty: anotherSymbol patternValue: nil
+	^ self property: aSymbol dbProperty: anotherSymbol patternValue: nil
 ]
 
 { #category : #'as yet unclassified' }
-SBPropertyMapping class >> property: aSymbol vpProperty: anotherSymbol patternValue: anObject [
+SBPropertyMapping class >> property: aSymbol dbProperty: anotherSymbol patternValue: anObject [
 
 	| getterBlock setterBlock |
 	getterBlock := self defaultGetterBlockWith: aSymbol.
@@ -136,7 +136,7 @@ SBPropertyMapping class >> property: aSymbol vpProperty: anotherSymbol patternVa
 		getter: getterBlock
 		setter: setterBlock
 		patternValue: anObject
-		vpProperty: anotherSymbol
+		dbProperty: anotherSymbol
 		name: aSymbol asString
 ]
 
@@ -144,6 +144,18 @@ SBPropertyMapping class >> property: aSymbol vpProperty: anotherSymbol patternVa
 SBPropertyMapping >> asPropertyMapping [
 
 	^ self
+]
+
+{ #category : #accessing }
+SBPropertyMapping >> dbProperty [
+
+	^ dbProperty
+]
+
+{ #category : #accessing }
+SBPropertyMapping >> dbProperty: aSymbol [
+
+	dbProperty := aSymbol
 ]
 
 { #category : #accessing }
@@ -204,7 +216,7 @@ SBPropertyMapping >> isPropertyMapping [
 { #category : #accessing }
 SBPropertyMapping >> key [
 
-	^ self vpProperty
+	^ self dbProperty
 ]
 
 { #category : #accessing }
@@ -253,18 +265,6 @@ SBPropertyMapping >> suggestionConstant [
 SBPropertyMapping >> value: anObject [
 
 	^ self getter value: anObject
-]
-
-{ #category : #accessing }
-SBPropertyMapping >> vpProperty [
-
-	^ vpProperty
-]
-
-{ #category : #accessing }
-SBPropertyMapping >> vpProperty: aSymbol [
-
-	vpProperty := aSymbol
 ]
 
 { #category : #accessing }

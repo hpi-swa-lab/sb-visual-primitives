@@ -24,10 +24,10 @@ SBPropertyMappingChildren class >> defaultSetterBlockWith: aSymbol for: ignored 
 
 	^ aSymbol isSymbol
 		ifTrue: [
-			[:object :vp | | patternChildren |
-				patternChildren := vp propertyAt: #patternChildren.
+			[:object :db | | patternChildren |
+				patternChildren := db propertyAt: #patternChildren.
 				(patternChildren notNil and: [patternChildren notEmpty]) ifTrue: [object perform: aSymbol asSimpleSetter with: patternChildren]]]
-		ifFalse: [[:object :vp | ]]
+		ifFalse: [[:object :db | ]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -38,16 +38,23 @@ SBPropertyMappingChildren class >> getter: aBlock setter: anotherBlock [
 		(aBlock value: object)
 			ifNil: [{}]
 			ifNotNil: [:patternChildren | patternChildren reject: [:entry | entry isNil]]].
-	wrappedSetter := [:object :vp | anotherBlock value: object value: (vp propertyAt: #patternChildren)].
+	wrappedSetter := [:object :db | anotherBlock value: object value: (db propertyAt: #patternChildren)].
 	^ super
 		getter: wrappedGetter
 		setter: wrappedSetter
-		vpProperty: #patternChildren
+		dbProperty: #patternChildren
 		name: 'patternChildren'
 ]
 
 { #category : #'as yet unclassified' }
-SBPropertyMappingChildren class >> getter: aBlock setter: anotherBlock patternValue: anObject vpProperty: aSymbol [
+SBPropertyMappingChildren class >> getter: aBlock setter: anotherBlock dbProperty: aSymbol [
+
+	self assert: aSymbol = #children.
+	^ self getter: aBlock setter: anotherBlock
+]
+
+{ #category : #'as yet unclassified' }
+SBPropertyMappingChildren class >> getter: aBlock setter: anotherBlock patternValue: anObject dbProperty: aSymbol [
 
 	anObject
 		ifNotNil: [Error signal: 'SBPropertyMappingChildren does not support patternValue as this would lead to patterns recusively having patternChildren. This will result in an infinite number of patternChildren.']
@@ -56,25 +63,18 @@ SBPropertyMappingChildren class >> getter: aBlock setter: anotherBlock patternVa
 				getter: aBlock
 				setter: anotherBlock
 				patternValue: anObject
-				vpProperty: aSymbol
+				dbProperty: aSymbol
 				name: 'patternChildren']
-]
-
-{ #category : #'as yet unclassified' }
-SBPropertyMappingChildren class >> getter: aBlock setter: anotherBlock vpProperty: aSymbol [
-
-	self assert: aSymbol = #children.
-	^ self getter: aBlock setter: anotherBlock
 ]
 
 { #category : #'as yet unclassified' }
 SBPropertyMappingChildren class >> property: aSymbol [
 
-	^ super property: aSymbol vpProperty: #patternChildren
+	^ super property: aSymbol dbProperty: #patternChildren
 ]
 
 { #category : #'as yet unclassified' }
-SBPropertyMappingChildren class >> property: aSymbol vpProperty: anotherSymbol [
+SBPropertyMappingChildren class >> property: aSymbol dbProperty: anotherSymbol [
 
 	self assert: anotherSymbol = #children.
 	^ self property: aSymbol

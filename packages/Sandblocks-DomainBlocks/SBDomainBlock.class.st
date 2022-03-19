@@ -122,14 +122,14 @@ SBDomainBlock >> addLabel [
 	| index notSetProperties |
 	notSetProperties := self missingProperties.
 	index := UIManager default chooseFrom: (notSetProperties collect: [:propertyMapping | propertyMapping name]).
-	index > 0 ifTrue: [ | vpProperty newBlock |
-		vpProperty := (notSetProperties at: index) vpProperty.
+	index > 0 ifTrue: [ | dbProperty newBlock |
+		dbProperty := (notSetProperties at: index) dbProperty.
 		self sandblockEditor do: (SBDoItCommand new
 			do: [
-				self setLabelAt: vpProperty to: (newBlock := self newLabelBlockAt: vpProperty).
+				self setLabelAt: dbProperty to: (newBlock := self newLabelBlockAt: dbProperty).
 				self afterAddLabel: newBlock.
 				newBlock];
-			undo: [self removeLabelAt: vpProperty])]
+			undo: [self removeLabelAt: dbProperty])]
 ]
 
 { #category : #'as yet unclassified' }
@@ -171,7 +171,7 @@ SBDomainBlock >> addPropertyMapping: anSBPropertyMapping [
 	propertyMapping := anSBPropertyMapping asPropertyMapping.
 	value := self valueFromPropertyMapping: propertyMapping.
 	
-	propertyMapping vpProperty
+	propertyMapping dbProperty
 		caseOf: {
 			[#shape] -> [self shape: (propertyMapping getMorphForValue: value)].
 			[#patternChildren] -> [
@@ -181,7 +181,7 @@ SBDomainBlock >> addPropertyMapping: anSBPropertyMapping [
 						ifNil: [child asDomainBlock]
 						ifNotNil: [SBDomainBlock newFromObject: child in: self owner].
 					self addChild: newChild]]}
-		otherwise: [(self labelPositions includes: propertyMapping vpProperty) ifTrue: [(self blockDict at: propertyMapping vpProperty) addVPLabel: (propertyMapping getMorphFor: self sourceObject)]]
+		otherwise: [(self labelPositions includes: propertyMapping dbProperty) ifTrue: [(self blockDict at: propertyMapping dbProperty) addDBLabel: (propertyMapping getMorphFor: self sourceObject)]]
 ]
 
 { #category : #'as yet unclassified' }
@@ -460,10 +460,10 @@ SBDomainBlock >> middleLabelPositions [
 SBDomainBlock >> missingProperties [
 
 	^ self domainBlockMappings select: [:mapping |
-		(self labelPositions includes: mapping vpProperty)
+		(self labelPositions includes: mapping dbProperty)
 			ifTrue: [
 				(self blockDict
-					at: mapping vpProperty
+					at: mapping dbProperty
 					ifPresent: [:block | block firstSubmorphOrNil]
 					ifAbsent: [nil]) isNil]
 			ifFalse: [false]]
@@ -686,7 +686,7 @@ SBDomainBlock >> shape: aMorph [
 	innerBlockWrapper removeAllMorphs.
 	innerBlock := aMorph.
 	innerBlockWrapper addMorphBack: innerBlock.
-	innerLabel ifNotNil: [:label | innerBlock addVPLabel: label]
+	innerLabel ifNotNil: [:label | innerBlock addDBLabel: label]
 ]
 
 { #category : #accessing }

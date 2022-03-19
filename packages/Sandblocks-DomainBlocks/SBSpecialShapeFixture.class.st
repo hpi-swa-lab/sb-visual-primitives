@@ -15,9 +15,9 @@ SBSpecialShapeFixture class >> domainBlockMapping [
 					yourself]
 			setter: [:object :vp | object key: ((vp propertyAt: #shape) color blue * 255) rounded]
 			patternValue: (CircleMorph new color: (Color r: 0.5 g: 0.5 b: 0.1))
-			vpProperty: #shape
+			dbProperty: #shape
 			name: 'shape'.
-		#innerLabel vpNumberFor: #key.
+		#innerLabel dbNumberFor: #key.
 		self childrenMappingEntry}
 ]
 

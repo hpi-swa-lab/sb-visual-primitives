@@ -49,7 +49,7 @@ SBSelectProperty class >> choices: anOrderedCollection representations: anotherO
 ]
 
 { #category : #accessing }
-SBSelectProperty >> addVPLabel: aMorph [
+SBSelectProperty >> addDBLabel: aMorph [
 
 	| temp |
 	^ self hasSubmorphs
@@ -61,8 +61,8 @@ SBSelectProperty >> addVPLabel: aMorph [
 					listCentering: #center;
 					wrapCentering: #center;
 					shrinkWrap].
-			temp addVPLabel: aMorph]
-		ifFalse: [super addVPLabel: aMorph]
+			temp addDBLabel: aMorph]
+		ifFalse: [super addDBLabel: aMorph]
 ]
 
 { #category : #accessing }

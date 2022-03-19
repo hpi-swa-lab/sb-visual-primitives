@@ -1,7 +1,7 @@
 Extension { #name : #Morph }
 
 { #category : #'*Sandblocks-DomainBlocks' }
-Morph >> addVPLabel: aMorph [
+Morph >> addDBLabel: aMorph [
 
 	aMorph ifNil: [^ nil].
 	self removeAllMorphs.
