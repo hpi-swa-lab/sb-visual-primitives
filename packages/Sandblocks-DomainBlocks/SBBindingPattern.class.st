@@ -168,7 +168,7 @@ SBBindingPattern class >> identityName [
 SBBindingPattern class >> matches: aBlock [
 	"match any resonable combination of constructor arguments"
 
-	^ (({#bindingDict:. #expressionDict:. #bindingDict:expressionDict:} gather: [:symbol | {symbol. symbol, #patternChildren:}]) gather: [:symbol | {symbol. symbol, #visualizingClass:}]), {#writeBackClosure:. #writeBackClosure:patternChildren:} anySatisfy: [:methodName | self selector: methodName receiverMatches: aBlock]
+	^ (({#bindingDict:. #expressionDict:. #bindingDict:expressionDict:} gather: [:symbol | {symbol. symbol, #patternChildren:}]) gather: [:symbol | {symbol. symbol, #visualizingClass:}]) anySatisfy: [:methodName | self selector: methodName receiverMatches: aBlock]
 ]
 
 { #category : #'as yet unclassified' }
@@ -183,22 +183,6 @@ SBBindingPattern class >> newFor: aBlock [
 				ifFalse: [[argument evaluate] on: Error do: [{self identityName -> aBlock sourceString}]]]].
 	
 	^ self perform: aBlock selector asSymbol withArguments: arguments
-]
-
-{ #category : #replacements }
-SBBindingPattern class >> writeBackClosure: aClosure [
-	"should look like [:var | yourVariable := var]"
-
-	^ self writeBackClosure: aClosure patternChildren: {}
-]
-
-{ #category : #replacements }
-SBBindingPattern class >> writeBackClosure: aClosure patternChildren: aCollection [
-	"should look like [:var | yourVariable := var]"
-
-	^ self new
-		writeBackClosure: aClosure;
-		patternChildren: aCollection
 ]
 
 { #category : #'adding/removing' }
@@ -453,7 +437,6 @@ SBBindingPattern >> domainBlockMappings [
 { #category : #drawing }
 SBBindingPattern >> drawOn: aCanvas [
 
-	self writeBackClosure ifNotNil: [aCanvas frameOval: (self bounds outsetBy: 5) width: 2 color: Color black].
 	super drawOn: aCanvas.
 	aCanvas frameRectangle: (self bounds outsetBy: 1) width: 2 color: color
 ]
@@ -711,7 +694,6 @@ SBBindingPattern >> setBindingFor: aDomainBlock in: aDict [
 	currentDomainBlock := self getCurrentDomainBlock: aDomainBlock.
 	self bindingName ifNotNil: [setBinding value: self bindingName value: (self bindingFor: aDomainBlock)].
 	self setLabelBindingsFor: aDomainBlock in: aDict using: setBinding.
-	self writeBackClosure ifNotNil: [self writeBackClosure value: currentDomainBlock sourceObject].
 	^ (self couldMatch: currentDomainBlock) and: [self setChildBindingFor: currentDomainBlock in: aDict]
 ]
 
@@ -777,36 +759,6 @@ SBBindingPattern >> wantsImplicitNeighbors [
 	^ true
 ]
 
-{ #category : #accessing }
-SBBindingPattern >> writeBackClosure [
-
-	^ writeBackClosure
-]
-
-{ #category : #accessing }
-SBBindingPattern >> writeBackClosure: aClosure [
-
-	writeBackClosure := aClosure isSandblock
-		ifTrue: [ | variableBlock |
-			variableBlock := aClosure statements first receiver copy.
-			self innerLabel: variableBlock.
-			self writeBackClosureString: aClosure sourceString.
-			aClosure evaluate]
-		ifFalse: [aClosure]
-]
-
-{ #category : #accessing }
-SBBindingPattern >> writeBackClosureString [
-
-	^ writeBackClosureString
-]
-
-{ #category : #accessing }
-SBBindingPattern >> writeBackClosureString: aString [
-
-	writeBackClosureString := aString
-]
-
 { #category : #printing }
 SBBindingPattern >> writeDict: aDict on: aStream using: aBlock [
 
@@ -841,11 +793,6 @@ SBBindingPattern >> writeSourceOn: aStream [
 			value firstSubmorph isName
 				ifTrue: [bindings at: position put: value firstSubmorph]
 				ifFalse: [expressions at: position put: value firstSubmorph]]].
-	
-	self writeBackClosure ifNotNil: [
-		aStream
-			nextPutAll: ' writeBackClosure: ';
-			nextPutAll: self writeBackClosureString].
 	
 	bindings ifNotEmpty: [
 		aStream nextPutAll: ' bindingDict: '.

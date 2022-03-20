@@ -10,23 +10,23 @@ Class {
 { #category : #'as yet unclassified' }
 SBQuery class >> exampleExtractLeafOf: aNode [
 
-	| newLeaf currentNode |
+	| currentNode bindings |
 	self
 		example: [SBQuery]
 		args: [{((SBDummyNode key: 9) left: ((SBDummyNode key: 10) left: (SBDummyNode key: 7))) showAsDomainBlock}]
 		label: 'example'.
 	currentNode := aNode.
 	[
-		(SBQuery
+		bindings := (SBQuery
 			pattern: (SBGroupPattern patterns: {
 				SBBindingPattern
 					expressionDict: {#identity -> [currentNode]}
-					patternChildren: {SBBindingPattern writeBackClosure: [:var | newLeaf := var]}})
+					patternChildren: {SBBindingPattern expressionDict: {#identity -> [#newLeaf]}}})
 			strategy: (Dictionary new
 				add: #explicitRootMatching -> false;
 				add: #explicitChildrenMatching -> false;
 				yourself)
-			visualizePatternsAs: SBDummyNode) query] whileNotNil: [currentNode := newLeaf].
+			visualizePatternsAs: SBDummyNode) query] whileNotNil: [currentNode := bindings at: #newLeaf].
 	^ currentNode
 ]
 
@@ -88,6 +88,34 @@ SBQuery class >> pattern: anSBDomainBlockContainer strategy: aDict visualizePatt
 		strategy: aDict;
 		defaultVisualizationClass: aClass;
 		yourself
+]
+
+{ #category : #'as yet unclassified' }
+SBQuery >> exampleExtractLeafOf: aNode [
+
+	| currentNode bindings |
+	self
+		example: [SBQuery new]
+		args: [{((SBDummyNode key: 9) left: ((SBDummyNode key: 10) left: (SBDummyNode key: 7))) showAsDomainBlock}]
+		label: 'example'.
+	currentNode := aNode.
+	[
+		bindings := (SBQuery
+			pattern: (SBGroupPattern patterns: {
+				SBBindingPattern
+					expressionDict: {#identity -> [currentNode]}
+					patternChildren: {
+						SBBindingPattern
+							bindingDict: {#identity -> #newLeaf}
+							patternChildren: {}
+							visualizingClass: SBDummyNode}
+					visualizingClass: SBDummyNode})
+			strategy: (Dictionary new
+				add: #explicitRootMatching -> false;
+				add: #explicitChildrenMatching -> false;
+				yourself)
+			visualizePatternsAs: SBDummyNode) query] whileNotNil: [currentNode := (bindings at: #newLeaf) sourceObject].
+	^ currentNode
 ]
 
 { #category : #accessing }

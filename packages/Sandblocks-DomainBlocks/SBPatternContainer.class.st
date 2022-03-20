@@ -116,7 +116,6 @@ SBPatternContainer >> buildImplicitChildrenMatchingPattern [
 
 	self pattern ifNotNil: [
 		self pattern removeImplicitChildren.
-		self world doOneCycle.
 		self explicitChildrenMatching ifFalse: [self pattern buildImplicitChildren: Dictionary new]]
 ]
 
