@@ -1,3 +1,17 @@
+"
+An SBDeleteSubtreeCommand is used to delete a domain block and its children.
+
+Instance Variables
+	command:		SBCombinedCommand
+	target:			SBDomainBlock
+
+command
+	- the command what is to be done
+
+target
+	- the domain block to be deleted
+
+"
 Class {
 	#name : #SBDeleteSubtreeCommand,
 	#superclass : #SBCommand,
@@ -54,9 +68,9 @@ SBDeleteSubtreeCommand >> target [
 ]
 
 { #category : #accessing }
-SBDeleteSubtreeCommand >> target: anObject [
+SBDeleteSubtreeCommand >> target: anSBDomainBlock [
 
-	target := anObject
+	target := anSBDomainBlock
 ]
 
 { #category : #'do-undo' }

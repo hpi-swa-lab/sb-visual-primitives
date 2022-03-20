@@ -1,13 +1,17 @@
 "
-An SBPropertyMapping hold information on how the properties of an object are to be displayed in an SBDomainBlock and how changes on the primitive affect the origin object.
+An SBPropertyMapping hold information on how the properties of an object are to be displayed in an SBDomainBlock and how changes on the domain block affect the origin object.
 
 Instance Variables
+	dbProperty:		Symbol
 	getter:			BlockClosure
 	isConstant:		Boolean
 	name:			String
 	patternValue:	Object
 	setter:			BlockClosure
-	dbProperty:		Symbol
+
+dbProperty
+	- specifies where the mapping will be applied in the domain block
+	- can be #shape #children or a labelPosition, e.g. #innerLabel or #topLeftLabel (see SBDomainBlock >> labelPositions)
 
 getter
 	- should look like this: [:object | ... ]
@@ -21,26 +25,22 @@ name
 	- this is the name of the property as a String
 
 patternValue
-	- this value will be displayed if there is no origin object, because the primitive is a pattern
+	- this value will be displayed if there is no origin object, because the domain block is a pattern
 
 setter
 	- should look like this: [:object :db | ... ]
-
-dbProperty
-	- specifies where the mapping will be applied in the domain block
-	- can be #shape #children or a labelPosition, e.g. #innerLabel or #topLeftLabel (see SBDomainBlock >> labelPositions) 
 
 "
 Class {
 	#name : #SBPropertyMapping,
 	#superclass : #Object,
 	#instVars : [
+		'dbProperty',
 		'getter',
 		'isConstant',
 		'name',
 		'patternValue',
-		'setter',
-		'dbProperty'
+		'setter'
 	],
 	#category : #'Sandblocks-DomainBlocks'
 }

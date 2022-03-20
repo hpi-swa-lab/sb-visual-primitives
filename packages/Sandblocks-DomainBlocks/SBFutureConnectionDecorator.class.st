@@ -1,3 +1,13 @@
+"
+An SBFutureConnectionDecorator is a decorator for the connection lines between domain blocks.
+
+Instance Variables
+	to:		SBDomainBlock
+
+to
+	- target of the connector line
+
+"
 Class {
 	#name : #SBFutureConnectionDecorator,
 	#superclass : #SBBlockDecorator,

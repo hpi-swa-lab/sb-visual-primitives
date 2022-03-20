@@ -1,5 +1,5 @@
 "
-An SBDomainBlockContainer displayes the block's value as an SBDomainBlock. The code can be shown or not. If it's shown, changing the visuals will always be overwritten with the code. Otherwise changes made to the domain block will be saved and written back.
+An SBDomainBlockContainer displayes the block's value as an SBDomainBlock. The code is visualized automatically. Changes made to the domain block will be saved and written back.
 
 Instance Variables
 	isImplicit:	Boolean

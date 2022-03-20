@@ -1,5 +1,5 @@
 "
-An SBGroupPattern creates and contains SBBindingPatterns, SBConstraintPatterns and SBOrGroupPatterns. The patterns are seperated with an 'and'.
+An SBGroupPattern creates and contains SBBindingPatterns, SBConstraintPatterns, SBOrGroupPatterns and other SBGroupPatterns. The patterns are seperated with an 'and'.
 
 Instance Variables
 	isOutputPattern: 	Boolean

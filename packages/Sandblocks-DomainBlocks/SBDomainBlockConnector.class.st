@@ -1,3 +1,7 @@
+"
+An SBDomainBlockConnector is an SBConnectorLine. It disables the mouseDown: event.
+
+"
 Class {
 	#name : #SBDomainBlockConnector,
 	#superclass : #SBConnectorLine,

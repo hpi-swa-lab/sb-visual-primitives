@@ -3,16 +3,16 @@ An SBDomainBlock is the visual representation of an object. It can also be used 
 See SBPropertyMappings for the different ways of mapping.
 
 Instance Variables
-	blockDict:				Dictionary
-	sourceObject:			Object
+	blockDict:			Dictionary
+	sourceObject:		Object
 
 blockDict
 	- (#blockPosition -> SBBlock)
 	- stores the blocks that the labels or shape blocks are inserted into
 
 sourceObject
-	- the object the primitive is build for
-	- may be nil if the SBDomainBlock is a pattern
+	- the object the domain block is build for
+	- may be nil if the domain block is a pattern
 
 "
 Class {

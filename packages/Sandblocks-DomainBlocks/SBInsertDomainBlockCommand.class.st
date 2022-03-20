@@ -10,10 +10,10 @@ patternChildren
 	- SBDomainBlocks that will be patternChildren of the inserted primitive
 
 patternParent
-	- parent primitive of the inserted one
+	- parent pattern of the inserted one
 
 patternSiblingIndex
-	- position index of the inserted primitive in the patternParent's patternChildren 
+	- position index of the inserted pattern in the patternParent's patternChildren 
 
 "
 Class {
