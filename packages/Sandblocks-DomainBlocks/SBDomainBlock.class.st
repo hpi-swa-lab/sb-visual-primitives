@@ -109,7 +109,7 @@ SBDomainBlock >> addConnectorLineTo: aDomainBlock afterIndex: aNumber [
 				self owner addMorph: connector after: previousConnector].
 			self owner addMorph: aDomainBlock]
 		ifFalse: [
-			self flag: #TODO.
+			self flag: #todo.
 			"Consider index here. Would be nice but probably doesn't actually change anything"
 			self attachDecorator: (SBFutureConnectionDecorator new to: aDomainBlock)]
 ]

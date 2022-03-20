@@ -2,11 +2,9 @@
 An SBBindingPattern is used to represent a single object. It's patternChildren are visualized as well recursively.
 
 Instance Variables
-	bindingDict:						Dictionary
-	expressionDict:				Dictionary
-	visualizingClass:				Class
-	writeBackClosure:			BlockClosure
-	writeBackClosureString:		String
+	bindingDict:			Dictionary
+	expressionDict:	Dictionary
+	visualizingClass:	Class
 
 bindingDict
 	- dictionary of label positions and their bindings
@@ -16,13 +14,6 @@ expressionDict
 
 visualizingClass
 	- the class to be visualized
-
-writeBackClosure
-	- xxxxx
-
-writeBackClosureString
-	- xxxxx
-
 "
 Class {
 	#name : #SBBindingPattern,
@@ -30,9 +21,7 @@ Class {
 	#instVars : [
 		'bindingDict',
 		'expressionDict',
-		'visualizingClass',
-		'writeBackClosure',
-		'writeBackClosureString'
+		'visualizingClass'
 	],
 	#category : #'Sandblocks-DomainBlocks-PatternMatching'
 }

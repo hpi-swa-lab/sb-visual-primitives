@@ -132,7 +132,7 @@ SBGroupPattern >> allChildrenDo: aBlock [
 { #category : #'pattern matching' }
 SBGroupPattern >> buildFromBinding: anArray [
 
-	self flag: #TODO.
+	self flag: #todo.
 	"Support multiple patternChildren to support multiple outputs"
 	^ self patternChildren first buildFromBinding: anArray
 ]
