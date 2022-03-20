@@ -58,7 +58,7 @@ SBPatternContainer class >> buttonSpecifications [
 		self childrenStrategy -> {
 			#index -> 2.
 			#icons -> {true -> SBIcon iconChild. false -> SBIcon iconEyeSlash} asDictionary.
-			#text -> {true -> 'explicit patternChildren'. false -> 'implicit patternChildren'} asDictionary} asDictionary} asDictionary
+			#text -> {true -> 'explicit children'. false -> 'implicit children'} asDictionary} asDictionary} asDictionary
 ]
 
 { #category : #'as yet unclassified' }
