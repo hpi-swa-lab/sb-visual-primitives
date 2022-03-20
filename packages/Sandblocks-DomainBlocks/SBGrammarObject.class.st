@@ -87,25 +87,20 @@ SBGrammarObject >> exampleGrammarRuleMergeWithExpression: aGrammarObject [
 				patternChildren: {
 					SBBindingPattern
 						bindingDict: {#identity -> #b}
-						expressionDict: {#topLeftLabel -> ['SYMBOL']}
-						visualizingClass: SBGrammarObject.
+						expressionDict: {#topLeftLabel -> ['SYMBOL']}.
 					SBBindingPattern
 						bindingDict: {#identity -> #c}
 						expressionDict: {#topLeftLabel -> ['REPEAT']}
 						patternChildren: {
 							SBBindingPattern
 								bindingDict: {#identity -> #d}
-								expressionDict: {#topLeftLabel -> ['SYMBOL']}
-								visualizingClass: SBGrammarObject}
-						visualizingClass: SBGrammarObject}
-				visualizingClass: SBGrammarObject.
+								expressionDict: {#topLeftLabel -> ['SYMBOL']}}}.
 			SBConstraintPattern constraint: [:bindings | (bindings at: #b) objectName = (bindings at: #d) objectName]})
 		output: (SBGroupPattern patterns: {
 			SBBindingPattern
 				bindingDict: {#identity -> #c}
 				expressionDict: {#topLeftLabel -> ['REPEAT1']}
-				patternChildren: {SBBindingPattern bindingDict: {#identity -> #b} visualizingClass: SBGrammarObject}
-				visualizingClass: SBGrammarObject})
+				patternChildren: {SBBindingPattern bindingDict: {#identity -> #b}}})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> false;
 			add: #explicitChildrenMatching -> true;

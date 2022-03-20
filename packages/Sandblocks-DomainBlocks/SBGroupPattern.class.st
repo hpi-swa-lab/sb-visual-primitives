@@ -295,7 +295,7 @@ SBGroupPattern >> matches: aDomainBlock withBinding: aCollection [
 SBGroupPattern >> noteNewOwner: aMorph [
 
 	super noteNewOwner: aMorph.
-	self patternChildren do: [:submorph | submorph noteNewOwner: self]
+	self allChildrenDo: [:submorph | submorph noteNewOwner: self]
 ]
 
 { #category : #'adding/removing' }
