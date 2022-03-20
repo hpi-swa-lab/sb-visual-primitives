@@ -434,13 +434,6 @@ SBBindingPattern >> domainBlockMappings [
 			ifFalse: [SBPropertyMapping fromAssociation: mappingOrAssoc]]
 ]
 
-{ #category : #drawing }
-SBBindingPattern >> drawOn: aCanvas [
-
-	super drawOn: aCanvas.
-	aCanvas frameRectangle: (self bounds outsetBy: 1) width: 2 color: color
-]
-
 { #category : #accessing }
 SBBindingPattern >> enoughChildren: aDomainBlock [
 
@@ -754,6 +747,12 @@ SBBindingPattern >> visualizingClass: aClass [
 ]
 
 { #category : #accessing }
+SBBindingPattern >> visualizingClassBasic [
+
+	^ visualizingClass
+]
+
+{ #category : #accessing }
 SBBindingPattern >> wantsImplicitNeighbors [
 
 	^ true
@@ -813,9 +812,9 @@ SBBindingPattern >> writeSourceOn: aStream [
 			aStream nextPut: $.].
 		aStream nextPut: $}].
 	
-	self visualizingClass ifNotNil: [
+	self visualizingClassBasic ifNotNil: [
 		aStream
 			nextPutAll: ' visualizingClass: ';
-			store: self visualizingClass].
+			store: self visualizingClassBasic].
 	aStream nextPut: $)
 ]

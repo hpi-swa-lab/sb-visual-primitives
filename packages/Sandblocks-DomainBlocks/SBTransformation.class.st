@@ -235,12 +235,11 @@ SBTransformation >> exampleInsertWithExpression: aTree [
 	newNode := (SBStringDummyNode key: 'to be inserted node') showAsDomainBlock.
 	"newNode is set as an Expression for the key in the child of a"
 	^ (SBTransformation
-		input: (SBGroupPattern patterns: {SBBindingPattern bindingDict: {#identity -> #a} visualizingClass: SBDummyNode})
+		input: (SBGroupPattern patterns: {SBBindingPattern bindingDict: {#identity -> #a}})
 		output: (SBGroupPattern patterns: {
 			SBBindingPattern
 				bindingDict: {#identity -> #a}
-				patternChildren: {SBBindingPattern expressionDict: {#identity -> [newNode]} visualizingClass: SBDummyNode}
-				visualizingClass: SBDummyNode})
+				patternChildren: {SBBindingPattern expressionDict: {#identity -> [newNode]}}})
 		strategy: (Dictionary new
 			add: #explicitRootMatching -> true;
 			add: #explicitChildrenMatching -> true;

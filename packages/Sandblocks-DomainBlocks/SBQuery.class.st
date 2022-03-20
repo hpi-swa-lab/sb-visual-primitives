@@ -8,29 +8,6 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-SBQuery class >> exampleExtractLeafOf: aNode [
-
-	| currentNode bindings |
-	self
-		example: [SBQuery]
-		args: [{((SBDummyNode key: 9) left: ((SBDummyNode key: 10) left: (SBDummyNode key: 7))) showAsDomainBlock}]
-		label: 'example'.
-	currentNode := aNode.
-	[
-		bindings := (SBQuery
-			pattern: (SBGroupPattern patterns: {
-				SBBindingPattern
-					expressionDict: {#identity -> [currentNode]}
-					patternChildren: {SBBindingPattern expressionDict: {#identity -> [#newLeaf]}}})
-			strategy: (Dictionary new
-				add: #explicitRootMatching -> false;
-				add: #explicitChildrenMatching -> false;
-				yourself)
-			visualizePatternsAs: SBDummyNode) query] whileNotNil: [currentNode := bindings at: #newLeaf].
-	^ currentNode
-]
-
-{ #category : #'as yet unclassified' }
 SBQuery class >> input: anSBDomainBlockContainer strategy: aDict [
 	" marker "
 
